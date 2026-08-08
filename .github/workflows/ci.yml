@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancela corridas viejas del mismo branch: solo interesa la última.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dependencias
+        run: flutter pub get
+
+      # `--fatal-infos` para que un lint nuevo no se cuele silenciosamente.
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Formato
+        run: dart format --output=none --set-exit-if-changed lib test tools
+
+      - name: Tests
+        run: flutter test
+
+  # El SQL generado NO se edita a mano: se regenera. Si alguien lo tocó,
+  # el diff con la regeneración lo delata.
+  # (No corre por defecto: depende de Overpass, un servicio público que no
+  # conviene golpear en cada PR. Se dispara a mano cuando hace falta.)
+  verificar-seed:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Regenerar e comparar
+        run: |
+          dart run tools/osm_import.dart
+          dart run tools/corrientes_import.dart
+          git diff --stat --exit-code supabase/seed/ || {
+            echo "El seed versionado no coincide con lo que produce el importer."
+            exit 1
+          }

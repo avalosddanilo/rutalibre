@@ -1,0 +1,55 @@
+# =====================================================================
+# LÍNEA 904 — Terminal de Ómnibus Resistencia <-> Campus UNNE Corrientes
+# Servicio 904A (Terminal ↔ Campus). Desde que el interurbano promueve el
+# ramal a línea, el ramal va vacío: la línea ES "904A". Operan DOS empresas alternadas (Ataco Norte y ERSA); el
+# esquema no modela empresa, así que acá van solo las salidas.
+#
+# FUENTE: imagen "Horarios CAMPUS" difundida por el grupo de WhatsApp
+#   "Grupo Info Chaco-Corrientes", con los logos de ERSA y Ataco Norte.
+#   NO es una publicación oficial y NO trae fecha.
+#
+# ⚠️  TRANSCRIPTO A MANO Y SIN VERIFICAR CONTRA LA EMPRESA.
+#     Antes de correr el SQL: comparar renglón por renglón con la imagen.
+#     Un horario mal tipeado es alguien parado en la vereda.
+#
+# Formato:  red | línea | ramal | sentido | tipos de día | salidas
+# =====================================================================
+
+# --- LUNES A VIERNES ---------------------------------------------
+# Panel izquierdo de la imagen. Cadencia de 50 minutos desde las 05:35
+# hasta las 19:45; las dos últimas salidas rompen el patrón (ojo ahí,
+# son las más fáciles de leer mal).
+
+# Columna "TERMINAL DE RCIA" (empresas: ATACO/ATACO/ERSA/ERSA alternando)
+interurbano-chaco-corrientes | 904A |  | ida | weekday | 05:35, 06:25, 07:15, 08:05, 08:55, 09:45, 10:35, 11:25, 12:15, 13:05, 13:55, 14:45, 15:35, 16:25, 17:15, 18:05, 18:55, 19:45, 20:47, 21:15
+
+# Columna "CAMPUS DE CTES"
+interurbano-chaco-corrientes | 904A |  | vuelta | weekday | 05:35, 06:25, 07:15, 08:05, 08:55, 09:45, 10:35, 11:25, 12:15, 13:05, 13:55, 14:45, 15:35, 16:25, 17:15, 18:05, 18:55, 19:45, 20:33, 21:20
+
+# --- SÁBADO, DOMINGO Y FERIADOS ----------------------------------
+# Panel derecho. La imagen da tres columnas de horas por servicio
+# (Terminal Rcia / UNNE Rcia / UNNE Ctes); acá va SOLO la primera de
+# cada fila, que es la salida desde cabecera, que es lo que guarda el
+# esquema. Los tiempos intermedios se pierden — ver nota abajo.
+
+# "CHACO A CORRIENTES", columna TERMINAL DE RESISTENCIA
+interurbano-chaco-corrientes | 904A |  | ida | saturday+sunday_holiday | 06:00, 07:30, 10:00, 12:00, 13:30, 15:00, 17:00, 19:30
+
+# "CORRIENTES A CHACO", columna UNNE CORRIENTES
+interurbano-chaco-corrientes | 904A |  | vuelta | saturday+sunday_holiday | 06:00, 07:30, 10:00, 12:00, 13:30, 15:00, 17:00, 19:30
+
+# -----------------------------------------------------------------
+# LO QUE ESTA TABLA NO PUEDE GUARDAR TODAVÍA
+#
+# 1. Los pasos intermedios. El fin de semana la imagen publica tres
+#    horas por servicio (sale de Terminal 06:00, pasa por UNNE Rcia
+#    06:22, llega a UNNE Ctes 07:30). El esquema guarda una sola hora
+#    por salida, así que el pasajero que espera en UNNE Resistencia no
+#    ve SU hora. Arreglarlo es agregar `route_stop_times`.
+#
+# 2. Qué empresa hace cada servicio. La imagen lo dice y a la gente le
+#    importa (los abonos no siempre son intercambiables).
+#
+# 3. De dónde salió el dato y de cuándo. Sin eso la app afirma con la
+#    misma cara un horario oficial y una foto de WhatsApp.
+# =====================================================================
