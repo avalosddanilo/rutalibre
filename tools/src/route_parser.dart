@@ -91,8 +91,9 @@ String networkCodeFor(String lineCode) {
   String lineCode,
   String? branch,
 ) {
-  if (branch == null || branch.isEmpty)
+  if (branch == null || branch.isEmpty) {
     return (lineCode: lineCode, branch: null);
+  }
   if (networkCodeFor(lineCode) != networkChacoCorrientes) {
     return (lineCode: lineCode, branch: branch);
   }
