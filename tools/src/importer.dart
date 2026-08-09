@@ -113,6 +113,7 @@ ImportResult buildImport(OsmInput input) {
   // --- Recorridos: geometría + paradas ---
   final variants = <ImportedVariant>[];
   final usedStopIds = <int>{};
+
   /// Todo lo que compitió por un lugar, incluido lo que el colapsado por
   /// recorrido descartó: la unificación global los necesita para juntar el
   /// nombre de la plataforma con el código de la posición de detención.
@@ -386,10 +387,7 @@ const _inferredMaxLeftMeters = 8.0;
   final declared = _declaredStops(relation, input);
 
   if (geometry.length < 2) {
-    return (
-      ordered: _collapseAdjacent(declared, input),
-      candidates: declared,
-    );
+    return (ordered: _collapseAdjacent(declared, input), candidates: declared);
   }
 
   // Se descartan las declaradas que caen lejísimos del trazado: son errores
@@ -415,18 +413,12 @@ const _inferredMaxLeftMeters = 8.0;
   }
 
   if (projected.isEmpty) {
-    return (
-      ordered: _collapseAdjacent(declared, input),
-      candidates: declared,
-    );
+    return (ordered: _collapseAdjacent(declared, input), candidates: declared);
   }
 
   projected.sort((a, b) => a.at.alongMeters.compareTo(b.at.alongMeters));
   final ordered = [for (final p in projected) p.nodeId];
-  return (
-    ordered: _collapseAdjacent(ordered, input),
-    candidates: ordered,
-  );
+  return (ordered: _collapseAdjacent(ordered, input), candidates: ordered);
 }
 
 /// Las paradas que la relation de OSM lista como miembros, sin repetir.

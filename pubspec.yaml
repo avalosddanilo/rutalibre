@@ -75,6 +75,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    # Las paradas de Corrientes capital. Ver tools/corrientes_stops_import.dart
+    # para por qué van acá y no en la base.
+    - assets/corrientes_stops.json
     # Los lugares (hospitales, escuelas, plazas…) del buscador de destino.
     # Se generan con `dart run tools/places_import.dart` y se leen RECIÉN al
     # abrir el buscador, nunca en el arranque: son 200 KB que no tienen por

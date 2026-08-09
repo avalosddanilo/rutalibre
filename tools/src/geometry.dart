@@ -161,11 +161,7 @@ Projection projectOntoLine(GeoPoint point, List<GeoPoint> line) {
     );
   }
 
-  var best = (
-    alongMeters: 0.0,
-    offsetMeters: double.infinity,
-    sideMeters: 0.0,
-  );
+  var best = (alongMeters: 0.0, offsetMeters: double.infinity, sideMeters: 0.0);
   var traveled = 0.0;
 
   for (var i = 1; i < line.length; i++) {

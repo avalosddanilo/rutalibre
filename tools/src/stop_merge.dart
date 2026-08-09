@@ -108,15 +108,10 @@ StopMergeResult mergeSameStops({
     final baseLng = (p.lng / cellDegrees).floor();
     for (var dLat = -1; dLat <= 1; dLat++) {
       for (var dLng = -1; dLng <= 1; dLng++) {
-        for (final other in grid[cellKey(baseLat + dLat, baseLng + dLng)] ??
-            const <int>[]) {
+        for (final other
+            in grid[cellKey(baseLat + dLat, baseLng + dLng)] ?? const <int>[]) {
           if (other <= id) continue;
-          if (_isSameStop(
-            id,
-            other,
-            points: points,
-            tags: tags,
-          )) {
+          if (_isSameStop(id, other, points: points, tags: tags)) {
             union(id, other);
           }
         }
@@ -188,17 +183,19 @@ bool isStopPosition(Map<String, String> tags) =>
 
 int _pickCanonical(List<int> group, Map<int, Map<String, String>> tags) {
   if (group.length == 1) return group.first;
-  final ranked = [...group]..sort((a, b) {
-    final tagsA = tags[a] ?? const <String, String>{};
-    final tagsB = tags[b] ?? const <String, String>{};
-    final byPlatform = _boolRank(isPlatform(tagsB)) - _boolRank(isPlatform(tagsA));
-    if (byPlatform != 0) return byPlatform;
-    final byName =
-        _boolRank((tagsB['name'] ?? '').trim().isNotEmpty) -
-        _boolRank((tagsA['name'] ?? '').trim().isNotEmpty);
-    if (byName != 0) return byName;
-    return a.compareTo(b);
-  });
+  final ranked = [...group]
+    ..sort((a, b) {
+      final tagsA = tags[a] ?? const <String, String>{};
+      final tagsB = tags[b] ?? const <String, String>{};
+      final byPlatform =
+          _boolRank(isPlatform(tagsB)) - _boolRank(isPlatform(tagsA));
+      if (byPlatform != 0) return byPlatform;
+      final byName =
+          _boolRank((tagsB['name'] ?? '').trim().isNotEmpty) -
+          _boolRank((tagsA['name'] ?? '').trim().isNotEmpty);
+      if (byName != 0) return byName;
+      return a.compareTo(b);
+    });
   return ranked.first;
 }
 

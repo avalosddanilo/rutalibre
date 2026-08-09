@@ -102,8 +102,14 @@ ScheduleParseResult parseScheduleSheets(String text) {
       );
     }
 
-    final [networkCode, lineCode, branchField, directionField, dayField, timesField] =
-        fields;
+    final [
+      networkCode,
+      lineCode,
+      branchField,
+      directionField,
+      dayField,
+      timesField,
+    ] = fields;
     if (networkCode.isEmpty || lineCode.isEmpty) {
       throw ScheduleFormatException(lineNumber, 'red y línea son obligatorias');
     }
@@ -285,10 +291,14 @@ String emitScheduleSql(
     ..writeln('-- CONTROL — debería devolver una fila por tabla cargada')
     ..writeln('-- ${'=' * 68}')
     ..writeln('-- select l.code, rv.branch, rv.direction, s.day_type,')
-    ..writeln('--        count(*) as salidas, min(s.departure_time) as primera,')
+    ..writeln(
+      '--        count(*) as salidas, min(s.departure_time) as primera,',
+    )
     ..writeln('--        max(s.departure_time) as ultima')
     ..writeln('--   from public.schedules s')
-    ..writeln('--   join public.route_variants rv on rv.id = s.route_variant_id')
+    ..writeln(
+      '--   join public.route_variants rv on rv.id = s.route_variant_id',
+    )
     ..writeln('--   join public.lines l on l.id = rv.line_id')
     ..writeln('--  group by 1, 2, 3, 4 order by 1, 2, 3, 4;');
 

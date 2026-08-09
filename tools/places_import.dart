@@ -105,9 +105,7 @@ Future<void> main(List<String> args) async {
   final sorted = byKind.entries.toList()
     ..sort((a, b) => b.value.compareTo(a.value));
   for (final entry in sorted) {
-    stdout.writeln(
-      '  ${entry.value.toString().padLeft(5)}  ${entry.key.name}',
-    );
+    stdout.writeln('  ${entry.value.toString().padLeft(5)}  ${entry.key.name}');
   }
 
   final encoded = jsonEncode(encodePlaces(result.places));

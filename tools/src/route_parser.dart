@@ -91,7 +91,8 @@ String networkCodeFor(String lineCode) {
   String lineCode,
   String? branch,
 ) {
-  if (branch == null || branch.isEmpty) return (lineCode: lineCode, branch: null);
+  if (branch == null || branch.isEmpty)
+    return (lineCode: lineCode, branch: null);
   if (networkCodeFor(lineCode) != networkChacoCorrientes) {
     return (lineCode: lineCode, branch: branch);
   }
@@ -118,10 +119,7 @@ int sortOrderFor(String lineCode) {
 }
 
 final _dirSuffix = RegExp(r'\s+(ida|vuelta)\s*$', caseSensitive: false);
-final _dirPrefix = RegExp(
-  r'^\s*\S+\s+(ida|vuelta)\b',
-  caseSensitive: false,
-);
+final _dirPrefix = RegExp(r'^\s*\S+\s+(ida|vuelta)\b', caseSensitive: false);
 final _dirWord = RegExp(r'\b(ida|vuelta)\b', caseSensitive: false);
 
 /// El sentido declarado en el nombre, buscándolo donde el convenio de la red

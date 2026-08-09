@@ -20,7 +20,8 @@ import 'src/schedule_sheet.dart';
 
 Future<void> main(List<String> args) async {
   final inputDir = _argValue(args, '--in') ?? 'supabase/seed/horarios';
-  final outputPath = _argValue(args, '--out') ?? 'supabase/seed/seed_horarios.sql';
+  final outputPath =
+      _argValue(args, '--out') ?? 'supabase/seed/seed_horarios.sql';
 
   stdout.writeln('Ruta Libre · importador de horarios');
 

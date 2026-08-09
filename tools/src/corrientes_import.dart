@@ -371,9 +371,7 @@ String emitCorrientesSql(
         '        ${sqlString(line.code)}, ${sqlString(line.name)}, '
         '${sqlTextArray(line.destinations)},',
       )
-      ..writeln(
-        '        ${sqlString(line.colorHex)}, ${line.sortOrder}, true)',
-      )
+      ..writeln('        ${sqlString(line.colorHex)}, ${line.sortOrder}, true)')
       ..writeln('on conflict (network_id, code) do update set')
       ..writeln('    name = excluded.name,')
       ..writeln('    destinations = excluded.destinations,')

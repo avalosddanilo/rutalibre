@@ -6,9 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/providers/shared_preferences_provider.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../../data/datasources/corrientes_stops_datasource.dart';
 import '../../data/datasources/places_asset_datasource.dart';
 import '../../data/datasources/transit_local_datasource.dart';
 import '../../data/datasources/transit_remote_datasource.dart';
@@ -17,6 +19,7 @@ import '../../data/repositories/transit_repository_impl.dart';
 import '../../domain/entities/bus_line.dart';
 import '../../domain/entities/nearby_stop.dart';
 import '../../domain/entities/place.dart';
+import '../../domain/entities/reference_stop.dart';
 import '../../domain/entities/route_at_stop.dart';
 import '../../domain/entities/route_variant.dart';
 import '../../domain/entities/schedule.dart';
@@ -413,4 +416,21 @@ final placesRepositoryProvider = Provider<PlacesRepository>(
 final placesProvider = FutureProvider<List<Place>>((ref) async {
   final result = await ref.watch(placesRepositoryProvider).getPlaces();
   return result.fold((failure) => throw failure, (places) => places);
+});
+
+/// Las paradas de Corrientes capital, que no entran al planificador.
+///
+/// Ver `ReferenceStop` para por qué son una clase aparte. `keepAlive` por lo
+/// mismo que los lugares: se parsean una vez y se dibujan en cada cuadro del
+/// mapa mientras se mira Corrientes.
+final corrientesStopsProvider = FutureProvider<List<ReferenceStop>>((
+  ref,
+) async {
+  try {
+    return await const AssetCorrientesStopsDataSource().getStops();
+  } on AppException {
+    // Que falte el asset NO puede romper el mapa: se dibuja sin las paradas
+    // de Corrientes, exactamente como antes de que existieran.
+    return const [];
+  }
 });

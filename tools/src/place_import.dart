@@ -84,7 +84,12 @@ PlaceKind? kindFor(Map<String, String> tags) {
 }
 
 /// Un elemento crudo de Overpass, ya aplanado.
-typedef RawPlace = ({String? name, double? lat, double? lng, Map<String, String> tags});
+typedef RawPlace = ({
+  String? name,
+  double? lat,
+  double? lng,
+  Map<String, String> tags,
+});
 
 /// Cuánto tienen que estar cerca dos cosas del mismo nombre para ser la misma.
 ///
@@ -130,8 +135,7 @@ String normalizeName(String name) {
 double _metersBetween(double lat1, double lng1, double lat2, double lng2) {
   const metersPerDegree = 111320.0;
   final dLat = (lat1 - lat2) * metersPerDegree;
-  final dLng =
-      (lng1 - lng2) * metersPerDegree * math.cos(lat1 * math.pi / 180);
+  final dLng = (lng1 - lng2) * metersPerDegree * math.cos(lat1 * math.pi / 180);
   return math.sqrt(dLat * dLat + dLng * dLng);
 }
 
@@ -211,7 +215,9 @@ PlaceImportResult buildPlaces(Iterable<RawPlace> raw) {
   // el mismo diff dos corridas seguidas, si no cada regeneración ensucia el
   // repo con 2600 líneas movidas.
   kept.sort((a, b) {
-    final byNameCompare = normalizeName(a.name).compareTo(normalizeName(b.name));
+    final byNameCompare = normalizeName(
+      a.name,
+    ).compareTo(normalizeName(b.name));
     if (byNameCompare != 0) return byNameCompare;
     return a.lat.compareTo(b.lat);
   });
