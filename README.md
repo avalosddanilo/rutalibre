@@ -11,7 +11,9 @@ Corrientes capital. Rápida, limpia y sin publicidad.
 - **Buscador** de líneas por número, barrio o **destino** (ignora tildes)
 - **Buscá por LUGAR**: el hospital, la escuela, el shopping, la plaza — 2612
   lugares del Gran Resistencia, sin señal y sin escribir la esquina
-- **"¿Cómo llego?"**: de dónde estás a dónde vas, con directos y un transbordo
+- **"¿Cómo llego?"**: de dónde estás a dónde vas, con directos y un transbordo.
+  El origen sale del GPS o **se elige a mano**, así que también sirve para
+  planificar desde el sillón o sin dar el permiso de ubicación
 - **"Iniciar viaje"**: el viaje paso a paso, uno por pantalla, y el mapa
   acompañando cada paso. Sin minutos inventados — ver el CHANGELOG
 - **"¿Qué colectivos pasan por acá?"** tocando cualquier parada, con a cuánto

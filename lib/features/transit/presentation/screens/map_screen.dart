@@ -30,9 +30,9 @@ import '../utils/route_segment.dart';
 import '../utils/trip_guidance.dart';
 import '../utils/trip_share_text.dart';
 import '../widgets/corrientes_stop_sheet.dart';
-import '../widgets/destination_search_sheet.dart';
 import '../widgets/line_sheet.dart';
 import '../widgets/nearby_stops_sheet.dart';
+import '../widgets/place_search_sheet.dart';
 import '../widgets/stop_details_sheet.dart';
 import '../widgets/stop_pin.dart';
 import '../widgets/trip_guidance_panel.dart';
@@ -205,30 +205,60 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     }
   }
 
-  /// Arranca "¿cómo llego?": el origen es dónde estás, y falta el destino.
+  /// Arranca "¿cómo llego?": primero de dónde salís, después a dónde vas.
   ///
-  /// El origen sale del GPS y no de un punto tocado porque la pregunta
-  /// real es "estoy ACÁ y quiero ir allá". Elegir el origen a mano es un
-  /// caso raro que puede esperar.
+  /// El origen se intenta con el GPS porque la pregunta que uno hace la
+  /// mayoría de las veces es "estoy ACÁ y quiero ir allá", y no hacerla
+  /// escribir es todo el valor. Pero el GPS falla —permiso negado, servicio
+  /// apagado, un fix que no llega— y antes eso terminaba en un snackbar de
+  /// error: la app se quedaba sin contestar su pregunta principal por algo
+  /// que tiene una alternativa obvia. Si falla, se elige el origen a mano.
   Future<void> _startTrip() async {
     setState(() => _locating = true);
+    LocationFix? fix;
+    Object? error;
     try {
-      final fix = await ref.read(locationServiceProvider).currentPosition();
-      if (!mounted) return;
-      final origin = (lat: fix.position.lat, lng: fix.position.lng);
-      ref.read(tripSearchProvider.notifier).startFrom(origin);
-      _moveTo(origin.lat, origin.lng, 14);
-      // El buscador se abre solo: escribir el destino es el camino corto y
-      // el que funciona aunque uno no tenga ubicado el lugar en el mapa.
-      // Cerrarlo deja el modo activo con el banner de "tocá el mapa", que
-      // es la salida para los destinos que no son una parada.
-      await DestinationSearchSheet.show(context, origin: origin);
-    } catch (error) {
-      if (!mounted) return;
-      _showError(error);
+      fix = await ref.read(locationServiceProvider).currentPosition();
+    } catch (thrown) {
+      error = thrown;
     } finally {
       if (mounted) setState(() => _locating = false);
     }
+    if (!mounted) return;
+
+    if (fix == null) {
+      // El cartel dice POR QUÉ apareció este buscador: sin eso, pedir el
+      // origen después de tocar "¿a dónde vas?" parece la pantalla equivocada.
+      await PlaceSearchSheet.showOrigin(
+        context,
+        notice: failureMessage(error!),
+      );
+      if (!mounted) return;
+      // Cancelar el buscador deja el modo apagado: no hay viaje que empezar.
+      final origin = switch (ref.read(tripSearchProvider)) {
+        TripIdle() => null,
+        TripPickingDestination(:final origin) => origin,
+        TripRoute(:final origin) => origin,
+      };
+      if (origin == null) return;
+      await _askDestination(origin);
+      return;
+    }
+
+    final origin = (lat: fix.position.lat, lng: fix.position.lng);
+    ref.read(tripSearchProvider.notifier).startFrom(origin);
+    await _askDestination(origin);
+  }
+
+  /// Con el origen ya puesto: mostrarlo en el mapa y pedir el destino.
+  ///
+  /// El buscador se abre solo: escribir el destino es el camino corto y el que
+  /// funciona aunque uno no tenga ubicado el lugar en el mapa. Cerrarlo deja
+  /// el modo activo con el banner de "tocá el mapa", que es la salida para los
+  /// destinos que no son una parada.
+  Future<void> _askDestination(MapPoint origin) async {
+    _moveTo(origin.lat, origin.lng, 14);
+    await PlaceSearchSheet.showDestination(context, origin: origin);
   }
 
   /// Manda el viaje elegido por donde el usuario quiera.
@@ -602,7 +632,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           if (tripSearch case TripPickingDestination(:final origin))
             _PickDestinationBanner(
               onSearch: () =>
-                  DestinationSearchSheet.show(context, origin: origin),
+                  PlaceSearchSheet.showDestination(context, origin: origin),
               onCancel: () => ref.read(tripSearchProvider.notifier).clear(),
             ),
           _MapActions(

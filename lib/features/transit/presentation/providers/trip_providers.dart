@@ -28,17 +28,30 @@ final class TripIdle extends TripSearch {
 
 /// Ya sabemos de dónde salís; falta que digas a dónde vas.
 final class TripPickingDestination extends TripSearch {
-  const TripPickingDestination(this.origin);
+  const TripPickingDestination(this.origin, {this.originName});
 
   final MapPoint origin;
+
+  /// Cómo se llama el origen, para poder DECIRLO: "Desde: Hospital Perrando".
+  ///
+  /// Null significa "mi ubicación": el GPS no devuelve un nombre, y ponerle
+  /// uno lo haría parecer un lugar que la persona eligió.
+  final String? originName;
 }
 
 /// Origen y destino puestos: hay viaje que buscar.
 final class TripRoute extends TripSearch {
-  const TripRoute({required this.origin, required this.destination});
+  const TripRoute({
+    required this.origin,
+    required this.destination,
+    this.originName,
+  });
 
   final MapPoint origin;
   final MapPoint destination;
+
+  /// Ver [TripPickingDestination.originName].
+  final String? originName;
 
   /// Argumento de `tripPlansProvider`. Se arma acá para que la pantalla no
   /// tenga que desarmar el estado a mano en cada uso.
@@ -58,32 +71,65 @@ final class TripSearchNotifier extends Notifier<TripSearch> {
   @override
   TripSearch build() => const TripIdle();
 
-  /// Arranca el modo: ya hay origen, falta el destino.
-  void startFrom(MapPoint origin) => state = TripPickingDestination(origin);
+  /// Arranca el modo DE CERO: hay origen y no hay destino.
+  ///
+  /// Distinto de [setOrigin], que cambia de dónde salís conservando a dónde
+  /// vas: esto empieza un viaje nuevo y descarta el destino anterior.
+  void startFrom(MapPoint origin, {String? name}) =>
+      state = TripPickingDestination(origin, originName: name);
+
+  /// Cambia el origen conservando el destino, si ya había uno.
+  ///
+  /// Existe porque el origen NO siempre es el GPS: se puede planificar un
+  /// viaje desde el sillón, o desde un teléfono al que se le negó el permiso
+  /// de ubicación. Con el destino ya puesto, cambiar el origen recalcula el
+  /// viaje —la query del provider cambia— sin hacer empezar de nuevo.
+  void setOrigin(MapPoint origin, {String? name}) {
+    state = switch (state) {
+      TripIdle() || TripPickingDestination() => TripPickingDestination(
+        origin,
+        originName: name,
+      ),
+      TripRoute(:final destination) => TripRoute(
+        origin: origin,
+        destination: destination,
+        originName: name,
+      ),
+    };
+  }
 
   /// Pone el destino. Sin origen no hace nada: tocar el mapa con el modo
   /// apagado no puede inventar un viaje.
   void setDestination(MapPoint destination) {
-    final origin = switch (state) {
-      TripIdle() => null,
-      TripPickingDestination(:final origin) => origin,
-      TripRoute(:final origin) => origin,
-    };
+    final origin = _origin;
     if (origin == null) return;
-    state = TripRoute(origin: origin, destination: destination);
+    state = TripRoute(
+      origin: origin.point,
+      destination: destination,
+      originName: origin.name,
+    );
   }
 
   /// Vuelve a pedir destino conservando el origen — para "elegir otro
   /// destino" sin tener que volver a esperar el GPS.
   void pickAnotherDestination() {
-    final origin = switch (state) {
-      TripIdle() => null,
-      TripPickingDestination(:final origin) => origin,
-      TripRoute(:final origin) => origin,
-    };
+    final origin = _origin;
     if (origin == null) return;
-    state = TripPickingDestination(origin);
+    state = TripPickingDestination(origin.point, originName: origin.name);
   }
+
+  /// El origen vigente, o null con el modo apagado.
+  ({MapPoint point, String? name})? get _origin => switch (state) {
+    TripIdle() => null,
+    TripPickingDestination(:final origin, :final originName) => (
+      point: origin,
+      name: originName,
+    ),
+    TripRoute(:final origin, :final originName) => (
+      point: origin,
+      name: originName,
+    ),
+  };
 
   void clear() {
     state = const TripIdle();

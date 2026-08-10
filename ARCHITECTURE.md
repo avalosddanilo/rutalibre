@@ -543,9 +543,24 @@ publicar la política en una URL y probar el APK de release en el teléfono.
    teléfono. **Ojo al tocar tests**: LineSheet y StopDetailsSheet ahora leen
    `sharedPreferencesProvider`, así que todo harness que los renderice tiene
    que sobreescribirlo.
-6. **Elegir el origen a mano** en "¿cómo llego?": hoy siempre usa el GPS, así
-   que no se puede planificar un viaje desde el sillón. Reusa el mismo
-   buscador apuntado al origen.
+6. ~~**Elegir el origen a mano**~~ — **hecho**. `PlaceSearchSheet` (era
+   `DestinationSearchSheet`) elige las DOS puntas: el mismo buscador con otro
+   título y otra acción al tocar un resultado. Cuatro cosas que conviene no
+   re-descubrir:
+   (a) el origen viaja con un **nombre opcional** (`originName` en
+   `TripSearch`), y null significa "mi ubicación". Sin el nombre no se puede
+   decir de dónde sale el viaje, y uno planificado desde el sillón se vería
+   idéntico a uno del GPS;
+   (b) `setOrigin` **conserva** el destino y `startFrom` lo **descarta**: son
+   dos acciones distintas y confundirlas hace perder el destino ya buscado.
+   Hay un test de cada una;
+   (c) el buscador de origen NO ofrece "tocá el mapa". El planificador arranca
+   desde las paradas cercanas, así que la esquina de al lado contesta lo mismo
+   que el patio exacto, y un segundo modo de toque pediría otro banner y otro
+   estado del sealed;
+   (d) el GPS que falla ya no termina en un snackbar: abre este buscador. Vale
+   para el CTA del panel y para "¿cómo llego acá?" del detalle de parada, que
+   eran los dos lugares donde negar el permiso dejaba a la app sin contestar.
 7. **Avisar cuando los datos son guardados**: toda la app es cache-first, así
    que sin señal se sigue viendo todo — pero no se sabe que es una copia.
 8. Feriados trasladables: tabla `holidays` en Supabase (reemplaza la lista

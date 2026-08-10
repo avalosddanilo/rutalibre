@@ -40,6 +40,11 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   transbordo. Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces.
 - Una opción por línea, no por ramal: el pasajero piensa en "la 9".
 - El destino es **cualquier punto del mapa**, no solo una parada.
+- **El origen no es solo el GPS**: se elige a mano escribiendo el lugar, y se
+  puede cambiar sin empezar de nuevo. Así se planifica un viaje desde el
+  sillón la noche anterior, y la app contesta igual en un teléfono al que se
+  le negó el permiso de ubicación — antes eso terminaba en un cartel de error
+  y la pregunta principal quedaba sin respuesta.
 - **"Iniciar viaje"**: la guía paso a paso, un paso por pantalla y grande, para
   leerla parada en la vereda con el colectivo viniendo. Caminá hasta tal
   parada, tomá la 3, viajá 14 paradas, bajate, caminá hasta tu destino,

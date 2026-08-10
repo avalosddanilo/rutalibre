@@ -13,6 +13,7 @@ import '../providers/user_prefs_providers.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
 import 'line_badge.dart';
+import 'place_search_sheet.dart';
 
 /// "A 350 m · unos 6 min caminando", desde donde está el usuario.
 ///
@@ -99,29 +100,48 @@ class _PlanTripHereButtonState extends ConsumerState<_PlanTripHereButton> {
 
   Future<void> _plan() async {
     final stop = widget.stop;
-    // Se toman ANTES del await: después de cerrar la hoja este `context` ya
+    // Se toma ANTES del await: después de cerrar la hoja este `context` ya
     // no sirve para nada.
     final navigator = Navigator.of(context);
-    final messenger = ScaffoldMessenger.of(context);
 
     setState(() => _locating = true);
+    LocationFix? fix;
+    Object? error;
     try {
-      final fix = await ref.read(locationServiceProvider).currentPosition();
-      if (!mounted) return;
-      // Cerrar PRIMERO: el resultado del viaje abre su propia hoja, y dos
-      // modales apilados obligan a tocar "atrás" dos veces para volver al
-      // mapa que uno quería ver.
-      navigator.pop();
-      ref.read(tripSearchProvider.notifier)
-        ..startFrom((lat: fix.position.lat, lng: fix.position.lng))
-        ..setDestination((lat: stop.lat, lng: stop.lng));
-    } catch (error) {
-      messenger
-        ..clearSnackBars()
-        ..showSnackBar(SnackBar(content: Text(failureMessage(error))));
+      fix = await ref.read(locationServiceProvider).currentPosition();
+    } catch (thrown) {
+      error = thrown;
     } finally {
       if (mounted) setState(() => _locating = false);
     }
+    if (!mounted) return;
+
+    if (fix == null) {
+      // Sin GPS esto era un snackbar de error y nada más: quien negó el
+      // permiso no podía planificar un viaje nunca. El origen se elige a
+      // mano y el viaje se calcula igual.
+      await PlaceSearchSheet.showOrigin(
+        context,
+        notice: failureMessage(error!),
+      );
+      if (!mounted) return;
+      // Canceló el buscador: la hoja de la parada queda como estaba.
+      if (ref.read(tripSearchProvider) is TripIdle) return;
+    } else {
+      ref.read(tripSearchProvider.notifier).startFrom((
+        lat: fix.position.lat,
+        lng: fix.position.lng,
+      ));
+    }
+
+    // Cerrar PRIMERO: el resultado del viaje abre su propia hoja, y dos
+    // modales apilados obligan a tocar "atrás" dos veces para volver al
+    // mapa que uno quería ver.
+    navigator.pop();
+    ref.read(tripSearchProvider.notifier).setDestination((
+      lat: stop.lat,
+      lng: stop.lng,
+    ));
   }
 
   @override

@@ -34,6 +34,14 @@ class TripResultsSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final plansAsync = ref.watch(tripPlansProvider(query));
+    // Solo cuando el origen se eligió A MANO. Con el GPS no hace falta
+    // decirlo —es lo que todo el mundo asume— pero un viaje calculado desde
+    // un punto que la persona escribió hace media hora no se entiende sin
+    // esto, y menos todavía si la respuesta es "no encontramos cómo llegar".
+    final originName = switch (ref.watch(tripSearchProvider)) {
+      TripRoute(:final originName) => originName,
+      _ => null,
+    };
 
     return SafeArea(
       child: ConstrainedBox(
@@ -57,6 +65,30 @@ class TripResultsSheet extends ConsumerWidget {
                 ],
               ),
             ),
+            if (originName != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.trip_origin,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Desde $originName',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             // El aviso de lluvia NO se repite acá: vive en el chip del mapa,
             // que esta hoja no tapa (llega hasta el 70% de la pantalla). Dos
             // avisos del mismo hecho a treinta píxeles uno del otro se leen
