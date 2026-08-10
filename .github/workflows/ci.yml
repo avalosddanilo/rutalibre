@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
   pull_request:
+  # `verificar-seed` se dispara SOLO a mano y por eso este trigger tiene que
+  # estar declarado: sin él, la condición de ese job no se cumple nunca y el
+  # chequeo no existe aunque el archivo lo describa.
+  workflow_dispatch:
 
 # Cancela corridas viejas del mismo branch: solo interesa la última.
 concurrency:
