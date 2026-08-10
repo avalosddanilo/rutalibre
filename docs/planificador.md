@@ -213,3 +213,123 @@ paradas sin decírselo.
 
 Si no devuelve nada, subir la caminata a 800: puede haber tocado un par que
 de verdad no se resuelve ni con transbordo (el 13% de la tabla de arriba).
+
+---
+
+## Verificación AUTOMÁTICA del transbordo — pegá y leé una línea
+
+Las consultas de arriba muestran filas para mirar a ojo. Esta las revisa sola:
+corre `plan_trip` sobre diez pares de paradas lejanas **sin línea directa** y
+verifica el invariante en todos los viajes de dos tramos que salgan.
+
+Tarda unos segundos (cada par es una corrida completa del planificador).
+**Lo único que hay que leer es la columna `mal`: tiene que ser 0.**
+
+```sql
+with pares as (
+    -- Pares lejanos y sin ninguna línea que los una directo: es donde el
+    -- transbordo es la única respuesta posible.
+    select st_y(o.geom::geometry) as olat, st_x(o.geom::geometry) as olng,
+           st_y(d.geom::geometry) as dlat, st_x(d.geom::geometry) as dlng,
+           o.id as o_id, d.id as d_id
+    from public.stops o
+    join public.stops d
+      on st_dwithin(o.geom, d.geom, 9000)
+     and st_distance(o.geom, d.geom) > 4000
+    where o.is_active and d.is_active
+      and not exists (
+          select 1
+          from public.route_stops a
+          join public.route_stops b
+            on b.route_variant_id = a.route_variant_id
+           and b.stop_order > a.stop_order
+          where a.stop_id = o.id and b.stop_id = d.id)
+    -- Muestra ESTABLE (no random()): dos corridas miran los mismos pares, así
+    -- que si algo falla se puede volver a ver.
+    order by md5(o.id::text || d.id::text)
+    limit 10
+),
+planes as (
+    select p.o_id, p.d_id,
+           row_number() over (partition by p.o_id, p.d_id) as opcion,
+           t.*
+    from pares p,
+         json_to_recordset(
+             public.plan_trip(p.olat, p.olng, p.dlat, p.dlng, 700, 6)
+         ) as t(leg_count int, walk_to_board_m int,
+                walk_from_alight_m int, legs json)
+),
+tramos as (
+    select o_id, d_id, opcion, leg_count, leg.ord as tramo,
+           leg.j -> 'board_stop'  ->> 'id' as sube_id,
+           leg.j -> 'alight_stop' ->> 'id' as baja_id
+    from planes,
+         lateral json_array_elements(planes.legs) with ordinality as leg(j, ord)
+),
+transbordos as (
+    select t1.baja_id as baja_tramo1, t2.sube_id as sube_tramo2
+    from tramos t1
+    join tramos t2
+      on t2.o_id = t1.o_id and t2.d_id = t1.d_id
+     and t2.opcion = t1.opcion and t2.tramo = t1.tramo + 1
+    where t1.leg_count = 2
+)
+select count(*) as transbordos_probados,
+       count(*) filter (where baja_tramo1 = sube_tramo2)               as ok,
+       count(*) filter (where baja_tramo1 is distinct from sube_tramo2) as mal
+from transbordos;
+```
+
+- `mal = 0` → el join del transbordo está bien: se baja y se sube en la MISMA
+  parada física.
+- `mal > 0` → la app está mandando gente a caminar entre dos paradas sin
+  decírselo. Es el bug más caro que puede tener el planificador.
+- `transbordos_probados = 0` → la muestra no encontró ningún viaje de dos
+  tramos. No es un aprobado: subí la caminata de 700 a 900 o el `limit` de 10
+  a 30, y si sigue en cero, mirá la consulta de cobertura de abajo.
+
+Para VER el detalle de lo que falló, la consulta de la sección anterior
+("forzar un viaje con transbordo") imprime una fila por tramo con los nombres
+de las paradas.
+
+### De paso: qué contesta el planificador y qué no
+
+Sobre la misma muestra —pero sin exigir que no haya línea directa—, cuántos
+pares se resuelven directo, cuántos con un transbordo y cuántos no se
+resuelven. Es la medición del 46% que justificó implementar el transbordo, y
+conviene rehacerla después de cada import.
+
+```sql
+with pares as (
+    select st_y(o.geom::geometry) as olat, st_x(o.geom::geometry) as olng,
+           st_y(d.geom::geometry) as dlat, st_x(d.geom::geometry) as dlng,
+           o.id as o_id, d.id as d_id
+    from public.stops o
+    join public.stops d
+      on st_dwithin(o.geom, d.geom, 9000)
+     and st_distance(o.geom, d.geom) > 3000
+    where o.is_active and d.is_active
+    order by md5(o.id::text || d.id::text)
+    limit 30
+),
+mejor as (
+    select p.o_id, p.d_id,
+           (select min(t.leg_count)
+            from json_to_recordset(
+                     public.plan_trip(p.olat, p.olng, p.dlat, p.dlng, 700, 6)
+                 ) as t(leg_count int, walk_to_board_m int,
+                        walk_from_alight_m int, legs json)
+           ) as tramos
+    from pares p
+)
+select count(*)                                      as pares,
+       count(*) filter (where tramos = 1)             as directo,
+       count(*) filter (where tramos = 2)             as con_transbordo,
+       count(*) filter (where tramos is null)         as sin_respuesta
+from mejor;
+```
+
+`sin_respuesta` alto no es necesariamente un bug: puede ser un par que de
+verdad no se resuelve con un solo transbordo (era el 13% en la medición
+original). Lo que sería una alarma es que `directo` baje de golpe entre dos
+imports: significa que se perdieron asignaciones parada↔recorrido.

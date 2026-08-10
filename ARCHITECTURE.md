@@ -480,9 +480,14 @@ publicar la política en una URL y probar el APK de release en el teléfono.
 
 0. ⚠️ **Verificar el TRANSBORDO de `plan_trip`.** El camino directo ya está
    probado contra la base (Plaza 25 de Mayo → UNNE: `leg_count 1`, 122 m +
-   128 m). El de transbordo no, y es el 46% de los viajes. Las consultas
-   están al final de `docs/planificador.md`; lo que hay que mirar es que la
-   parada de bajada del tramo 1 sea IDÉNTICA a la de subida del tramo 2.
+   128 m). El de transbordo no, y es el 46% de los viajes: la parada de bajada
+   del tramo 1 tiene que ser IDÉNTICA a la de subida del tramo 2, o la app
+   manda gente a caminar entre dos paradas sin decírselo.
+   **La consulta que lo verifica sola está al final de
+   `docs/planificador.md`** ("Verificación AUTOMÁTICA del transbordo"): se pega
+   en el SQL Editor y devuelve una fila; alcanza con que la columna `mal` sea
+   0. Es lo único que queda sin verificar de la v1 y no se puede hacer desde el
+   código: hay que correrlo contra la base.
 1. **Horarios**: sigue sin fuente pública, pero ya hay puente — se
    transcriben a mano en `supabase/seed/horarios/*.txt` y
    `tools/schedules_import.dart` emite el SQL (ver `docs/horarios.md`).
