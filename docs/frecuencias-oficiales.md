@@ -71,13 +71,30 @@ Los cuadros horarios reales existen, pero **los aprueba la CNRT y no los
 publica**. Eso refuerza el pedido de `docs/propuesta-datos-abiertos.md`: lo que
 falta no es que el dato exista, es que sea abierto.
 
-### Lo que sí se puede mostrar
+### Lo que sí se puede mostrar — y ya se muestra
 
 La banda, **citada y fechada**, como respuesta a "¿cada cuánto pasa?" cuando no
 hay horarios cargados. Es verificable, tiene fuente y es honesta:
 
 > Frecuencia regulada: 1 servicio cada 10 a 12 minutos en hora pico.
 > Fuente: Anexo II, Resolución 141/2017 — condición del permiso de ERSA.
+
+**Implementado.** Los números viven en
+`lib/features/transit/domain/entities/service_frequency.dart` (tabla en código,
+por la misma razón que la tarifa: la cache es cache-first y un dato nuevo en la
+base no le llegaría a quien ya abrió la app) y se dibujan con `FrequencyRow`:
+
+- en la **pantalla de horarios**, arriba de la lista y no dentro, para que se
+  vea justamente cuando la lista está vacía. Ahí el cartel del vacío cambia de
+  "todavía no tenemos los horarios" a "no hay tabla de horarios · las horas las
+  aprueba la CNRT y no se publican", que es la verdad más precisa;
+- en el **resumen del viaje**, solo en los directos.
+
+Tocando el renglón se abre la explicación completa: que es una obligación y no
+una medición, que no define qué horas son "pico", y la resolución citada.
+Los tests están en `test/features/transit/domain/entities/service_frequency_test.dart`
+y clavan los números contra este documento: si alguien los cambia sin cambiar
+acá, fallan.
 
 ## De yapa: el documento oficial confirma nuestros ramales
 

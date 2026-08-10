@@ -31,6 +31,18 @@ const _variant = RouteVariant(
   isActive: true,
 );
 
+/// El 904C, que SÍ tiene frecuencia regulada (Anexo II de la Res. 141/2017).
+const _line904c = BusLine(
+  id: 'l1',
+  code: '904C',
+  name: '904 por Barranqueras',
+  colorHex: '#1E88E5',
+  network: TransitNetwork(
+    code: 'interurbano-chaco-corrientes',
+    name: 'Chaco ↔ Corrientes',
+  ),
+);
+
 const _weekdaySchedules = [
   Schedule(
     id: 'a',
@@ -229,6 +241,85 @@ void main() {
     expect(find.text('06:00'), findsOneWidget);
     expect(calls, 2);
     await _unmount(tester);
+  });
+
+  group('frecuencia regulada', () {
+    testWidgets('sin horarios, el 904C igual contesta cada cuánto pasa', (
+      tester,
+    ) async {
+      // Es el caso que esto vino a resolver: la pantalla decía "todavía no
+      // tenemos los horarios" teniendo la banda del pliego a mano.
+      final repo = _MockRepo();
+      when(
+        () =>
+            repo.getSchedules(routeVariantId: 'rv1', dayType: DayType.weekday),
+      ).thenAnswer((_) async => const Right(<Schedule>[]));
+
+      final container = _makeContainer(repo);
+      container.read(selectedLineProvider.notifier).select(_line904c);
+      container.read(selectedRouteVariantProvider.notifier).select(_variant);
+
+      await tester.pumpWidget(_app(container));
+      await tester.pumpAndSettle();
+
+      expect(find.text('cada 12 a 15 min'), findsOneWidget);
+      // "regulada" no es un adorno: sin esa palabra el número se lee como una
+      // promesa de que viene uno cada 12 minutos.
+      expect(find.text('frecuencia regulada en hora pico'), findsOneWidget);
+      // Y el cartel del vacío NO se contradice con el renglón de arriba.
+      expect(find.text('No hay tabla de horarios'), findsOneWidget);
+      expect(find.textContaining('CNRT'), findsOneWidget);
+      await _unmount(tester);
+    });
+
+    testWidgets('tocarla explica que es una obligación, no una medición', (
+      tester,
+    ) async {
+      final repo = _MockRepo();
+      when(
+        () =>
+            repo.getSchedules(routeVariantId: 'rv1', dayType: DayType.weekday),
+      ).thenAnswer((_) async => const Right(<Schedule>[]));
+
+      final container = _makeContainer(repo);
+      container.read(selectedLineProvider.notifier).select(_line904c);
+      container.read(selectedRouteVariantProvider.notifier).select(_variant);
+
+      await tester.pumpWidget(_app(container));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('cada 12 a 15 min'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('obligada a cumplir'), findsOneWidget);
+      expect(
+        find.textContaining('Anexo II de la Res. 141/2017'),
+        findsOneWidget,
+      );
+      await _unmount(tester);
+    });
+
+    testWidgets('una línea sin banda no muestra nada inventado', (
+      tester,
+    ) async {
+      final repo = _MockRepo();
+      when(
+        () =>
+            repo.getSchedules(routeVariantId: 'rv1', dayType: DayType.weekday),
+      ).thenAnswer((_) async => const Right(<Schedule>[]));
+
+      final container = _makeContainer(repo);
+      // La 3 del Gran Resistencia: ninguna norma publicada fija su intervalo.
+      container.read(selectedLineProvider.notifier).select(_line);
+      container.read(selectedRouteVariantProvider.notifier).select(_variant);
+
+      await tester.pumpWidget(_app(container));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('frecuencia regulada'), findsNothing);
+      expect(find.text('Todavía no tenemos los horarios'), findsOneWidget);
+      await _unmount(tester);
+    });
   });
 
   testWidgets('sin salidas restantes hoy muestra el aviso y nada resaltado', (

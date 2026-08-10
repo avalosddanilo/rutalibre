@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../../app/widgets/staggered_in.dart';
 import '../../domain/entities/fare.dart';
+import '../../domain/entities/service_frequency.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../../domain/entities/walk_estimate.dart';
 import '../providers/trip_providers.dart';
@@ -424,9 +425,10 @@ String _meters(double meters) {
 /// **Lo que NO dice, y es lo que más se extraña: cuánto tarda.** Google Maps
 /// pone "25 min" porque sabe a qué velocidad va el colectivo y cada cuánto
 /// pasa. Nosotros no tenemos ninguna de las dos cosas —hay horarios de UNA
-/// línea de 32 y ninguna frecuencia confirmada—, así que un tiempo total
-/// sería un número inventado con cara de dato. Se dice lo que sí se sabe:
-/// los metros son reales, las paradas las cuenta la base y la tarifa tiene
+/// línea de 32, y frecuencia regulada de tres ramales del 904, que además es
+/// una obligación y no una medición—, así que un tiempo total sería un número
+/// inventado con cara de dato. Se dice lo que sí se sabe: los metros son
+/// reales, las paradas las cuenta la base, y la tarifa y la frecuencia tienen
 /// fecha y fuente.
 ///
 /// La suma de tarifas es el dato que nadie te avisa: **con transbordo pagás
@@ -463,6 +465,18 @@ class _TripSummary extends StatelessWidget {
     return Fare(amount: amount, validFrom: oldest, source: source);
   }
 
+  /// La frecuencia regulada, **solo en viajes directos**.
+  ///
+  /// Con transbordo hay dos líneas y dos bandas distintas (o una sola, que es
+  /// peor): un "cada 12 a 15 min" suelto al lado de dos números de línea no
+  /// dice de cuál de los dos habla. Y la espera de un viaje con transbordo no
+  /// es ninguna de las dos bandas, es la suma de dos esperas.
+  ServiceFrequency? get _frequency {
+    if (!plan.isDirect) return null;
+    final leg = plan.legs.single;
+    return frequencyFor(networkCode: leg.networkCode, lineCode: leg.lineCode);
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -472,6 +486,7 @@ class _TripSummary extends StatelessWidget {
     final walk = WalkEstimate(meters: plan.walkTotalMeters);
     final stops = plan.totalStopCount;
     final total = _total;
+    final frequency = _frequency;
 
     return DefaultTextStyle.merge(
       style: style,
@@ -497,6 +512,15 @@ class _TripSummary extends StatelessWidget {
                   ? total.formattedAmount
                   : '${total.formattedAmount} (2 boletos)',
               emphasis: !plan.isDirect,
+            ),
+          // Cada cuánto pasa, cuando la norma lo fija. Es lo más cerca de
+          // "cuánto vas a esperar" que se puede decir sin inventar, y acá
+          // llega el que nunca abre la pantalla de horarios. "En hora pico"
+          // no se abrevia: sin eso el número promete todo el día.
+          if (frequency != null)
+            _SummaryBit(
+              icon: Icons.av_timer,
+              text: '${frequency.shortBand} en hora pico',
             ),
         ],
       ),

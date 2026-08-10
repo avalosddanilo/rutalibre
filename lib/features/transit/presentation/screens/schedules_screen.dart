@@ -8,10 +8,12 @@ import '../../../../app/widgets/staggered_in.dart';
 import '../../../../core/providers/clock_provider.dart';
 import '../../domain/entities/fare.dart';
 import '../../domain/entities/schedule.dart';
+import '../../domain/entities/service_frequency.dart';
 import '../providers/transit_providers.dart';
 import '../utils/day_type_resolver.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
+import '../widgets/frequency_notice.dart';
 
 /// Tabla de horarios del recorrido seleccionado, por tipo de día.
 ///
@@ -79,6 +81,12 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
 
     final args = (routeVariantId: variant.id, dayType: dayType);
     final schedulesAsync = ref.watch(schedulesProvider(args));
+    // Se resuelve una vez: la usan el renglón de arriba y el cartel de "no
+    // tenemos horarios", que necesita saber si arriba hay algo o no para no
+    // contradecirlo.
+    final frequency = line == null
+        ? null
+        : frequencyFor(networkCode: line.network.code, lineCode: line.code);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,13 +107,20 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
           // La tarifa de ESTA línea, que no siempre es la de su red: el 904A
           // sale un 55% más que sus hermanos. Acá se puede dar el número
           // exacto porque la pantalla ya es de una línea sola.
-          if (line != null)
+          if (line != null) ...[
             _FareRow(
               fare: fareFor(
                 networkCode: line.network.code,
                 lineCode: line.code,
               ),
             ),
+            // Y cada cuánto tiene que pasar. Va ACÁ arriba y no dentro de la
+            // lista de horarios porque tiene que verse justamente cuando la
+            // lista está vacía: para el 904B y el 904C es lo único que
+            // contesta "¿cuándo pasa?", y hasta ahora la pantalla decía
+            // "todavía no tenemos los horarios" teniendo el dato a mano.
+            FrequencyRow(frequency: frequency),
+          ],
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
             child: SegmentedButton<DayType>(
@@ -148,6 +163,7 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
                 // Resaltar "próxima salida" solo tiene sentido si se está
                 // mirando el tipo de día de HOY.
                 now: dayType == todayType ? now : null,
+                hasRegulatedFrequency: frequency != null,
               ),
             ),
           ),
@@ -283,13 +299,24 @@ class _UnverifiedNotice extends StatelessWidget {
 }
 
 class _ScheduleList extends StatelessWidget {
-  const _ScheduleList({required this.schedules, required this.now});
+  const _ScheduleList({
+    required this.schedules,
+    required this.now,
+    this.hasRegulatedFrequency = false,
+  });
 
   final List<Schedule> schedules;
 
   /// Momento actual, o null si la lista no corresponde al día de hoy
   /// (en ese caso no se resalta ninguna salida).
   final DateTime? now;
+
+  /// Si arriba hay un renglón de frecuencia regulada.
+  ///
+  /// Cambia el cartel de "no tenemos horarios": decir "no sabemos cuándo pasa"
+  /// tres centímetros abajo de "cada 12 minutos en hora pico" se lee como que
+  /// la app se contradice.
+  final bool hasRegulatedFrequency;
 
   @override
   Widget build(BuildContext context) {
@@ -310,15 +337,21 @@ class _ScheduleList extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Todavía no tenemos los horarios',
+                hasRegulatedFrequency
+                    ? 'No hay tabla de horarios'
+                    : 'Todavía no tenemos los horarios',
                 style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'Los recorridos y las paradas los mapeó la comunidad, pero '
-                'los horarios no están publicados por ninguna fuente '
-                'abierta. Estamos gestionando el acceso.',
+                hasRegulatedFrequency
+                    ? 'Las horas exactas de salida las aprueba la CNRT y no '
+                          'se publican. Lo que sí es oficial es la frecuencia '
+                          'de arriba: cada cuánto tiene que pasar.'
+                    : 'Los recorridos y las paradas los mapeó la comunidad, '
+                          'pero los horarios no están publicados por ninguna '
+                          'fuente abierta. Estamos gestionando el acceso.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),

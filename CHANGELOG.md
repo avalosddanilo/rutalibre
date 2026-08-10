@@ -82,6 +82,16 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   las empresas y no están verificados con ellas.
 - Cargados los de la **904A** (Terminal Resistencia ↔ Campus UNNE Corrientes).
   El resto de las líneas todavía no tiene horarios: no hay fuente pública.
+- **"Cada cuánto pasa"** en los tres ramales del 904, con la norma al lado: el
+  pliego que rige el permiso de la línea fija un servicio cada 50 a 100 minutos
+  en el ramal A, cada 10 a 12 en el B y cada 12 a 15 en el C, en hora pico.
+  Es lo único oficial que existe sobre cuándo pasa el colectivo, y se muestra
+  por lo que es: **una obligación de la empresa, no una medición de la calle**,
+  y no un horario — no dice a qué hora sale el primero ni qué horas son "pico",
+  que la norma no define. Tocándolo se explica entero, con la resolución citada.
+  Para las otras 29 líneas no se muestra nada: no hay norma publicada y
+  estimarla por el largo del recorrido sería inventar un horario con otro
+  nombre.
 
 ### Otras
 

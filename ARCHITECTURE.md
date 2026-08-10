@@ -495,7 +495,11 @@ publicar la política en una URL y probar el APK de release en el teléfono.
    ramal. Está en `docs/frecuencias-oficiales.md`, con las tres erratas que
    trae el original. **No se convierte en `schedules`** —una banda dice cada
    cuánto, nunca a qué hora— pero sirve para contestar "¿cada cuánto pasa?"
-   citando la fuente. Los cuadros horarios reales los aprueba la CNRT y no
+   citando la fuente, y **ya se muestra**: `ServiceFrequency` (domain, tabla en
+   código por la misma razón que `Fare`) + `FrequencyRow`, en la pantalla de
+   horarios —arriba de la lista, para que se vea cuando la lista está vacía— y
+   como un dato más del resumen del viaje, solo en viajes DIRECTOS: con
+   transbordo una banda suelta no dice de cuál de las dos líneas habla. Los cuadros horarios reales los aprueba la CNRT y no
    los publica: ese es el dato que falta, y existe.
    El cambio de esquema más valioso que queda es `route_stop_times`: hoy se
    guarda solo la salida de cabecera, y quien espera en una parada del medio
