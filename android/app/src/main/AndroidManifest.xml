@@ -56,5 +56,16 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <!-- Para abrir el nodo de la parada en OpenStreetMap (url_launcher).
+             Desde Android 11 una app no VE las otras a menos que las declare
+             acá; sin esto, cualquier consulta de "¿hay con qué abrir esto?"
+             contesta que no aunque el teléfono tenga Chrome instalado.
+             NO es un permiso: no agrega nada a lo que la app pide al usuario
+             (la ficha de Play sigue declarando solo los tres de siempre).
+             url_launcher_android no lo trae en su propio manifest. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
     </queries>
 </manifest>

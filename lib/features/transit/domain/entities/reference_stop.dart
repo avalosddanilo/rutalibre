@@ -22,6 +22,7 @@ class ReferenceStop extends Equatable {
     required this.lat,
     required this.lng,
     required this.lines,
+    this.osmNodeId,
   });
 
   /// La esquina, derivada del callejero. En OSM estas paradas no tienen
@@ -34,6 +35,12 @@ class ReferenceStop extends Equatable {
   /// Los códigos de línea que paran acá, tal como los declara OpenStreetMap.
   final List<String> lines;
 
+  /// El nodo de OSM del que salió. Ver `Stop.osmNodeId`: acá pesa todavía más
+  /// porque estas paradas no las verifica nadie más que quien las use.
+  ///
+  /// Nullable solo por las versiones viejas del asset (`v: 1` no lo traía).
+  final int? osmNodeId;
+
   @override
-  List<Object?> get props => [name, lat, lng, lines];
+  List<Object?> get props => [name, lat, lng, lines, osmNodeId];
 }

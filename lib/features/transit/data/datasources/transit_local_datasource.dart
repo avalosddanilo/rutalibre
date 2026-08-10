@@ -73,7 +73,13 @@ final class SharedPrefsTransitLocalDataSource
   // técnicamente una cache v3 no rompe — pero se degrada justo en lo que la
   // versión nueva vino a arreglar: el buscador seguiría sin encontrar
   // "Sarmiento" hasta que la cache venciera sola. Se descarta y listo.
-  static const _prefix = 'ruta_libre_cache_v4';
+  //
+  // v5: las paradas traen `osm_node_id` (migración 0010). Misma razón que la
+  // v4, y acá es peor: la cache de paradas NUNCA vence sola —`getStopsForRoute`
+  // y `getAllStops` no vuelven a la red si tienen datos—, así que sin subir la
+  // versión el enlace para corregir la parada en OSM no aparecería nunca en un
+  // teléfono que ya abrió la app.
+  static const _prefix = 'ruta_libre_cache_v5';
 
   static const _linesKey = '$_prefix/lines';
 

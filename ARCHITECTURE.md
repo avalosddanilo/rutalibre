@@ -207,6 +207,9 @@ flutter pub get
 #    supabase/migrations/0008_all_stops.sql             (buscador de destino)
 #    supabase/migrations/0009_line_destinations_and_networks.sql
 #                                        (destinos buscables + parte el interurbano)
+#    supabase/migrations/0010_stop_osm_node_id.sql
+#                                        (el nodo de OSM llega al cliente:
+#                                         habilita "corregí esta parada")
 #    supabase/seed/seed_gran_resistencia.sql       (datos REALES, ~815 KB)
 #    supabase/seed/seed_corrientes.sql             (Corrientes capital)
 #    supabase/seed/seed_horarios.sql               (DESPUÉS de los recorridos)
@@ -516,12 +519,20 @@ publicar la política en una URL y probar el APK de release en el teléfono.
    baja de paradas sin recorrido limpian lo que se puede deducir de los
    datos, pero una parada que se levantó y OSM todavía tiene mapeada es
    indistinguible de una vigente. Dos caminos, ninguno automatizable:
-   (a) corregirlo en OSM y reimportar — se puede acortar mucho poniendo en
-   `StopDetailsSheet` un enlace a `openstreetmap.org/node/<osm_node_id>`
-   (requiere subir `osm_node_id` hasta la entidad `Stop` y **volver a
-   agregar `url_launcher`**, que se sacó del pubspec al quitar el 911 — era
-   su único uso);
-   (b) reportes de usuarios, que es Fase 2.
+   (a) ~~corregirlo en OSM y reimportar~~ — **el enlace ya está**:
+   `OsmStopLink` abre `openstreetmap.org/node/<osm_node_id>` desde la hoja de
+   la parada y desde la de Corrientes. Lo que queda es humano: alguien tiene
+   que corregir OSM y después hay que **reimportar** (`dart run
+   tools/osm_import.dart` y aplicar el seed nuevo), que sigue siendo a mano.
+   Tres cosas del camino: el `osm_node_id` sale de los RPCs recién con la
+   **migración 0010** —sin ella el enlace no aparece y la app se comporta
+   como antes—; la **cache subió a v5** porque la de paradas nunca vence sola
+   y el campo nuevo no llegaría jamás a un teléfono que ya abrió la app; y
+   `url_launcher` volvió al pubspec (se había ido con el botón del 911).
+   Las paradas de Corrientes llevan el nodo en el asset (`v: 2`), sin base de
+   por medio;
+   (b) reportes de usuarios, que es Fase 2. Sigue pendiente, y es lo que
+   cierra el círculo sin depender de que el usuario tenga cuenta en OSM.
 4. ~~**Tarifa**~~ — **hecho**. Ver `domain/entities/fare.dart`. Tres cosas que
    se aprendieron haciéndolo y conviene no re-descubrir:
    (a) el número que estaba anotado acá —"$1899 agosto 2026"— **era falso**:

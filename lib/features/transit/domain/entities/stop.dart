@@ -16,6 +16,7 @@ class Stop extends Equatable {
     required this.lat,
     required this.lng,
     this.description,
+    this.osmNodeId,
   });
 
   final String id;
@@ -32,6 +33,19 @@ class Stop extends Equatable {
   /// Longitud en grados decimales, WGS84 (rango válido: -180 a 180).
   final double lng;
 
+  /// El nodo de OpenStreetMap del que salió esta parada, si se sabe.
+  ///
+  /// **Para qué sirve tener un id de otra base acá.** Una parada que se
+  /// levantó en la realidad pero que OSM todavía mapea es indistinguible de
+  /// una vigente: no hay dato nuestro que lo delate. Lo único que lo arregla
+  /// es corregir OSM, y con el nodo a mano eso pasa de "encontrala en el
+  /// editor" a un toque desde la parada que uno está mirando.
+  ///
+  /// Nullable porque puede faltar por dos razones distintas y las dos son
+  /// normales: la base todavía no corrió la migración 0010, o la parada llegó
+  /// por un camino que no lo trae. Sin él la app se comporta como antes.
+  final int? osmNodeId;
+
   @override
-  List<Object?> get props => [id, name, description, lat, lng];
+  List<Object?> get props => [id, name, description, lat, lng, osmNodeId];
 }

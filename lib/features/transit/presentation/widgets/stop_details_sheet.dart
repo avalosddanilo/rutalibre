@@ -13,6 +13,7 @@ import '../providers/user_prefs_providers.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
 import 'line_badge.dart';
+import 'osm_stop_link.dart';
 import 'place_search_sheet.dart';
 
 /// "A 350 m · unos 6 min caminando", desde donde está el usuario.
@@ -381,6 +382,14 @@ class StopDetailsSheet extends ConsumerWidget {
                 },
               ),
             ),
+            // Afuera del `Flexible` a propósito: así se ve también cuando la
+            // lista está vacía o falló, que es justo cuando más sirve —una
+            // parada de la que no sabemos ninguna línea es la primera
+            // candidata a no existir más.
+            if (stop.osmNodeId case final nodeId?) ...[
+              const Divider(height: 1),
+              OsmStopLink(osmNodeId: nodeId),
+            ],
           ],
         ),
       ),

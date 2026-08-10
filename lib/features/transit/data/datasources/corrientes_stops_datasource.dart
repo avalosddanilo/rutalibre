@@ -48,6 +48,10 @@ final class AssetCorrientesStopsDataSource
               lat: lat.toDouble(),
               lng: lng.toDouble(),
               lines: [for (final line in lines) '$line'],
+              // Fuera del patrón porque es OPCIONAL: el asset v1 no traía el
+              // nodo, y pedirlo en el patrón haría que un asset viejo se
+              // parseara como cero paradas en vez de como paradas sin enlace.
+              osmNodeId: (row['i'] as num?)?.toInt(),
             ),
       ];
     } catch (e) {

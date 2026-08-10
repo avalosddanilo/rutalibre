@@ -128,10 +128,14 @@ CorrientesStopsResult buildCorrientesStops(
 /// El JSON que se empaqueta con la app. Claves de una letra por lo mismo que
 /// en los lugares: el archivo se lee entero en memoria.
 Map<String, Object?> encodeCorrientesStops(List<ReferenceStop> stops) => {
-  'v': 1,
+  // v2: se agrega `i`, el nodo de OSM. Es lo que permite ofrecer "corregila
+  // en OpenStreetMap" desde la parada: estas 254 salen todas de un nodo real
+  // y son justamente las que nadie más va a verificar.
+  'v': 2,
   's': [
     for (final stop in stops)
       {
+        'i': stop.osmId,
         'n': stop.name,
         'y': double.parse(stop.lat.toStringAsFixed(5)),
         'x': double.parse(stop.lng.toStringAsFixed(5)),

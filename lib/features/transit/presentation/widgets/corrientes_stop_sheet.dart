@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../domain/entities/reference_stop.dart';
 import 'line_badge.dart';
+import 'osm_stop_link.dart';
 
 /// Qué líneas paran en una parada de Corrientes capital.
 ///
@@ -78,6 +79,18 @@ class CorrientesStopSheet extends StatelessWidget {
                 ),
               ],
             ),
+            // Acá el enlace pesa más que en el Gran Resistencia: estas 254
+            // paradas no las cruza ningún recorrido nuestro, así que si una no
+            // existe más, el único que se puede dar cuenta es quien esté
+            // parado en la esquina mirando esta hoja.
+            if (stop.osmNodeId case final nodeId?)
+              // El tile trae su propio relleno horizontal y esta hoja ya pone
+              // 20: se lo saca para que el enlace no quede indentado respecto
+              // de todo lo demás.
+              ListTileTheme(
+                data: const ListTileThemeData(contentPadding: EdgeInsets.zero),
+                child: OsmStopLink(osmNodeId: nodeId, explainSource: false),
+              ),
           ],
         ),
       ),

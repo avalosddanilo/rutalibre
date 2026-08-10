@@ -45,6 +45,10 @@ dependencies:
   geolocator: ^14.0.3
   share_plus: ^13.3.0
   http: ^1.6.0
+  # Vuelve, y esta vez por algo que solo se puede hacer afuera de la app:
+  # abrir el nodo de la parada en OpenStreetMap para corregirlo. (Se había
+  # sacado al quitar el botón del 911, que era su único uso.)
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

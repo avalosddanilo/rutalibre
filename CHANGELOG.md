@@ -66,6 +66,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - **"A cuánto llego caminando"** desde tu ubicación, con distancia y tiempo
   estimado.
 - **"¿Cómo llego acá?"** para planificar el viaje hasta esa parada.
+- **"¿Ya no existe, o está en otra esquina?"**: un enlace al nodo de la parada
+  en OpenStreetMap. Es la única forma real de arreglar una parada que se
+  levantó y el mapa todavía dibuja: ningún dato nuestro la distingue de una
+  vigente, así que se dice de dónde sale y se deja el camino abierto para
+  corregirla. También en las paradas de Corrientes, donde pesa más porque no
+  las cruza ningún recorrido nuestro.
 - **Cerca mío** por GPS, con la distancia real calculada en el servidor.
 
 ### Horarios
@@ -125,7 +131,9 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   circulan, y sin la red completa la respuesta sería adivinada. Los 12 códigos
   que faltan están pedidos en `docs/mails-para-mandar.md`.
 - Las paradas que ya no existen en la realidad pero OSM todavía mapea son
-  indistinguibles de las vigentes.
+  indistinguibles de las vigentes. Ahora se pueden corregir en OSM desde la
+  app, pero el cambio recién se ve cuando reimportamos los datos: no hay
+  reportes dentro de la app todavía.
 - Los tiles del mapa se ven claros también en modo oscuro.
 
 [1.0.0]: https://github.com/rutalibre/rutalibre/releases/tag/v1.0.0

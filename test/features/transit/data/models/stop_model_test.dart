@@ -36,8 +36,36 @@ void main() {
         lat: -27.1,
         lng: -58.2,
         description: 'x',
+        osmNodeId: 1234567890,
       );
       expect(StopModel.fromJson(model.toJson()), model);
+    });
+
+    test('lee el nodo de OSM que agrega la migración 0010', () {
+      final model = StopModel.fromJson({
+        'id': 's4',
+        'name': 'Ameghino y French',
+        'description': null,
+        'osm_node_id': 2286343843,
+        'lat': -27.45,
+        'lng': -58.98,
+      });
+      expect(model.osmNodeId, 2286343843);
+    });
+
+    test('sin osm_node_id NO rompe: queda en null', () {
+      // Pasa en dos casos reales y los dos tienen que andar: una base a la que
+      // todavía no le corrieron la 0010, y una cache escrita por una versión
+      // vieja de la app. Quedarse sin el enlace a OSM es aceptable; quedarse
+      // sin paradas no.
+      final model = StopModel.fromJson({
+        'id': 's5',
+        'name': 'Terminal',
+        'description': null,
+        'lat': -27.45,
+        'lng': -58.98,
+      });
+      expect(model.osmNodeId, isNull);
     });
   });
 }

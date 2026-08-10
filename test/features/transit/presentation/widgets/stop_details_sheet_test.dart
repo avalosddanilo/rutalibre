@@ -21,6 +21,15 @@ const _stop = Stop(
   lng: -58.9865,
 );
 
+/// La misma parada como la devuelve una base con la migración 0010 aplicada.
+const _stopConNodo = Stop(
+  id: 's1',
+  name: 'Ameghino y Sáenz Peña',
+  lat: -27.4519,
+  lng: -58.9865,
+  osmNodeId: 2286343843,
+);
+
 const _routes = [
   RouteAtStop(
     lineId: 'l3',
@@ -92,5 +101,54 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(container.read(selectedStopProvider), _stop);
+  });
+
+  group('enlace a OpenStreetMap', () {
+    Future<void> pump(WidgetTester tester, Stop stop) async {
+      final container = ProviderContainer(
+        overrides: [
+          transitRepositoryProvider.overrideWithValue(repo),
+          sharedPreferencesProvider.overrideWithValue(prefs),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: Consumer(
+              builder: (context, ref, _) => Scaffold(
+                body: Center(
+                  child: ElevatedButton(
+                    onPressed: () =>
+                        StopDetailsSheet.show(context, ref, stop: stop),
+                    child: const Text('abrir'),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('abrir'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('con el nodo, la hoja ofrece corregir la parada', (
+      tester,
+    ) async {
+      await pump(tester, _stopConNodo);
+      expect(find.text('Ver esta parada en OpenStreetMap'), findsOneWidget);
+    });
+
+    testWidgets('sin el nodo no hay enlace: no habría a dónde llevar a nadie', (
+      tester,
+    ) async {
+      // Pasa con una base sin la migración 0010. La hoja tiene que verse
+      // exactamente como antes, no con un enlace roto.
+      await pump(tester, _stop);
+      expect(find.text('Ver esta parada en OpenStreetMap'), findsNothing);
+    });
   });
 }

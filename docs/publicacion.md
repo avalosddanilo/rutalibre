@@ -30,6 +30,12 @@ a propósito.
 - **No hay ubicación en segundo plano**, y no la va a haber: es lo que
   dispararía una revisión extra de Google con video justificativo.
 
+> El manifest declara además un bloque `<queries>` con `VIEW` sobre `https`,
+> para abrir el nodo de la parada en OpenStreetMap. **No es un permiso** y no
+> cambia nada de lo que hay que declarar en la ficha: `<queries>` solo dice qué
+> apps de otros puede VER la nuestra, que es lo que Android 11+ exige para
+> abrir un enlace. Los permisos siguen siendo tres.
+
 ---
 
 ## 2. Generar el keystore — **lo hacés vos**

@@ -14,6 +14,7 @@ final class StopModel extends Stop {
     required super.lat,
     required super.lng,
     super.description,
+    super.osmNodeId,
   });
 
   factory StopModel.fromJson(Map<String, dynamic> json) => StopModel(
@@ -24,6 +25,10 @@ final class StopModel extends Stop {
     // enteros exactos (ej: lat = -27.0) y el cast directo a double explota.
     lat: (json['lat'] as num).toDouble(),
     lng: (json['lng'] as num).toDouble(),
+    // Ausente ANTES de la migración 0010, y ausente en cualquier cache
+    // escrita por una versión vieja de la app. Que falte no puede romper el
+    // parseo: sería cambiar "no hay enlace a OSM" por "no hay paradas".
+    osmNodeId: (json['osm_node_id'] as num?)?.toInt(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,5 +37,6 @@ final class StopModel extends Stop {
     'description': description,
     'lat': lat,
     'lng': lng,
+    'osm_node_id': osmNodeId,
   };
 }
