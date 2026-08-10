@@ -576,8 +576,23 @@ publicar la política en una URL y probar el APK de release en el teléfono.
    (d) el GPS que falla ya no termina en un snackbar: abre este buscador. Vale
    para el CTA del panel y para "¿cómo llego acá?" del detalle de parada, que
    eran los dos lugares donde negar el permiso dejaba a la app sin contestar.
-7. **Avisar cuando los datos son guardados**: toda la app es cache-first, así
-   que sin señal se sigue viendo todo — pero no se sabe que es una copia.
+7. ~~**Avisar cuando los datos son guardados**~~ — **hecho**, y en el camino
+   apareció algo peor que lo que se venía a arreglar: **la cache no se
+   refrescaba NUNCA**. `_cacheFirst` devuelve lo guardado sin mirar la red, así
+   que un recorrido corregido en la base no le llegaba a nadie que ya hubiera
+   abierto la app hasta publicar una versión con la versión de la cache subida.
+   Ahora hay dos cosas:
+   (a) cada escritura de la cache deja una marca de cuándo fue
+   (`TransitLocalDataSource.lastSyncedAt`), y el pie del panel de líneas dice
+   "Datos guardados en el teléfono · hoy / ayer / 28/7/2026". No se intenta
+   adivinar el estado de la red: eso pediría un plugin de conectividad para
+   contestar algo que da igual —los datos están guardados, haya señal o no—;
+   (b) `_cacheFirst` hace **stale-while-revalidate** con `cacheTtl` de 7 días:
+   devuelve la copia al instante (el arranque no se negocia) y si está vieja
+   dispara un refresco de fondo que no se await-ea y que se traga todos los
+   errores. Sin marca de sincronización se considera FRESCA a propósito: no
+   sabemos de cuándo es y salir a la red por las dudas sería una consulta que
+   nadie pidió.
 8. Feriados trasladables: tabla `holidays` en Supabase (reemplaza la lista
    fija de `day_type_resolver.dart` sin tocar pantallas).
 9. Widget tests de MapScreen (requieren mockear tiles — evaluar

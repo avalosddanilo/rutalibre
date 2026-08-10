@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/providers/clock_provider.dart';
 import '../../../../core/providers/shared_preferences_provider.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../data/datasources/corrientes_stops_datasource.dart';
@@ -60,14 +61,18 @@ final transitRemoteDataSourceProvider = Provider<TransitRemoteDataSource>(
 );
 
 final transitLocalDataSourceProvider = Provider<TransitLocalDataSource>(
-  (ref) =>
-      SharedPrefsTransitLocalDataSource(ref.watch(sharedPreferencesProvider)),
+  (ref) => SharedPrefsTransitLocalDataSource(
+    ref.watch(sharedPreferencesProvider),
+    now: ref.watch(clockProvider),
+  ),
 );
 
 final transitRepositoryProvider = Provider<TransitRepository>(
   (ref) => TransitRepositoryImpl(
     remoteDataSource: ref.watch(transitRemoteDataSourceProvider),
     localDataSource: ref.watch(transitLocalDataSourceProvider),
+    // El mismo reloj que el resto de la app: decide si la cache está vieja.
+    now: ref.watch(clockProvider),
   ),
 );
 
@@ -262,6 +267,14 @@ final allStopsProvider = FutureProvider<List<Stop>>((ref) async {
   final result = await ref.watch(getAllStopsProvider)(const NoParams());
   return result.fold((failure) => throw failure, (stops) => stops);
 });
+
+/// De cuándo son los datos guardados en el teléfono, o null si no se sabe.
+///
+/// Alimenta el pie del panel de líneas. `null` es normal en el primer arranque:
+/// todavía no se escribió nada en la cache.
+final lastSyncProvider = FutureProvider<DateTime?>(
+  (ref) => ref.watch(transitLocalDataSourceProvider).lastSyncedAt(),
+);
 
 final linesProvider = FutureProvider<List<BusLine>>((ref) async {
   final result = await ref.watch(getLinesProvider)(const NoParams());

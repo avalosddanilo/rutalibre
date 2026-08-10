@@ -118,7 +118,14 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   no existe. Si no llueve, el chip no aparece.
 - Modo oscuro.
 - **Arranque instantáneo**: todo lo estático se guarda en el teléfono, así que
-  a partir de la segunda vez la app abre sin esperar la red.
+  a partir de la segunda vez la app abre sin esperar la red. Y **dice de cuándo
+  son esos datos** al pie del panel: es lo que hace que la app ande sin señal,
+  pero también significa que lo que estás mirando puede tener semanas, y sin la
+  fecha un recorrido viejo y uno de hoy se ven igual.
+- Lo guardado **se refresca solo** cuando pasa una semana: se sigue mostrando la
+  copia al instante y la actualización baja de fondo para la próxima vez. Antes
+  la copia no se renovaba nunca, así que corregir un dato exigía publicar una
+  versión de la app.
 
 ### Datos
 

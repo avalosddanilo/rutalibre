@@ -42,6 +42,18 @@ abstract interface class TransitLocalDataSource {
     required DayType dayType,
     required List<ScheduleModel> schedules,
   });
+
+  /// Cuándo se escribió por última vez algo en la cache, o null si nunca.
+  ///
+  /// Existe para dos cosas: poder DECIRLE al usuario de cuándo son los datos
+  /// que está mirando —toda la app es cache-first, así que sin esto no hay
+  /// forma de saber si son de hoy o de hace un mes— y para que el repositorio
+  /// sepa cuándo conviene refrescarlos.
+  ///
+  /// Es una sola marca para toda la cache y no una por clave: los datos
+  /// estáticos se bajan todos alrededor del mismo momento, y una marca por
+  /// entrada sería más precisa sin cambiar ninguna decisión.
+  Future<DateTime?> lastSyncedAt();
 }
 
 /// Implementación sobre `shared_preferences`: cada lista se guarda como un
@@ -53,9 +65,16 @@ abstract interface class TransitLocalDataSource {
 /// esta clase, el resto de la app no se entera.
 final class SharedPrefsTransitLocalDataSource
     implements TransitLocalDataSource {
-  const SharedPrefsTransitLocalDataSource(this._prefs);
+  const SharedPrefsTransitLocalDataSource(
+    this._prefs, {
+    DateTime Function()? now,
+  }) : _now = now ?? DateTime.now;
 
   final SharedPreferences _prefs;
+
+  /// Reloj inyectable: la marca de sincronización se escribe con esto, así
+  /// que los tests pueden fijar la fecha en vez de depender de cuándo corren.
+  final DateTime Function() _now;
 
   /// Versionar la clave permite invalidar TODA la cache vieja en un update
   /// de la app cambiando el número (las claves huérfanas quedan muertas).
@@ -95,6 +114,13 @@ final class SharedPrefsTransitLocalDataSource
 
   static String _schedulesKey(String routeVariantId, DayType dayType) =>
       '$_prefix/schedules/$routeVariantId/${ScheduleModel.dayTypeToDb(dayType)}';
+
+  /// La marca de "cuándo bajamos esto", en ISO-8601.
+  ///
+  /// Va dentro del prefijo versionado como todo lo demás: al subir la versión
+  /// de la cache, la marca vieja también queda huérfana. Si sobreviviera, la
+  /// app diría "datos del 3 de agosto" sobre una cache recién creada.
+  static const _syncedAtKey = '$_prefix/synced_at';
 
   @override
   Future<List<BusLineModel>> getCachedLines() async =>
@@ -165,10 +191,24 @@ final class SharedPrefsTransitLocalDataSource
     }
   }
 
+  @override
+  Future<DateTime?> lastSyncedAt() async {
+    final raw = _prefs.getString(_syncedAtKey);
+    if (raw == null) return null;
+    // Una marca ilegible se trata como ausente: es un dato de adorno y de
+    // decisión, no vale tirar una excepción que rompa una pantalla por él.
+    return DateTime.tryParse(raw);
+  }
+
   Future<void> _write(String key, List<Map<String, dynamic>> rows) async {
     final ok = await _prefs.setString(key, jsonEncode(rows));
     if (!ok) {
       throw CacheException('No se pudo escribir la cache "$key"');
     }
+    // La marca se pone acá y no en cada método: cualquier escritura de datos
+    // frescos cuenta como sincronización, y así ninguna se olvida de marcar.
+    // Si falla no se lanza: perder la marca es que la app no sepa la fecha,
+    // no que se quede sin datos.
+    await _prefs.setString(_syncedAtKey, _now().toIso8601String());
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/widgets/staggered_in.dart';
+import '../../../../core/providers/clock_provider.dart';
 import '../../domain/entities/bus_line.dart';
 import '../../domain/entities/fare.dart';
 import '../providers/transit_providers.dart';
@@ -267,7 +268,8 @@ class _LineList extends ConsumerWidget {
         return ListView.builder(
           controller: scrollController,
           padding: const EdgeInsets.only(bottom: 24),
-          itemCount: rows.length + 2,
+          // +2 de cabecera y +1 del pie que dice de cuándo son estos datos.
+          itemCount: rows.length + 3,
           itemBuilder: (context, index) {
             if (index == 0) {
               return Column(
@@ -298,6 +300,9 @@ class _LineList extends ConsumerWidget {
                 ),
               );
             }
+            // Al final del listado, y no arriba: es información de contexto y
+            // no la respuesta que se vino a buscar.
+            if (index == rows.length + 2) return const _SavedDataFooter();
             // La lista entra escalonada: el movimiento cuenta que ACABA de
             // cargar y en qué orden está, en vez de aparecer entera de golpe
             // como si siempre hubiera estado ahí.
@@ -307,6 +312,64 @@ class _LineList extends ConsumerWidget {
       },
     );
   }
+}
+
+/// "Datos guardados en el teléfono · 8/8/2026".
+///
+/// **Por qué hace falta decirlo.** Toda la app es cache-first: después de la
+/// primera vez, líneas, recorridos y paradas salen del teléfono y no de la
+/// red. Eso es lo que la hace andar arriba del colectivo sin señal, pero
+/// también significa que lo que se está mirando puede tener semanas. Sin la
+/// fecha, un recorrido viejo y uno de hoy se ven idénticos.
+///
+/// No dice "sin conexión" ni intenta adivinar el estado de la red: eso pediría
+/// un plugin de conectividad para contestar algo que igual no importa —los
+/// datos están guardados, haya señal o no—. Lo que importa es de cuándo son.
+///
+/// Si no hay marca no dibuja nada: pasa en el primer arranque, cuando los
+/// datos vienen de la red y todavía no se escribió nada.
+class _SavedDataFooter extends ConsumerWidget {
+  const _SavedDataFooter();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final syncedAt = ref.watch(lastSyncProvider).value;
+    if (syncedAt == null) return const SizedBox.shrink();
+
+    final scheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.save_outlined, size: 13, color: scheme.outline),
+          const SizedBox(width: 6),
+          Text(
+            'Datos guardados en el teléfono · '
+            '${_syncLabel(syncedAt, ref.watch(clockProvider)())}',
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: scheme.outline),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// "hoy", "ayer" o "8/8/2026".
+///
+/// Los dos primeros casos son los más frecuentes justo después de instalar la
+/// app, y "hoy" se entiende sin hacer ninguna cuenta. Para más atrás gana la
+/// fecha: "hace 23 días" obliga a la cuenta que la fecha ya hizo.
+String _syncLabel(DateTime syncedAt, DateTime now) {
+  final day = DateTime(syncedAt.year, syncedAt.month, syncedAt.day);
+  final today = DateTime(now.year, now.month, now.day);
+  final days = today.difference(day).inDays;
+  if (days <= 0) return 'hoy';
+  if (days == 1) return 'ayer';
+  return '${syncedAt.day}/${syncedAt.month}/${syncedAt.year}';
 }
 
 class _SearchField extends ConsumerStatefulWidget {

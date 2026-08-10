@@ -21,11 +21,24 @@ final class TransitRepositoryImpl implements TransitRepository {
   const TransitRepositoryImpl({
     required TransitRemoteDataSource remoteDataSource,
     required TransitLocalDataSource localDataSource,
+    DateTime Function()? now,
   }) : _remote = remoteDataSource,
-       _local = localDataSource;
+       _local = localDataSource,
+       _now = now ?? DateTime.now;
 
   final TransitRemoteDataSource _remote;
   final TransitLocalDataSource _local;
+  final DateTime Function() _now;
+
+  /// A partir de cuándo una cache de datos estáticos se considera vieja.
+  ///
+  /// **Sin esto la cache no se refrescaba NUNCA.** `_cacheFirst` devuelve lo
+  /// guardado sin mirar la red, así que un recorrido que cambia no le llegaba
+  /// a nadie que ya hubiera abierto la app: hacía falta publicar una versión
+  /// con la versión de la cache subida. Siete días es un compromiso: los
+  /// recorridos cambian pocas veces por año, y esperar más volvería a hacer
+  /// que la única forma de corregir un dato sea una release.
+  static const cacheTtl = Duration(days: 7);
 
   @override
   Result<List<BusLine>> getLines() async {
@@ -156,6 +169,17 @@ final class TransitRepositoryImpl implements TransitRepository {
     try {
       final cached = await readCache();
       if (cached.isNotEmpty) {
+        // Se devuelve YA, sin tocar la red: la velocidad de arranque es EL
+        // requisito del producto. Pero si lo guardado está viejo se dispara
+        // un refresco de fondo, así que la próxima vez que se abra la app los
+        // datos son nuevos. Es stale-while-revalidate: nadie espera y nadie
+        // se queda con una copia de hace tres meses.
+        if (await _isStale()) {
+          _refreshInBackground(
+            fetchRemote: fetchRemote,
+            writeCache: writeCache,
+          );
+        }
         return Right(cached);
       }
     } on CacheException {
@@ -175,6 +199,43 @@ final class TransitRepositoryImpl implements TransitRepository {
     } on AppException catch (e) {
       return Left(_toFailure(e));
     }
+  }
+
+  /// True si lo guardado pasó el [cacheTtl].
+  ///
+  /// **Sin marca de sincronización devuelve false**, o sea "no está vieja". Es
+  /// a propósito: significa que no sabemos de cuándo es, y salir a la red por
+  /// las dudas convertiría cada arranque de una cache legacy en una consulta
+  /// que nadie pidió. La primera escritura pone la marca y a partir de ahí sí
+  /// se puede decidir.
+  Future<bool> _isStale() async {
+    try {
+      final synced = await _local.lastSyncedAt();
+      if (synced == null) return false;
+      return _now().difference(synced) > cacheTtl;
+    } on Object {
+      return false;
+    }
+  }
+
+  /// Baja datos frescos y reescribe la cache SIN hacer esperar a nadie.
+  ///
+  /// No se await-ea y se traga todos los errores: es trabajo especulativo
+  /// —sin señal, con el servidor caído o con la app cerrándose en el medio, el
+  /// usuario ya tiene su respuesta— y una excepción sin capturar acá sería un
+  /// crash en un camino que nadie pidió.
+  void _refreshInBackground<T, M extends T>({
+    required Future<List<M>> Function() fetchRemote,
+    required Future<void> Function(List<T>) writeCache,
+  }) {
+    Future<void>(() async {
+      try {
+        final fresh = await fetchRemote();
+        if (fresh.isNotEmpty) await writeCache(fresh);
+      } on Object {
+        // Queda la cache vieja y se reintenta en el próximo arranque.
+      }
+    });
   }
 
   Failure _toFailure(AppException exception) => switch (exception) {

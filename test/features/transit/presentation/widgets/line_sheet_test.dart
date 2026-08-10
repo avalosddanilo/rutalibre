@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rutalibre/core/errors/failures.dart';
+import 'package:rutalibre/core/providers/clock_provider.dart';
 import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/bus_line.dart';
 import 'package:rutalibre/features/transit/domain/entities/route_variant.dart';
@@ -71,7 +72,11 @@ const _variants = [
   ),
 ];
 
-ProviderContainer _container(TransitRepository repo, SharedPreferences prefs) {
+ProviderContainer _container(
+  TransitRepository repo,
+  SharedPreferences prefs, {
+  DateTime? syncedAt,
+}) {
   final container = ProviderContainer(
     retry: (retryCount, error) => null,
     overrides: [
@@ -79,6 +84,10 @@ ProviderContainer _container(TransitRepository repo, SharedPreferences prefs) {
       // El panel lee las líneas favoritas para fijarlas arriba, así que ahora
       // necesita las preferencias igual que en la app real.
       sharedPreferencesProvider.overrideWithValue(prefs),
+      // De cuándo son los datos guardados. Se sobreescribe el provider y no
+      // las prefs para no atar el test al nombre de la clave de la cache.
+      lastSyncProvider.overrideWith((ref) async => syncedAt),
+      clockProvider.overrideWithValue(() => DateTime(2026, 8, 10, 12)),
     ],
   );
   addTearDown(container.dispose);
@@ -228,5 +237,52 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(displayText('Vial ↔ Monte Alto')), findsOneWidget);
+  });
+
+  group('de cuándo son los datos', () {
+    /// El pie está al final de la lista: hay que scrollear para verlo, igual
+    /// que en la app.
+    Future<void> scrollToFooter(WidgetTester tester) =>
+        tester.scrollUntilVisible(
+          find.textContaining('Datos guardados en el teléfono'),
+          120,
+          scrollable: find.byType(Scrollable).first,
+        );
+
+    testWidgets('lo de hoy se dice "hoy", que no obliga a hacer la cuenta', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(_container(repo, prefs, syncedAt: DateTime(2026, 8, 10, 7))),
+      );
+      await tester.pumpAndSettle();
+      await scrollToFooter(tester);
+
+      expect(find.text('Datos guardados en el teléfono · hoy'), findsOneWidget);
+    });
+
+    testWidgets('más atrás gana la fecha', (tester) async {
+      await tester.pumpWidget(
+        _app(_container(repo, prefs, syncedAt: DateTime(2026, 7, 28, 7))),
+      );
+      await tester.pumpAndSettle();
+      await scrollToFooter(tester);
+
+      expect(
+        find.text('Datos guardados en el teléfono · 28/7/2026'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('sin marca no dice nada: es el primer arranque', (
+      tester,
+    ) async {
+      // Los datos vienen de la red y todavía no se guardó nada. Inventar una
+      // fecha ahí sería peor que no decir nada.
+      await tester.pumpWidget(_app(_container(repo, prefs)));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Datos guardados'), findsNothing);
+    });
   });
 }

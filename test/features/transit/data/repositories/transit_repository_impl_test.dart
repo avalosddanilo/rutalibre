@@ -123,6 +123,9 @@ const _schedules = [
   ),
 ];
 
+/// "Ahora" fijo para decidir si la cache está vieja.
+final _now = DateTime(2026, 8, 10, 12);
+
 void main() {
   late _MockRemote remote;
   late _MockLocal local;
@@ -139,9 +142,13 @@ void main() {
   setUp(() {
     remote = _MockRemote();
     local = _MockLocal();
+    // Sin marca de sincronización, salvo que el test diga otra cosa: es el
+    // caso "no sabemos de cuándo son estos datos", que NO dispara refresco.
+    when(() => local.lastSyncedAt()).thenAnswer((_) async => null);
     repository = TransitRepositoryImpl(
       remoteDataSource: remote,
       localDataSource: local,
+      now: () => _now,
     );
   });
 
@@ -547,4 +554,73 @@ void main() {
       });
     },
   );
+
+  group('cache vieja: stale-while-revalidate', () {
+    // Antes de esto la cache de datos estáticos no se refrescaba NUNCA: con
+    // datos guardados, `_cacheFirst` no volvía a la red jamás, así que un
+    // recorrido corregido en la base no le llegaba a nadie que ya hubiera
+    // abierto la app hasta publicar una versión nueva.
+    void cacheAgedDays(int days) {
+      when(
+        () => local.lastSyncedAt(),
+      ).thenAnswer((_) async => _now.subtract(Duration(days: days)));
+      when(() => local.getCachedLines()).thenAnswer((_) async => _unordered);
+    }
+
+    test('devuelve la cache SIN esperar la red, y refresca de fondo', () async {
+      cacheAgedDays(8);
+      when(() => remote.getLines()).thenAnswer((_) async => _unordered);
+      when(() => local.cacheLines(any())).thenAnswer((_) async {});
+
+      final result = await repository.getLines();
+
+      // La respuesta es la cache: el arranque instantáneo no se negocia.
+      expect(result.getRight().toNullable(), _orderedByCode);
+
+      // Y el refresco corre después, sin que nadie lo espere.
+      await pumpEventQueue();
+      verify(() => remote.getLines()).called(1);
+      verify(() => local.cacheLines(any())).called(1);
+    });
+
+    test('cache fresca: no sale a la red', () async {
+      cacheAgedDays(6);
+
+      final result = await repository.getLines();
+
+      expect(result.getRight().toNullable(), _orderedByCode);
+      await pumpEventQueue();
+      verifyNever(() => remote.getLines());
+    });
+
+    test(
+      'si el refresco de fondo falla, la respuesta ya estaba dada',
+      () async {
+        // El caso normal de un colectivo sin señal: la cache está vieja, el
+        // refresco no puede correr y el usuario igual ve todo.
+        cacheAgedDays(30);
+        when(
+          () => remote.getLines(),
+        ).thenThrow(const NetworkException('sin señal'));
+
+        final result = await repository.getLines();
+
+        expect(result.getRight().toNullable(), _orderedByCode);
+        await pumpEventQueue();
+        verify(() => remote.getLines()).called(1);
+        // Y NO se pisa la cache buena con nada.
+        verifyNever(() => local.cacheLines(any()));
+      },
+    );
+
+    test('una respuesta vacía no borra la cache que funcionaba', () async {
+      cacheAgedDays(10);
+      when(() => remote.getLines()).thenAnswer((_) async => const []);
+
+      await repository.getLines();
+
+      await pumpEventQueue();
+      verifyNever(() => local.cacheLines(any()));
+    });
+  });
 }
