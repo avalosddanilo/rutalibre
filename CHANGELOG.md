@@ -18,6 +18,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - Paradas como pines tocables, con las **cabeceras marcadas** y
   descongestionado por zoom: encuadrado entero se ven ~15 de las 47 de un
   recorrido, y todas a partir del zoom 16. Nada se pierde, se acerca y aparecen.
+- **Las 254 paradas de Corrientes capital**, con su esquina y las 22 líneas que
+  paran en cada una. Se dibujan con un marcador **hueco**, distinto del de las
+  del Gran Resistencia, porque hacen algo distinto: abren una hoja corta que
+  dice qué líneas paran ahí y de dónde sale el dato. No entran al
+  planificador —medido: solo 93 de las 254 caen a menos de 80 m del recorrido
+  de su propia línea— y verse iguales haría leer esa diferencia como un bug.
 
 ### Buscar
 
@@ -34,6 +40,19 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   transbordo. Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces.
 - Una opción por línea, no por ramal: el pasajero piensa en "la 9".
 - El destino es **cualquier punto del mapa**, no solo una parada.
+- **"Iniciar viaje"**: la guía paso a paso, un paso por pantalla y grande, para
+  leerla parada en la vereda con el colectivo viniendo. Caminá hasta tal
+  parada, tomá la 3, viajá 14 paradas, bajate, caminá hasta tu destino,
+  llegaste. El mapa se mueve a donde hay que mirar en cada paso.
+  **No dice minutos**: no sabemos a qué velocidad anda el colectivo, y un
+  número ahí hace que alguien se baje antes de tiempo. Los pasos se avanzan a
+  mano, no con el GPS: un paso que salta cuando no correspondía es peor que
+  ninguno.
+- El mapa dibuja **el camino que hacés vos**, recortado entre la parada donde
+  subís y la donde bajás, no el recorrido entero de la línea.
+- Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:
+  uno eligió un nombre de una lista, y verlo en su cuadra es lo que confirma
+  que era ese.
 - **Compartir el viaje** por donde sea, con enlace al destino en OpenStreetMap.
 
 ### Paradas
@@ -59,6 +78,16 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   la plaza. 2612 lugares del Gran Resistencia empaquetados con la app, así
   que anda sin señal desde la instalación. Los lugares y las paradas salen en
   una sola lista, ordenada por qué tan bien coincide con lo que escribiste.
+- **Cuánto sale el boleto**, siempre con la fecha desde la que rige y con la
+  fuente al lado: $1.885 en el Gran Resistencia y $1.890 en el interurbano,
+  salvo el ramal del Campus de la UNNE, que sale $2.921,10 —un 55% más— y por
+  eso se muestra aparte. Donde no hay dato confirmado no se muestra nada: un
+  precio "aproximado" es peor que ninguno cuando alguien llega a la máquina
+  con la plata contada.
+- **Favoritos y últimos destinos**: estrella en cada línea y en cada parada.
+  Las líneas marcadas quedan **fijadas arriba** del panel, y el buscador de
+  destino abre con lo guardado y los últimos ocho lugares en vez de un cartel.
+  Nada de esto sale del teléfono.
 - **Tipografía propia** (Inter): elegida por los números, que es casi todo lo
   que la app muestra de reojo.
 - **Aviso por lluvia**: un chip chico arriba a la izquierda del mapa con la
@@ -77,13 +106,19 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - Las paradas que OSM no declara se **infieren de la geometría** del recorrido
   y del lado de la calle: 2638 inferidas contra 3261 declaradas.
 - Paradas duplicadas unificadas (una parada física, un solo registro).
+- Aparte de esas, **254 paradas de Corrientes capital** y **2612 lugares** del
+  Gran Resistencia van empaquetados con la app: andan sin señal desde la
+  instalación y no dependen de la base.
 
 ### Se sabe que falta
 
 - **Horarios de casi todas las líneas.** No los publica ninguna fuente abierta;
   el pedido formal está en `docs/propuesta-datos-abiertos.md`.
-- **Paradas de Corrientes capital**: solo hay trazados, el portal dio de baja
-  ese recurso.
+- **"¿Cómo llego?" no funciona dentro de Corrientes capital.** Las paradas se
+  ven y se puede consultar qué líneas paran en cada una, pero no se puede
+  planificar un viaje: el dataset municipal publica 10 de las 22 líneas que
+  circulan, y sin la red completa la respuesta sería adivinada. Los 12 códigos
+  que faltan están pedidos en `docs/mails-para-mandar.md`.
 - Las paradas que ya no existen en la realidad pero OSM todavía mapea son
   indistinguibles de las vigentes.
 - Los tiles del mapa se ven claros también en modo oscuro.
