@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidad · Ruta Libre</title>
+<meta name="description" content="Política de privacidad de Ruta Libre, la app de colectivos del Gran Resistencia y Corrientes. Sin cuentas, sin publicidad y sin datos en ningún servidor.">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --muted: #5c5c5c;
+    --rule: #e2e2e2;
+    --accent: #1565c0;
+    --panel: #f5f6f8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161616;
+      --fg: #ececec;
+      --muted: #a8a8a8;
+      --rule: #303030;
+      --accent: #64b5f6;
+      --panel: #1f1f1f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  main { max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .35rem; letter-spacing: -.02em; }
+  h2 { font-size: 1.3rem; margin: 2.5rem 0 .75rem; letter-spacing: -.01em; }
+  h3 { font-size: 1.05rem; margin: 1.75rem 0 .5rem; }
+  .updated { color: var(--muted); font-size: .9rem; margin: 0 0 2rem; }
+  .lead {
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    margin: 0 0 1rem;
+  }
+  .lead p:first-child { margin-top: 0; }
+  .lead p:last-child { margin-bottom: 0; }
+  a { color: var(--accent); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: .95rem;
+    display: block;
+    overflow-x: auto;
+  }
+  th, td { text-align: left; padding: .6rem .7rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-weight: 700; }
+  ul { padding-left: 1.2rem; }
+  li { margin: .3rem 0; }
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+  footer { color: var(--muted); font-size: .9rem; }
+  code {
+    background: var(--panel);
+    padding: .1rem .35rem;
+    border-radius: 5px;
+    font-size: .9em;
+  }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Política de privacidad de Ruta Libre</h1>
+<p class="updated">Última actualización: 10 de agosto de 2026</p>
+
+<div class="lead">
+  <p><strong>Ruta Libre no tiene cuentas, no te registra y no manda tus datos a
+  ninguna parte.</strong> No hay servidor nuestro que sepa quién sos ni por dónde
+  anduviste.</p>
+  <p>La app sí guarda algunas cosas <strong>en tu teléfono</strong> para
+  funcionar rápido y sin señal: los datos del transporte, lo que marcaste como
+  favorito y los últimos lugares que buscaste. <strong>Nada de eso sale del
+  dispositivo</strong>, y lo borrás cuando quieras.</p>
+  <p>Tu ubicación se usa <strong>solo cuando hacés algo que la necesita</strong>,
+  y no se envía a nuestros servidores.</p>
+</div>
+
+<h2>Qué información se usa</h2>
+
+<h3>Tu ubicación</h3>
+
+<p><strong>Para qué</strong>: mostrarte las paradas que tenés cerca, calcular a
+cuánto estás caminando de una parada, usarla como punto de partida cuando
+preguntás cómo llegar a algún lado, y pedir el pronóstico de lluvia de tu zona.</p>
+
+<p><strong>Cuándo</strong>: para "Cerca mío" y "¿Cómo llego?" la app te pide el
+permiso y enciende el GPS. Para la distancia caminando y el aviso de lluvia usa
+<strong>la última posición que tu teléfono ya tenía guardada</strong> —no te
+pide nada ni enciende el GPS—, y si no hay ninguna, simplemente no muestra ese
+dato.</p>
+
+<p>Podés usar el mapa, ver los recorridos, las paradas, los horarios y buscar
+líneas <strong>sin dar el permiso de ubicación</strong>. También podés escribir
+a mano de dónde salís, así que "¿cómo llego?" funciona igual sin GPS.</p>
+
+<p><strong>A dónde va</strong>: no se envía a nuestros servidores para
+guardarla, no se asocia a ninguna identidad y no se comparte con nadie.</p>
+
+<p>Dos precisiones que conviene que sepas:</p>
+<ul>
+  <li>Para responder "¿qué paradas tengo cerca?" y "¿cómo llego de acá hasta
+  allá?", la app le manda <strong>un par de coordenadas</strong> a nuestra base
+  de datos, que devuelve las paradas o los recorridos que corresponden. Esas
+  consultas <strong>no se asocian a ninguna identidad ni se registran</strong>:
+  no hay cuenta, no hay identificador de usuario y no llevamos historial de
+  consultas.</li>
+  <li>Para el aviso de lluvia, la app le manda a Open-Meteo <strong>una
+  coordenada redondeada a unos 1000 metros</strong> — no tu posición exacta. Esa
+  coordenada redondeada <strong>queda guardada en tu teléfono</strong> junto con
+  el pronóstico, para no volver a pedirlo cada vez que abrís la app.</li>
+</ul>
+
+<h2>Lo que se guarda en tu teléfono</h2>
+
+<p>Todo lo de esta lista vive <strong>únicamente en tu dispositivo</strong>. No
+se sincroniza, no se sube a ningún servidor nuestro ni de terceros, y no se
+incluye en la copia de seguridad automática de Android.</p>
+
+<table>
+  <thead>
+    <tr><th>Qué</th><th>Para qué</th><th>Qué contiene</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Datos del transporte</strong></td>
+      <td>Que la app abra al instante y funcione sin señal</td>
+      <td>Líneas, recorridos, paradas y horarios, con la fecha en que se
+      descargaron. Son datos públicos del transporte, no tuyos</td>
+    </tr>
+    <tr>
+      <td><strong>Pronóstico de lluvia</strong></td>
+      <td>No pedirlo de nuevo cada vez que abrís la app</td>
+      <td>Las próximas horas de pronóstico y <strong>una coordenada tuya
+      redondeada a ~1 km</strong>, con la hora en que se guardó. Se descarta
+      solo a las pocas horas</td>
+    </tr>
+    <tr>
+      <td><strong>Tus favoritos</strong></td>
+      <td>Que no tengas que rebuscar la línea o la parada de todos los días</td>
+      <td>Qué líneas y qué paradas marcaste con la estrella, con el nombre y la
+      ubicación de esas paradas</td>
+    </tr>
+    <tr>
+      <td><strong>Tus últimos destinos</strong></td>
+      <td>Que no escribas de nuevo el lugar al que vas siempre</td>
+      <td><strong>Los últimos 8 lugares</strong> que elegiste como destino, con
+      su nombre y ubicación. Al noveno, el más viejo se borra solo</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Los últimos dos son datos tuyos, no del transporte</strong>: qué
+colectivo tomás y a dónde vas dicen algo sobre vos. Por eso están acá, dichos
+con todas las letras. Lo importante es que <strong>nunca salen del
+teléfono</strong>: no hay a quién mandárselos porque no hay cuenta ni servidor
+de usuarios.</p>
+
+<p><strong>Cómo borrarlos</strong>:</p>
+<ul>
+  <li>Los últimos destinos tienen un botón <strong>"Borrar"</strong> dentro de
+  la app, en la pantalla de "¿A dónde vas?".</li>
+  <li>Los favoritos se quitan tocando la estrella de nuevo.</li>
+  <li>Todo junto, de una: desinstalando la app, o desde <em>Ajustes →
+  Aplicaciones → Ruta Libre → Almacenamiento → Borrar datos</em>.</li>
+</ul>
+
+<h2>Lo que NO se usa</h2>
+<ul>
+  <li>No hay cuentas ni registro.</li>
+  <li><strong>No se pide ni se guarda tu nombre, correo, teléfono ni ningún
+  dato que sirva para identificarte.</strong></li>
+  <li><strong>No hay publicidad ni rastreadores de terceros.</strong></li>
+  <li>No hay analítica: no medimos qué pantallas mirás ni cuánto usás la app.</li>
+  <li>No se accede a tus contactos, fotos, archivos, micrófono ni cámara.</li>
+  <li>No hay ningún perfil tuyo en ningún lado: lo que la app guarda no se
+  cruza con nada ni se le manda a nadie.</li>
+</ul>
+
+<h2>Servicios de terceros</h2>
+
+<p>La app se conecta a estos servicios para funcionar. Cada uno recibe, como
+cualquier sitio de internet, la dirección IP desde la que se conecta tu
+teléfono:</p>
+
+<table>
+  <thead>
+    <tr><th>Servicio</th><th>Para qué</th><th>Qué recibe</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Supabase</strong></td>
+      <td>La base con líneas, recorridos, paradas y horarios</td>
+      <td>Las consultas de la app. Sin identidad asociada</td>
+    </tr>
+    <tr>
+      <td><strong>OpenStreetMap</strong></td>
+      <td>Las imágenes del mapa</td>
+      <td>Qué porciones de mapa mirás</td>
+    </tr>
+    <tr>
+      <td><strong>Open-Meteo</strong></td>
+      <td>El pronóstico de lluvia</td>
+      <td>Una coordenada redondeada a ~1 km, no tu posición exacta</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Cuando tocás <strong>compartir un viaje</strong>, la app le pasa la acción al
+menú de compartir de tu teléfono. Desde ahí manda la app que elijas vos, con sus
+propias reglas.</p>
+
+<p>Cuando tocás <strong>"Ver esta parada en OpenStreetMap"</strong>, la app abre
+tu navegador en la página de esa parada. Lo único que viaja es <strong>el número
+público de la parada en el mapa</strong> — ningún dato tuyo. A partir de ahí
+valen las reglas de OpenStreetMap y de tu navegador.</p>
+
+<h2>Permisos que pide la app, y por qué</h2>
+
+<table>
+  <thead>
+    <tr><th>Permiso</th><th>Para qué</th><th>¿Se puede usar la app sin darlo?</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>INTERNET</code></td>
+      <td>Descargar los datos del transporte y el mapa</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code>ACCESS_COARSE_LOCATION</code> y <code>ACCESS_FINE_LOCATION</code></td>
+      <td>"Cerca mío", "¿cómo llego?", la distancia caminando y el aviso de lluvia</td>
+      <td><strong>Sí.</strong> Todo lo demás funciona igual</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>No pedimos ubicación en segundo plano: la app <strong>no puede</strong> saber
+dónde estás cuando no la estás usando.</p>
+
+<h2>Menores</h2>
+<p>La app no está dirigida a menores de 13 años y no recolecta datos de nadie,
+de ninguna edad, en ningún servidor.</p>
+
+<h2>Tus derechos</h2>
+<p><strong>No tenemos nada tuyo que pedirnos.</strong> No hay servidor con tus
+datos, así que no hay nada que podamos borrarte ni entregarte: no existe.</p>
+<p>Lo que la app guarda vive en tu teléfono y <strong>lo controlás vos</strong>,
+sin pedirnos permiso ni esperar respuesta — ver "Cómo borrarlos" más arriba.</p>
+
+<h2>Cuando esto cambie</h2>
+<p>Si en algún momento la app empieza a mandar algo a un servidor —por ejemplo,
+si se suma la función de reportar dónde está un colectivo, que es un plan a
+futuro—, este documento se actualiza <strong>antes</strong> de que salga esa
+versión, y se avisa en la ficha de Google Play.</p>
+
+<h2>Contacto</h2>
+<ul>
+  <li>Responsable: Danilo Nicolás Avalos</li>
+  <li>Correo: <a href="mailto:avalosdanilonicolas@gmail.com">avalosdanilonicolas@gmail.com</a></li>
+</ul>
+
+<hr>
+
+<footer>
+  <p><strong>Atribución de datos.</strong> Los datos de recorridos y paradas
+  provienen de <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+  bajo licencia ODbL. Los recorridos de Corrientes capital provienen del portal
+  de datos abiertos de la Municipalidad de la Ciudad de Corrientes. El
+  pronóstico es de <a href="https://open-meteo.com/">Open-Meteo</a>.</p>
+</footer>
+
+</main>
+</body>
+</html>

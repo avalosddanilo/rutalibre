@@ -99,6 +99,11 @@ Cuando tocás **compartir un viaje**, la app le pasa la acción al menú de
 compartir de tu teléfono. Desde ahí manda la app que elijas vos, con sus
 propias reglas.
 
+Cuando tocás **"Ver esta parada en OpenStreetMap"**, la app abre tu navegador
+en la página de esa parada. Lo único que viaja es **el número público de la
+parada en el mapa** — ningún dato tuyo. A partir de ahí valen las reglas de
+OpenStreetMap y de tu navegador.
+
 ## Permisos que pide la app, y por qué
 
 | Permiso | Para qué | ¿Se puede usar la app sin darlo? |

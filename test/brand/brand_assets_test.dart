@@ -7,15 +7,21 @@
 //   dart run flutter_launcher_icons
 //   dart run flutter_native_splash:create
 //
-// Por qué no regenera siempre: rasterizar tres PNG de 1024 px tarda, y
+// Por qué no regenera siempre: rasterizar cuatro PNG grandes tarda, y
 // `flutter test` se corre antes de cada commit. Y por qué igual vive acá y
 // no en un script suelto: así el test FALLA si alguien borra un asset o si
 // el ícono nunca se generó, en vez de descubrirlo en la tienda.
+//
+// `assets/branding/` NO está declarado en el pubspec: estos PNG son insumos
+// de la tienda y de los generadores de íconos, no assets que la app cargue.
+// Ninguno viaja dentro del APK.
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart' show FontLoader;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rutalibre/app/theme/brand.dart';
 
@@ -73,6 +79,103 @@ Widget _plate({
   ),
 );
 
+/// El gráfico destacado de Google Play: 1024×500, obligatorio en la ficha.
+///
+/// Se dibuja en código por lo mismo que el ícono: la marca ya vive en un
+/// `CustomPainter`, así que el banner sale del MISMO dibujo y no de un archivo
+/// que alguien exportó una vez y nadie sabe cómo regenerar.
+///
+/// Medidas: se captura a 512×250 lógicos con `pixelRatio: 2`.
+const _featureSize = Size(512, 250);
+
+/// El banner de la ficha.
+///
+/// Composición: la marca a la izquierda y el texto a la derecha, con aire
+/// generoso en los bordes. Play recorta este gráfico distinto en cada
+/// superficie —y le superpone un botón de play si hay video—, así que nada
+/// importante toca los bordes ni el centro exacto.
+/// El banner, apilado: marca + nombre arriba, y las dos líneas de texto
+/// ocupando el ancho completo abajo.
+///
+/// La primera versión ponía el texto en una columna al lado del colectivo, y
+/// con eso al texto le quedaban 280 de los 512 px: la bajada se partía en tres
+/// renglones con cortes horribles ("...del Gran / Resistencia / y Corrientes").
+/// Apilado, cada frase entra en un solo renglón.
+Widget _featurePlate() => Directionality(
+  // Los `Text` lo necesitan y acá no hay MaterialApp que lo traiga: esto se
+  // rasteriza suelto, sin app alrededor.
+  textDirection: TextDirection.ltr,
+  child: ColoredBox(
+    color: Brand.black,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const BrandMark(size: 104),
+              const SizedBox(width: 24),
+              const Text(
+                'Ruta Libre',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 46,
+                  height: 1.05,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  letterSpacing: -1.5,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          const Text(
+            'Colectivos del Gran Resistencia y Corrientes',
+            maxLines: 1,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 20,
+              height: 1.3,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFFBDBDBD),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Sin publicidad · Sin cuenta · Anda sin señal',
+            maxLines: 1,
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ).copyWith(color: Brand.accent),
+          ),
+        ],
+      ),
+    ),
+  ),
+);
+
+/// Carga Inter de verdad para rasterizar.
+///
+/// **Sin esto el banner sale con cuadraditos**: en `flutter test` la fuente por
+/// defecto dibuja cada glifo como una caja llena, y el PNG terminaría en la
+/// ficha de Play mostrando eso.
+///
+/// **Va DENTRO de `tester.runAsync`** (ver quién la llama). `load()` manda la
+/// fuente al engine y espera su respuesta, que es trabajo real y no entra en el
+/// reloj falso de los tests: llamada afuera, el `await` no vuelve nunca y el
+/// test se cuelga hasta el timeout. Es el mismo gotcha que `toImage`.
+Future<void> _loadInter() async {
+  final bytes = File('assets/fonts/Inter-Variable.ttf').readAsBytesSync();
+  await (FontLoader(
+        'Inter',
+      )..addFont(Future.value(ByteData.sublistView(Uint8List.fromList(bytes)))))
+      .load();
+}
+
 void main() {
   final assets = {
     // A sangre, fondo negro completo y SIN esquinas redondeadas: las ponen
@@ -98,7 +201,7 @@ void main() {
   test(
     'los PNG de la marca están y no están vacíos',
     () {
-      for (final name in assets.keys) {
+      for (final name in [...assets.keys, 'feature_graphic.png']) {
         final file = File('$_dir/$name');
         expect(
           file.existsSync(),
@@ -161,6 +264,51 @@ void main() {
       for (final name in assets.keys) {
         expect(File('$_dir/$name').lengthSync(), greaterThan(1000));
       }
+    },
+  );
+
+  testWidgets(
+    'regenera el gráfico destacado de Play (1024×500)',
+    timeout: const Timeout(Duration(minutes: 10)),
+    skip: Platform.environment['REGEN_BRAND'] != '1',
+    (tester) async {
+      await tester.runAsync(_loadInter);
+
+      tester.view
+        ..physicalSize = Size(_featureSize.width + 40, _featureSize.height + 40)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+
+      final key = GlobalKey();
+      await tester.pumpWidget(
+        Center(
+          child: RepaintBoundary(
+            key: key,
+            child: SizedBox.fromSize(
+              size: _featureSize,
+              child: _featurePlate(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      await tester.runAsync(() async {
+        // pixelRatio 2 sobre 512×250 = los 1024×500 exactos que pide Play.
+        final image = await boundary.toImage(pixelRatio: 2);
+        expect(image.width, 1024);
+        expect(image.height, 500);
+        final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+        image.dispose();
+        await File(
+          '$_dir/feature_graphic.png',
+        ).writeAsBytes(bytes!.buffer.asUint8List());
+      });
+
+      expect(File('$_dir/feature_graphic.png').lengthSync(), greaterThan(1000));
     },
   );
 }

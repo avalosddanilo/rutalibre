@@ -84,17 +84,34 @@ release usa la clave de debug y Play lo rechaza. Se verifica en el paso 5.
 
 ---
 
-## 4. Política de privacidad — **lo hacés vos**
+## 4. Política de privacidad — **lo hacés vos** (pero ya está escrita)
 
 Google **exige una URL pública** porque la app pide ubicación.
 
-1. Completá los datos de contacto en
-   [`politica-de-privacidad.md`](politica-de-privacidad.md) (hay un bloque
-   marcado `COMPLETAR ANTES DE PUBLICAR`).
-2. Publicala en algún lado con URL estable: GitHub Pages, un Gist, Notion
-   público, tu sitio. Cualquiera sirve mientras sea accesible sin login.
-3. Pegá la URL en Play Console → *Contenido de la aplicación → Política de
-   privacidad*.
+El texto está completo y al día en
+[`politica-de-privacidad.md`](politica-de-privacidad.md) —contacto incluido— y
+**ya está armado como página web lista para publicar** en
+[`site/privacidad/index.html`](../site/privacidad/index.html): un solo archivo,
+sin dependencias, con modo claro y oscuro. Se abre en el navegador para verlo.
+
+Dos formas de darle una URL, de menos a más trabajo:
+
+1. **Un repo público aparte** (recomendado). Creá `rutalibre-privacidad`, subí
+   ese `index.html` en la raíz y activá GitHub Pages. Queda
+   `https://<tu-usuario>.github.io/rutalibre-privacidad/`.
+2. **GitHub Pages en este repo.** ⚠️ **Ojo con esto**: si apuntás Pages a la
+   carpeta `/docs`, se publica TODO lo que hay ahí — incluida la auditoría de
+   seguridad y los borradores de los mails. Si vas por acá, servís `site/` con
+   una Action, no `/docs`.
+
+Después, pegá la URL en Play Console → *Contenido de la aplicación → Política de
+privacidad*.
+
+> **Antes de hacer público el repo del código**, revisá qué hay en `docs/`:
+> `auditoria-seguridad.md` describe la superficie de ataque del proyecto y
+> `mails-para-mandar.md` tiene borradores dirigidos a personas con nombre y
+> apellido. Ninguno de los dos tiene secretos, pero ninguno de los dos fue
+> escrito para leerse de afuera.
 
 ---
 
@@ -141,17 +158,30 @@ poda distinto, por ejemplo). **Probalo antes de subir, no después.**
 
 ## 6. Ficha de Play Console — **lo hacés vos**
 
+**Los textos ya están escritos y con los caracteres contados**:
+[`ficha-play.md`](ficha-play.md). Se copian y se pegan.
+
 | Campo | Qué hace falta |
 |---|---|
 | Nombre | Ruta Libre |
-| Descripción corta | 80 caracteres |
-| Descripción completa | 4000 caracteres — el [CHANGELOG](../CHANGELOG.md) tiene el material |
+| Descripción corta | ✅ en [`ficha-play.md`](ficha-play.md) |
+| Descripción completa | ✅ en [`ficha-play.md`](ficha-play.md) |
+| Novedades de la versión | ✅ en [`ficha-play.md`](ficha-play.md) |
 | Ícono de la ficha | 512×512 PNG. Sale de `assets/branding/icon.png` (1024×1024, redimensionar) |
-| Gráfico destacado | 1024×500 — **hay que diseñarlo**, no existe todavía |
-| Capturas | Mínimo 2 de teléfono. Salen del emulador o del teléfono |
+| Gráfico destacado | ✅ `assets/branding/feature_graphic.png`, 1024×500 exactos. Se regenera con `REGEN_BRAND=1 flutter test test/brand/brand_assets_test.dart` |
+| Capturas | Mínimo 2 de teléfono. **Es lo único que falta y necesita el teléfono** |
 | Categoría | Mapas y navegación (o Viajes y guías locales) |
 | Clasificación de contenido | Cuestionario. Sin contenido sensible |
 | **Seguridad de los datos** | Ver abajo — es el que más se equivoca |
+
+### Qué capturas sacar
+
+Cuatro alcanzan, y en este orden —la primera es la que decide la instalación:
+
+1. El mapa con las paradas visibles y el panel abajo.
+2. El resultado de "¿cómo llego?" con un viaje elegido dibujado.
+3. Un paso de "Iniciar viaje" (la guía grande).
+4. El detalle de una parada con "qué colectivos pasan por acá".
 
 ### Formulario de "Seguridad de los datos"
 
@@ -187,15 +217,21 @@ elegí la que declara más.
 - [x] `versionCode` / `versionName` cableados a `pubspec.yaml`
 - [x] Permisos mínimos, verificados sobre el manifest fusionado
 - [x] Config de firma leyendo `key.properties`, con `.gitignore` cubriendo las claves
-- [x] Borrador de política de privacidad
+- [x] Política de privacidad escrita, al día y armada como página web
 - [x] CHANGELOG de la v1.0
+- [x] Textos de la ficha, con los caracteres contados por un test
+- [x] Gráfico destacado 1024×500, generado en código
 - [ ] Keystore generado y guardado *(vos)*
 - [ ] `android/key.properties` creado *(vos)*
 - [ ] Política de privacidad publicada en una URL *(vos)*
 - [ ] APK de release probado en el teléfono *(vos)*
 - [ ] AAB firmado y verificado con `keytool -printcert` *(vos)*
-- [ ] Gráfico destacado y capturas *(vos)*
+- [ ] Capturas de pantalla *(vos — necesitan el teléfono)*
 - [ ] Formulario de seguridad de los datos *(vos)*
+- [ ] Verificar el transbordo de `plan_trip` *(vos)* — la consulta está al final
+      de [`planificador.md`](planificador.md) y alcanza con que `mal` dé 0
+- [ ] Correr la migración `0010` en el Dashboard *(vos)* — sin ella no aparece
+      el enlace para corregir una parada en OpenStreetMap
 - [ ] Verificaciones de RLS en el dashboard de Supabase *(vos)* — las 5 de
       [`auditoria-seguridad.md`](auditoria-seguridad.md), S2
 - [ ] Alerta de uso de Supabase al 50% y 80% *(vos)* — S4 de la misma
