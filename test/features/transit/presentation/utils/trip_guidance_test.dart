@@ -160,7 +160,12 @@ void main() {
   test('siempre termina en "Llegaste"', () {
     for (final plan in [
       _plan(legs: [_leg()]),
-      _plan(legs: [_leg(), _leg(code: '110')]),
+      _plan(
+        legs: [
+          _leg(),
+          _leg(code: '110'),
+        ],
+      ),
       _plan(legs: [_leg()], walkToBoard: 0, walkFromAlight: 0),
     ]) {
       expect(_steps(plan).last, isA<ArrivalStep>());
