@@ -93,6 +93,56 @@ void main() {
     expect(state.originName, 'Mi casa');
   });
 
+  group('swap — "¿y para volver?"', () {
+    test('da vuelta origen y destino, y la query cambia con ellos', () {
+      final c = container();
+      final notifier = c.read(tripSearchProvider.notifier);
+      notifier.startFrom(_casa);
+      notifier.setDestination(_campus);
+
+      notifier.swap();
+
+      final state = c.read(tripSearchProvider) as TripRoute;
+      expect(state.origin, _campus);
+      expect(state.destination, _casa);
+      expect(state.query.originLat, _campus.lat);
+      expect(state.query.destLat, _casa.lat);
+    });
+
+    test('pierde el nombre del origen a propósito', () {
+      // El origen nuevo es el destino viejo, del que solo hay coordenada.
+      // Mentirle un nombre sería peor que no tenerlo.
+      final c = container();
+      final notifier = c.read(tripSearchProvider.notifier);
+      notifier.startFrom(_casa, name: 'Mi casa');
+      notifier.setDestination(_campus);
+
+      notifier.swap();
+
+      expect((c.read(tripSearchProvider) as TripRoute).originName, isNull);
+    });
+
+    test('suelta el viaje elegido: era de la ida', () {
+      final c = container();
+      final notifier = c.read(tripSearchProvider.notifier);
+      notifier.startFrom(_casa);
+      notifier.setDestination(_campus);
+
+      notifier.swap();
+
+      expect(c.read(selectedTripProvider), isNull);
+    });
+
+    test('sin destino todavía, no hace nada', () {
+      final c = container();
+      c.read(tripSearchProvider.notifier).startFrom(_casa);
+
+      c.read(tripSearchProvider.notifier).swap();
+
+      expect(c.read(tripSearchProvider), isA<TripPickingDestination>());
+    });
+  });
+
   test('con el modo apagado, poner destino no inventa un viaje', () {
     final c = container();
     c.read(tripSearchProvider.notifier).setDestination(_campus);

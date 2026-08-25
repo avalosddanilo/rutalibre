@@ -69,6 +69,14 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   uno eligió un nombre de una lista, y verlo en su cuadra es lo que confirma
   que era ese.
 - **Compartir el viaje** por donde sea, con enlace al destino en OpenStreetMap.
+- **"¿Y para volver?"**: un toque invierte origen y destino y la lista de
+  viajes se recalcula sola. La vuelta puede ser otro colectivo —o el mismo por
+  otra calle— y por eso no alcanza con leer la ida al revés.
+- **Cartel para el chofer**: esperando el colectivo (y en el transbordo), un
+  botón llena la pantalla con el número de la línea en su color. De noche, en
+  una parada mal iluminada, la pantalla del teléfono es la superficie más
+  brillante de la vereda — y una mano levantada no dice a cuál de los tres
+  que vienen le estás haciendo señas.
 
 ### Paradas
 

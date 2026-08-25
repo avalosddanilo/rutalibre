@@ -34,12 +34,20 @@ class TripResultsSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final plansAsync = ref.watch(tripPlansProvider(query));
+    final search = ref.watch(tripSearchProvider);
+    // La query VIVA y no la del momento de abrir: "invertir el viaje" cambia
+    // el estado con la hoja abierta, y una hoja clavada en la query vieja
+    // mostraría la ida con el botón de la vuelta recién tocado.
+    final liveQuery = switch (search) {
+      TripRoute(:final query) => query,
+      _ => query,
+    };
+    final plansAsync = ref.watch(tripPlansProvider(liveQuery));
     // Solo cuando el origen se eligió A MANO. Con el GPS no hace falta
     // decirlo —es lo que todo el mundo asume— pero un viaje calculado desde
     // un punto que la persona escribió hace media hora no se entiende sin
     // esto, y menos todavía si la respuesta es "no encontramos cómo llegar".
-    final originName = switch (ref.watch(tripSearchProvider)) {
+    final originName = switch (search) {
       TripRoute(:final originName) => originName,
       _ => null,
     };
@@ -54,14 +62,27 @@ class TripResultsSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+              padding: const EdgeInsets.fromLTRB(20, 0, 8, 8),
               child: Row(
                 children: [
                   const Icon(Icons.alt_route),
                   const SizedBox(width: 12),
-                  Text(
-                    'Cómo llegar',
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Expanded(
+                    child: Text(
+                      'Cómo llegar',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  // "¿Y para volver?" es la pregunta que sigue a cualquier
+                  // viaje. Un toque da vuelta origen y destino y la lista se
+                  // recalcula sola — la vuelta puede ser OTRO colectivo, o el
+                  // mismo por otra calle, y por eso no alcanza con releer la
+                  // ida al revés.
+                  IconButton(
+                    icon: const Icon(Icons.swap_vert),
+                    tooltip: 'Invertir el viaje (para volver)',
+                    onPressed: () =>
+                        ref.read(tripSearchProvider.notifier).swap(),
                   ),
                 ],
               ),
@@ -109,7 +130,7 @@ class TripResultsSheet extends ConsumerWidget {
                       const SizedBox(height: 8),
                       FilledButton.tonal(
                         onPressed: () =>
-                            ref.invalidate(tripPlansProvider(query)),
+                            ref.invalidate(tripPlansProvider(liveQuery)),
                         child: const Text('Reintentar'),
                       ),
                     ],

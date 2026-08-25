@@ -11,6 +11,7 @@ import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../utils/ride_progress.dart';
 import '../utils/trip_guidance.dart';
+import 'hail_screen.dart';
 import 'line_badge.dart';
 
 /// El viaje paso a paso, uno por pantalla.
@@ -118,6 +119,14 @@ class TripGuidancePanel extends ConsumerWidget {
                   if (step case final RideStep ride)
                     _LiveRideRow(leg: ride.leg),
                   if (step case final WalkStep walk) _LiveWalkRow(step: walk),
+                  // El cartel para el chofer, en los pasos donde hay que
+                  // PARAR un colectivo: esperándolo, y en el transbordo (el
+                  // que se para es el siguiente). De noche, la pantalla es
+                  // la superficie más brillante de la vereda.
+                  if (step case final BoardStep board)
+                    _HailButton(leg: board.leg),
+                  if (step case final TransferStep transfer)
+                    _HailButton(leg: transfer.next),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -154,6 +163,30 @@ class TripGuidancePanel extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Abre el cartel de la línea a pantalla completa.
+class _HailButton extends StatelessWidget {
+  const _HailButton({required this.leg});
+
+  final TripLeg leg;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => HailScreen.show(
+          context,
+          code: leg.displayCode,
+          colorHex: leg.colorHex,
+        ),
+        icon: const Icon(Icons.front_hand, size: 18),
+        label: const Text('Cartel para el chofer'),
+      ),
+    ),
+  );
 }
 
 /// "Faltan 3 paradas" en vivo, con el aviso de bajada.

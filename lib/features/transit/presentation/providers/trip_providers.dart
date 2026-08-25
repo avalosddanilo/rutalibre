@@ -110,6 +110,24 @@ final class TripSearchNotifier extends Notifier<TripSearch> {
     );
   }
 
+  /// Da vuelta el viaje: el destino pasa a ser el origen y viceversa.
+  ///
+  /// Es la pregunta que sigue a cualquier viaje: "¿y para volver?". Sin esto
+  /// había que salir del modo, esperar el GPS o buscar el origen a mano, y
+  /// volver a elegir el destino — para pedir EXACTAMENTE el viaje inverso.
+  ///
+  /// El nombre del origen se pierde a propósito: el origen nuevo es el
+  /// destino viejo, del que solo tenemos la coordenada. Mentirle un nombre
+  /// sería peor que no tenerlo.
+  void swap() {
+    if (state case TripRoute(:final origin, :final destination)) {
+      state = TripRoute(origin: destination, destination: origin);
+      // El viaje que estaba elegido era de la IDA: dejarlo dibujado sobre la
+      // lista de la vuelta mezclaría los dos viajes en el mapa.
+      ref.read(selectedTripProvider.notifier).select(null);
+    }
+  }
+
   /// Vuelve a pedir destino conservando el origen — para "elegir otro
   /// destino" sin tener que volver a esperar el GPS.
   void pickAnotherDestination() {
