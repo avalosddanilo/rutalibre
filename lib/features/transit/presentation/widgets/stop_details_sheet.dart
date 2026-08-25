@@ -255,9 +255,12 @@ class StopDetailsSheet extends ConsumerWidget {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.sizeOf(context).height * 0.7,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        // Toda la hoja en UN scroll. Antes el encabezado, la caminata y el
+        // botón eran fijos y solo la lista de líneas scrolleaba: con el
+        // texto del sistema al 200%, lo fijo solo ya superaba el tope de la
+        // hoja y desbordaba 505 px. A escala normal se ve idéntico.
+        child: ListView(
+          shrinkWrap: true,
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
@@ -297,40 +300,40 @@ class StopDetailsSheet extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
               child: _PlanTripHereButton(stop: stop),
             ),
-            Flexible(
-              child: routesAsync.when(
-                loading: () => const Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Center(child: CircularProgressIndicator()),
+            routesAsync.when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(32),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(failureMessage(error), textAlign: TextAlign.center),
+                    const SizedBox(height: 8),
+                    FilledButton.tonal(
+                      onPressed: () =>
+                          ref.invalidate(routesForStopProvider(stop.id)),
+                      child: const Text('Reintentar'),
+                    ),
+                  ],
                 ),
-                error: (error, _) => Padding(
-                  padding: const EdgeInsets.all(24),
+              ),
+              data: (routes) {
+                if (routes.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.fromLTRB(24, 8, 24, 32),
+                    child: Text(
+                      'Todavía no tenemos registrado qué líneas paran acá.',
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+                // Sin scroll propio: scrollea la hoja entera.
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(failureMessage(error), textAlign: TextAlign.center),
-                      const SizedBox(height: 8),
-                      FilledButton.tonal(
-                        onPressed: () =>
-                            ref.invalidate(routesForStopProvider(stop.id)),
-                        child: const Text('Reintentar'),
-                      ),
-                    ],
-                  ),
-                ),
-                data: (routes) {
-                  if (routes.isEmpty) {
-                    return const Padding(
-                      padding: EdgeInsets.fromLTRB(24, 8, 24, 32),
-                      child: Text(
-                        'Todavía no tenemos registrado qué líneas paran acá.',
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  }
-                  return ListView(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.only(bottom: 16),
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 4),
@@ -378,14 +381,14 @@ class StopDetailsSheet extends ConsumerWidget {
                           ),
                         ),
                     ],
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-            // Afuera del `Flexible` a propósito: así se ve también cuando la
-            // lista está vacía o falló, que es justo cuando más sirve —una
-            // parada de la que no sabemos ninguna línea es la primera
-            // candidata a no existir más.
+            // Al final a propósito: así se ve también cuando la lista está
+            // vacía o falló, que es justo cuando más sirve —una parada de la
+            // que no sabemos ninguna línea es la primera candidata a no
+            // existir más.
             if (stop.osmNodeId case final nodeId?) ...[
               const Divider(height: 1),
               OsmStopLink(osmNodeId: nodeId),

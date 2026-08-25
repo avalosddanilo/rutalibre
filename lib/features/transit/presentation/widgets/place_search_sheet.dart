@@ -124,9 +124,11 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
           constraints: BoxConstraints(
             maxHeight: MediaQuery.sizeOf(context).height * 0.8,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Toda la hoja en UN scroll, como las demás: con el texto del
+          // sistema al 200% la parte fija sola (título, origen, campo y
+          // atajos) superaba el tope de la hoja. A escala normal, idéntico.
+          child: ListView(
+            shrinkWrap: true,
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
@@ -134,9 +136,14 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
                   children: [
                     Icon(_pickingOrigin ? Icons.trip_origin : Icons.flag),
                     const SizedBox(width: 12),
-                    Text(
-                      _pickingOrigin ? '¿De dónde salís?' : '¿A dónde vas?',
-                      style: Theme.of(context).textTheme.titleMedium,
+                    // Expanded: al 200% de texto el título no entra al lado
+                    // del ícono y desbordaba. Prefiere partirse en dos
+                    // renglones antes que romperse.
+                    Expanded(
+                      child: Text(
+                        _pickingOrigin ? '¿De dónde salís?' : '¿A dónde vas?',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                     ),
                   ],
                 ),
@@ -201,31 +208,26 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
                   title: const Text('Usar mi ubicación'),
                   onTap: _locating ? null : _useCurrentLocation,
                 ),
-              Flexible(
-                child: stopsAsync.when(
-                  loading: () => const Padding(
-                    padding: EdgeInsets.all(32),
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                  error: (error, _) => Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          failureMessage(error),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        FilledButton.tonal(
-                          onPressed: () => ref.invalidate(allStopsProvider),
-                          child: const Text('Reintentar'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  data: (stops) => _buildResults(stops, reference),
+              stopsAsync.when(
+                loading: () => const Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Center(child: CircularProgressIndicator()),
                 ),
+                error: (error, _) => Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(failureMessage(error), textAlign: TextAlign.center),
+                      const SizedBox(height: 8),
+                      FilledButton.tonal(
+                        onPressed: () => ref.invalidate(allStopsProvider),
+                        child: const Text('Reintentar'),
+                      ),
+                    ],
+                  ),
+                ),
+                data: (stops) => _buildResults(stops, reference),
               ),
               // El mapa nunca deja de ser una opción PARA EL DESTINO: hay
               // destinos que no son una parada (una casa, una plaza, la
@@ -279,8 +281,10 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
         ? null
         : LatLng(reference.lat, reference.lng);
 
+    // Sin scroll propio: scrollea la hoja entera (ver el ListView del build).
     return ListView.separated(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 8),
       itemCount: matches.length,
       separatorBuilder: (_, _) => const Divider(height: 1),
@@ -368,6 +372,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
 
     return ListView(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 8),
       children: rows,
     );

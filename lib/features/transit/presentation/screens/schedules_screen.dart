@@ -102,7 +102,14 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
           ],
         ),
       ),
-      body: Column(
+      // UN solo scroll para toda la pantalla, tarifa y frecuencia incluidas.
+      // Antes eran renglones fijos arriba de una lista con scroll propio, y
+      // con el texto del sistema al 200% los renglones solos ya superaban el
+      // alto de la pantalla: desbordaba 580 px justo para quien agrandó la
+      // letra porque no ve bien de lejos. Que scrollee todo junto no cambia
+      // nada a escala normal —todo entra igual— y a escala grande se navega.
+      body: ListView(
+        padding: const EdgeInsets.only(bottom: 24),
         children: [
           // La tarifa de ESTA línea, que no siempre es la de su red: el 904A
           // sale un 55% más que sus hermanos. Acá se puede dar el número
@@ -137,34 +144,30 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
                   setState(() => _userDayType = selection.single),
             ),
           ),
-          Expanded(
-            child: schedulesAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) => Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Text(
-                        failureMessage(error),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => ref.invalidate(schedulesProvider(args)),
-                      child: const Text('Reintentar'),
-                    ),
-                  ],
-                ),
+          schedulesAsync.when(
+            loading: () => const Padding(
+              padding: EdgeInsets.all(32),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, _) => Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(failureMessage(error), textAlign: TextAlign.center),
+                  TextButton(
+                    onPressed: () => ref.invalidate(schedulesProvider(args)),
+                    child: const Text('Reintentar'),
+                  ),
+                ],
               ),
-              data: (schedules) => _ScheduleList(
-                schedules: schedules,
-                // Resaltar "próxima salida" solo tiene sentido si se está
-                // mirando el tipo de día de HOY.
-                now: dayType == todayType ? now : null,
-                hasRegulatedFrequency: frequency != null,
-              ),
+            ),
+            data: (schedules) => _ScheduleList(
+              schedules: schedules,
+              // Resaltar "próxima salida" solo tiene sentido si se está
+              // mirando el tipo de día de HOY.
+              now: dayType == todayType ? now : null,
+              hasRegulatedFrequency: frequency != null,
             ),
           ),
         ],
@@ -326,7 +329,7 @@ class _ScheduleList extends StatelessWidget {
       // explícito evita que parezca una pantalla rota.
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.fromLTRB(32, 48, 32, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -371,72 +374,87 @@ class _ScheduleList extends StatelessWidget {
         : schedules.indexWhere((s) => s.departureTime >= nowOffset);
     final scheme = Theme.of(context).colorScheme;
 
-    return ListView(
+    // Sin scroll propio: la pantalla entera es UNA lista (ver el body) y un
+    // scrollable adentro de otro pelea los gestos.
+    return Padding(
       padding: const EdgeInsets.all(12),
-      children: [
-        const _UnverifiedNotice(),
-        if (nextIndex >= 0)
-          _NextDepartureCard(
-            schedule: schedules[nextIndex],
-            minutesLeft:
-                (schedules[nextIndex].departureTime - nowOffset!).inMinutes,
-          ),
-        if (nowOffset != null && nextIndex == -1)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  const Icon(Icons.nightlight_outlined),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'No quedan salidas hoy para este recorrido.',
-                      style: Theme.of(context).textTheme.bodyMedium,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _UnverifiedNotice(),
+          if (nextIndex >= 0)
+            _NextDepartureCard(
+              schedule: schedules[nextIndex],
+              minutesLeft:
+                  (schedules[nextIndex].departureTime - nowOffset!).inMinutes,
+            ),
+          if (nowOffset != null && nextIndex == -1)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  children: [
+                    const Icon(Icons.nightlight_outlined),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'No quedan salidas hoy para este recorrido.',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            for (final (index, schedule) in schedules.indexed)
-              StaggeredIn(
-                index: index,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    // Píldora, como todos los chips de la app. Estaba en
-                    // radio 10, que no era ni tarjeta ni chip.
-                    borderRadius: BorderRadius.circular(AppTheme.pillRadius),
-                    color: index == nextIndex
-                        ? scheme.primaryContainer
-                        : scheme.surfaceContainerHighest,
-                  ),
-                  child: Text(
-                    schedule.formattedTime,
-                    style: TextStyle(
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                      fontWeight: index == nextIndex
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final (index, schedule) in schedules.indexed)
+                StaggeredIn(
+                  index: index,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      // Píldora, como todos los chips de la app. Estaba en
+                      // radio 10, que no era ni tarjeta ni chip.
+                      borderRadius: BorderRadius.circular(AppTheme.pillRadius),
                       color: index == nextIndex
-                          ? scheme.onPrimaryContainer
-                          : scheme.onSurfaceVariant,
+                          ? scheme.primaryContainer
+                          : scheme.surfaceContainerHighest,
+                    ),
+                    // La etiqueta dice lo que el color y la negrita dicen a
+                    // la vista: cuál es la próxima. Un lector de pantalla no
+                    // "ve" el resaltado, y la próxima salida es LA respuesta
+                    // de esta pantalla.
+                    child: Semantics(
+                      label: index == nextIndex
+                          ? 'Próxima salida: ${schedule.formattedTime}'
+                          : null,
+                      excludeSemantics: index == nextIndex,
+                      child: Text(
+                        schedule.formattedTime,
+                        style: TextStyle(
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                          fontWeight: index == nextIndex
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          color: index == nextIndex
+                              ? scheme.onPrimaryContainer
+                              : scheme.onSurfaceVariant,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

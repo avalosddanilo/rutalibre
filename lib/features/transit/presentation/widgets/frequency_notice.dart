@@ -62,10 +62,20 @@ class FrequencyRow extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text(
-                  frequency.formattedValidity,
-                  style: textTheme.labelSmall?.copyWith(color: scheme.outline),
-                  textAlign: TextAlign.right,
+                // Acotada y elidible: con el texto del sistema al 200% esta
+                // fecha no entra entera al lado de la banda, y de las dos la
+                // que no se puede perder es la banda. La fecha completa vive
+                // en la hoja de detalle, a un toque.
+                Flexible(
+                  child: Text(
+                    frequency.formattedValidity,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: scheme.outline,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
                 ),
                 const SizedBox(width: 6),
                 Icon(Icons.info_outline, size: 16, color: scheme.outline),
