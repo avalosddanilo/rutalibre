@@ -617,6 +617,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                   ],
                 ),
+              // Vos, moviéndote, SOLO con la guía activa: es la única
+              // situación en que la app sigue la posición (ver
+              // livePositionProvider — el stream muere solo al cerrar la
+              // guía). Ver el propio punto avanzar por el trazado es lo que
+              // confirma "voy bien" sin leer nada.
+              if (steps != null) const _LiveGuidanceDot(),
             ],
           ),
           _TopBar(
@@ -680,6 +686,45 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             TripGuidancePanel(steps: steps),
         ],
       ),
+    );
+  }
+}
+
+/// El punto "vos" del viaje en curso, alimentado por el GPS en vivo.
+///
+/// Widget aparte por lo mismo que las otras capas: que el rebuild de cada
+/// fix de posición redibuje ESTO y no la pantalla entera. Sin posición
+/// (permiso negado, GPS apagado, primer fix que no llegó) no dibuja nada.
+class _LiveGuidanceDot extends ConsumerWidget {
+  const _LiveGuidanceDot();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final position = ref.watch(livePositionProvider).value;
+    if (position == null || !isDrawableLatLng(position.lat, position.lng)) {
+      return const SizedBox.shrink();
+    }
+
+    return MarkerLayer(
+      markers: [
+        Marker(
+          point: LatLng(position.lat, position.lng),
+          width: 22,
+          height: 22,
+          child: const DecoratedBox(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              // El mismo azul de "acá estás" del modo cerca mío: es el mismo
+              // significado, así que es el mismo color.
+              color: userMarkerColor,
+              border: Border.fromBorderSide(
+                BorderSide(color: Colors.white, width: 3),
+              ),
+              boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black38)],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

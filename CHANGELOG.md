@@ -53,6 +53,16 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   número ahí hace que alguien se baje antes de tiempo. Los pasos se avanzan a
   mano, no con el GPS: un paso que salta cuando no correspondía es peor que
   ninguno.
+- **"Faltan 3 paradas para bajarte", en vivo.** Con la guía abierta, la app
+  sigue tu posición y la cuenta contra las paradas en orden del recorrido: es
+  geometría, no un horario inventado. Cuando queda una parada —o menos de 250
+  metros— el renglón se enciende y el teléfono **vibra una vez**: se acabó
+  viajar pegado a la ventanilla contando esquinas. En las caminatas dice los
+  metros que faltan, y tu punto azul avanza por el trazado. Tres reglas
+  honestas: si no hay GPS no se muestra nada (la guía funciona igual que
+  siempre), si tu posición no cae en el tramo el contador **se calla** en vez
+  de adivinar, y el seguimiento **muere solo** al cerrar la guía — nunca corre
+  de fondo.
 - El mapa dibuja **el camino que hacés vos**, recortado entre la parada donde
   subís y la donde bajás, no el recorrido entero de la línea.
 - Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:

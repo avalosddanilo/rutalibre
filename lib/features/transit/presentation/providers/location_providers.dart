@@ -85,6 +85,24 @@ class LocationService {
     }
   }
 
+  /// La posición en vivo, mientras alguien la escuche.
+  ///
+  /// Existe para UNA cosa: el viaje en curso. Con la guía abierta, saber
+  /// dónde estás es lo que permite decir "faltan 3 paradas" de verdad — y es
+  /// el único momento en que seguir el GPS se justifica: la persona pidió
+  /// explícitamente que la acompañemos.
+  ///
+  /// `distanceFilter: 20`: arriba de un colectivo no interesa cada metro, y
+  /// cada fix de menos es batería. **No pide permiso**: si no está dado, el
+  /// stream falla y quien escucha simplemente no muestra el dato — pedirlo
+  /// acá interrumpiría con un diálogo en medio del viaje.
+  Stream<UserPosition> positionStream() => Geolocator.getPositionStream(
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 20,
+    ),
+  ).map((position) => (lat: position.latitude, lng: position.longitude));
+
   /// La última posición que el sistema YA tiene, o null.
   ///
   /// A diferencia de [currentPosition], esto **no pide permiso, no enciende
@@ -149,6 +167,21 @@ final class NearbyQueryNotifier extends Notifier<UserPosition?> {
 
   void clear() => state = null;
 }
+
+/// La posición en vivo del viaje en curso.
+///
+/// `autoDispose` es LA decisión acá: el stream del GPS arranca cuando el
+/// primer widget lo escucha —la guía— y se corta solo cuando el último deja
+/// de hacerlo — al terminar el viaje. Nadie tiene que acordarse de apagarlo,
+/// y fuera de la guía la app no sigue a nadie, que es exactamente lo que
+/// promete la política de privacidad.
+///
+/// El error (sin permiso, GPS apagado) NO se traduce a mensaje: los widgets
+/// usan `.value` y sin posición simplemente no muestran el dato en vivo. La
+/// guía completa funciona igual sin GPS, como siempre.
+final livePositionProvider = StreamProvider.autoDispose<UserPosition>(
+  (ref) => ref.watch(locationServiceProvider).positionStream(),
+);
 
 /// Desde dónde se mide "a cuánto llego caminando", o null si no se sabe.
 ///

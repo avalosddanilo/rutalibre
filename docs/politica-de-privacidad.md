@@ -28,6 +28,12 @@ enciende el GPS. Para la distancia caminando y el aviso de lluvia usa **la
 última posición que tu teléfono ya tenía guardada** —no te pide nada ni
 enciende el GPS—, y si no hay ninguna, simplemente no muestra ese dato.
 
+Durante un **viaje iniciado** (la guía paso a paso), la app sí sigue tu
+posición **mientras la guía está abierta**: es lo que le permite decirte
+cuántas paradas faltan para bajarte. El seguimiento **se corta solo** al
+terminar o cerrar la guía, y nunca corre en segundo plano: con la app cerrada
+no hay seguimiento posible.
+
 Podés usar el mapa, ver los recorridos, las paradas, los horarios y buscar
 líneas **sin dar el permiso de ubicación**.
 

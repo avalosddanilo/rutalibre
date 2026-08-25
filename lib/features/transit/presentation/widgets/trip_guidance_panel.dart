@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../../app/theme/app_theme.dart';
 import '../../../../app/theme/motion.dart';
+import '../../domain/entities/trip_plan.dart';
+import '../providers/location_providers.dart';
+import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
+import '../utils/ride_progress.dart';
 import '../utils/trip_guidance.dart';
 import 'line_badge.dart';
 
@@ -13,11 +19,12 @@ import 'line_badge.dart';
 /// yendo a algún lado no está eligiendo qué colectivo mirar, y dos paneles
 /// apilados abajo dejarían el mapa en una franja.
 ///
-/// El paso se avanza A MANO. Podría avanzarse solo con el GPS —cuando te
-/// acercás a la parada— pero eso pide seguir la posición todo el viaje, que
-/// es batería y permisos, y equivocarse ahí es peor que no hacerlo: un paso
-/// que salta solo cuando no correspondía deja a alguien mirando la
-/// indicación equivocada arriba del colectivo.
+/// El paso se avanza A MANO, aunque la guía sí sigue tu posición (ver
+/// [livePositionProvider]). La distinción importa: la posición se usa para
+/// INFORMAR —"faltan 3 paradas", "faltan 120 m"— y nunca para decidir por
+/// vos. Un paso que salta solo cuando no correspondía deja a alguien mirando
+/// la indicación equivocada arriba del colectivo; un renglón informativo
+/// equivocado se ignora y ya.
 class TripGuidancePanel extends ConsumerWidget {
   const TripGuidancePanel({required this.steps, super.key});
 
@@ -105,6 +112,12 @@ class TripGuidancePanel extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  // El renglón EN VIVO: solo en los pasos donde la posición
+                  // agrega algo (viajar y caminar). Si no hay GPS no se
+                  // dibuja nada y el paso queda como siempre.
+                  if (step case final RideStep ride)
+                    _LiveRideRow(leg: ride.leg),
+                  if (step case final WalkStep walk) _LiveWalkRow(step: walk),
                   const SizedBox(height: 12),
                   Row(
                     children: [
@@ -138,6 +151,152 @@ class TripGuidancePanel extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// "Faltan 3 paradas" en vivo, con el aviso de bajada.
+///
+/// **Es la respuesta a "¿y cuándo me bajo?" sin inventar horarios.** No
+/// sabemos a qué velocidad va el colectivo, pero la posición contra las
+/// paradas EN ORDEN del recorrido es geometría: se muestra cuántas faltan, y
+/// cuando queda una (o menos de 250 m) el renglón se enciende y el teléfono
+/// vibra UNA vez. Es lo que evita viajar pegado a la ventanilla contando
+/// esquinas — que es exactamente como se viaja en una ciudad que no es la
+/// tuya.
+///
+/// Si no hay GPS, no hay permiso o la posición no cae en el tramo, no se
+/// dibuja NADA: el paso queda con su texto de siempre. Un contador que
+/// adivina es peor que ningún contador.
+class _LiveRideRow extends ConsumerStatefulWidget {
+  const _LiveRideRow({required this.leg});
+
+  final TripLeg leg;
+
+  @override
+  ConsumerState<_LiveRideRow> createState() => _LiveRideRowState();
+}
+
+class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
+  /// Para vibrar UNA vez al entrar en zona de bajada, no en cada fix.
+  bool _alerted = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final position = ref.watch(livePositionProvider).value;
+    final stops = ref
+        .watch(stopsForRouteProvider(widget.leg.routeVariantId))
+        .value;
+    if (position == null || stops == null) return const SizedBox.shrink();
+
+    final progress = rideProgress(
+      routeStops: stops,
+      leg: widget.leg,
+      lat: position.lat,
+      lng: position.lng,
+    );
+    if (progress == null) {
+      // Se salió de la zona del tramo: si vuelve a entrar, puede volver a
+      // avisar (bajarse, caminar y volver a subir es raro pero existe).
+      _alerted = false;
+      return const SizedBox.shrink();
+    }
+
+    final prepare = progress.shouldPrepare;
+    if (prepare && !_alerted) {
+      _alerted = true;
+      // Háptica y no sonido: arriba del colectivo el teléfono está en la
+      // mano o el bolsillo, y un pitido compite con el ruido del motor.
+      HapticFeedback.heavyImpact();
+    } else if (!prepare) {
+      _alerted = false;
+    }
+
+    final scheme = Theme.of(context).colorScheme;
+    final text = switch (progress.stopsRemaining) {
+      0 => 'Bajate en esta parada',
+      1 => 'La próxima es la tuya — preparate',
+      final n => 'Faltan $n paradas',
+    };
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: AnimatedContainer(
+        duration: Motion.base,
+        curve: Motion.curve,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: prepare
+              ? scheme.primaryContainer
+              : scheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(AppTheme.radius),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              prepare ? Icons.notifications_active : Icons.gps_fixed,
+              size: 18,
+              color: prepare
+                  ? scheme.onPrimaryContainer
+                  : scheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: prepare ? FontWeight.w700 : FontWeight.w500,
+                  color: prepare
+                      ? scheme.onPrimaryContainer
+                      : scheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// "Faltan ~120 m" en vivo, en los pasos de caminata.
+///
+/// Mismo contrato que el contador de paradas: aparece si hay posición y se
+/// calla si no. El "~" no es decorativo — es línea recta, no la vereda.
+class _LiveWalkRow extends ConsumerWidget {
+  const _LiveWalkRow({required this.step});
+
+  final WalkStep step;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final position = ref.watch(livePositionProvider).value;
+    if (position == null) return const SizedBox.shrink();
+
+    final meters = const Distance().as(
+      LengthUnit.Meter,
+      LatLng(position.lat, position.lng),
+      LatLng(step.focusLat, step.focusLng),
+    );
+    final scheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        children: [
+          Icon(Icons.gps_fixed, size: 16, color: scheme.onSurfaceVariant),
+          const SizedBox(width: 8),
+          Text(
+            meters < 1000
+                ? 'Faltan ~${meters.round()} m'
+                : 'Faltan ~${(meters / 1000).toStringAsFixed(1).replaceAll('.', ',')} km',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: scheme.onSurfaceVariant,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ],
       ),
     );
   }
