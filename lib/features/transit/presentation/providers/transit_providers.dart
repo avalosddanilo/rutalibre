@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -415,6 +416,20 @@ final placesDataSourceProvider = Provider<PlacesDataSource>(
 
 final placesRepositoryProvider = Provider<PlacesRepository>(
   (ref) => PlacesRepositoryImpl(ref.watch(placesDataSourceProvider)),
+);
+
+/// Fábrica del `TileProvider` del mapa.
+///
+/// Existe para poder TESTEAR la pantalla del mapa: el provider por defecto
+/// sale a la red por cada tile, y en un widget test cada request devuelve
+/// 400 y llena la corrida de excepciones. Los tests lo sobreescriben con un
+/// provider que sirve una imagen fija; la app no nota la diferencia.
+///
+/// Es una fábrica y no una instancia porque `TileLayer` toma posesión del
+/// provider que recibe (lo cierra al desmontarse) y un singleton compartido
+/// se cerraría con el primer mapa que muera.
+final tileProviderFactoryProvider = Provider<TileProvider Function()>(
+  (ref) => NetworkTileProvider.new,
 );
 
 /// Los 2612 lugares, leídos del asset.

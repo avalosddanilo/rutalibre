@@ -541,6 +541,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 // Requerido por la política de tiles de OSM.
                 userAgentPackageName: 'com.rutalibre.rutalibre',
+                // Inyectable para que la pantalla se pueda testear sin red.
+                tileProvider: ref.watch(tileProviderFactoryProvider)(),
               ),
               if (routePoints.isNotEmpty)
                 PolylineLayer(
@@ -1237,54 +1239,63 @@ class _TopBar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                FloatingPanel(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // La marca, no un ícono de catálogo: es la misma que
-                      // el ícono de la app, dibujada por el mismo painter.
-                      // Sobre el panel claro la carrocería va en el negro de
-                      // marca y los faros en el acento.
-                      const BrandMark(
-                        size: 20,
-                        bodyColor: Brand.black,
-                        accentColor: Brand.accent,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Ruta Libre',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
+            // La escala de texto se acota a 1.3 SOLO en este renglón, y es
+            // una decisión de accesibilidad, no en contra: al 200% la chapa
+            // de la marca ocupaba casi todo el ancho y al crédito de OSM le
+            // quedaban ~40 px — se partía en una letra por renglón, 800 px de
+            // alto de sopa de letras. Esto es cromo sobre el mapa, no
+            // contenido de lectura; lo que SÍ es contenido (el chip de
+            // lluvia, abajo) escala completo porque tiene el ancho entero.
+            MediaQuery.withClampedTextScaling(
+              maxScaleFactor: 1.3,
+              child: Row(
+                children: [
+                  FloatingPanel(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // La marca, no un ícono de catálogo: es la misma que
+                        // el ícono de la app, dibujada por el mismo painter.
+                        // Sobre el panel claro la carrocería va en el negro de
+                        // marca y los faros en el acento.
+                        const BrandMark(
+                          size: 20,
+                          bodyColor: Brand.black,
+                          accentColor: Brand.accent,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 8),
+                        Text(
+                          'Ruta Libre',
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                // Expanded y no Spacer: con el tamaño de fuente accesible el
-                // crédito desbordaba el Row y quedaba RECORTADO. Mostrarlo
-                // entero no es cosmético, es la obligación de atribución de
-                // la licencia ODbL.
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: FloatingPanel(
-                      radius: 10,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 5,
-                      ),
-                      child: Text(
-                        '© OpenStreetMap contributors',
-                        textAlign: TextAlign.right,
-                        style: Theme.of(context).textTheme.labelSmall,
+                  const SizedBox(width: 8),
+                  // Expanded y no Spacer: con el tamaño de fuente accesible el
+                  // crédito desbordaba el Row y quedaba RECORTADO. Mostrarlo
+                  // entero no es cosmético, es la obligación de atribución de
+                  // la licencia ODbL.
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: FloatingPanel(
+                        radius: 10,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 5,
+                        ),
+                        child: Text(
+                          '© OpenStreetMap contributors',
+                          textAlign: TextAlign.right,
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             // El chip de lluvia va DEBAJO de la marca y no al lado: el
             // renglón de arriba ya se lo pelea con el crédito de OSM, que por
