@@ -600,8 +600,13 @@ publicar la política en una URL y probar el APK de release en el teléfono.
    nadie pidió.
 8. Feriados trasladables: tabla `holidays` en Supabase (reemplaza la lista
    fija de `day_type_resolver.dart` sin tocar pantallas).
-9. Widget tests de MapScreen (requieren mockear tiles — evaluar
-   `flutter_map` test harness o fake TileProvider).
+9. ~~Widget tests de MapScreen~~ — **empezado**: el tile provider es
+   inyectable (`tileProviderFactoryProvider`, una FÁBRICA porque `TileLayer`
+   toma posesión del provider y lo cierra al desmontarse) y
+   `map_screen_test.dart` cubre el arranque, el modo "¿cómo llego?" y el
+   texto al 200%. Regla del harness: `pump` con duración y NUNCA
+   `pumpAndSettle` — el mapa anima tiles y a settle no se llega. Falta cubrir
+   los flujos con GPS y la capa de marcadores.
 10. CI (GitHub Actions: analyze + test en cada PR).
 11. **Publicarla**: cuenta de desarrollador, capturas, ficha y política de
     privacidad (obligatoria, la app usa ubicación).
