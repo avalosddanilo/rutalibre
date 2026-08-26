@@ -194,6 +194,49 @@ void main() {
       expect(find.text('Viajá 5 paradas'), findsOneWidget);
     });
 
+    testWidgets('"Reintentar" re-suscribe el stream y el contador revive', (
+      tester,
+    ) async {
+      // Los reintentos automáticos se rinden con backoff creciente: quien
+      // apagó la ubicación por error y la prendió cinco minutos después se
+      // quedaba mirando "esperando" para siempre. El botón revive el stream.
+      var subscriptions = 0;
+      final gps = StreamController<({double lat, double lng})>();
+      addTearDown(gps.close);
+      final c = ProviderContainer(
+        retry: (retryCount, error) => null,
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
+          livePositionProvider.overrideWith((ref) {
+            subscriptions++;
+            // Primera suscripción: el guion del GPS que se apaga (lo maneja
+            // el test a mano). Segunda (tras Reintentar): señal de vuelta.
+            return subscriptions == 1
+                ? gps.stream
+                : Stream.value((lat: -27.4519, lng: _routeStops[5].lng));
+          }),
+        ],
+      );
+      addTearDown(c.dispose);
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      gps.add((lat: -27.4519, lng: _routeStops[3].lng));
+      await tester.pumpAndSettle();
+      expect(find.text('Faltan 3 paradas'), findsOneWidget);
+
+      gps.addError(Exception('ubicación apagada'));
+      await tester.pumpAndSettle();
+      expect(find.text('Esperando señal de GPS…'), findsOneWidget);
+
+      await tester.tap(find.text('Reintentar'));
+      await tester.pumpAndSettle();
+
+      expect(subscriptions, 2);
+      expect(find.text('La próxima es la tuya — preparate'), findsOneWidget);
+      expect(find.text('Esperando señal de GPS…'), findsNothing);
+    });
+
     testWidgets('caminando pasa lo mismo: aviso, no metros congelados', (
       tester,
     ) async {

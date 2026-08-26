@@ -78,12 +78,17 @@ class TripResultsSheet extends ConsumerWidget {
                   // recalcula sola — la vuelta puede ser OTRO colectivo, o el
                   // mismo por otra calle, y por eso no alcanza con releer la
                   // ida al revés.
-                  IconButton(
-                    icon: const Icon(Icons.swap_vert),
-                    tooltip: 'Invertir el viaje (para volver)',
-                    onPressed: () =>
-                        ref.read(tripSearchProvider.notifier).swap(),
-                  ),
+                  // PERO NO con la guía andando: invertir suelta el viaje
+                  // elegido, y soltar el viaje mata la guía y borra su
+                  // guardado — un toque, sin confirmación, arriba del
+                  // colectivo. "Para volver" es de después de llegar.
+                  if (ref.watch(tripGuidanceProvider) == null)
+                    IconButton(
+                      icon: const Icon(Icons.swap_vert),
+                      tooltip: 'Invertir el viaje (para volver)',
+                      onPressed: () =>
+                          ref.read(tripSearchProvider.notifier).swap(),
+                    ),
                 ],
               ),
             ),

@@ -53,109 +53,125 @@ class TripGuidancePanel extends ConsumerWidget {
             shadowColor: Colors.black.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(AppTheme.radius),
             clipBehavior: Clip.antiAlias,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Cuántos pasos faltan, en barritas. Un "3 de 5" obliga a
-                  // hacer la cuenta; las barritas se leen sin leer.
-                  Row(
-                    children: [
-                      for (var i = 0; i < steps.length; i++) ...[
-                        if (i > 0) const SizedBox(width: 4),
-                        Expanded(
-                          child: AnimatedContainer(
-                            duration: Motion.base,
-                            curve: Motion.curve,
-                            height: 3,
-                            decoration: BoxDecoration(
-                              color: i <= safeIndex
-                                  ? scheme.primary
-                                  : scheme.surfaceContainerHighest,
-                              borderRadius: BorderRadius.circular(2),
+            // Con tope y scroll: en landscape con el texto del sistema al
+            // 200%, el paso grande + el renglón en vivo + el botón del
+            // cartel no entran en el alto de la pantalla, y sin esto el
+            // panel desbordaba en franjas amarillas. Quien agranda el texto
+            // es justamente quien no puede leer letra chica: romperle el
+            // panel de la guía sería fallarle al que más lo necesita.
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.6,
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Cuántos pasos faltan, en barritas. Un "3 de 5" obliga a
+                    // hacer la cuenta; las barritas se leen sin leer.
+                    Row(
+                      children: [
+                        for (var i = 0; i < steps.length; i++) ...[
+                          if (i > 0) const SizedBox(width: 4),
+                          Expanded(
+                            child: AnimatedContainer(
+                              duration: Motion.base,
+                              curve: Motion.curve,
+                              height: 3,
+                              decoration: BoxDecoration(
+                                color: i <= safeIndex
+                                    ? scheme.primary
+                                    : scheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
                             ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _StepIcon(step: step),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Grande: esto se lee de un vistazo, parado en la
+                              // vereda, sin anteojos.
+                              Text(
+                                step.title,
+                                style: textTheme.titleLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              if (step.detail != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  step.detail!,
+                                  style: textTheme.bodyMedium?.copyWith(
+                                    color: scheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
                       ],
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _StepIcon(step: step),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Grande: esto se lee de un vistazo, parado en la
-                            // vereda, sin anteojos.
-                            Text(
-                              step.title,
-                              style: textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            if (step.detail != null) ...[
-                              const SizedBox(height: 2),
-                              Text(
-                                step.detail!,
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: scheme.onSurfaceVariant,
-                                ),
-                              ),
-                            ],
-                          ],
+                    ),
+                    // El renglón EN VIVO: solo en los pasos donde la posición
+                    // agrega algo (viajar y caminar). Si no hay GPS no se
+                    // dibuja nada y el paso queda como siempre.
+                    // Con KEY por tramo: dos pasos seguidos del mismo tipo
+                    // (viajá tramo 1 → viajá tramo 2) reusan el elemento, y
+                    // sin la key el "ya vibré" del tramo anterior se arrastra
+                    // y silencia el aviso de bajada del siguiente.
+                    if (step case final RideStep ride)
+                      _LiveRideRow(key: ObjectKey(ride.leg), leg: ride.leg),
+                    if (step case final WalkStep walk)
+                      _LiveWalkRow(key: ObjectKey(walk), step: walk),
+                    // El cartel para el chofer, en los pasos donde hay que
+                    // PARAR un colectivo: esperándolo, y en el transbordo (el
+                    // que se para es el siguiente). De noche, la pantalla es
+                    // la superficie más brillante de la vereda.
+                    if (step case final BoardStep board)
+                      _HailButton(leg: board.leg),
+                    if (step case final TransferStep transfer)
+                      _HailButton(leg: transfer.next),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        TextButton(
+                          onPressed: () =>
+                              ref.read(tripGuidanceProvider.notifier).stop(),
+                          child: Text(isLast ? 'Listo' : 'Terminar'),
                         ),
-                      ),
-                    ],
-                  ),
-                  // El renglón EN VIVO: solo en los pasos donde la posición
-                  // agrega algo (viajar y caminar). Si no hay GPS no se
-                  // dibuja nada y el paso queda como siempre.
-                  if (step case final RideStep ride)
-                    _LiveRideRow(leg: ride.leg),
-                  if (step case final WalkStep walk) _LiveWalkRow(step: walk),
-                  // El cartel para el chofer, en los pasos donde hay que
-                  // PARAR un colectivo: esperándolo, y en el transbordo (el
-                  // que se para es el siguiente). De noche, la pantalla es
-                  // la superficie más brillante de la vereda.
-                  if (step case final BoardStep board)
-                    _HailButton(leg: board.leg),
-                  if (step case final TransferStep transfer)
-                    _HailButton(leg: transfer.next),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      TextButton(
-                        onPressed: () =>
-                            ref.read(tripGuidanceProvider.notifier).stop(),
-                        child: Text(isLast ? 'Listo' : 'Terminar'),
-                      ),
-                      const Spacer(),
-                      if (safeIndex > 0)
-                        IconButton(
-                          tooltip: 'Paso anterior',
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => ref
-                              .read(tripGuidanceProvider.notifier)
-                              .previous(),
-                        ),
-                      const SizedBox(width: 4),
-                      if (!isLast)
-                        FilledButton.icon(
-                          onPressed: () => ref
-                              .read(tripGuidanceProvider.notifier)
-                              .next(steps.length),
-                          icon: const Icon(Icons.arrow_forward, size: 18),
-                          label: const Text('Siguiente'),
-                        ),
-                    ],
-                  ),
-                ],
+                        const Spacer(),
+                        if (safeIndex > 0)
+                          IconButton(
+                            tooltip: 'Paso anterior',
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () => ref
+                                .read(tripGuidanceProvider.notifier)
+                                .previous(),
+                          ),
+                        const SizedBox(width: 4),
+                        if (!isLast)
+                          FilledButton.icon(
+                            onPressed: () => ref
+                                .read(tripGuidanceProvider.notifier)
+                                .next(steps.length),
+                            icon: const Icon(Icons.arrow_forward, size: 18),
+                            label: const Text('Siguiente'),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -203,7 +219,7 @@ class _HailButton extends StatelessWidget {
 /// dibuja NADA: el paso queda con su texto de siempre. Un contador que
 /// adivina es peor que ningún contador.
 class _LiveRideRow extends ConsumerStatefulWidget {
-  const _LiveRideRow({required this.leg});
+  const _LiveRideRow({required this.leg, super.key});
 
   final TripLeg leg;
 
@@ -261,9 +277,13 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
       _alerted = true;
       // Háptica y no sonido: arriba del colectivo el teléfono está en la
       // mano o el bolsillo, y un pitido compite con el ruido del motor.
+      //
+      // Y UNA sola vez por acercamiento: el flag NO se resetea cuando
+      // `prepare` vuelve a falso, porque el GPS oscila — un fix a 240 m y el
+      // siguiente a 260 harían vibrar el teléfono en cada vaivén. Solo se
+      // rearma al salir de la zona del tramo entero (el `progress == null`
+      // de arriba), que es un cambio de situación real y no ruido.
       HapticFeedback.heavyImpact();
-    } else if (!prepare) {
-      _alerted = false;
     }
 
     final scheme = Theme.of(context).colorScheme;
@@ -317,18 +337,21 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
 ///
 /// Aparece SOLO cuando el renglón en vivo venía andando y el stream murió
 /// (permiso revocado en los ajustes, ubicación apagada a mitad de viaje).
-/// Neutro y sin botón: no es un error de la app ni hay nada que reintentar
-/// desde acá — si el permiso vuelve, el stream revive solo con la guía.
-class _WaitingForGps extends StatelessWidget {
+/// Con "Reintentar" a mano: los reintentos automáticos de Riverpod se rinden
+/// después de varios fallos con backoff creciente, así que quien apagó la
+/// ubicación por error y la volvió a prender cinco minutos después podía
+/// quedarse mirando "esperando" para siempre. El botón re-suscribe el stream
+/// en el acto.
+class _WaitingForGps extends ConsumerWidget {
   const _WaitingForGps();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
           color: scheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(AppTheme.radius),
@@ -345,6 +368,10 @@ class _WaitingForGps extends StatelessWidget {
                 ),
               ),
             ),
+            TextButton(
+              onPressed: () => ref.invalidate(livePositionProvider),
+              child: const Text('Reintentar'),
+            ),
           ],
         ),
       ),
@@ -357,7 +384,7 @@ class _WaitingForGps extends StatelessWidget {
 /// Mismo contrato que el contador de paradas: aparece si hay posición y se
 /// calla si no. El "~" no es decorativo — es línea recta, no la vereda.
 class _LiveWalkRow extends ConsumerStatefulWidget {
-  const _LiveWalkRow({required this.step});
+  const _LiveWalkRow({required this.step, super.key});
 
   final WalkStep step;
 

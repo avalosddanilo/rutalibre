@@ -12,7 +12,6 @@ import '../../../../app/theme/motion.dart';
 import '../../../../app/widgets/floating_panel.dart';
 import '../../../../app/widgets/staggered_in.dart';
 import '../../../weather/presentation/widgets/rain_chip.dart';
-import '../../data/datasources/active_trip_store.dart';
 import '../../domain/entities/nearby_stop.dart';
 import '../../domain/entities/reference_stop.dart';
 import '../../domain/entities/route_variant.dart';
@@ -751,7 +750,7 @@ class _ResumeTripBanner extends ConsumerWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => _resume(ref, saved),
+                    onPressed: () => _resume(ref),
                     child: Text(
                       'Retomar',
                       style: TextStyle(color: scheme.inversePrimary),
@@ -775,7 +774,17 @@ class _ResumeTripBanner extends ConsumerWidget {
     );
   }
 
-  static void _resume(WidgetRef ref, ActiveTrip saved) {
+  static Future<void> _resume(WidgetRef ref) async {
+    // Se RELEE del disco en vez de usar lo que muestra el banner: el banner
+    // sale de una lectura de cuando la app arrancó, y si quedó abierta horas
+    // con el mapa quieto, ese valor puede haber vencido hace rato. load()
+    // re-valida la frescura; retomar un viaje vencido lo "lavaría" con una
+    // marca nueva.
+    final saved = await ref.read(activeTripStoreProvider).load();
+    if (saved == null) {
+      ref.invalidate(savedTripProvider);
+      return;
+    }
     // `restore` y no startFrom+setDestination: ese par pasa por "eligiendo
     // destino", y el mapa lee esa transición como "abrile la hoja de
     // opciones" — que acá taparía la guía con una consulta a la red.
