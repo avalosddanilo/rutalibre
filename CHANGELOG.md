@@ -177,4 +177,4 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   reportes dentro de la app todavía.
 - Los tiles del mapa se ven claros también en modo oscuro.
 
-[1.0.0]: https://github.com/rutalibre/rutalibre/releases/tag/v1.0.0
+[1.0.0]: https://github.com/avalosddanilo/rutalibre/releases/tag/v1.0.0
