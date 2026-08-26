@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../../app/theme/app_theme.dart';
 import '../../../../app/theme/motion.dart';
+import '../../../../core/providers/clock_provider.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../providers/location_providers.dart';
 import '../providers/transit_providers.dart';
@@ -227,7 +230,8 @@ class _LiveRideRow extends ConsumerStatefulWidget {
   ConsumerState<_LiveRideRow> createState() => _LiveRideRowState();
 }
 
-class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
+class _LiveRideRowState extends ConsumerState<_LiveRideRow>
+    with _StaleFixTicker {
   /// Para vibrar UNA vez al entrar en zona de bajada, no en cada fix.
   bool _alerted = false;
 
@@ -257,6 +261,13 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
         .watch(stopsForRouteProvider(widget.leg.routeVariantId))
         .value;
     if (position == null || stops == null) return const SizedBox.shrink();
+
+    // El fix puede estar VIEJO sin que haya error: en un túnel o una
+    // terminal techada el GPS simplemente deja de emitir, y como los fixes
+    // son continuos (ver positionStream), más de 25 s de silencio ES pérdida
+    // de señal — no un semáforo. Un contador alimentado por esa posición es
+    // un dato viejo con cara de vivo.
+    if (checkStaleFix(ref)) return const _WaitingForGps();
 
     final progress = rideProgress(
       routeStops: stops,
@@ -333,6 +344,41 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
   }
 }
 
+/// La detección de "fix viejo" que comparten los renglones en vivo.
+///
+/// Mixin y no herencia: cada renglón ya extiende su `ConsumerState`. El
+/// timer es de UN disparo, armado para el instante exacto en que el último
+/// fix cumple [liveFixStaleAfter]: un periódico despertaría al widget cada
+/// pocos segundos para nada (y colgaría los `pumpAndSettle` de los tests).
+mixin _StaleFixTicker<T extends ConsumerStatefulWidget> on ConsumerState<T> {
+  Timer? _staleTimer;
+
+  /// True si el último fix ya es viejo. Arma el timer para re-evaluar justo
+  /// cuando VAYA a serlo.
+  bool checkStaleFix(WidgetRef ref) {
+    final lastFixAt = ref.watch(lastLiveFixAtProvider);
+    if (lastFixAt == null) return false;
+    final age = ref.read(clockProvider)().difference(lastFixAt);
+    final stale = age > liveFixStaleAfter;
+    _staleTimer?.cancel();
+    if (!stale) {
+      _staleTimer = Timer(
+        liveFixStaleAfter - age + const Duration(seconds: 1),
+        () {
+          if (mounted) setState(() {});
+        },
+      );
+    }
+    return stale;
+  }
+
+  @override
+  void dispose() {
+    _staleTimer?.cancel();
+    super.dispose();
+  }
+}
+
 /// "Esperando señal de GPS…" — el reemplazo honesto de un contador muerto.
 ///
 /// Aparece SOLO cuando el renglón en vivo venía andando y el stream murió
@@ -392,7 +438,8 @@ class _LiveWalkRow extends ConsumerStatefulWidget {
   ConsumerState<_LiveWalkRow> createState() => _LiveWalkRowState();
 }
 
-class _LiveWalkRowState extends ConsumerState<_LiveWalkRow> {
+class _LiveWalkRowState extends ConsumerState<_LiveWalkRow>
+    with _StaleFixTicker {
   /// Ver `_LiveRideRowState._sawProgress`: mismo criterio, misma razón.
   bool _sawFix = false;
 
@@ -409,6 +456,8 @@ class _LiveWalkRowState extends ConsumerState<_LiveWalkRow> {
 
     final position = positionAsync.value;
     if (position == null) return const SizedBox.shrink();
+    // Mismo criterio que el contador: un fix viejo no es un fix.
+    if (checkStaleFix(ref)) return const _WaitingForGps();
     _sawFix = true;
 
     final meters = const Distance().as(

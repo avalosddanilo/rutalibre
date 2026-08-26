@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rutalibre/core/providers/clock_provider.dart';
 import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/route_variant.dart';
 import 'package:rutalibre/features/transit/domain/entities/stop.dart';
@@ -150,6 +151,75 @@ void main() {
     expect(find.textContaining('Faltan'), findsNothing);
   });
 
+  testWidgets('un fix VIEJO no alimenta el contador: túnel = esperando señal', (
+    tester,
+  ) async {
+    // El GPS puede callarse SIN error (terminal techada, el puente): la
+    // posición queda retenida y el contador seguiría corriendo sobre un dato
+    // de hace un minuto. Con fixes continuos, más de 25 s de silencio es
+    // pérdida de señal, y se dice.
+    final ahora = DateTime(2026, 8, 26, 10);
+    final c = ProviderContainer(
+      retry: (retryCount, error) => null,
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
+        clockProvider.overrideWithValue(() => ahora),
+        livePositionProvider.overrideWith(
+          (ref) => Stream.value((lat: -27.4519, lng: _routeStops[3].lng)),
+        ),
+      ],
+    );
+    addTearDown(c.dispose);
+    // El último fix llegó hace 30 segundos.
+    c
+        .read(lastLiveFixAtProvider.notifier)
+        .mark(ahora.subtract(const Duration(seconds: 30)));
+
+    await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+    expect(find.text('Esperando señal de GPS…'), findsOneWidget);
+    expect(find.textContaining('Faltan'), findsNothing);
+  });
+
+  testWidgets('el stream de posición SE AUTO-CURA: ubicación prendida tarde', (
+    tester,
+  ) async {
+    // Con la ubicación apagada al arrancar la guía, geolocator ni registra
+    // el pedido de updates: prenderla después no emitía nada, nunca. El
+    // provider ahora re-suscribe solo cada 8 segundos mientras la guía viva.
+    var calls = 0;
+    final c = ProviderContainer(
+      // Sin el retry de Riverpod: lo que se prueba es NUESTRO reintento.
+      retry: (retryCount, error) => null,
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+        stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
+        locationServiceProvider.overrideWithValue(
+          _ScriptedLocationService(() {
+            calls++;
+            return calls == 1
+                ? Stream.error(const LocationServiceDisabled())
+                : Stream.value((lat: -27.4519, lng: _routeStops[3].lng));
+          }),
+        ),
+      ],
+    );
+    addTearDown(c.dispose);
+    await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+    // Primer intento: muerto al nacer, sin renglón (nunca hubo señal).
+    expect(find.textContaining('Faltan'), findsNothing);
+
+    // A los 9 segundos el reintento interno vuelve a suscribir: la
+    // ubicación "ya está prendida" y el contador aparece solo.
+    await tester.pump(const Duration(seconds: 9));
+    await tester.pumpAndSettle();
+
+    expect(calls, 2);
+    expect(find.text('Faltan 3 paradas'), findsOneWidget);
+  });
+
   group('el GPS se muere a mitad de viaje', () {
     // El caso real: permiso revocado desde los ajustes de Android/iOS, o la
     // ubicación apagada, CON la guía abierta y el contador andando. El
@@ -284,4 +354,20 @@ void main() {
 
     expect(find.textContaining('Faltan ~'), findsOneWidget);
   });
+}
+
+/// Un LocationService cuyo stream de posición lo decide el test.
+final class _ScriptedLocationService implements LocationService {
+  _ScriptedLocationService(this._stream);
+
+  final Stream<({double lat, double lng})> Function() _stream;
+
+  @override
+  Stream<({double lat, double lng})> positionStream() => _stream();
+
+  @override
+  Future<LocationFix> currentPosition() => throw UnimplementedError();
+
+  @override
+  Future<({double lat, double lng})?> lastKnownPosition() async => null;
 }

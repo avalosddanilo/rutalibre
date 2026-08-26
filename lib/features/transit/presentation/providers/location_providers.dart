@@ -1,7 +1,11 @@
-import 'dart:async' show TimeoutException;
+import 'dart:async';
 
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../../../core/providers/clock_provider.dart';
 
 /// Errores de geolocalización. NO son `Failure`s del dominio a propósito:
 /// la posición del usuario es una preocupación del DISPOSITIVO, no de los
@@ -92,16 +96,30 @@ class LocationService {
   /// el único momento en que seguir el GPS se justifica: la persona pidió
   /// explícitamente que la acompañemos.
   ///
-  /// `distanceFilter: 20`: arriba de un colectivo no interesa cada metro, y
-  /// cada fix de menos es batería. **No pide permiso**: si no está dado, el
-  /// stream falla y quien escucha simplemente no muestra el dato — pedirlo
-  /// acá interrumpiría con un diálogo en medio del viaje.
-  Stream<UserPosition> positionStream() => Geolocator.getPositionStream(
-    locationSettings: const LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 20,
-    ),
-  ).map((position) => (lat: position.latitude, lng: position.longitude));
+  /// **Fixes CONTINUOS (cada ~2 s en Android), sin filtro de distancia.**
+  /// Antes filtraba por 20 m para ahorrar batería, pero eso hace que "el GPS
+  /// calla porque estás quieto en un semáforo" y "el GPS calla porque perdió
+  /// la señal" sean indistinguibles — y sobre ese silencio no se puede
+  /// construir el aviso de dato viejo. Con fixes continuos, el silencio
+  /// SIGNIFICA pérdida de señal, y eso vale las décimas de batería de un
+  /// viaje en colectivo: es solo mientras la guía está abierta.
+  ///
+  /// **No pide permiso**: si no está dado, el stream falla y quien escucha
+  /// simplemente no muestra el dato — pedirlo acá interrumpiría con un
+  /// diálogo en medio del viaje.
+  Stream<UserPosition> positionStream() {
+    final settings = switch (defaultTargetPlatform) {
+      TargetPlatform.android => AndroidSettings(
+        accuracy: LocationAccuracy.high,
+        intervalDuration: const Duration(seconds: 2),
+      ),
+      TargetPlatform.iOS => AppleSettings(accuracy: LocationAccuracy.high),
+      _ => const LocationSettings(accuracy: LocationAccuracy.high),
+    };
+    return Geolocator.getPositionStream(
+      locationSettings: settings,
+    ).map((position) => (lat: position.latitude, lng: position.longitude));
+  }
 
   /// La última posición que el sistema YA tiene, o null.
   ///
@@ -168,6 +186,32 @@ final class NearbyQueryNotifier extends Notifier<UserPosition?> {
   void clear() => state = null;
 }
 
+/// Cuándo llegó el último fix del viaje en curso, o null si ninguno todavía.
+///
+/// Es lo que separa "posición viva" de "posición vieja con cara de viva":
+/// con fixes continuos (ver [LocationService.positionStream]), que esta
+/// marca envejezca significa pérdida de señal DE VERDAD — no un semáforo—,
+/// y la guía puede decir "esperando señal" en vez de mostrar un contador
+/// congelado.
+final lastLiveFixAtProvider = NotifierProvider<LastLiveFixNotifier, DateTime?>(
+  LastLiveFixNotifier.new,
+);
+
+final class LastLiveFixNotifier extends Notifier<DateTime?> {
+  @override
+  DateTime? build() => null;
+
+  void mark(DateTime at) => state = at;
+
+  void reset() => state = null;
+}
+
+/// Más viejo que esto, un fix ya no se muestra como "en vivo".
+///
+/// 25 segundos: con fixes cada ~2, son más de diez perdidos seguidos — eso
+/// es un túnel o una terminal techada, no ruido.
+const liveFixStaleAfter = Duration(seconds: 25);
+
 /// La posición en vivo del viaje en curso.
 ///
 /// `autoDispose` es LA decisión acá: el stream del GPS arranca cuando el
@@ -176,12 +220,64 @@ final class NearbyQueryNotifier extends Notifier<UserPosition?> {
 /// y fuera de la guía la app no sigue a nadie, que es exactamente lo que
 /// promete la política de privacidad.
 ///
-/// El error (sin permiso, GPS apagado) NO se traduce a mensaje: los widgets
-/// usan `.value` y sin posición simplemente no muestran el dato en vivo. La
-/// guía completa funciona igual sin GPS, como siempre.
-final livePositionProvider = StreamProvider.autoDispose<UserPosition>(
-  (ref) => ref.watch(locationServiceProvider).positionStream(),
-);
+/// **Se auto-cura.** El stream de geolocator muere con error cuando el
+/// permiso falta o la ubicación está apagada, y NO revive solo cuando el
+/// usuario la prende — con la ubicación apagada al ARRANCAR la guía, ni
+/// siquiera queda registrado el pedido de updates. Los reintentos de
+/// Riverpod ayudan pero se rinden a los ~40 segundos, y quien prende el GPS
+/// arriba del colectivo llega tarde a esa ventana. Por eso acá el error se
+/// REEMITE (para que la UI diga "esperando señal") y además se re-suscribe
+/// cada [_resubscribeEvery] mientras la guía viva: prender la ubicación a
+/// mitad de viaje vuelve a dibujar el contador solo, como promete el cartel.
+final livePositionProvider = StreamProvider.autoDispose<UserPosition>((ref) {
+  final service = ref.watch(locationServiceProvider);
+  final clock = ref.watch(clockProvider);
+  // El notifier se captura ACÁ, fuera de los callbacks: Riverpod prohíbe
+  // usar `ref` dentro del listen del stream (corre en zona guardada).
+  final lastFix = ref.read(lastLiveFixAtProvider.notifier);
+  final controller = StreamController<UserPosition>();
+  StreamSubscription<UserPosition>? subscription;
+  Timer? retry;
+  var disposed = false;
+
+  void subscribe() {
+    subscription = service.positionStream().listen(
+      (position) {
+        lastFix.mark(clock());
+        controller.add(position);
+      },
+      onError: (Object error, StackTrace stack) {
+        controller.addError(error, stack);
+        retry?.cancel();
+        retry = Timer(_resubscribeEvery, () {
+          if (!disposed) subscribe();
+        });
+      },
+    );
+  }
+
+  subscribe();
+  ref.onDispose(() {
+    disposed = true;
+    retry?.cancel();
+    subscription?.cancel();
+    controller.close();
+    // En el teardown del container el notifier puede ya no existir: da
+    // igual, no queda nadie que lea la marca.
+    try {
+      lastFix.reset();
+    } on Object {
+      // Nada que resetear.
+    }
+  });
+  return controller.stream;
+});
+
+/// Cada cuánto se reintenta un stream de posición muerto.
+///
+/// Ocho segundos: prender la ubicación y ver el contador volver "enseguida"
+/// sin martillar un servicio que va a seguir fallando mientras esté apagada.
+const _resubscribeEvery = Duration(seconds: 8);
 
 /// Desde dónde se mide "a cuánto llego caminando", o null si no se sabe.
 ///

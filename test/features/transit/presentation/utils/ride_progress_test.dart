@@ -107,6 +107,82 @@ void main() {
     expect(_at(_routeStops[3].lng, leg: _leg(board: 6, alight: 1)), isNull);
   });
 
+  test('EL PUENTE: entre dos paradas lejanas, el contador sigue vivo', () {
+    // Barranqueras → Corrientes: ~1,7 km sin ninguna parada. Medido contra
+    // paradas, el punto medio quedaba a >400 m de todas y el contador
+    // desaparecía EN EL MEDIO del tramo más largo de la red — y al volver a
+    // aparecer, vibraba por segunda vez. Contra los segmentos, estar sobre
+    // el camino es estar en el viaje.
+    final bridge = [
+      for (var i = 0; i < 4; i++)
+        Stop(id: 'b$i', name: 'P$i', lat: -27.4519, lng: -58.9865 + i * 0.002),
+      // La otra orilla: 1,7 km después de la última de este lado.
+      Stop(id: 'b4', name: 'Orilla', lat: -27.4519, lng: -58.9805 + 0.0172),
+      Stop(id: 'b5', name: 'Centro', lat: -27.4519, lng: -58.9785 + 0.0172),
+    ];
+    final leg = TripLeg(
+      lineId: 'l904',
+      lineCode: '904C',
+      lineName: '904 por Barranqueras',
+      colorHex: '#111111',
+      networkCode: 'interurbano-chaco-corrientes',
+      networkName: 'Chaco ↔ Corrientes',
+      routeVariantId: 'rv904',
+      variantName: 'Ida',
+      branch: 'C',
+      direction: RouteDirection.outbound,
+      boardStop: bridge[1],
+      alightStop: bridge[5],
+      stopCount: 4,
+    );
+
+    // En pleno puente: a mitad de camino entre la parada 3 y la orilla.
+    final midBridge = rideProgress(
+      routeStops: bridge,
+      leg: leg,
+      lat: -27.4519,
+      lng: (bridge[3].lng + bridge[4].lng) / 2,
+    );
+    expect(midBridge, isNotNull, reason: 'el contador no puede esfumarse');
+    expect(midBridge!.stopsRemaining, 2);
+  });
+
+  test('lejos del CAMINO (no solo de las paradas) sigue callándose', () {
+    // 500 m perpendicular al recorrido: eso sí es no estar en el viaje.
+    expect(
+      rideProgress(
+        routeStops: _routeStops,
+        leg: _leg(),
+        lat: -27.4519 + 0.0045,
+        lng: _routeStops[3].lng,
+      ),
+      isNull,
+    );
+  });
+
+  test('la cache de OTRA generación de datos se detecta y calla', () {
+    // Tras un reimport, el recorrido puede tener más (o menos) paradas que
+    // cuando el planificador armó el tramo. Contar contra esa secuencia
+    // diría "faltan 6" abajo de un paso que dice "viajá 4". stopCount es la
+    // promesa del planificador: si no cierra, silencio.
+    final legOtraGeneracion = _leg(); // stopCount real: 5 (board 1 → alight 6)
+    final conParadaNueva = [
+      ..._routeStops.sublist(0, 4),
+      // El reimport metió una parada nueva en el medio.
+      Stop(id: 'nueva', name: 'Nueva', lat: -27.4519, lng: -58.9795),
+      ..._routeStops.sublist(4),
+    ];
+    expect(
+      rideProgress(
+        routeStops: conParadaNueva,
+        leg: legOtraGeneracion,
+        lat: -27.4519,
+        lng: _routeStops[3].lng,
+      ),
+      isNull,
+    );
+  });
+
   test('una lista de paradas vacía es null, no una excepción', () {
     // Cache a medio cargar o recorrido sin paradas: el contador se calla.
     expect(

@@ -71,16 +71,29 @@ class HailScreen extends StatefulWidget {
   /// Inyectable para los tests; en la app es siempre el plugin real.
   final HailBrightness brightness;
 
+  /// True mientras hay un cartel abierto: dos toques rápidos al botón abrían
+  /// DOS diálogos apilados, y al cerrar el primero su dispose restauraba el
+  /// brillo con el segundo todavía en pantalla — un cartel a media luz.
+  static bool _showing = false;
+
   static Future<void> show(
     BuildContext context, {
     required String code,
     String? colorHex,
-  }) => showDialog<void>(
-    context: context,
-    // Sin barrera gris ni margen: el cartel ES la pantalla.
-    useSafeArea: false,
-    builder: (context) => HailScreen(code: code, colorHex: colorHex),
-  );
+  }) async {
+    if (_showing) return;
+    _showing = true;
+    try {
+      await showDialog<void>(
+        context: context,
+        // Sin barrera gris ni margen: el cartel ES la pantalla.
+        useSafeArea: false,
+        builder: (context) => HailScreen(code: code, colorHex: colorHex),
+      );
+    } finally {
+      _showing = false;
+    }
+  }
 
   @override
   State<HailScreen> createState() => _HailScreenState();

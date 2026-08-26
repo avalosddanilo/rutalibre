@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../../../../app/theme/brand.dart';
 import '../../../../app/theme/motion.dart';
 import '../../../../app/widgets/floating_panel.dart';
 import '../../../../app/widgets/staggered_in.dart';
+import '../../../../core/providers/clock_provider.dart';
 import '../../../weather/presentation/widgets/rain_chip.dart';
 import '../../domain/entities/nearby_stop.dart';
 import '../../domain/entities/reference_stop.dart';
@@ -75,16 +77,37 @@ class MapScreen extends ConsumerStatefulWidget {
   ConsumerState<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends ConsumerState<MapScreen> {
+class _MapScreenState extends ConsumerState<MapScreen>
+    with WidgetsBindingObserver {
   final _mapController = MapController();
 
   /// True mientras se espera el GPS (el FAB muestra un spinner).
   bool _locating = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _mapController.dispose();
     super.dispose();
+  }
+
+  /// Al volver del segundo plano se relee el viaje guardado.
+  ///
+  /// El cartel de "retomar" sale de una lectura del arranque, y una app que
+  /// queda horas en recientes sin que Android la mate volvería mostrando un
+  /// viaje que venció hace rato — el contrato de las tres horas se chequea
+  /// en `load()`, así que releer ES revalidar.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(savedTripProvider);
+    }
   }
 
   /// Centra el mapa, salvo que la coordenada esté rota.
@@ -646,7 +669,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           // fresco (menos de tres horas) y no se está haciendo otra cosa.
           // OFRECE retomar, nunca retoma solo: la app no puede saber si el
           // colectivo sigue andando o si te bajaste hace una hora.
-          if (tripSearch is TripIdle && steps == null)
+          if (tripSearch is TripIdle &&
+              steps == null &&
+              selectedVariant == null)
             const _ResumeTripBanner(),
           if (tripSearch case TripPickingDestination(:final origin))
             _PickDestinationBanner(
@@ -806,11 +831,27 @@ class _ResumeTripBanner extends ConsumerWidget {
 /// Widget aparte por lo mismo que las otras capas: que el rebuild de cada
 /// fix de posición redibuje ESTO y no la pantalla entera. Sin posición
 /// (permiso negado, GPS apagado, primer fix que no llegó) no dibuja nada.
-class _LiveGuidanceDot extends ConsumerWidget {
+class _LiveGuidanceDot extends ConsumerStatefulWidget {
   const _LiveGuidanceDot();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_LiveGuidanceDot> createState() => _LiveGuidanceDotState();
+}
+
+class _LiveGuidanceDotState extends ConsumerState<_LiveGuidanceDot> {
+  /// Un disparo, armado para cuando el último fix vaya a cumplir la edad
+  /// máxima: si el GPS calla, este timer es lo único que redibuja (y
+  /// esconde) el punto — sin fixes no hay rebuilds.
+  Timer? _staleTimer;
+
+  @override
+  void dispose() {
+    _staleTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final positionAsync = ref.watch(livePositionProvider);
     // Con el stream muerto (permiso revocado a mitad de viaje), el último
     // valor queda retenido en el estado de error: dibujarlo sería un "estás
@@ -819,6 +860,21 @@ class _LiveGuidanceDot extends ConsumerWidget {
     final position = positionAsync.value;
     if (position == null || !isDrawableLatLng(position.lat, position.lng)) {
       return const SizedBox.shrink();
+    }
+    // Y con el GPS que calla SIN error —túnel, terminal techada— el fix
+    // envejece: un punto azul quieto donde estabas hace tres cuadras miente
+    // igual que el congelado por error.
+    final lastFixAt = ref.watch(lastLiveFixAtProvider);
+    if (lastFixAt != null) {
+      final age = ref.read(clockProvider)().difference(lastFixAt);
+      _staleTimer?.cancel();
+      if (age > liveFixStaleAfter) return const SizedBox.shrink();
+      _staleTimer = Timer(
+        liveFixStaleAfter - age + const Duration(seconds: 1),
+        () {
+          if (mounted) setState(() {});
+        },
+      );
     }
 
     return MarkerLayer(

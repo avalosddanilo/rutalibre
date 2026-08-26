@@ -43,6 +43,12 @@ class TripResultsSheet extends ConsumerWidget {
       _ => query,
     };
     final plansAsync = ref.watch(tripPlansProvider(liveQuery));
+    // La consulta ORIGINAL se mantiene viva mientras la hoja esté abierta:
+    // tras un swap, la ida es autoDispose y sin esto se descartaba — y el
+    // doble swap ("¿y para volver?… no, mejor la ida") re-consultaba a la
+    // red algo que ya se tenía, que sin señal es perder resultados que
+    // estaban EN PANTALLA hace un segundo.
+    ref.listen(tripPlansProvider(query), (_, _) {});
     // Solo cuando el origen se eligió A MANO. Con el GPS no hace falta
     // decirlo —es lo que todo el mundo asume— pero un viaje calculado desde
     // un punto que la persona escribió hace media hora no se entiende sin
