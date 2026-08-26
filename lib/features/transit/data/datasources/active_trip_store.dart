@@ -7,7 +7,7 @@ import '../models/trip_plan_model.dart';
 
 /// Un viaje con la guía andando, congelado para sobrevivir a cerrar la app.
 ///
-/// Trae TODO lo que hace falta para volver a dibujarlo sin red: el plan
+/// Trae completo lo que hace falta para volver a dibujarlo sin red: el plan
 /// entero (tramos con sus paradas), las dos puntas del viaje y en qué paso
 /// estaba la guía. El trazado y las paradas del recorrido no viajan acá
 /// porque ya viven en la cache normal — quedaron guardados al dibujarse la

@@ -51,7 +51,7 @@ class RideProgress {
 ///   contra esa secuencia diría "faltan 6" abajo de un paso que dice "viajá
 ///   4", y un contador que se contradice con su propio paso es peor que
 ///   ninguno;
-/// * la posición está a más de [_offRouteMeters] de TODO el camino del
+/// * la posición está a más de [_offRouteMeters] del camino entero del
 ///   tramo — todavía no subiste, ya bajaste, o el GPS delira.
 RideProgress? rideProgress({
   required List<Stop> routeStops,

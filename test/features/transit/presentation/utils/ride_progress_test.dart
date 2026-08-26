@@ -75,7 +75,7 @@ void main() {
     expect(progress!.shouldPrepare, isTrue);
   });
 
-  test('lejos de TODO el tramo se calla: mejor nada que adivinar', () {
+  test('lejos del tramo entero se calla: mejor nada que adivinar', () {
     // 2 km al este de la última parada del tramo.
     expect(_at(_routeStops[7].lng + 0.02), isNull);
   });
