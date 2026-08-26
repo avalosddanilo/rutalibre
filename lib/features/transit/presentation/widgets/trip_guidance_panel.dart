@@ -215,9 +215,28 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
   /// Para vibrar UNA vez al entrar en zona de bajada, no en cada fix.
   bool _alerted = false;
 
+  /// Si el contador llegó a mostrarse alguna vez en este tramo.
+  ///
+  /// Cambia qué es honesto cuando el GPS se muere a mitad de viaje (permiso
+  /// revocado desde los ajustes, servicio apagado): si NUNCA hubo señal, el
+  /// paso sin renglón es el estado normal y no hay nada que avisar; pero si
+  /// la persona VENÍA confiando en el contador, que desaparezca en silencio
+  /// la deja contando esquinas sin saber que ya nadie cuenta por ella.
+  bool _sawProgress = false;
+
   @override
   Widget build(BuildContext context) {
-    final position = ref.watch(livePositionProvider).value;
+    final positionAsync = ref.watch(livePositionProvider);
+
+    // El stream murió con error. Riverpod CONSERVA el último valor en el
+    // estado de error, así que sin este corte el contador quedaría congelado
+    // en "faltan 3" presentado como vivo — un dato viejo con cara de dato.
+    // Peor que no mostrar nada.
+    if (positionAsync.hasError) {
+      return _sawProgress ? const _WaitingForGps() : const SizedBox.shrink();
+    }
+
+    final position = positionAsync.value;
     final stops = ref
         .watch(stopsForRouteProvider(widget.leg.routeVariantId))
         .value;
@@ -235,6 +254,7 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
       _alerted = false;
       return const SizedBox.shrink();
     }
+    _sawProgress = true;
 
     final prepare = progress.shouldPrepare;
     if (prepare && !_alerted) {
@@ -293,19 +313,76 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow> {
   }
 }
 
+/// "Esperando señal de GPS…" — el reemplazo honesto de un contador muerto.
+///
+/// Aparece SOLO cuando el renglón en vivo venía andando y el stream murió
+/// (permiso revocado en los ajustes, ubicación apagada a mitad de viaje).
+/// Neutro y sin botón: no es un error de la app ni hay nada que reintentar
+/// desde acá — si el permiso vuelve, el stream revive solo con la guía.
+class _WaitingForGps extends StatelessWidget {
+  const _WaitingForGps();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(AppTheme.radius),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.gps_off, size: 18, color: scheme.onSurfaceVariant),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Esperando señal de GPS…',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// "Faltan ~120 m" en vivo, en los pasos de caminata.
 ///
 /// Mismo contrato que el contador de paradas: aparece si hay posición y se
 /// calla si no. El "~" no es decorativo — es línea recta, no la vereda.
-class _LiveWalkRow extends ConsumerWidget {
+class _LiveWalkRow extends ConsumerStatefulWidget {
   const _LiveWalkRow({required this.step});
 
   final WalkStep step;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final position = ref.watch(livePositionProvider).value;
+  ConsumerState<_LiveWalkRow> createState() => _LiveWalkRowState();
+}
+
+class _LiveWalkRowState extends ConsumerState<_LiveWalkRow> {
+  /// Ver `_LiveRideRowState._sawProgress`: mismo criterio, misma razón.
+  bool _sawFix = false;
+
+  WalkStep get step => widget.step;
+
+  @override
+  Widget build(BuildContext context) {
+    final positionAsync = ref.watch(livePositionProvider);
+    if (positionAsync.hasError) {
+      // Sin el corte, los metros quedarían congelados como si siguieras
+      // caminando hacia el número viejo.
+      return _sawFix ? const _WaitingForGps() : const SizedBox.shrink();
+    }
+
+    final position = positionAsync.value;
     if (position == null) return const SizedBox.shrink();
+    _sawFix = true;
 
     final meters = const Distance().as(
       LengthUnit.Meter,

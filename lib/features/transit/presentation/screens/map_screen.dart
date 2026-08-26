@@ -700,7 +700,12 @@ class _LiveGuidanceDot extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final position = ref.watch(livePositionProvider).value;
+    final positionAsync = ref.watch(livePositionProvider);
+    // Con el stream muerto (permiso revocado a mitad de viaje), el último
+    // valor queda retenido en el estado de error: dibujarlo sería un "estás
+    // acá" clavado donde estabas hace cinco cuadras.
+    if (positionAsync.hasError) return const SizedBox.shrink();
+    final position = positionAsync.value;
     if (position == null || !isDrawableLatLng(position.lat, position.lng)) {
       return const SizedBox.shrink();
     }

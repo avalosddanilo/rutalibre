@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,15 +40,27 @@ final _leg = TripLeg(
 );
 
 void main() {
-  ProviderContainer container({({double lat, double lng})? position}) {
+  ProviderContainer container({
+    ({double lat, double lng})? position,
+    Stream<({double lat, double lng})>? positionStream,
+  }) {
     final c = ProviderContainer(
+      // Sin reintentos: el retry de Riverpod 3 re-suscribe el stream muerto
+      // con un Timer de backoff, y flutter_test acusa el timer pendiente al
+      // desmontar. En la app el reintento es deseable (si el permiso vuelve,
+      // el contador revive); en el test solo mete ruido.
+      retry: (retryCount, error) => null,
       overrides: [
         stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
         livePositionProvider.overrideWith(
           // Sin posición: un stream que nunca emite, como un GPS que no
-          // consigue fix. Con posición: un solo valor.
+          // consigue fix. Con posición: un solo valor. Con positionStream:
+          // el guion que diga el test (fix y después error, por ejemplo).
           (ref) =>
-              position == null ? const Stream.empty() : Stream.value(position),
+              positionStream ??
+              (position == null
+                  ? const Stream.empty()
+                  : Stream.value(position)),
         ),
       ],
     );
@@ -121,6 +135,80 @@ void main() {
     await pumpPanel(tester, c, steps: steps, stepIndex: 1);
 
     expect(find.textContaining('Faltan'), findsNothing);
+  });
+
+  group('el GPS se muere a mitad de viaje', () {
+    // El caso real: permiso revocado desde los ajustes de Android/iOS, o la
+    // ubicación apagada, CON la guía abierta y el contador andando. El
+    // stream se maneja a mano porque el orden importa: fix, un frame donde
+    // el contador se VE, y recién ahí el error.
+    testWidgets('el contador NO queda congelado: dice que espera señal', (
+      tester,
+    ) async {
+      final gps = StreamController<({double lat, double lng})>();
+      addTearDown(gps.close);
+      final c = container(positionStream: gps.stream);
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      gps.add((lat: -27.4519, lng: _routeStops[3].lng));
+      await tester.pumpAndSettle();
+      expect(find.text('Faltan 3 paradas'), findsOneWidget);
+
+      // Riverpod conserva el último valor cuando el stream muere: sin el
+      // corte explícito, "Faltan 3 paradas" quedaría clavado en pantalla
+      // presentado como vivo — un dato viejo con cara de dato.
+      gps.addError(Exception('permiso revocado'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Esperando señal de GPS…'), findsOneWidget);
+      expect(find.textContaining('Faltan'), findsNothing);
+      // Y el paso estático sigue ahí: la guía no se rompe.
+      expect(find.text('Viajá 5 paradas'), findsOneWidget);
+    });
+
+    testWidgets('si NUNCA hubo señal, el error no agrega ruido', (
+      tester,
+    ) async {
+      // Permiso negado desde el arranque: el stream muere sin haber emitido.
+      // Acá el paso sin renglón ES el estado normal — "esperando señal"
+      // prometería algo que no va a llegar.
+      final c = container(
+        positionStream: Stream.error(Exception('sin permiso')),
+      );
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      expect(find.text('Esperando señal de GPS…'), findsNothing);
+      expect(find.text('Viajá 5 paradas'), findsOneWidget);
+    });
+
+    testWidgets('caminando pasa lo mismo: aviso, no metros congelados', (
+      tester,
+    ) async {
+      final walkSteps = [
+        WalkStep(
+          meters: 400,
+          toName: 'Parada 1',
+          focusLat: _routeStops[1].lat,
+          focusLng: _routeStops[1].lng,
+          isFinal: false,
+        ),
+        ...steps,
+      ];
+      final gps = StreamController<({double lat, double lng})>();
+      addTearDown(gps.close);
+      final c = container(positionStream: gps.stream);
+      await pumpPanel(tester, c, steps: walkSteps, stepIndex: 0);
+
+      gps.add((lat: -27.4519, lng: _routeStops[0].lng));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Faltan ~'), findsOneWidget);
+
+      gps.addError(Exception('ubicación apagada'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Esperando señal de GPS…'), findsOneWidget);
+      expect(find.textContaining('Faltan ~'), findsNothing);
+    });
   });
 
   testWidgets('caminando, dice los metros que quedan en vivo', (tester) async {

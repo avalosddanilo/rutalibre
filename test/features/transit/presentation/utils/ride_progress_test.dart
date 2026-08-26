@@ -106,6 +106,23 @@ void main() {
   test('un tramo dado vuelta (bajada antes que subida) es null', () {
     expect(_at(_routeStops[3].lng, leg: _leg(board: 6, alight: 1)), isNull);
   });
+
+  test('una lista de paradas vacía es null, no una excepción', () {
+    // Cache a medio cargar o recorrido sin paradas: el contador se calla.
+    expect(
+      rideProgress(routeStops: const [], leg: _leg(), lat: -27.45, lng: -58.98),
+      isNull,
+    );
+  });
+
+  test('el fix basura del GPS —(0,0), el golfo de Guinea— se calla', () {
+    // Algunos GPS emiten (0,0) mientras buscan señal. Queda a miles de km de
+    // toda parada del tramo, así que cae por la regla de lejanía: null.
+    expect(
+      rideProgress(routeStops: _routeStops, leg: _leg(), lat: 0, lng: 0),
+      isNull,
+    );
+  });
 }
 
 extension on TripLeg {
