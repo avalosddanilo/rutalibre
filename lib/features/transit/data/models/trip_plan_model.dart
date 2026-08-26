@@ -38,6 +38,40 @@ final class TripLegModel extends TripLeg {
     alightStop: StopModel.fromJson(json['alight_stop'] as Map<String, dynamic>),
     stopCount: (json['stop_count'] as num).toInt(),
   );
+
+  /// El espejo exacto de [TripLegModel.fromJson], para poder GUARDAR un
+  /// viaje: el viaje activo se persiste en el teléfono y se restaura con el
+  /// mismo `fromJson` que parsea la respuesta del RPC. Un solo formato, un
+  /// solo parser.
+  static Map<String, dynamic> legToJson(TripLeg leg) => {
+    'line_id': leg.lineId,
+    'line_code': leg.lineCode,
+    'line_name': leg.lineName,
+    'color_hex': leg.colorHex,
+    'network_code': leg.networkCode,
+    'network_name': leg.networkName,
+    'route_variant_id': leg.routeVariantId,
+    'variant_name': leg.variantName,
+    'branch': leg.branch,
+    'direction': RouteVariantModel.directionToDb(leg.direction),
+    'board_stop': StopModel(
+      id: leg.boardStop.id,
+      name: leg.boardStop.name,
+      description: leg.boardStop.description,
+      lat: leg.boardStop.lat,
+      lng: leg.boardStop.lng,
+      osmNodeId: leg.boardStop.osmNodeId,
+    ).toJson(),
+    'alight_stop': StopModel(
+      id: leg.alightStop.id,
+      name: leg.alightStop.name,
+      description: leg.alightStop.description,
+      lat: leg.alightStop.lat,
+      lng: leg.alightStop.lng,
+      osmNodeId: leg.alightStop.osmNodeId,
+    ).toJson(),
+    'stop_count': leg.stopCount,
+  };
 }
 
 /// DTO de la salida del RPC `plan_trip`.
@@ -61,4 +95,12 @@ final class TripPlanModel extends TripPlan {
     walkToBoardMeters: (json['walk_to_board_m'] as num).toDouble(),
     walkFromAlightMeters: (json['walk_from_alight_m'] as num).toDouble(),
   );
+
+  /// Espejo de [TripPlanModel.fromJson]. Ver [TripLegModel.legToJson].
+  static Map<String, dynamic> planToJson(TripPlan plan) => {
+    'leg_count': plan.legs.length,
+    'walk_to_board_m': plan.walkToBoardMeters,
+    'walk_from_alight_m': plan.walkFromAlightMeters,
+    'legs': [for (final leg in plan.legs) TripLegModel.legToJson(leg)],
+  };
 }

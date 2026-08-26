@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers/clock_provider.dart';
+import '../../../../core/providers/shared_preferences_provider.dart';
+import '../../data/datasources/active_trip_store.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../../domain/usecases/plan_trip.dart';
 import 'transit_providers.dart';
@@ -205,6 +208,23 @@ final class SelectedTripNotifier extends Notifier<TripPlan?> {
 ///
 /// Null y no `-1`: "no empezó" y "está en el paso cero" son estados
 /// distintos, y el mapa dibuja cosas distintas en cada uno.
+final activeTripStoreProvider = Provider<ActiveTripStore>(
+  (ref) => ActiveTripStore(
+    ref.watch(sharedPreferencesProvider),
+    now: ref.watch(clockProvider),
+  ),
+);
+
+/// El viaje que quedó a medio hacer la última vez que la app se cerró.
+///
+/// Se lee UNA vez al arrancar. Null es lo normal: no había viaje, venció
+/// (más de tres horas) o no se pudo leer. El mapa lo usa para ofrecer
+/// retomarlo — ofrecer, no retomarlo solo: la app no puede saber si el
+/// viaje sigue pasando o si te bajaste hace una hora.
+final savedTripProvider = FutureProvider<ActiveTrip?>(
+  (ref) => ref.watch(activeTripStoreProvider).load(),
+);
+
 final tripGuidanceProvider = NotifierProvider<TripGuidanceNotifier, int?>(
   TripGuidanceNotifier.new,
 );
@@ -213,28 +233,94 @@ final class TripGuidanceNotifier extends Notifier<int?> {
   @override
   int? build() {
     // Cambiar de viaje —o salir del modo "¿cómo llego?"— corta la guía. Si
-    // no, se seguiría el paso 3 de un viaje que ya no está dibujado.
-    ref.listen(selectedTripProvider, (_, _) => state = null);
+    // no, se seguiría el paso 3 de un viaje que ya no está dibujado. Y un
+    // viaje que se corta deja de estar "activo": el guardado se limpia para
+    // que al reabrir la app no se ofrezca retomar algo que se abandonó.
+    ref.listen(selectedTripProvider, (_, _) {
+      if (state != null) _discard();
+      state = null;
+    });
     ref.listen(tripSearchProvider, (_, next) {
-      if (next is! TripRoute) state = null;
+      if (next is! TripRoute) {
+        if (state != null) _discard();
+        state = null;
+      }
     });
     return null;
   }
 
-  void start() => state = 0;
+  void start() {
+    state = 0;
+    _persist();
+  }
 
-  void stop() => state = null;
+  /// Arranca en un paso puntual: el camino de RETOMAR un viaje guardado.
+  void startAt(int stepIndex) {
+    state = stepIndex < 0 ? 0 : stepIndex;
+    _persist();
+  }
+
+  void stop() {
+    state = null;
+    _discard();
+  }
 
   /// Avanza sin pasarse del último paso. El tope lo pone quien llama, que es
   /// el único que sabe cuántos pasos tiene ESTE viaje.
   void next(int stepCount) {
     final current = state;
     if (current == null) return;
-    if (current + 1 < stepCount) state = current + 1;
+    if (current + 1 < stepCount) {
+      state = current + 1;
+      _saveStep();
+    }
   }
 
   void previous() {
     final current = state;
-    if (current != null && current > 0) state = current - 1;
+    if (current != null && current > 0) {
+      state = current - 1;
+      _saveStep();
+    }
+  }
+
+  /// Congela el viaje entero en el teléfono, para que sobreviva a que
+  /// Android mate la app o se acabe la batería a mitad de camino.
+  ///
+  /// Sin await y tragándose los errores, los tres: es una red de seguridad,
+  /// y una red de seguridad que puede hacer caer la guía por un disco lleno
+  /// no es una red de seguridad.
+  void _persist() {
+    final plan = ref.read(selectedTripProvider);
+    final search = ref.read(tripSearchProvider);
+    final step = state;
+    if (plan == null || search is! TripRoute || step == null) return;
+    ref
+        .read(activeTripStoreProvider)
+        .save(
+          ActiveTrip(
+            plan: plan,
+            originLat: search.origin.lat,
+            originLng: search.origin.lng,
+            destinationLat: search.destination.lat,
+            destinationLng: search.destination.lng,
+            originName: search.originName,
+            stepIndex: step,
+          ),
+        )
+        .catchError((_) {});
+  }
+
+  void _saveStep() {
+    final step = state;
+    if (step == null) return;
+    ref.read(activeTripStoreProvider).saveStep(step).catchError((_) {});
+  }
+
+  void _discard() {
+    ref.read(activeTripStoreProvider).clear().catchError((_) {});
+    // Sin esto, el provider del viaje guardado retendría el valor viejo y el
+    // cartel de "retomar" aparecería justo al TERMINAR un viaje.
+    ref.invalidate(savedTripProvider);
   }
 }

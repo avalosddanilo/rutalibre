@@ -12,6 +12,7 @@ import '../../../../app/theme/motion.dart';
 import '../../../../app/widgets/floating_panel.dart';
 import '../../../../app/widgets/staggered_in.dart';
 import '../../../weather/presentation/widgets/rain_chip.dart';
+import '../../data/datasources/active_trip_store.dart';
 import '../../domain/entities/nearby_stop.dart';
 import '../../domain/entities/reference_stop.dart';
 import '../../domain/entities/route_variant.dart';
@@ -637,6 +638,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             // mejor apuesta.
             rainOrigin: ref.watch(walkOriginProvider).value,
           ),
+          // El viaje que quedó a medio hacer al cerrarse la app, si hay uno
+          // fresco (menos de tres horas) y no se está haciendo otra cosa.
+          // OFRECE retomar, nunca retoma solo: la app no puede saber si el
+          // colectivo sigue andando o si te bajaste hace una hora.
+          if (tripSearch is TripIdle && steps == null)
+            const _ResumeTripBanner(),
           if (tripSearch case TripPickingDestination(:final origin))
             _PickDestinationBanner(
               onSearch: () =>
@@ -687,6 +694,92 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ],
       ),
     );
+  }
+}
+
+/// "Tenías un viaje en curso" — la vuelta de un viaje que la app no eligió
+/// abandonar.
+///
+/// Aparece cuando hay un viaje guardado fresco y el mapa está en reposo.
+/// Retomar restaura las tres piezas EN ORDEN (el modo con sus puntas, el
+/// viaje elegido, el paso de la guía — al revés, los listeners de la guía
+/// la matarían al instante) y todo sale del teléfono: el plan del guardado,
+/// las paradas y el trazado de la cache de siempre. Sin señal funciona
+/// igual, que es justamente cuándo más se necesita.
+class _ResumeTripBanner extends ConsumerWidget {
+  const _ResumeTripBanner();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final saved = ref.watch(savedTripProvider).value;
+    if (saved == null) return const SizedBox.shrink();
+
+    final scheme = Theme.of(context).colorScheme;
+    final leg = saved.plan.legs.isEmpty ? null : saved.plan.legs.first;
+
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 76, left: 12, right: 12),
+          child: StaggeredIn(
+            index: 0,
+            offset: -16,
+            child: FloatingPanel(
+              color: scheme.inverseSurface,
+              radius: 14,
+              padding: const EdgeInsets.fromLTRB(14, 6, 6, 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.replay, size: 18, color: scheme.onInverseSurface),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      leg == null
+                          ? 'Tenías un viaje en curso'
+                          : 'Tenías un viaje en curso con la '
+                                '${leg.displayCode}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: scheme.onInverseSurface,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => _resume(ref, saved),
+                    child: Text(
+                      'Retomar',
+                      style: TextStyle(color: scheme.inversePrimary),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    color: scheme.onInverseSurface,
+                    tooltip: 'Descartar el viaje guardado',
+                    onPressed: () {
+                      ref.read(activeTripStoreProvider).clear();
+                      ref.invalidate(savedTripProvider);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void _resume(WidgetRef ref, ActiveTrip saved) {
+    ref.read(tripSearchProvider.notifier)
+      ..startFrom((
+        lat: saved.originLat,
+        lng: saved.originLng,
+      ), name: saved.originName)
+      ..setDestination((lat: saved.destinationLat, lng: saved.destinationLng));
+    ref.read(selectedTripProvider.notifier).select(saved.plan);
+    ref.read(tripGuidanceProvider.notifier).startAt(saved.stepIndex);
+    ref.invalidate(savedTripProvider);
   }
 }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/route_variant.dart';
 import 'package:rutalibre/features/transit/domain/entities/stop.dart';
 import 'package:rutalibre/features/transit/domain/entities/trip_plan.dart';
@@ -11,6 +12,7 @@ import 'package:rutalibre/features/transit/presentation/providers/transit_provid
 import 'package:rutalibre/features/transit/presentation/providers/trip_providers.dart';
 import 'package:rutalibre/features/transit/presentation/utils/trip_guidance.dart';
 import 'package:rutalibre/features/transit/presentation/widgets/trip_guidance_panel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Recorrido recto, paradas cada ~200 m (0.002 de longitud a esta latitud).
 final _routeStops = [
@@ -40,6 +42,16 @@ final _leg = TripLeg(
 );
 
 void main() {
+  late SharedPreferences prefs;
+
+  setUp(() async {
+    // La guía ahora PERSISTE el viaje activo en cada paso (para retomarlo si
+    // Android mata la app), así que el harness necesita las prefs como la
+    // app real.
+    SharedPreferences.setMockInitialValues({});
+    prefs = await SharedPreferences.getInstance();
+  });
+
   ProviderContainer container({
     ({double lat, double lng})? position,
     Stream<({double lat, double lng})>? positionStream,
@@ -51,6 +63,7 @@ void main() {
       // el contador revive); en el test solo mete ruido.
       retry: (retryCount, error) => null,
       overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
         stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
         livePositionProvider.overrideWith(
           // Sin posición: un stream que nunca emite, como un GPS que no

@@ -77,6 +77,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   una parada mal iluminada, la pantalla del teléfono es la superficie más
   brillante de la vereda — y una mano levantada no dice a cuál de los tres
   que vienen le estás haciendo señas.
+- **El viaje sobrevive a cerrar la app.** Si Android mata la app —o se apaga
+  el teléfono— con la guía andando, al reabrir aparece "Tenías un viaje en
+  curso · Retomar": el viaje entero se levanta del teléfono, sin volver a
+  consultar a la base y sin señal. Se ofrece hasta tres horas después —ningún
+  viaje del Gran Resistencia dura más— y retomar es una decisión tuya, nunca
+  automática: la app no puede saber si seguís arriba del colectivo.
 
 ### Paradas
 
