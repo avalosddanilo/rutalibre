@@ -478,16 +478,15 @@ publicar la política en una URL y probar el APK de release en el teléfono.
 
 ## Pendientes (próximos PRs, en orden sugerido)
 
-0. ⚠️ **Verificar el TRANSBORDO de `plan_trip`.** El camino directo ya está
-   probado contra la base (Plaza 25 de Mayo → UNNE: `leg_count 1`, 122 m +
-   128 m). El de transbordo no, y es el 46% de los viajes: la parada de bajada
-   del tramo 1 tiene que ser IDÉNTICA a la de subida del tramo 2, o la app
-   manda gente a caminar entre dos paradas sin decírselo.
-   **La consulta que lo verifica sola está al final de
-   `docs/planificador.md`** ("Verificación AUTOMÁTICA del transbordo"): se pega
-   en el SQL Editor y devuelve una fila; alcanza con que la columna `mal` sea
-   0. Es lo único que queda sin verificar de la v1 y no se puede hacer desde el
-   código: hay que correrlo contra la base.
+0. ~~**Verificar el TRANSBORDO de `plan_trip`**~~ — **VERIFICADO contra la
+   base real (2026-08-25)**: 30 pares lejanos, 158 viajes devueltos, **124
+   con transbordo y los 124 con bajada == subida** (mismo id de parada, 0 m).
+   Se corrió con `dart run tools/verify_transfers.dart`, que audita por REST
+   con la anon key —el MISMO RPC que llama la app, solo lectura— así que no
+   necesita Dashboard ni psql. La muestra es estable (hash del par, no
+   random): se puede volver a correr tras cada reimport y mira los mismos
+   pares. Las consultas SQL equivalentes siguen al final de
+   `docs/planificador.md` para quien prefiera el SQL Editor.
 1. **Horarios**: sigue sin fuente pública, pero ya hay puente — se
    transcriben a mano en `supabase/seed/horarios/*.txt` y
    `tools/schedules_import.dart` emite el SQL (ver `docs/horarios.md`).

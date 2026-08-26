@@ -228,10 +228,9 @@ elegí la que declara más.
 - [ ] AAB firmado y verificado con `keytool -printcert` *(vos)*
 - [ ] Capturas de pantalla *(vos — necesitan el teléfono)*
 - [ ] Formulario de seguridad de los datos *(vos)*
-- [ ] Verificar el transbordo de `plan_trip` *(vos)* — la consulta está al final
-      de [`planificador.md`](planificador.md) y alcanza con que `mal` dé 0
-- [ ] Correr la migración `0010` en el Dashboard *(vos)* — sin ella no aparece
-      el enlace para corregir una parada en OpenStreetMap
+- [x] Transbordo de `plan_trip` verificado contra la base real: 124 transbordos
+      auditados, 0 rotos (`dart run tools/verify_transfers.dart`, 2026-08-25)
+- [x] Migración `0010` corrida en el Dashboard (2026-08-25)
 - [ ] Verificaciones de RLS en el dashboard de Supabase *(vos)* — las 5 de
       [`auditoria-seguridad.md`](auditoria-seguridad.md), S2
 - [ ] Alerta de uso de Supabase al 50% y 80% *(vos)* — S4 de la misma
