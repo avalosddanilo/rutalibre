@@ -49,6 +49,10 @@ dependencies:
   # abrir el nodo de la parada en OpenStreetMap para corregirlo. (Se había
   # sacado al quitar el botón del 911, que era su único uso.)
   url_launcher: ^6.3.2
+  # El cartel para el chofer sube el brillo al máximo mientras está abierto:
+  # su única función es verse desde un colectivo que viene con las luces
+  # puestas, y un cartel al 30% de brillo no es un cartel.
+  screen_brightness: ^2.1.0
 
 dev_dependencies:
   flutter_test:

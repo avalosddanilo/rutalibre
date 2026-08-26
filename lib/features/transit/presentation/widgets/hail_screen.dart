@@ -1,6 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 import '../utils/color_hex.dart';
+
+/// El brillo de la pantalla, con nombre de lo que hace acá.
+///
+/// Es una interfaz y no llamadas directas al plugin por dos razones: los
+/// tests verifican que el cartel sube y RESTAURA el brillo sin necesitar la
+/// plataforma, y el plugin puede no estar (test, plataforma sin soporte) sin
+/// que eso rompa el cartel — que sigue sirviendo al brillo que esté.
+abstract interface class HailBrightness {
+  /// Al máximo, mientras el cartel esté a la vista.
+  Future<void> boost();
+
+  /// De vuelta al brillo que manejaba el sistema antes del cartel.
+  Future<void> restore();
+}
+
+/// La implementación real, sobre `screen_brightness`.
+///
+/// Usa el brillo DE LA APLICACIÓN, no el del sistema: al salir de la app —o
+/// al restaurar— el teléfono vuelve solo a lo que el usuario tenía, sin que
+/// toquemos su configuración. Todo va en try/catch porque un cartel que no
+/// pudo subir el brillo sigue siendo un cartel; un cartel que crashea no.
+final class ScreenHailBrightness implements HailBrightness {
+  const ScreenHailBrightness();
+
+  @override
+  Future<void> boost() async {
+    try {
+      await ScreenBrightness.instance.setApplicationScreenBrightness(1);
+    } on Object {
+      // Sin plugin o sin permiso: el cartel sirve igual.
+    }
+  }
+
+  @override
+  Future<void> restore() async {
+    try {
+      await ScreenBrightness.instance.resetApplicationScreenBrightness();
+    } on Object {
+      // Nada que restaurar si nunca se pudo subir.
+    }
+  }
+}
 
 /// El cartel para el chofer: la pantalla entera con el número de la línea.
 ///
@@ -9,14 +52,24 @@ import '../utils/color_hex.dart';
 /// levantada no dice A CUÁL de los tres que vienen le estás haciendo señas.
 /// La pantalla del teléfono es la superficie más brillante que hay en la
 /// vereda: con el número gigante en el color de la línea, el chofer sabe
-/// desde lejos si le hablás a él.
+/// desde lejos si le hablás a él. Y mientras está abierto, **el brillo sube
+/// al máximo solo** — un cartel al 30% de brillo no es un cartel — y al
+/// cerrarlo vuelve al que había.
 ///
 /// Se cierra tocando en cualquier lado. No rota ni anima nada: es un cartel.
-class HailScreen extends StatelessWidget {
-  const HailScreen({required this.code, this.colorHex, super.key});
+class HailScreen extends StatefulWidget {
+  const HailScreen({
+    required this.code,
+    this.colorHex,
+    this.brightness = const ScreenHailBrightness(),
+    super.key,
+  });
 
   final String code;
   final String? colorHex;
+
+  /// Inyectable para los tests; en la app es siempre el plugin real.
+  final HailBrightness brightness;
 
   static Future<void> show(
     BuildContext context, {
@@ -30,9 +83,28 @@ class HailScreen extends StatelessWidget {
   );
 
   @override
+  State<HailScreen> createState() => _HailScreenState();
+}
+
+class _HailScreenState extends State<HailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.brightness.boost();
+  }
+
+  @override
+  void dispose() {
+    // En dispose y no en el onTap de cerrar: el cartel también se cierra con
+    // el botón de atrás del sistema, y ese camino no pasa por ningún onTap.
+    widget.brightness.restore();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final color =
-        colorFromHex(colorHex) ?? Theme.of(context).colorScheme.primary;
+        colorFromHex(widget.colorHex) ?? Theme.of(context).colorScheme.primary;
     final onColor = onColorFor(color);
 
     return GestureDetector(
@@ -41,7 +113,8 @@ class HailScreen extends StatelessWidget {
         color: color,
         child: SafeArea(
           child: Semantics(
-            label: 'Cartel con el número de la línea $code. Tocá para volver.',
+            label:
+                'Cartel con el número de la línea ${widget.code}. Tocá para volver.',
             child: Column(
               children: [
                 Expanded(
@@ -52,7 +125,7 @@ class HailScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(24),
                       child: FittedBox(
                         child: Text(
-                          code,
+                          widget.code,
                           style: TextStyle(
                             color: onColor,
                             fontSize: 280,
