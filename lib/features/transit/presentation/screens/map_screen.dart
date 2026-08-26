@@ -395,7 +395,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     // Puesto el destino, la hoja de resultados se abre sola: nadie toca el
     // mapa "a ver qué pasa", lo toca para saber cómo llegar.
     ref.listen(tripSearchProvider, (previous, next) {
-      if (next is TripRoute && previous is! TripRoute) {
+      // SOLO desde "eligiendo destino": esa transición es la persona
+      // terminando de elegir. Un TripRoute que aparece desde otro estado es
+      // una restauración (retomar un viaje guardado), y ahí abrir la hoja
+      // taparía la guía — con una consulta a la red que sin señal es un
+      // cartel de error encima de lo que se vino a restaurar.
+      if (next is TripRoute && previous is TripPickingDestination) {
         ref.read(lineSheetControllerProvider).collapse();
         // Primero se ACERCA al destino, y recién después se abre la hoja.
         //
@@ -771,12 +776,16 @@ class _ResumeTripBanner extends ConsumerWidget {
   }
 
   static void _resume(WidgetRef ref, ActiveTrip saved) {
-    ref.read(tripSearchProvider.notifier)
-      ..startFrom((
-        lat: saved.originLat,
-        lng: saved.originLng,
-      ), name: saved.originName)
-      ..setDestination((lat: saved.destinationLat, lng: saved.destinationLng));
+    // `restore` y no startFrom+setDestination: ese par pasa por "eligiendo
+    // destino", y el mapa lee esa transición como "abrile la hoja de
+    // opciones" — que acá taparía la guía con una consulta a la red.
+    ref
+        .read(tripSearchProvider.notifier)
+        .restore(
+          origin: (lat: saved.originLat, lng: saved.originLng),
+          destination: (lat: saved.destinationLat, lng: saved.destinationLng),
+          originName: saved.originName,
+        );
     ref.read(selectedTripProvider.notifier).select(saved.plan);
     ref.read(tripGuidanceProvider.notifier).startAt(saved.stepIndex);
     ref.invalidate(savedTripProvider);

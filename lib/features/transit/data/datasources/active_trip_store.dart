@@ -52,18 +52,25 @@ final class ActiveTripStore {
   /// viaje en curso, y viceversa.
   static const _key = 'ruta_libre_active_trip_v1';
 
-  /// Un viaje guardado hace más de esto no se ofrece retomar.
+  /// Un viaje sin actividad hace más de esto no se ofrece retomar.
   ///
-  /// Tres horas: ningún viaje del Gran Resistencia dura eso — el interurbano
-  /// entero son ~70 minutos—. "Retomar" un viaje de ayer a la mañana no
-  /// ayuda a nadie y hace desconfiar del cartel.
+  /// Tres horas DESDE LA ÚLTIMA INTERACCIÓN, no desde el arranque: la guía
+  /// puede abrirse desde casa mucho antes de subir (un interurbano demorado
+  /// lo hace normal), y lo que dice "este viaje sigue vivo" es que alguien
+  /// tocó "siguiente", no cuándo empezó. Tres horas porque ningún viaje del
+  /// Gran Resistencia dura eso, y "retomar" un viaje de ayer hace
+  /// desconfiar del cartel.
   static const maxAge = Duration(hours: 3);
 
   Future<void> save(ActiveTrip trip) async {
     await _prefs.setString(
       _key,
       jsonEncode({
-        'saved_at': _now().toIso8601String(),
+        // SIEMPRE en UTC. En hora local sin zona, un teléfono que cambia de
+        // zona horaria (pasa: en la frontera se agarra la antena del otro
+        // lado) reinterpreta la marca y corre el vencimiento sin que el
+        // reloj haya cambiado.
+        'saved_at': _now().toUtc().toIso8601String(),
         'origin_lat': trip.originLat,
         'origin_lng': trip.originLng,
         'dest_lat': trip.destinationLat,
@@ -86,6 +93,12 @@ final class ActiveTripStore {
     try {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       json['step'] = stepIndex;
+      // Tocar un paso ES actividad: refresca la frescura. Sin esto, la
+      // ventana de 3 horas corría desde el ARRANQUE de la guía, y un viaje
+      // en uso activo —guía abierta desde casa, colectivo demorado— vencía
+      // arriba del colectivo: justo el caso para el que la persistencia
+      // existe.
+      json['saved_at'] = _now().toUtc().toIso8601String();
       await _prefs.setString(_key, jsonEncode(json));
     } on Object {
       // Guardado corrupto: se limpia en el próximo load().
@@ -102,8 +115,13 @@ final class ActiveTripStore {
     if (raw == null) return null;
     try {
       final json = jsonDecode(raw) as Map<String, dynamic>;
-      final savedAt = DateTime.parse(json['saved_at'] as String);
-      if (_now().difference(savedAt) > maxAge) {
+      final savedAt = DateTime.parse(json['saved_at'] as String).toUtc();
+      final now = _now().toUtc();
+      // También se descarta una marca EN EL FUTURO: pasa cuando el guardado
+      // se hizo con el reloj adelantado a mano y después NTP lo corrigió.
+      // Solo con `> maxAge`, esa diferencia negativa figuraba "fresca" por
+      // horas de más. Es la misma guarda que ya tiene la cache del clima.
+      if (savedAt.isAfter(now) || now.difference(savedAt) > maxAge) {
         await clear();
         return null;
       }

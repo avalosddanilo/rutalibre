@@ -253,6 +253,27 @@ void main() {
       expect(await c.read(activeTripStoreProvider).load(), isNull);
     });
 
+    test('restore arma el viaje EN UNA transición, sin pasar por '
+        '"eligiendo destino"', () async {
+      // El mapa lee la transición "eligiendo → armado" como "la persona
+      // acaba de elegir: abrile la hoja de opciones". Retomar no es elegir:
+      // si restore pasara por ahí, la hoja —con su consulta a la red, que
+      // sin señal es un cartel de error— taparía la guía restaurada.
+      final c = await storeContainer();
+      final transitions = <TripSearch>[];
+      c.listen(tripSearchProvider, (_, next) => transitions.add(next));
+
+      c
+          .read(tripSearchProvider.notifier)
+          .restore(origin: _casa, destination: _campus, originName: 'Mi casa');
+
+      expect(transitions, hasLength(1));
+      final state = transitions.single as TripRoute;
+      expect(state.origin, _casa);
+      expect(state.destination, _campus);
+      expect(state.originName, 'Mi casa');
+    });
+
     test('startAt retoma en el paso guardado, no en el cero', () async {
       final c = await storeContainer();
       c.read(tripSearchProvider.notifier)

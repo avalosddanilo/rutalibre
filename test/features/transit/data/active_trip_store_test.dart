@@ -125,6 +125,33 @@ void main() {
     expect(loaded.plan.legs.single.lineCode, '3');
   });
 
+  test(
+    'una marca EN EL FUTURO también vence: reloj corregido por NTP',
+    () async {
+      // Guardado con el reloj adelantado a mano; NTP lo corrige para atrás.
+      // Con solo "> maxAge", la diferencia negativa figuraba fresca por horas
+      // de más del contrato de 3.
+      await store(now: _ahora.add(const Duration(hours: 4))).save(_trip());
+      expect(await store().load(), isNull);
+      expect(prefs.getString('ruta_libre_active_trip_v1'), isNull);
+    },
+  );
+
+  test('tocar "siguiente" REFRESCA la frescura: actividad = vida', () async {
+    // La guía abierta desde casa a las 10, el colectivo demorado, y a las
+    // 13:04 —todavía arriba— se toca "siguiente". El viaje NO puede vencer a
+    // las 13:30 por haber arrancado hace más de tres horas: la última
+    // actividad fue hace minutos.
+    await store().save(_trip(step: 1));
+    final masTarde = _ahora.add(const Duration(hours: 3, minutes: 4));
+    await store(now: masTarde).saveStep(2);
+
+    final alReabrir = _ahora.add(const Duration(hours: 3, minutes: 30));
+    final loaded = await store(now: alReabrir).load();
+    expect(loaded, isNotNull);
+    expect(loaded!.stepIndex, 2);
+  });
+
   test('saveStep sin viaje guardado no inventa uno', () async {
     await store().saveStep(3);
     expect(await store().load(), isNull);

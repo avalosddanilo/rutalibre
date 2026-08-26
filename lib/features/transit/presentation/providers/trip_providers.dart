@@ -113,6 +113,27 @@ final class TripSearchNotifier extends Notifier<TripSearch> {
     );
   }
 
+  /// Deja el viaje armado DE UNA, sin pasar por "eligiendo destino".
+  ///
+  /// Es el camino de RETOMAR un viaje guardado, y la única razón de que no
+  /// sea `startFrom` + `setDestination` es que ese par produce la transición
+  /// "eligiendo → armado", que para el mapa significa "la persona acaba de
+  /// elegir un destino: abrile la hoja de opciones". Retomar no es elegir:
+  /// abrir esa hoja encima de la guía restaurada —con su consulta a la red,
+  /// que sin señal es un cartel de error— taparía justo lo que se vino a
+  /// restaurar.
+  void restore({
+    required MapPoint origin,
+    required MapPoint destination,
+    String? originName,
+  }) {
+    state = TripRoute(
+      origin: origin,
+      destination: destination,
+      originName: originName,
+    );
+  }
+
   /// Da vuelta el viaje: el destino pasa a ser el origen y viceversa.
   ///
   /// Es la pregunta que sigue a cualquier viaje: "¿y para volver?". Sin esto
