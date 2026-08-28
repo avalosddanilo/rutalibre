@@ -332,7 +332,13 @@ class _MapScreenState extends ConsumerState<MapScreen>
   /// destinos que no son una parada.
   Future<void> _askDestination(MapPoint origin) async {
     _moveTo(origin.lat, origin.lng, 14);
-    await PlaceSearchSheet.showDestination(context, origin: origin);
+    final focus = await PlaceSearchSheet.showDestination(
+      context,
+      origin: origin,
+    );
+    // Se eligió una CALLE: la cámara vuela ahí y el punto exacto lo marca el
+    // usuario tocando el mapa, con el banner del modo ya en pantalla.
+    if (focus != null && mounted) _moveTo(focus.lat, focus.lng, 16);
   }
 
   /// Manda el viaje elegido por donde el usuario quiera.
@@ -726,8 +732,16 @@ class _MapScreenState extends ConsumerState<MapScreen>
             const _ResumeTripBanner(),
           if (tripSearch case TripPickingDestination(:final origin))
             _PickDestinationBanner(
-              onSearch: () =>
-                  PlaceSearchSheet.showDestination(context, origin: origin),
+              // Sin el _moveTo inicial de _askDestination: quien reabre el
+              // buscador desde el banner puede estar recorriendo el mapa, y
+              // devolverle la cámara al origen le pisa lo que estaba mirando.
+              onSearch: () async {
+                final focus = await PlaceSearchSheet.showDestination(
+                  context,
+                  origin: origin,
+                );
+                if (focus != null && mounted) _moveTo(focus.lat, focus.lng, 16);
+              },
               onCancel: () => ref.read(tripSearchProvider.notifier).clear(),
             ),
           _MapActions(

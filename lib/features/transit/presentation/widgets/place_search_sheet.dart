@@ -59,7 +59,13 @@ class PlaceSearchSheet extends ConsumerStatefulWidget {
   final String? notice;
 
   /// "¿A dónde vas?" — el destino, con [origin] como referencia de distancias.
-  static Future<void> showDestination(
+  ///
+  /// Devuelve un punto SOLO cuando lo elegido fue una CALLE: una calle entera
+  /// no es un destino puntual, así que en vez de fijar el destino en su
+  /// mitad —y planificar un viaje a diez cuadras de la casa de alguien— la
+  /// hoja se cierra devolviendo el punto para que el mapa vuele ahí y el
+  /// usuario marque el lugar exacto con el modo "tocá el mapa" ya activo.
+  static Future<MapPoint?> showDestination(
     BuildContext context, {
     required MapPoint origin,
   }) =>
@@ -69,12 +75,12 @@ class PlaceSearchSheet extends ConsumerStatefulWidget {
   static Future<void> showOrigin(BuildContext context, {String? notice}) =>
       _show(context, target: PlaceSearchTarget.origin, notice: notice);
 
-  static Future<void> _show(
+  static Future<MapPoint?> _show(
     BuildContext context, {
     required PlaceSearchTarget target,
     MapPoint? reference,
     String? notice,
-  }) => showModalBottomSheet<void>(
+  }) => showModalBottomSheet<MapPoint>(
     context: context,
     showDragHandle: true,
     isScrollControlled: true,
@@ -479,7 +485,20 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
   /// parado la volvería otra cosa.
   void _choose(Destination match) {
     if (_pickingOrigin) {
+      // Como origen, la calle se toma tal cual: el planificador arranca desde
+      // las paradas CERCANAS al punto, así que la mitad de la calle contesta
+      // casi lo mismo que la puerta exacta — y "Cambiar" queda a un toque.
       _setOrigin((lat: match.lat, lng: match.lng), name: match.name);
+      return;
+    }
+    // Una CALLE como destino no fija nada: se devuelve el punto para que el
+    // mapa vuele ahí y el usuario marque dónde exactamente (ver
+    // [showDestination]). Tampoco se anota como reciente — el destino real
+    // será el toque en el mapa, no la mitad geométrica de la calle.
+    if (match case PlaceDestination(
+      :final place,
+    ) when place.kind == PlaceKind.calle) {
+      Navigator.of(context).pop((lat: match.lat, lng: match.lng));
       return;
     }
     ref.read(recentDestinationsProvider.notifier).record((
@@ -652,6 +671,7 @@ IconData _placeIcon(PlaceKind kind) => switch (kind) {
   PlaceKind.deporte => Icons.sports_soccer_outlined,
   PlaceKind.cultura => Icons.theater_comedy_outlined,
   PlaceKind.iglesia => Icons.church_outlined,
+  PlaceKind.calle => Icons.signpost_outlined,
   PlaceKind.otro => Icons.place_outlined,
 };
 
@@ -666,5 +686,6 @@ String _placeLabel(PlaceKind kind) => switch (kind) {
   PlaceKind.deporte => 'Deporte',
   PlaceKind.cultura => 'Cultura',
   PlaceKind.iglesia => 'Templo',
+  PlaceKind.calle => 'Calle',
   PlaceKind.otro => 'Lugar',
 };

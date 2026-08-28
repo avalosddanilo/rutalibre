@@ -9,7 +9,7 @@ import '../../domain/entities/place.dart';
 ///
 /// **No hay red ni base de por medio**: los lugares se empaquetan con la app
 /// en `assets/places.json`. Por qué, en `tools/places_import.dart`; en dos
-/// líneas: son 200 KB que andan desde la instalación y sin señal, y meterlos
+/// líneas: son ~420 KB que andan desde la instalación y sin señal, y meterlos
 /// en la cache los haría cargar en cada arranque antes del primer cuadro.
 abstract interface class PlacesDataSource {
   /// Lanza [ParsingException] si el asset no está o vino roto — que solo

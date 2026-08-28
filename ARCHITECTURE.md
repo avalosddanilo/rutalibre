@@ -89,7 +89,7 @@ instantánea, UX limpia sin publicidad, arquitectura impecable.
   al arrancar. Lo verifica `weather_cache_test.dart` **contando los pedidos
   a la red**, que es exactamente lo que hay que garantizar.
 - **Los LUGARES van en un asset empaquetado, no en la base ni en la cache.**
-  Son 2612 nombres (~200 KB) que salen de OSM con
+  Son ~2600 lugares + ~2900 calles con nombre (~420 KB) que salen de OSM con
   `tools/places_import.dart`. Tres razones y ninguna es pereza: (a) meterlos
   en `SharedPreferences` los haría cargar ENTEROS en cada arranque, antes del
   primer cuadro, que es justo el costo que `docs/arranque.md` marca como el
@@ -100,6 +100,21 @@ instantánea, UX limpia sin publicidad, arquitectura impecable.
   publicar una versión — se banca, un hospital no se muda. **La tarifa SÍ
   cambia seguido y por eso está en código con su fecha**, que es un problema
   distinto con otra solución.
+- **Las CALLES son entradas del buscador, rotuladas por localidad; los
+  números de puerta NO existen en los datos.** "San Juan 5240, Barranqueras"
+  no aparecía: las paradas nombran esquinas y en Barranqueras ninguna se
+  llama San Juan. Ahora la calle es una entrada propia ("San Juan
+  (Barranqueras)", `PlaceKind.calle`, armada en `tools/src/street_import.dart`
+  agrupando los ways de OSM por nombre + localidad más cercana — por nombre
+  solo, las cinco San Juan del área se fundirían en un punto en el medio de
+  la nada). Elegirla como DESTINO no fija nada: vuela la cámara a la calle y
+  deja el modo "tocá el mapa" para marcar el punto exacto, porque fijar la
+  mitad geométrica de una calle de veinte cuadras planificaría el viaje a
+  cuadras de donde la persona va. Como ORIGEN sí se toma directo: el
+  planificador arranca de las paradas cercanas y la imprecisión no cambia la
+  respuesta. Si la búsqueda entera no matchea y termina en número, se
+  reintenta sin el número Y SE DICE — mostrar esquinas como si fueran la
+  dirección sería dejar creer que una de esas ES.
 - **El buscador de destino mezcla lugares y paradas en UNA lista**, no en dos
   pestañas: pestañas obligarían a adivinar de antemano si lo que uno busca
   "es un lugar" o "es una parada", que es exactamente lo que el usuario no

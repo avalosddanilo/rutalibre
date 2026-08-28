@@ -26,11 +26,11 @@ void main() {
     prefs = await SharedPreferences.getInstance();
   });
 
-  ProviderContainer container() {
+  ProviderContainer container({List<Place> places = const []}) {
     final c = ProviderContainer(
       overrides: [
         allStopsProvider.overrideWith((ref) async => _stops),
-        placesProvider.overrideWith((ref) async => const <Place>[]),
+        placesProvider.overrideWith((ref) async => places),
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
     );
@@ -202,6 +202,74 @@ void main() {
       expect(
         find.textContaining('Los números de puerta no están'),
         findsNothing,
+      );
+    });
+  });
+
+  group('calles', () {
+    // La calle de una casa real que el buscador no encontraba: en
+    // Barranqueras ninguna ESQUINA se llama San Juan, así que las paradas no
+    // alcanzaban. Las calles entran como entradas propias del asset.
+    const street = Place(
+      name: 'San Juan (Barranqueras)',
+      lat: -27.47276,
+      lng: -58.92749,
+      kind: PlaceKind.calle,
+    );
+
+    testWidgets('como destino NO fija nada: devuelve el punto para que el '
+        'mapa vuele ahí', (tester) async {
+      final c = container(places: const [street]);
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+
+      MapPoint? focus;
+      await pumpSheet(tester, c, (context) {
+        PlaceSearchSheet.showDestination(
+          context,
+          origin: _gpsPoint,
+        ).then((value) => focus = value);
+      });
+
+      // Con número de puerta y todo: el recorte lo saca y la calle aparece.
+      await tester.enterText(find.byType(TextField), 'san juan 5240');
+      await tester.pumpAndSettle();
+      expect(find.text('San Juan (Barranqueras)'), findsOneWidget);
+      // El renglón dice que es una calle, no un lugar puntual.
+      expect(find.textContaining('Calle'), findsWidgets);
+
+      await tester.tap(find.text('San Juan (Barranqueras)'));
+      await tester.pumpAndSettle();
+
+      // La hoja devolvió el punto de la calle…
+      expect(focus, (lat: street.lat, lng: street.lng));
+      // …pero el destino NO se fijó: una calle entera no es un punto, y
+      // fijarlo en su mitad planificaría un viaje a cuadras de la casa. El
+      // modo "tocá el mapa" sigue activo para marcar el lugar exacto.
+      expect(c.read(tripSearchProvider), isA<TripPickingDestination>());
+      // Tampoco es un "último destino": el destino real será el toque.
+      expect(c.read(recentDestinationsProvider), isEmpty);
+    });
+
+    testWidgets('como origen se toma directo, con su nombre', (tester) async {
+      // Para el origen alcanza: el planificador arranca desde las paradas
+      // CERCANAS al punto, y "Cambiar" queda a un toque.
+      final c = container(places: const [street]);
+      await pumpSheet(
+        tester,
+        c,
+        (context) => PlaceSearchSheet.showOrigin(context),
+      );
+
+      await tester.enterText(find.byType(TextField), 'san juan');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('San Juan (Barranqueras)'));
+      await tester.pumpAndSettle();
+
+      final state = c.read(tripSearchProvider);
+      expect(state, isA<TripPickingDestination>());
+      expect(
+        (state as TripPickingDestination).originName,
+        'San Juan (Barranqueras)',
       );
     });
   });

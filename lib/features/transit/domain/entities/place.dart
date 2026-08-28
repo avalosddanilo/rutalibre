@@ -14,6 +14,11 @@ enum PlaceKind {
   deporte,
   cultura,
   iglesia,
+
+  /// Una calle con nombre. Existe porque la gente TAMBIÉN piensa en calles
+  /// ("San Juan 5240") y los datos de paradas solo nombran esquinas: sin
+  /// esto, quien buscaba su propia calle veía "nada coincide".
+  calle,
   otro;
 
   static PlaceKind parse(String raw) => PlaceKind.values.firstWhere(

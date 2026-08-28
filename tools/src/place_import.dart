@@ -16,6 +16,11 @@ enum PlaceKind {
   deporte,
   cultura,
   iglesia,
+
+  /// Una calle con nombre. No sale de un tag como los demás: la arma
+  /// `street_import.dart` desde los ways de OSM, para que "San Juan 5240"
+  /// encuentre la calle aunque ninguna parada se llame así.
+  calle,
   otro,
 }
 
@@ -106,7 +111,7 @@ const dedupeMeters = 150.0;
 /// escuelas rurales a 40 km, a las que nadie llega en colectivo urbano.
 const urbanBounds = (south: -27.53, north: -27.38, west: -59.08, east: -58.75);
 
-bool _insideUrbanArea(double lat, double lng) =>
+bool insideUrbanArea(double lat, double lng) =>
     lat > urbanBounds.south &&
     lat < urbanBounds.north &&
     lng > urbanBounds.west &&
@@ -132,7 +137,7 @@ String normalizeName(String name) {
   return buffer.toString().replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 
-double _metersBetween(double lat1, double lng1, double lat2, double lng2) {
+double metersBetween(double lat1, double lng1, double lat2, double lng2) {
   const metersPerDegree = 111320.0;
   final dLat = (lat1 - lat2) * metersPerDegree;
   final dLng = (lng1 - lng2) * metersPerDegree * math.cos(lat1 * math.pi / 180);
@@ -183,7 +188,7 @@ PlaceImportResult buildPlaces(Iterable<RawPlace> raw) {
       categoriaDesconocida++;
       continue;
     }
-    if (!_insideUrbanArea(lat, lng)) {
+    if (!insideUrbanArea(lat, lng)) {
       fueraDelArea++;
       continue;
     }
@@ -200,7 +205,7 @@ PlaceImportResult buildPlaces(Iterable<RawPlace> raw) {
     final sameName = byName.putIfAbsent(key, () => []);
     final isDuplicate = sameName.any(
       (other) =>
-          _metersBetween(other.lat, other.lng, place.lat, place.lng) <
+          metersBetween(other.lat, other.lng, place.lat, place.lng) <
           dedupeMeters,
     );
     if (isDuplicate) {

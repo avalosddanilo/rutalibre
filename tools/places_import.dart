@@ -1,5 +1,5 @@
-/// Importador de LUGARES (hospitales, escuelas, plazas, shoppings…) desde
-/// OpenStreetMap hacia el asset que la app empaqueta.
+/// Importador de LUGARES (hospitales, escuelas, plazas, shoppings…) y de
+/// CALLES con nombre, desde OpenStreetMap hacia el asset que la app empaqueta.
 ///
 /// Uso:
 ///   dart run tools/places_import.dart                    # baja de Overpass
@@ -26,6 +26,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'src/place_import.dart';
+import 'src/street_import.dart';
 
 /// Mismo bbox que el importador de recorridos: se filtra al área urbana
 /// después, en `buildPlaces`.
@@ -54,6 +55,28 @@ const _placesQuery =
   nwr["office"="government"]["name"]($_bbox);
 );
 out center tags;
+''';
+
+/// Las CALLES con nombre. Solo las categorías por las que pasa gente y
+/// colectivos: sin `service` (entradas de cocheras), sin `track` (huellas
+/// rurales), sin `footway` (senderos, casi nunca con nombre de verdad).
+///
+/// `out tags center`: el centro de cada way alcanza — la geometría completa
+/// pesa diez veces más y el buscador necesita UN punto, no el trazado.
+const _streetsQuery =
+    '''
+[out:json][timeout:270];
+way["highway"~"^(trunk|primary|secondary|tertiary|unclassified|residential|living_street|pedestrian)\$"]["name"]($_bbox);
+out tags center;
+''';
+
+/// Las localidades, para rotular calles homónimas: la San Juan de
+/// Barranqueras no es la San Juan del centro de Resistencia.
+const _localitiesQuery =
+    '''
+[out:json][timeout:270];
+node["place"~"^(city|town|village)\$"]["name"]($_bbox);
+out;
 ''';
 
 Future<void> main(List<String> args) async {
@@ -108,7 +131,62 @@ Future<void> main(List<String> args) async {
     stdout.writeln('  ${entry.value.toString().padLeft(5)}  ${entry.key.name}');
   }
 
-  final encoded = jsonEncode(encodePlaces(result.places));
+  // Las calles: misma fuente, otro armado (ver street_import.dart).
+  final localitiesJson = await _load(
+    label: 'localidades',
+    query: _localitiesQuery,
+    cachePath: cacheDir == null ? null : '$cacheDir/osm_localities.json',
+  );
+  final localities = <Locality>[
+    for (final element
+        in ((localitiesJson['elements'] as List<dynamic>?) ?? const [])
+            .cast<Map<String, dynamic>>())
+      if ((element['tags'] as Map<String, dynamic>?)?['name'] is String &&
+          element['lat'] is num &&
+          element['lon'] is num)
+        (
+          name: (element['tags'] as Map<String, dynamic>)['name'] as String,
+          lat: (element['lat'] as num).toDouble(),
+          lng: (element['lon'] as num).toDouble(),
+        ),
+  ];
+  stdout.writeln('');
+  stdout.writeln('Localidades: ${localities.map((l) => l.name).join(', ')}');
+
+  final streetsJson = await _load(
+    label: 'calles',
+    query: _streetsQuery,
+    cachePath: cacheDir == null ? null : '$cacheDir/osm_streets.json',
+  );
+  final rawStreets = <RawStreet>[
+    for (final element
+        in ((streetsJson['elements'] as List<dynamic>?) ?? const [])
+            .cast<Map<String, dynamic>>())
+      (
+        name: (element['tags'] as Map<String, dynamic>?)?['name'] as String?,
+        lat: _coord(element, 'lat'),
+        lng: _coord(element, 'lon'),
+      ),
+  ];
+  final streetResult = buildStreets(rawStreets, localities);
+  final sr = streetResult.report;
+  stdout.writeln('');
+  stdout.writeln('Ways de calles leídos: ${sr.total}');
+  stdout.writeln('  sin nombre:             ${sr.sinNombre}');
+  stdout.writeln('  sin coordenada:         ${sr.sinCoordenada}');
+  stdout.writeln('  fuera del área urbana:  ${sr.fueraDelArea}');
+  stdout.writeln('  → CALLES:               ${sr.calles}');
+
+  // Un solo asset, orden estable global: regenerar sin cambios en la fuente
+  // tiene que dar diff vacío.
+  final combined = [...result.places, ...streetResult.streets]
+    ..sort((a, b) {
+      final byName = normalizeName(a.name).compareTo(normalizeName(b.name));
+      if (byName != 0) return byName;
+      return a.lat.compareTo(b.lat);
+    });
+
+  final encoded = jsonEncode(encodePlaces(combined));
   final file = File(outputPath);
   await file.parent.create(recursive: true);
   await file.writeAsString(encoded);
