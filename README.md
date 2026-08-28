@@ -9,13 +9,18 @@ Corrientes capital. Rápida, limpia y sin publicidad.
 - **Mapa** con las paradas visibles de entrada, sin pedir el GPS ni elegir una
   línea, y el trazado de cada recorrido
 - **Buscador** de líneas por número, barrio o **destino** (ignora tildes)
-- **Buscá por LUGAR**: el hospital, la escuela, el shopping, la plaza — 2612
-  lugares del Gran Resistencia, sin señal y sin escribir la esquina
+- **Buscá por LUGAR o por CALLE**: el hospital, la escuela, el shopping, la
+  plaza — ~2600 lugares y ~2900 calles con su localidad ("San Juan
+  (Barranqueras)"), sin señal y sin saber la esquina
 - **"¿Cómo llego?"**: de dónde estás a dónde vas, con directos y un transbordo.
   El origen sale del GPS o **se elige a mano**, así que también sirve para
   planificar desde el sillón o sin dar el permiso de ubicación
 - **"Iniciar viaje"**: el viaje paso a paso, uno por pantalla, y el mapa
   acompañando cada paso. Sin minutos inventados — ver el CHANGELOG
+- **Alarma "avisame para bajar"**: por si te dormís arriba del colectivo —
+  la pantalla no se apaga y, al acercarse tu parada, suena el tono de alarma
+  del sistema (aunque el teléfono esté en silencio) y vibra hasta que la
+  apagues
 - **"¿Qué colectivos pasan por acá?"** tocando cualquier parada, con a cuánto
   llegás caminando
 - **Cerca mío** por GPS, con la distancia real en metros
@@ -95,7 +100,7 @@ Detalles y decisiones en [`docs/osm-import.md`](docs/osm-import.md).
 
 ## Tests
 
-550 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
+560 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
 trazados, SQL), repositorio cache-first, mapeos DTO, usecases, resolución de
 feriados (computus), buscador de origen y destino, estado del viaje, assets
 empaquetados (lugares y paradas de Corrientes), panel de líneas, hoja de

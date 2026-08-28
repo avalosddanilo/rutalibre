@@ -13,7 +13,10 @@ import 'package:rutalibre/features/transit/presentation/providers/transit_provid
 import 'package:rutalibre/features/transit/presentation/providers/trip_providers.dart';
 import 'package:rutalibre/features/transit/presentation/utils/trip_guidance.dart';
 import 'package:rutalibre/features/transit/presentation/widgets/trip_guidance_panel.dart';
+import 'package:rutalibre/features/transit/presentation/widgets/wake_alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'wake_alarm_test.dart' show FakeWakeAlarmGear;
 
 /// Recorrido recto, paradas cada ~200 m (0.002 de longitud a esta latitud).
 final _routeStops = [
@@ -51,11 +54,13 @@ void main() {
     // app real.
     SharedPreferences.setMockInitialValues({});
     prefs = await SharedPreferences.getInstance();
+    WakeAlarmScreen.resetShowingForTest();
   });
 
   ProviderContainer container({
     ({double lat, double lng})? position,
     Stream<({double lat, double lng})>? positionStream,
+    WakeAlarmGear? gear,
   }) {
     final c = ProviderContainer(
       // Sin reintentos: el retry de Riverpod 3 re-suscribe el stream muerto
@@ -66,6 +71,7 @@ void main() {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
         stopsForRouteProvider('rv1').overrideWith((ref) async => _routeStops),
+        if (gear != null) wakeAlarmGearProvider.overrideWithValue(gear),
         livePositionProvider.overrideWith(
           // Sin posición: un stream que nunca emite, como un GPS que no
           // consigue fix. Con posición: un solo valor. Con positionStream:
@@ -353,6 +359,91 @@ void main() {
     await pumpPanel(tester, c, steps: walkSteps, stepIndex: 0);
 
     expect(find.textContaining('Faltan ~'), findsOneWidget);
+  });
+
+  group('la alarma "avisame para bajar"', () {
+    testWidgets('el interruptor aparece con el contador, no sin él', (
+      tester,
+    ) async {
+      // Sin GPS no hay contador, y sin contador la alarma sería un
+      // despertador sin reloj: no se ofrece.
+      final sinGps = container();
+      await pumpPanel(tester, sinGps, steps: steps, stepIndex: 1);
+      expect(find.text('Avisame para bajar'), findsNothing);
+    });
+
+    testWidgets('armada, al entrar en zona de bajada SUENA a toda pantalla', (
+      tester,
+    ) async {
+      final gear = FakeWakeAlarmGear();
+      final gps = StreamController<({double lat, double lng})>();
+      addTearDown(gps.close);
+      final c = container(positionStream: gps.stream, gear: gear);
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      // Viajando, lejos todavía: el interruptor está y se arma.
+      gps.add((lat: -27.4519, lng: _routeStops[3].lng));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Avisame para bajar'));
+      await tester.pumpAndSettle();
+      expect(gear.calls, contains('keepScreenOn'));
+
+      // Llega la zona de bajada: pantalla de alarma + tono en loop.
+      gps.add((lat: -27.4519, lng: _routeStops[5].lng));
+      // pump y no pumpAndSettle: la vibración periódica no "settlea" nunca.
+      // Tres cuadros: llega el fix, el renglón se reconstruye y encola el
+      // post-frame que abre la alarma, y el diálogo se dibuja.
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.text('¡Preparate para bajar!'), findsOneWidget);
+      expect(find.text('Tu parada es Parada 6.'), findsOneWidget);
+      expect(gear.calls, contains('ring'));
+
+      // El botón apaga y devuelve la guía, no el mapa.
+      await tester.tap(find.text('Listo, estoy despierto'));
+      await tester.pumpAndSettle();
+      expect(find.text('¡Preparate para bajar!'), findsNothing);
+      expect(gear.calls, contains('silence'));
+      expect(find.text('La próxima es la tuya — preparate'), findsOneWidget);
+    });
+
+    testWidgets('SIN armar, la zona de bajada avisa discreto como siempre', (
+      tester,
+    ) async {
+      final gear = FakeWakeAlarmGear();
+      final c = container(
+        position: (lat: -27.4519, lng: _routeStops[5].lng),
+        gear: gear,
+      );
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      expect(find.text('La próxima es la tuya — preparate'), findsOneWidget);
+      expect(find.text('¡Preparate para bajar!'), findsNothing);
+      expect(gear.calls, isNot(contains('ring')));
+    });
+
+    testWidgets('"Terminar" con la alarma armada la desarma y suelta todo', (
+      tester,
+    ) async {
+      final gear = FakeWakeAlarmGear();
+      final c = container(
+        position: (lat: -27.4519, lng: _routeStops[3].lng),
+        gear: gear,
+      );
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+
+      await tester.tap(find.text('Avisame para bajar'));
+      await tester.pumpAndSettle();
+      expect(c.read(wakeAlarmProvider), isTrue);
+
+      await tester.tap(find.text('Terminar'));
+      await tester.pumpAndSettle();
+
+      expect(c.read(wakeAlarmProvider), isFalse);
+      expect(gear.calls, containsAllInOrder(['silence', 'allowScreenOff']));
+    });
   });
 }
 

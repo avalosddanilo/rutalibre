@@ -16,6 +16,7 @@ import '../utils/ride_progress.dart';
 import '../utils/trip_guidance.dart';
 import 'hail_screen.dart';
 import 'line_badge.dart';
+import 'wake_alarm.dart';
 
 /// El viaje paso a paso, uno por pantalla.
 ///
@@ -295,6 +296,20 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
       // rearma al salir de la zona del tramo entero (el `progress == null`
       // de arriba), que es un cambio de situación real y no ruido.
       HapticFeedback.heavyImpact();
+      // Con la alarma armada, el aviso deja de ser discreto: pantalla de
+      // alarma con el tono del sistema en loop, para quien se durmió. En un
+      // post-frame porque abrir un diálogo en medio del build no se puede.
+      if (ref.read(wakeAlarmProvider)) {
+        final stopName = widget.leg.alightStop.name;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          WakeAlarmScreen.show(
+            context,
+            stopName: stopName,
+            gear: ref.read(wakeAlarmGearProvider),
+          );
+        });
+      }
     }
 
     final scheme = Theme.of(context).colorScheme;
@@ -306,39 +321,76 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
 
     return Padding(
       padding: const EdgeInsets.only(top: 10),
-      child: AnimatedContainer(
-        duration: Motion.base,
-        curve: Motion.curve,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: prepare
-              ? scheme.primaryContainer
-              : scheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(AppTheme.radius),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              prepare ? Icons.notifications_active : Icons.gps_fixed,
-              size: 18,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedContainer(
+            duration: Motion.base,
+            curve: Motion.curve,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
               color: prepare
-                  ? scheme.onPrimaryContainer
-                  : scheme.onSurfaceVariant,
+                  ? scheme.primaryContainer
+                  : scheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(AppTheme.radius),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: prepare ? FontWeight.w700 : FontWeight.w500,
+            child: Row(
+              children: [
+                Icon(
+                  prepare ? Icons.notifications_active : Icons.gps_fixed,
+                  size: 18,
                   color: prepare
                       ? scheme.onPrimaryContainer
                       : scheme.onSurfaceVariant,
                 ),
-              ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    text,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: prepare ? FontWeight.w700 : FontWeight.w500,
+                      color: prepare
+                          ? scheme.onPrimaryContainer
+                          : scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          // La alarma vive DEBAJO del contador y solo cuando el contador
+          // vive: se alimenta de la misma geometría, y ofrecerla sin GPS
+          // sería prometer un despertador sin reloj.
+          const _WakeAlarmToggle(),
+        ],
+      ),
+    );
+  }
+}
+
+/// "Avisame para bajar": el interruptor de la alarma para quien se duerme.
+///
+/// El estado vive en [wakeAlarmProvider], no acá: cambiar de paso —o de
+/// tramo en un transbordo— reconstruye este renglón, y una alarma que se
+/// desarma sola al tocar "Siguiente" no es una alarma.
+class _WakeAlarmToggle extends ConsumerWidget {
+  const _WakeAlarmToggle();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final armed = ref.watch(wakeAlarmProvider);
+    return SwitchListTile(
+      value: armed,
+      onChanged: (value) =>
+          ref.read(wakeAlarmProvider.notifier).setArmed(value),
+      contentPadding: EdgeInsets.zero,
+      dense: true,
+      secondary: Icon(armed ? Icons.alarm_on : Icons.alarm_add),
+      title: const Text('Avisame para bajar'),
+      // La promesa se lee ANTES de armar: qué va a pasar y a qué precio.
+      subtitle: const Text(
+        'Por si te dormís: suena fuerte aunque el teléfono esté en '
+        'silencio, y la pantalla queda prendida.',
       ),
     );
   }

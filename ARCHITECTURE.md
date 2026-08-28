@@ -627,15 +627,18 @@ publicar la política en una URL y probar el APK de release en el teléfono.
 
 ## Pendientes de la 1.1 (pedidos de la prueba de campo)
 
-1. **Alarma "avisame para bajar"**: hoy el contador vibra UNA vez con la app
-   abierta y la pantalla prendida. La versión para quien se queda dormido
-   arriba del colectivo —pasó de verdad— necesita un servicio en primer
+1. **Alarma "avisame para bajar" con la pantalla APAGADA**: la 1.0 ya trae
+   la alarma (`wake_alarm.dart`: opt-in por viaje, wakelock mientras está
+   armada, tono de alarma del sistema en loop por el canal de alarmas —
+   suena aunque el teléfono esté en silencio — y vibración sostenida hasta
+   apagarla a mano). Su límite honesto: depende de que la pantalla siga
+   prendida, que el wakelock garantiza SALVO que la persona la apague con el
+   botón. La versión que sobrevive a eso necesita un servicio en primer
    plano de Android (geolocator lo trae: `foregroundNotificationConfig` en
-   AndroidSettings), con notificación persistente "viaje en curso", vibración
-   sostenida + sonido de alarma al entrar en zona de bajada, permiso
+   AndroidSettings), con notificación persistente "viaje en curso", permiso
    POST_NOTIFICATIONS (Android 13+), FOREGROUND_SERVICE_LOCATION en el
-   manifest y la política de privacidad actualizada. Opt-in por viaje, nunca
-   por defecto: seguir el GPS con la pantalla apagada es otra promesa.
+   manifest y la política de privacidad actualizada. Seguir el GPS con la
+   pantalla apagada es otra promesa — no se mete a días de largar.
 
 ## Fases del producto
 
