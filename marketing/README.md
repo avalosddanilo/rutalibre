@@ -1,30 +1,48 @@
 # Campaña de Ruta Libre
 
 Todo lo que hace falta para lanzar la app en Instagram y TikTok: la estrategia,
-los siete carruseles, los ocho guiones de video, el calendario y las 56 piezas
-de arte ya rasterizadas.
+los ocho carruseles, los nueve guiones de video, el calendario y las 64 piezas
+de arte ya rasterizadas con las capturas reales del teléfono.
+
+**Esta carpeta cuelga de [`docs/lanzamiento.md`](../docs/lanzamiento.md)**, que
+es el plan del primer mes y el que manda: ahí están el keystore, el AAB, la
+prueba cerrada de 14 días y los trámites. Acá está qué se publica y cuándo.
 
 ## Por dónde empezar
 
 | Archivo | Qué es |
 |---|---|
-| [`estrategia.md`](estrategia.md) | **Leer esto primero.** Posicionamiento, público, los cinco mensajes, el tono y —lo más importante— las tres frases que no se escriben nunca. |
-| [`ig-carruseles.md`](ig-carruseles.md) | Los 7 carruseles slide por slide, con su caption y sus hashtags. |
-| [`tiktok-guiones.md`](tiktok-guiones.md) | Los 8 videos con tiempos, texto en pantalla, voz y notas de rodaje. Sirven igual para Reels. |
+| [`estrategia.md`](estrategia.md) | **Leer esto primero.** Posicionamiento, público, los cinco mensajes, las dos historias humanas, el tono y las tres frases que no se escriben nunca. |
+| [`ig-carruseles.md`](ig-carruseles.md) | Los 8 carruseles slide por slide, con su caption y sus hashtags. |
+| [`tiktok-guiones.md`](tiktok-guiones.md) | Los 9 videos con tiempos, texto en pantalla, voz y notas de rodaje. Sirven igual para Reels. |
 | [`ig-posts-y-stories.md`](ig-posts-y-stories.md) | Los posts sueltos, las stories, la bio, los highlights y las respuestas guardadas. |
-| [`calendario.md`](calendario.md) | Qué se publica cada día, anclado al día del lanzamiento. |
-| `assets/` | Los 56 PNG, a 1080 × 1350, listos para subir. |
+| [`calendario.md`](calendario.md) | Qué se publica cada día, colgado de los 14 días de prueba cerrada. |
+| `assets/` | Las 64 piezas, a 1080 × 1350, listas para subir. |
+| `capturas/` | Las 9 capturas del teléfono, de la versión final. |
+
+## Lo primero de todo: el video
+
+`docs/lanzamiento.md` pide **un** video, y tiene razón: uno bien hecho sirve
+para Instagram, TikTok, WhatsApp, el posteo personal y para mandarle a los
+medios. Es la pieza de mayor rendimiento de toda la campaña.
+
+El guion está en [`tiktok-guiones.md`](tiktok-guiones.md) como **T0 · El
+video**: pantalla grabada del flujo entero — busco mi casa con la altura →
+elijo el viaje → iniciar → el contador bajando → la alarma sonando.
 
 ## Las piezas
-
-Están todas generadas en `assets/`. Se regeneran con:
 
 ```bash
 REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart
 ```
 
-- `c1-01.png` … `c7-07.png` — los siete carruseles, en orden de deslizado
-- `p1-frase.png`, `p2-numeros.png`, `p3-permisos.png`, `p4-resistencia.png` — los posts de imagen única
+- `c1-*` … `c8-*` — los ocho carruseles, en orden de deslizado
+- `p1-frase`, `p2-numeros`, `p3-permisos`, `p4-resistencia`, `p5-alarma` — los posts de imagen única
+
+El orden de los carruseles no es caprichoso: **C1** es la tesis (lo único que
+no se puede copiar), **C2** presenta el producto, y **C3** (la alarma) y
+**C4** ("San Juan 5240") son las dos historias humanas que el plan de
+lanzamiento manda contar primero.
 
 ## Por qué el arte se dibuja en Dart
 
@@ -33,7 +51,7 @@ Porque el colectivo de estos slides es el **mismo `BrandMarkPainter`** del
 la tienda muestren dos marcas distintas, ni de que alguien exporte una versión
 "parecida" desde otro programa.
 
-Y porque cuando aumente el boleto, corregir el precio del carrusel C6 es
+Y porque cuando aumente el boleto, corregir el precio del carrusel C7 es
 cambiar un string en `test/marketing/social_assets_test.dart` y correr un
 comando — no buscar un archivo de diseño que quedó en la computadora de
 alguien.
@@ -41,16 +59,24 @@ alguien.
 El guion vive en el markdown; **lo que queda dibujado en el PNG vive en el
 Dart**. Si cambiás un texto, cambialo en los dos lados.
 
+Las capturas se recortan en el generador con una alineación por slide. **Nunca
+se retoca una captura para que muestre algo que la app no hace.**
+
 ## El guardarraíl
 
 `test/marketing/social_assets_test.dart` corre en cada `flutter test` y
-verifica tres cosas sobre el texto que va impreso en las imágenes:
+verifica el texto que va impreso en las imágenes:
 
 1. **Ningún slide promete lo que la app no hace** — nada de "tiempo real",
    "en vivo" ni "sabé cuándo llega". La app no sabe dónde está el colectivo.
 2. **El carrusel C1 sigue diciendo la tesis** — si alguien le saca el slide
    incómodo, la campaña pierde lo único que no se puede copiar.
-3. **Cada carrusel cierra con la marca** y no pasa de 10 slides.
+3. **El carrusel de la alarma dice su límite** — que necesita la app abierta.
+   Venderla sin ese renglón haría que alguien se durmiera confiando en algo
+   que, con la pantalla apagada, no suena.
+4. **Cada carrusel cierra con la marca** y no pasa de 10 slides.
+5. **Las capturas que usan los slides existen** — un slide que apunta a un
+   archivo borrado no falla al generar, falla cincuenta PNG después.
 
 Es el mismo criterio que `test/store/listing_test.dart` aplica sobre la ficha
 de Play. Un slide es más peligroso que la ficha: se comparte suelto, sin
@@ -58,10 +84,8 @@ contexto, y sobrevive años en la galería de alguien.
 
 ## Lo que falta antes de publicar
 
-- [ ] **Las 4 capturas de pantalla de la app.** Es el único bloqueante real:
-      sin ellas no se pueden armar los carruseles C2, C3 y C5 completos, y
-      tampoco se puede terminar la ficha de Play. El guion de las capturas
-      está en [`../docs/publicacion.md`](../docs/publicacion.md).
-- [ ] Crear las cuentas de Instagram y TikTok.
-- [ ] Publicar la app y poner el link de Play en la bio.
-- [ ] Verificar las tarifas del carrusel C6 antes de subirlo.
+- [ ] **Grabar T0**, el video del flujo completo. Es lo primero.
+- [ ] Crear las cuentas de Instagram y TikTok — el día 1 de la prueba cerrada,
+      no el día del lanzamiento.
+- [ ] Poner el link de Play en la bio cuando la app salga.
+- [ ] Verificar las tarifas del C7 antes de subirlo.

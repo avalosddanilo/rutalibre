@@ -1,117 +1,147 @@
 # Calendario
 
-Todo está anclado a **D**, el día que la app queda pública en Google Play. No
-hay fechas absolutas a propósito: la publicación depende del keystore, del AAB
-firmado y de la revisión de Google, que tarda lo que tarda.
+Este calendario **cuelga de [`docs/lanzamiento.md`](../docs/lanzamiento.md)**,
+que es el que manda: ahí están el keystore, el AAB, la prueba cerrada y los
+trámites. Acá está solamente qué se publica y cuándo.
 
-**Ritmo:** 3 publicaciones por semana en Instagram (1 carrusel + 1 post + 1
-reel) y 2 en TikTok. Stories todos los días que haya algo real que contar —
-nunca por obligación.
+## La idea que ordena todo
+
+Google obliga a correr una **prueba cerrada de 14 días con 12+ testers** antes
+de dejarte publicar. Eso no es tiempo perdido: son **dos semanas de ventaja**
+para que el día que la app salga no se publique en el vacío.
+
+La cuenta se abre el día 1 de la prueba cerrada, no el día del lanzamiento.
+Si el día L la cuenta tiene 200 seguidores que ya vieron de qué se trata, el
+link de Play cae sobre gente. Si se abre ese mismo día, cae sobre nadie.
+
+**Ritmo:** 3 publicaciones semanales en Instagram (1 carrusel + 1 post + 1
+reel) y 2 en TikTok. Stories los días que haya algo real que contar.
 
 **Mejores horarios para esta zona:** 12:30–14:00 y 20:00–22:30. Son las dos
 franjas en que la gente está viajando o volviendo.
 
 ---
 
-## Antes de D — lo que hay que tener listo
+## Antes de empezar
 
-Esto no es contenido, es la condición para que exista:
-
-| | Bloqueante | Estado |
+| | Qué | Dónde está |
 |---|---|---|
-| ☐ | **Las 4 capturas de pantalla de la app.** Ver el guion en `docs/publicacion.md`. Sin esto no hay carruseles C2, C3 y C5. | Pendiente |
-| ☐ | Cuentas de IG y TikTok creadas, con foto, bio y highlights vacíos armados | Pendiente |
-| ☐ | El AAB firmado y subido | Pendiente |
-| ☐ | La política de privacidad en una URL pública | Pendiente |
-| ☐ | Los PNG generados (`REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart`) | — |
+| ☑ | Las 9 capturas del teléfono | `marketing/capturas/` |
+| ☑ | Las 64 piezas de arte generadas | `marketing/assets/` |
+| ☐ | Cuentas de IG y TikTok creadas, con foto, bio y highlights | [`ig-posts-y-stories.md`](ig-posts-y-stories.md) |
+| ☐ | **El video de 30–60 s** del flujo completo | ver abajo |
+| ☐ | Los dos mails institucionales mandados | `docs/mails-para-mandar.md` |
 
-> Las capturas son el único bloqueante real de la campaña. Se sacan en 20
-> minutos con el teléfono, y desbloquean tres carruseles y la ficha de Play a
-> la vez. **Hacer eso primero.**
+### El video
+
+`docs/lanzamiento.md` pide **un** video, y tiene razón: uno bien hecho sirve
+para Instagram, TikTok, WhatsApp y para mandarle a los medios. Es la pieza de
+mayor rendimiento de toda la campaña.
+
+El guion está en [`tiktok-guiones.md`](tiktok-guiones.md) como **T0 · El
+video** — pantalla grabada del flujo entero: busco mi casa con la altura →
+elijo el viaje → iniciar → el contador bajando → la alarma sonando.
 
 ---
 
-## Semana −1 · Que exista alguien antes de que exista el link
+## Días 1–14 · Mientras corre la prueba cerrada
 
-El objetivo no es vender, es que el día D no se publique en el vacío.
+El objetivo no es vender —todavía no hay link— sino **existir**. Todo lo de
+esta etapa funciona sin la app publicada.
 
 | Día | Dónde | Qué |
 |---|---|---|
-| D−7 | TikTok | **T7** — "Hice una app para los colectivos de mi ciudad" |
-| D−6 | IG | **P4** — "Hecha en Resistencia, Chaco" + story presentándose |
-| D−5 | IG stories | Caja de preguntas: "¿A dónde no sabés cómo llegar?" |
-| D−4 | IG | **C7** — "El mapa es de todos" *(no necesita capturas)* |
-| D−3 | TikTok | **T4** — "Lo que mi app NO hace" |
-| D−2 | IG stories | Cuenta regresiva. Responder la caja de preguntas con viajes armados |
-| D−1 | IG | **P1** — "Preferimos decir no sabemos" |
+| 1 | TikTok | **T7** — "Hice una app para los colectivos de mi ciudad" |
+| 1 | IG | **P4** — "Hecha en Resistencia, Chaco" + story presentándose |
+| 3 | IG | **C1** — "Lo que esta app NO hace" |
+| 4 | IG stories | Caja de preguntas: "¿A dónde no sabés cómo llegar?" |
+| 5 | TikTok | **T4** — "Lo que mi app NO hace" |
+| 6 | IG | **C8** — "El mapa es de todos" |
+| 8 | IG | **C4** — "San Juan 5240" |
+| 9 | TikTok | **T2** — POV: no sos de acá |
+| 10 | IG | **P1** — "Preferimos decir no sabemos" |
+| 12 | IG | **C3** — La alarma ⭐ |
+| 13 | TikTok | **T1** — El cartel para el chofer |
+| 14 | IG stories | Responder la caja de preguntas con viajes armados |
 
-**En paralelo, esta semana:** mandar los dos mails que ya están escritos en
-`docs/mails-para-mandar.md` (Municipalidad de Corrientes y Santiago Zibecchi).
-Y avisarle a medios locales — Diario Chaco, Chaco Día por Día, El Litoral,
-Norte — con el ángulo de C6 o de C7, que son los dos que son noticia.
+> **C3 (la alarma) va el día 12 y no antes.** Es la pieza más fuerte y
+> conviene que pegue con la cuenta ya andando y cerca del lanzamiento, no en
+> el día 1 con 20 seguidores.
+
+**En paralelo**, lo que dice `lanzamiento.md`: mandar los dos mails, grabar el
+video, armar la lista de grupos de Facebook y de medios locales. Y hablar con
+los testers — son 15 personas que ya la usan; pedirles que compartan el día L
+vale más que cualquier aviso.
 
 ---
 
-## Semana 1 · Lanzamiento
+## Día L · Sale a producción
+
+El orden lo fija `lanzamiento.md`: primero lo propio, después los grupos,
+después la prensa — así cuando la prensa mire, ya hay gente usándola.
 
 | Día | Dónde | Qué |
 |---|---|---|
-| **D** | IG | **C2** — "¿Cómo llego?" · el link en la bio y en todas las stories |
-| **D** | TikTok | **T1** — El cartel para el chofer |
-| D+1 | IG stories | Repostear a todo el que la baje. Todo el día. |
-| D+2 | IG | **C1** — "Lo que esta app NO hace" |
-| D+3 | TikTok | **T2** — POV: no sos de acá |
-| D+5 | IG | **P2** — Los números |
+| **L** | Todo | **El video** + el posteo personal (el borrador está en `lanzamiento.md`) |
+| **L** | IG | **C2** — "¿Cómo llego?" · el link en la bio y en todas las stories |
+| L+1 | Grupos | Facebook e Instagram locales, **un grupo por vez y con el texto adaptado** |
+| L+1 | IG stories | Repostear a todo el que la baje. Todo el día. |
+| L+2 | Medios | El mensaje corto de `lanzamiento.md`, con el video adjunto |
+| L+3 | IG | **P5** — "Te despierta dos paradas antes de la tuya" |
+| L+5 | TikTok | **T5** — grabado arriba del colectivo |
 
-**Regla de la semana 1:** contestar absolutamente todos los comentarios y
-todos los mensajes, en el día. El primer mes decide si la cuenta tiene voz
-propia o parece una marca.
+**Adaptar el texto por grupo** (esto es lo que evita que los admins lo borren
+por spam):
+- Grupos de Barranqueras y de barrios → arrancar por **"San Juan 5240"** (C4)
+- Grupos de la UNNE y estudiantes → arrancar por el **904 al Campus** y la
+  tarifa (C7)
+- Grupos de noticias y vecinos → arrancar por **la alarma** (C3)
+
+**Regla de la semana:** contestar todos los comentarios y todos los mensajes,
+en el día. El primer mes decide si la cuenta tiene voz propia o parece una
+marca.
 
 ---
 
-## Semana 2 · El wow
+## Semanas 2–3 después del lanzamiento
 
 | Día | Dónde | Qué |
 |---|---|---|
-| D+7 | IG | **C3** — "Faltan 3 paradas para bajarte" |
-| D+8 | TikTok | **T5** — grabado arriba del colectivo |
-| D+10 | IG | **P3** — Los tres permisos |
-| D+12 | TikTok | **T8** — "¿Y para volver?" |
-| D+13 | IG | **C4** — "El cartel para el chofer" |
+| L+7 | IG | **C5** — El cartel para el chofer |
+| L+8 | TikTok | **T8** — "¿Y para volver?" |
+| L+10 | IG | **P3** — Los tres permisos |
+| L+12 | IG | **C6** — "Faltan 3 paradas para bajarte" |
+| L+14 | TikTok | **T3** — "Le pregunté a 5 personas" |
+| L+15 | IG stories | Encuesta: "¿Qué línea tomás todos los días?" |
+| L+17 | IG | **C7** — "¿Cuánto sale el boleto?" *(verificar tarifas antes)* |
+| L+18 | TikTok | **T6** — El boleto del Campus |
+| L+20 | IG | **P2** — Los números |
 
 ---
 
-## Semana 3 · Utilidad
-
-| Día | Dónde | Qué |
-|---|---|---|
-| D+14 | IG | **C5** — "Buscá por lugar, no por esquina" |
-| D+15 | IG stories | Encuesta: "¿Qué línea tomás todos los días?" |
-| D+16 | TikTok | **T3** — "Le pregunté a 5 personas" |
-| D+18 | IG | **P5** — La línea más votada en la encuesta |
-| D+20 | IG | **C6** — "¿Cuánto sale el boleto?" *(verificar tarifas antes)* |
-| D+21 | TikTok | **T6** — El boleto del Campus |
-
----
-
-## Semana 4 en adelante · Sostenimiento
+## De ahí en adelante · Sostenimiento
 
 Ya no hace falta guion nuevo. El contenido lo empieza a dar la gente:
 
-- **Un P5 por semana**, la línea que más pidan. Son 32 posts de reserva.
+- **Un post por línea, por semana** — la que más pidan. Son 32 de reserva, y
+  cada uno le habla a un barrio distinto, que es donde está el comentario.
 - **Las cajas de preguntas** convertidas en carrusel: "les preguntamos a dónde
   no sabían llegar" con cinco viajes resueltos.
-- **Cada línea nueva o cada corrección de datos** es un post.
-- **Cuando aumente el boleto**, reponer C6 el mismo día. Es el contenido con
+- **Cada corrección de datos** es un post. Cada parada arreglada en OSM
+  también.
+- **Cuando aumente el boleto**, reponer C7 el mismo día. Es el contenido con
   más alcance garantizado del año, y llega antes que los medios.
+- **Cuando salga la 1.1 con la alarma a pantalla apagada**, ese es un post
+  solo: es cerrar en público el "todavía no" que C3 dijo de frente. Vale
+  doble.
 - **Reponer los que funcionaron**, con otro slide 1. A los 60 días nadie se
   acuerda.
 
 ## Los tres momentos que hay que aprovechar sí o sí
 
-1. **Aumento de tarifa.** Reponer C6 en el día, con la fecha nueva.
-2. **Inicio de clases (marzo).** Toda la campaña apunta a P1: el 904, el
-   Campus, cómo llegar a las facultades. Es el pico anual de demanda.
-3. **Si la provincia o el municipio publican datos.** Sería noticia, y sería
-   la prueba de que el pedido de datos abiertos sirvió. Ese post se escribe
-   solo.
+1. **Aumento de tarifa.** Reponer C7 en el día, con la fecha nueva.
+2. **Inicio de clases (marzo).** El pico anual: el 904, el Campus, cómo llegar
+   a las facultades. Toda la campaña apunta a estudiantes esa semana.
+3. **Si la provincia o el municipio publican los horarios.** Sería noticia, y
+   sería la prueba de que el pedido de datos abiertos sirvió. Ese post se
+   escribe solo — y es el único que puede cambiar de qué habla la app.

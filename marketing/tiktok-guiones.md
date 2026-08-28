@@ -1,14 +1,15 @@
 # Guiones de TikTok
 
-Ocho videos, todos grabables con un teléfono y sin equipo. Formato **9:16,
-1080 × 1920**. Duración objetivo **15 a 35 segundos** — el que se pasa de 40
-pierde la mitad de la audiencia antes del final.
+Nueve videos, todos grabables con un teléfono y sin equipo. Formato **9:16,
+1080 × 1920**. Duración objetivo **15 a 35 segundos** —el que se pasa de 40
+pierde la mitad de la audiencia antes del final—, salvo **T0**, que es el
+único que se estira a 60 porque tiene que contar el flujo entero.
 
 Sirven igual para **Reels** y para **Shorts**: se sube el mismo archivo. En
 Reels conviene subirlo sin la marca de agua de TikTok (exportar desde CapCut,
 no descargar de TikTok).
 
-## Las cinco reglas que valen para los ocho
+## Las cinco reglas que valen para los nueve
 
 1. **El gancho está en el primer segundo.** No hay intro, no hay logo al
    principio, no hay "hola, les quiero contar". El primer cuadro ya tiene
@@ -25,10 +26,44 @@ no descargar de TikTok).
 
 ---
 
+## T0 · El video ⭐
+
+**Este es el importante.** `docs/lanzamiento.md` pide *un* video, y tiene
+razón: uno bien hecho sirve para Instagram, TikTok, WhatsApp, el posteo
+personal y para mandarle a los medios. Es la pieza de mayor rendimiento de
+toda la campaña — hacerlo primero.
+
+Es **pantalla grabada** del flujo entero, sin actores y sin salir a la calle.
+45 a 60 segundos.
+
+| Tiempo | Pantalla | Texto en pantalla | Voz |
+|---|---|---|---|
+| 0-3 s | El mapa abierto, lleno de paradas | **una app de colectivos para Resistencia y Corrientes** | "Hice una app de colectivos para Resistencia y Corrientes." |
+| 3-9 s | Se toca "¿A dónde vas?" y se escribe **San Juan 5240** | **buscás tu casa con la altura** | "Buscás tu casa con la altura, no una esquina." |
+| 9-15 s | La lista de viajes: "6 líneas te llevan directo" | **te dice qué colectivo tomar** | "Y te dice qué colectivo tomar, dónde subir y dónde bajarte." |
+| 15-21 s | El recorrido dibujado, se toca **Iniciar viaje** | | "Iniciás el viaje y te lleva paso a paso." |
+| 21-27 s | La guía: "Caminá hasta…", después "Tomá la 2" | **un paso por pantalla** | "Un paso por pantalla, grande, para leerlo parado en la vereda." |
+| 27-33 s | "Viajá 10 paradas · Faltan 10 paradas" | **y te cuenta las paradas que faltan** | "Y mientras viajás te va contando las paradas que faltan." |
+| 33-40 s | Se prende el interruptor **"Avisame para bajar"** | **y esto** | "Y esto es lo que más me gusta." |
+| 40-50 s | La alarma sonando: **¡Preparate para bajar!** | **dos paradas antes, suena aunque esté en silencio** | "Dos paradas antes de la tuya suena, aunque el teléfono esté en silencio. La hice porque me quedé dormido y me desperté en la terminal." |
+| 50-58 s | El ícono / la marca | **gratis · sin publicidad · sin cuenta** | "Es gratis, sin publicidad y sin cuenta. Ruta Libre." |
+
+**Descripción:** la hice porque la necesitaba 🚌 gratis, sin publicidad y sin
+cuenta #Resistencia #Chaco #Corrientes #Colectivos
+
+> **Cómo grabarlo**: grabación de pantalla del teléfono, con el viaje ya
+> probado una vez para que no haya titubeos. La alarma hay que dispararla de
+> verdad — vale hacer un viaje corto para que suene. Cortar los tiempos
+> muertos en CapCut, no acelerar: un flujo acelerado no se entiende.
+> **Que se vea el crédito de OpenStreetMap** en el mapa: es obligación de la
+> licencia y además es la mejor parte de la historia.
+
+---
+
 ## T1 · El cartel para el chofer
 
-**El mejor de los ocho.** Visual, nocturno, y muestra algo que nadie vio antes
-en una app.
+**El más visual de todos.** Nocturno, y muestra algo que nadie vio antes en
+una app.
 
 | Tiempo | Imagen | Texto en pantalla | Voz |
 |---|---|---|---|
@@ -62,7 +97,7 @@ Para P3. El formato POV rinde y es barato de producir.
 | 14-18 s | Sube al colectivo. | | "Listo." |
 | 18-21 s | Marca. | **Ruta Libre · gratis, sin cuenta** | |
 
-**Descripción:** el que llega de afuera es el que más la sufre 🚌 2612 lugares
+**Descripción:** el que llega de afuera es el que más la sufre 🚌 58.000 alturas y ~2600 lugares
 del Gran Resistencia adentro de la app #Resistencia #Chaco #Mudanza
 
 ---
@@ -108,19 +143,31 @@ La versión video del carrusel C1. Texto puro sobre negro, ritmo rápido.
 
 ---
 
-## T5 · "Faltan 3 paradas" — grabado arriba del colectivo
+## T5 · La siesta — grabado arriba del colectivo
+
+La versión filmada de la alarma. Es el que tiene más chance de salirse del
+Chaco: quedarse dormido en el colectivo le pasó a todo el mundo.
 
 | Tiempo | Imagen | Texto en pantalla | Voz |
 |---|---|---|---|
-| 0-3 s | Ventanilla de colectivo en movimiento, mirando afuera con cara de duda. | **contar esquinas para no pasarte de la parada** | — |
-| 3-6 s | La misma toma. | **todos lo hicimos** | "Todos viajamos así." |
-| 6-11 s | Plano del teléfono en la mano: **"Faltan 3 paradas"**. | | "Con el viaje iniciado, la app te va contando." |
-| 11-15 s | El contador baja: 2… 1. El renglón se enciende. | **y cuando falta una, vibra** | "Y cuando falta una, vibra." |
-| 15-19 s | Se levanta del asiento y toca el timbre. | | "Nada de contar esquinas." |
-| 19-24 s | Baja. Marca. | **Ruta Libre · no es un horario, es tu posición** | "No es un horario. Es tu posición contra las paradas." |
+| 0-3 s | Asiento de colectivo, ventanilla, alguien cabeceando de sueño. | **te dormís en el colectivo** | — |
+| 3-6 s | Se le cierran los ojos del todo. | **y te despertás en la terminal** | "Nos pasó a todos." |
+| 6-11 s | Plano del teléfono: se prende el interruptor **"Avisame para bajar"**. | **antes de arrancar, prendés esto** | "Antes de arrancar el viaje, prendés la alarma." |
+| 11-16 s | Duerme tranquilo. El contador baja de fondo. | **dormí tranquilo** | — |
+| 16-22 s | **La alarma suena**: pantalla entera, "¡Preparate para bajar!". Se despierta de golpe. | **dos paradas antes, aunque esté en silencio** | "Dos paradas antes de la tuya suena, aunque el teléfono esté en silencio." |
+| 22-27 s | Toca "Listo, estoy despierto", junta las cosas, baja. | **y solo la apaga el botón** | "Y solo la apaga el botón." |
+| 27-31 s | Marca. | **Ruta Libre · gratis** | "Ruta Libre. La hice porque me pasó." |
 
-**Descripción:** se acabó viajar pegado a la ventanilla 🚌 #Colectivos
-#Resistencia #Chaco #GranResistencia
+**Descripción:** dos paradas antes de la tuya, suena aunque el teléfono esté
+en silencio 🚌😴 #Colectivos #Resistencia #Chaco #GranResistencia
+
+> **Ojo con el sonido**: en TikTok muchos lo miran sin audio, así que la
+> alarma tiene que verse — la pantalla roja entera es el golpe visual. Grabar
+> el momento en que suena de verdad, no simularlo.
+>
+> **Y si alguien pregunta por la pantalla apagada**, contestar de frente:
+> "hoy necesita la app abierta, está en la próxima versión". Es la misma
+> honestidad que el carrusel C3 y es lo que evita la reseña de una estrella.
 
 ---
 
@@ -184,14 +231,25 @@ Corto, un solo chiste, un solo gesto. Bueno para reponer sin producción.
 
 ## Orden de publicación sugerido
 
-`T7` (presentación) → `T4` (la tesis) → `T1` (el wow) → `T2` (el caso de uso)
-→ `T5` → `T6` → `T3` → `T8`
+**`T0` se graba primero de todo**, aunque se publique el día del lanzamiento:
+es el que va también al posteo personal, a WhatsApp y a los medios. Hasta que
+no esté, no hay campaña.
+
+Después: `T7` (presentación) → `T4` (la tesis) → `T2` (el caso de uso) →
+`T1` (el cartel) → **`T0` el día L** → `T5` → `T8` → `T3` → `T6`
 
 `T7` primero porque en TikTok la gente sigue a una persona antes que a un
 producto. Que el primer video tenga cara mejora todo lo que viene después.
 
+El calendario día por día está en [`calendario.md`](calendario.md), colgado de
+los 14 días de prueba cerrada que pide Google.
+
 ## Qué hacer con los comentarios
 
+- **"¿la alarma anda con la pantalla apagada?"** → la verdad, sin vueltas:
+  "Hoy no: necesita la app abierta. Está en la próxima versión." Es la
+  pregunta que más va a repetirse en T0 y T5, y contestarla mal es la reseña
+  de una estrella que no se recupera.
 - **"¿y para iOS?"** → "Por ahora solo Android. Si junta gente, se ve." (No
   prometer fecha.)
 - **"no está mi línea"** → pedir el número y el barrio. Eso es investigación

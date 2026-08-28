@@ -104,7 +104,7 @@ Detalles y decisiones en [`docs/osm-import.md`](docs/osm-import.md).
 
 ## Tests
 
-581 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
+583 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
 trazados, SQL), repositorio cache-first, mapeos DTO, usecases, resolución de
 feriados (computus), buscador de origen y destino, estado del viaje, assets
 empaquetados (lugares y paradas de Corrientes), panel de líneas, hoja de

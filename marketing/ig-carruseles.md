@@ -1,9 +1,10 @@
 # Carruseles de Instagram
 
-Siete carruseles, en orden de publicación. Cada slide está escrito para
+Ocho carruseles, **en orden de publicación**. Cada slide está escrito para
 **1080 × 1350 px (4:5)**, que es el formato que más pantalla ocupa en el feed.
 
-Los PNG se generan solos, desde el mismo painter de la marca:
+Los PNG se generan solos, desde el mismo painter de la marca y con las
+capturas reales del teléfono:
 
 ```bash
 REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart
@@ -16,23 +17,27 @@ cambialo también en `test/marketing/social_assets_test.dart`.
 **Regla de oro del slide 1**: tiene que funcionar solo. En el feed se ve nada
 más que ese. Si el slide 1 no da ganas de deslizar, el carrusel no existe.
 
+**El orden no es caprichoso.** `C1` es la tesis, `C2` presenta el producto, y
+`C3` y `C4` son las dos historias humanas que [`docs/lanzamiento.md`](../docs/lanzamiento.md)
+manda contar primero: la alarma y las alturas.
+
 ---
 
 ## C1 · "Lo que esta app NO hace"
 
 **Va primero.** Es contraintuitivo, es verdad, y es lo único que ninguna otra
-app de transporte puede copiar. Si funciona uno solo, va a ser este.
+app de transporte puede copiar — para copiarlo tendría que dejar de inventar.
 
-| # | Texto | Notas de arte |
-|---|---|---|
-| 1 | **Lo que esta app de colectivos NO hace** | Fondo negro, tipografía grande, nada más. El "NO" en azul. |
-| 2 | **No te dice a qué hora llega el colectivo.** Nadie lo sabe: no hay GPS público en la flota. | |
-| 3 | **No inventa horarios.** Un horario inventado manda a alguien a esperar un colectivo que no viene. | La segunda frase más chica, en gris. |
-| 4 | **No tiene publicidad.** Ni una. | |
-| 5 | **No te pide que te registres.** No hay cuenta, no hay mail, no hay contraseña. | |
-| 6 | **No te rastrea.** Pide tres permisos y ninguno corre en segundo plano. Tus favoritos viven en tu teléfono. | |
-| 7 | **Lo que sí hace:** te dice qué colectivo tomar, en qué esquina subir y en cuál bajar. | Acá cambia el fondo: azul `#1E88E5`, texto blanco. Es el giro del carrusel. |
-| 8 | Cierre de marca | |
+| # | Texto |
+|---|---|
+| 1 | **Lo que esta app de colectivos NO hace** *(el "NO" en azul)* |
+| 2 | **No te dice a qué hora llega el colectivo.** Nadie lo sabe: no hay GPS público en la flota. |
+| 3 | **No inventa horarios.** Un horario inventado manda a alguien a esperar un colectivo que no viene. |
+| 4 | **No tiene publicidad.** Ni una. |
+| 5 | **No te pide que te registres.** No hay cuenta, no hay mail, no hay contraseña. |
+| 6 | **No te rastrea.** Pide tres permisos y ninguno corre en segundo plano. |
+| 7 | **Lo que sí hace:** te dice qué colectivo tomar, en qué esquina subir y en cuál bajar. *(fondo azul — el giro)* |
+| 8 | Cierre de marca |
 
 **Caption:**
 
@@ -54,16 +59,16 @@ app de transporte puede copiar. Si funciona uno solo, va a ser este.
 
 ## C2 · "¿Cómo llego?"
 
-El carrusel de lanzamiento. Explica el producto entero en seis deslizadas.
+El carrusel de presentación. Explica el producto entero, con capturas reales.
 
-| # | Texto | Notas de arte |
+| # | Texto | Captura |
 |---|---|---|
-| 1 | **¿Cómo llego de acá hasta allá?** | La pregunta con la que uno abre una app de colectivos. Grande, centrada. |
-| 2 | **Escribís a dónde vas.** El hospital, la facultad, el shopping, la plaza. No hace falta la esquina. | Captura del buscador. |
-| 3 | **Te dice qué colectivo tomar.** En qué esquina subís y en cuál te bajás. | Captura del resultado. |
-| 4 | **Con transbordo, si hace falta.** Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces. | El "6 de cada 10" grande, en azul. |
-| 5 | **Y después te lleva paso a paso.** Un paso por pantalla, grande, para leerlo parado en la vereda. | Captura de la guía. |
-| 6 | **Gratis. Sin publicidad. Sin cuenta. Anda sin señal.** | Las cuatro en renglones separados. |
+| 1 | **¿Cómo llego de acá hasta allá?** | — |
+| 2 | **Escribís a dónde vas.** El hospital, la escuela, la plaza — o tu casa, con la altura. | `02-buscador-altura` |
+| 3 | **Te dice qué colectivo tomar.** En qué esquina subís y en cuál te bajás. | `03-como-llego` |
+| 4 | **Con transbordo, si hace falta.** Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces. | — |
+| 5 | **Y después te lleva paso a paso.** Un paso por pantalla, grande, para leerlo parado en la vereda. | `05-guia-caminata` |
+| 6 | **Gratis. Sin publicidad. Sin cuenta. Anda sin señal.** | — |
 | 7 | Cierre de marca | |
 
 **Caption:**
@@ -79,51 +84,89 @@ El carrusel de lanzamiento. Explica el producto entero en seis deslizadas.
 
 ---
 
-## C3 · "Faltan 3 paradas para bajarte"
+## C3 · La alarma para no quedarte dormido
 
-El "wow". Es la función que hace que alguien se la muestre a otro.
+**El mejor de los ocho.** Es la función preferida del que la hizo, tiene una
+historia humana atrás ("la hice porque me pasó") y no la tiene ninguna otra
+app de colectivos del país.
 
-| # | Texto | Notas de arte |
+| # | Texto | Captura |
 |---|---|---|
-| 1 | **Viajar contando esquinas, pegado a la ventanilla.** | Fondo oscuro, tono de ventanilla de noche. |
-| 2 | **Se terminó.** | Sola, gigante, centrada. |
-| 3 | **La app cuenta las paradas que te faltan.** Mientras viajás. | Captura del renglón "Faltan 3 paradas". |
-| 4 | **Cuando falta una, el renglón se enciende y el teléfono vibra una vez.** | El renglón encendido, en azul. |
-| 5 | **Es geometría, no un horario.** Sigue tu posición contra las paradas del recorrido, en orden. | |
-| 6 | **Si tu posición no cae en el tramo, se calla.** Antes que adivinar, no dice nada. | El "se calla" en azul. |
-| 7 | **Y se apaga al cerrar la guía.** Nunca corre en segundo plano. | |
+| 1 | **¿Alguna vez te quedaste dormido en el colectivo?** | — |
+| 2 | **Y te despertaste en la terminal.** | — |
+| 3 | **Antes de arrancar, prendés la alarma.** "Avisame para bajar". Un interruptor y listo. | `08-alarma-armada` |
+| 4 | **Dos paradas antes de la tuya, suena.** Dos y no una: entre abrir los ojos y juntar las cosas, una parada es muy justo. Lo dijo la prueba de campo. | — |
+| 5 | **Suena fuerte aunque el teléfono esté en silencio.** Con vibración, y la pantalla entera pidiéndote que te bajes. | `09-alarma-sonando` |
+| 6 | **Y solo la apaga el botón.** Una alarma que se apaga rozándola medio dormido no despertó a nadie. | — |
+| 7 | **Necesita la app abierta.** Con la pantalla apagada todavía no anda. Te lo decimos ahora y no cuando te falle: queda para la 1.1. *(fondo azul)* | — |
 | 8 | Cierre de marca | |
+
+> El slide 7 es el que ningún departamento de marketing dejaría pasar, y es
+> justamente el que hay que dejar. Alguien que se duerme confiando en una
+> alarma que no suena con la pantalla apagada se despierta en la terminal y
+> desinstala. Hay un test que verifica que ese slide siga estando.
 
 **Caption:**
 
-> Todos hicimos lo mismo: viajar pegado a la ventanilla contando esquinas para
-> no pasarnos.
+> Me quedé dormido en el colectivo y me desperté quién sabe dónde. Así que le
+> puse una alarma.
 >
-> Con el viaje iniciado, Ruta Libre cuenta las paradas que faltan y te avisa
-> con una vibración cuando queda una (o cuando estás a menos de 250 m). No es
-> magia ni un horario: es tu posición contra las paradas del recorrido.
+> La prendés antes de arrancar el viaje y, dos paradas antes de la tuya, el
+> teléfono suena con el tono de alarma del sistema —aunque esté en silencio,
+> que arriba del colectivo es exactamente cuándo hace falta—, vibra, y la
+> pantalla entera te pide que te bajes. Solo la apaga el botón: una alarma que
+> se apaga rozándola medio dormido no despertó a nadie.
 >
-> Tres reglas honestas 👇
-> · Sin GPS no te muestra nada. La guía sigue funcionando igual.
-> · Si tu posición no cae en el tramo, se calla. No adivina.
-> · Al cerrar la guía el seguimiento muere. Nunca corre en segundo plano.
+> Dos paradas y no una, porque entre abrir los ojos y juntar las cosas, una
+> parada es muy justo. Eso lo aprendí probándola.
 >
-> Gratis, sin cuenta y sin publicidad. 🚌
+> Lo único: necesita la app abierta. Con la pantalla apagada todavía no, y
+> prefiero decírtelo ahora. Queda para la próxima versión. 🚌
 
 ---
 
-## C4 · "El cartel para el chofer"
+## C4 · "San Juan 5240"
 
-El más visual de todos. Es el que se reenvía por WhatsApp.
+La segunda historia humana: buscaba mi propia casa y la app no la encontraba.
 
-| # | Texto | Notas de arte |
+| # | Texto | Captura |
 |---|---|---|
-| 1 | **De noche, el colectivo no para si nadie le hace señas.** | Fondo casi negro. |
-| 2 | **Y una mano levantada no dice a cuál de los tres que vienen le estás haciendo señas.** | |
-| 3 | *(sin texto)* | **El cartel**: la pantalla entera con un "3" gigante en el color de la línea. Este slide es la pieza. |
-| 4 | **Un botón llena la pantalla con el número de tu línea, en su color.** | |
-| 5 | **Y sube el brillo al máximo solo.** Un cartel al 30% de brillo no es un cartel. | |
-| 6 | **La pantalla del teléfono es la superficie más brillante que hay en la vereda.** | |
+| 1 | **¿Cómo buscás tu casa en una app de colectivos?** | — |
+| 2 | **Las paradas se llaman por esquinas.** Tu casa tiene altura. | — |
+| 3 | **Ahora escribís la dirección con el número.** "San Juan 5240" cae en la cuadra real. | `02-buscador-altura` |
+| 4 | **58.000** números de puerta mapeados en OpenStreetMap, adentro de la app | — |
+| 5 | **¿Y si tu número justo no está mapeado?** Te ofrece el más cercano con su número, y te avisa. | — |
+| 6 | **Disfrazar el 5249 de 5240 sería mentirte la dirección.** E interpolarla sería inventarla. *(fondo azul)* | — |
+| 7 | Cierre de marca | |
+
+**Caption:**
+
+> Buscaba mi propia casa —San Juan al 5200, Barranqueras— y la app no la
+> encontraba. Porque las paradas se nombran por esquinas, y nadie piensa su
+> casa como una esquina.
+>
+> Ahora escribís la dirección con altura y cae en la cuadra real, gracias a
+> las 58.000 direcciones que la comunidad de OpenStreetMap mapeó en el área.
+>
+> ¿Y si tu número justo no está mapeado? Te ofrece el más cercano con SU
+> número y te lo dice. Disfrazar el 5249 de 5240 sería mentirte la dirección,
+> e interpolarla sería inventarla. 🚌
+
+---
+
+## C5 · "El cartel para el chofer"
+
+El más visual. Es el que se reenvía por WhatsApp. Resuelve un problema
+físico, no digital.
+
+| # | Texto | Captura |
+|---|---|---|
+| 1 | **De noche, el colectivo no para si nadie le hace señas.** | — |
+| 2 | **Y una mano levantada no dice a cuál de los tres que vienen le estás haciendo señas.** | — |
+| 3 | *(sin texto — la captura a sangre, la pantalla entera en verde con el 2)* | `07-cartel-chofer` |
+| 4 | **Un botón llena la pantalla con el número de tu línea, en su color.** | `06-guia-toma-la-2` |
+| 5 | **Y sube el brillo al máximo solo.** Un cartel al 30% de brillo no es un cartel. | — |
+| 6 | **La pantalla del teléfono es la superficie más brillante que hay en la vereda.** | — |
 | 7 | Cierre de marca | |
 
 **Caption:**
@@ -142,45 +185,49 @@ El más visual de todos. Es el que se reenvía por WhatsApp.
 
 ---
 
-## C5 · "Buscá por lugar, no por esquina"
+## C6 · "Faltan 3 paradas para bajarte"
 
-| # | Texto | Notas de arte |
+| # | Texto | Captura |
 |---|---|---|
-| 1 | **¿Vos sabés en qué esquina queda el Perrando?** | |
-| 2 | **No hace falta.** | Sola, grande. |
-| 3 | **Escribís "hospital" y aparece.** | Captura del buscador con resultados. |
-| 4 | **2612 lugares del Gran Resistencia.** Hospitales, escuelas, plazas, la terminal, el shopping, las facultades. | El número grande, en azul. |
-| 5 | **Vienen adentro de la app.** Se buscan sin señal desde el momento en que la instalás. | |
-| 6 | **Lugares y paradas salen en la misma lista.** Ordenada por lo que mejor coincide con lo que escribiste. | |
+| 1 | **Viajar contando esquinas, pegado a la ventanilla.** | — |
+| 2 | **Se terminó.** | — |
+| 3 | **La app cuenta las paradas que te faltan.** Mientras viajás. | `08-alarma-armada` |
+| 4 | **Es geometría, no un horario.** Sigue tu posición contra las paradas del recorrido, en orden. | — |
+| 5 | **Si tu posición no cae en el tramo, se calla.** Antes que adivinar, no dice nada. | — |
+| 6 | **Y se apaga al cerrar la guía.** Nunca corre en segundo plano. | — |
 | 7 | Cierre de marca | |
 
 **Caption:**
 
-> Nadie piensa "quiero ir a French y Güemes". Uno piensa "quiero ir al
-> Perrando".
+> Todos hicimos lo mismo: viajar pegado a la ventanilla contando esquinas para
+> no pasarnos.
 >
-> 2612 lugares del Gran Resistencia vienen empaquetados adentro de la app:
-> hospitales, escuelas, plazas, facultades, la terminal. Se buscan sin señal
-> desde el momento en que la instalás, porque no dependen de internet.
+> Con el viaje iniciado, Ruta Libre cuenta las paradas que faltan. No es magia
+> ni un horario: es tu posición contra las paradas del recorrido.
 >
-> Escribís el nombre, elegís de la lista, y te arma el viaje. 🚌
+> Tres reglas honestas 👇
+> · Sin GPS no te muestra nada. La guía sigue funcionando igual.
+> · Si tu posición no cae en el tramo, se calla. No adivina.
+> · Al cerrar la guía el seguimiento muere. Nunca corre en segundo plano.
+>
+> Y si preferís dormir, está la alarma. 🚌
 
 ---
 
-## C6 · "¿Cuánto sale el boleto?"
+## C7 · "¿Cuánto sale el boleto?"
 
 El más "noticia". Es el que puede levantar un medio local.
 
-| # | Texto | Notas de arte |
-|---|---|---|
-| 1 | **¿Cuánto sale el boleto hoy?** | |
-| 2 | **$1.885** · Gran Resistencia | Cifra gigante. |
-| 3 | **$1.890** · Interurbano Chaco – Corrientes | Cifra gigante. |
-| 4 | **$2.921,10** · ramal del Campus de la UNNE | Cifra gigante, en azul. |
-| 5 | **Un 55% más caro que el resto del interurbano.** Por eso se muestra aparte. | |
-| 6 | **Cada tarifa con la fecha desde la que rige y la fuente al lado.** | |
-| 7 | **Un precio sin fecha es peor que no tener precio.** Alguien llega a la máquina con la plata contada. | Fondo azul. |
-| 8 | Cierre de marca | |
+| # | Texto |
+|---|---|
+| 1 | **¿Cuánto sale el boleto hoy?** |
+| 2 | **$1.885** · Gran Resistencia |
+| 3 | **$1.890** · Interurbano Chaco – Corrientes |
+| 4 | **$2.921,10** · ramal del Campus de la UNNE *(fondo azul)* |
+| 5 | **Un 55% más caro que el resto del interurbano.** Por eso se muestra aparte. |
+| 6 | **Cada tarifa con la fecha desde la que rige y la fuente al lado.** |
+| 7 | **Un precio sin fecha es peor que no tener precio.** Alguien llega a la máquina con la plata contada. *(fondo azul)* |
+| 8 | Cierre de marca |
 
 > ⚠️ **Antes de publicar**: verificar que las tres tarifas sigan vigentes.
 > Al momento de escribir esto: $1.885 desde enero de 2026 (fuente Diario
@@ -201,20 +248,20 @@ El más "noticia". Es el que puede levantar un medio local.
 
 ---
 
-## C7 · "El mapa es de todos"
+## C8 · "El mapa es de todos"
 
-Para P4: la comunidad de OpenStreetMap, datos abiertos, prensa. Es el que da
+Para la comunidad de OpenStreetMap, datos abiertos y prensa. Es el que da
 credibilidad y el que consigue que otros hablen de la app.
 
-| # | Texto | Notas de arte |
-|---|---|---|
-| 1 | **Esta app no tiene un mapa propio.** | |
-| 2 | **Los recorridos y las paradas son de OpenStreetMap.** Los mapeó gente, a mano. | |
-| 3 | **1474 paradas · 133 recorridos · 32 líneas** | Los tres números, grandes. |
-| 4 | **Y 2638 paradas que OSM no declaraba** las dedujimos de la geometría del recorrido y del lado de la calle. | |
-| 5 | **¿Encontraste una parada que ya no existe?** La app te abre el nodo en OpenStreetMap para que la corrijas vos. | El "vos" en azul. |
-| 6 | **El mapa es de todos.** | Sola, grande, fondo azul. |
-| 7 | Cierre de marca | |
+| # | Texto |
+|---|---|
+| 1 | **Esta app no tiene un mapa propio.** |
+| 2 | **Los recorridos y las paradas son de OpenStreetMap.** Los mapeó gente, a mano. |
+| 3 | **1474 paradas · 133 recorridos · 32 líneas** |
+| 4 | **Y 2638 paradas que OpenStreetMap no declaraba** las dedujimos de la geometría del recorrido y del lado de la calle. |
+| 5 | **¿Encontraste una parada que ya no existe?** La app te abre el nodo en OpenStreetMap para que la corrijas vos. |
+| 6 | **El mapa es de todos.** *(fondo azul)* |
+| 7 | Cierre de marca |
 
 **Caption:**
 
@@ -222,12 +269,37 @@ credibilidad y el que consigue que otros hablen de la app.
 > gente común, bajo licencia ODbL. Los recorridos de Corrientes capital salen
 > del portal de datos abiertos de la Municipalidad.
 >
+> Las 58.000 alturas que hacen que "San Juan 5240" caiga en la cuadra real
+> también salen de ahí: las mapeó gente, gratis.
+>
 > Por eso, cuando encontrás una parada que ya no existe, la app no te pide que
 > nos escribas: te abre el nodo en OpenStreetMap para que lo corrijas.
-> Corregido ahí, queda corregido para todos los que usan ese mapa, no solo
-> para nosotros.
+> Corregido ahí, queda corregido para todos.
 >
 > Si mapeás en OSM y querés dar una mano con el Gran Resistencia, hablanos. 🚌
+
+---
+
+## Las capturas
+
+Están en `marketing/capturas/`, sacadas del teléfono con la versión final.
+Se recortan en el generador con una alineación por slide — **nunca se retoca
+una captura para que muestre algo que la app no hace.**
+
+| Archivo | Qué muestra |
+|---|---|
+| `01-mapa-paradas` | El mapa con las paradas visibles y el panel de líneas |
+| `02-buscador-altura` | "9 de julio 1250" y el cartel de que ese número no está mapeado |
+| `03-como-llego` | "6 líneas te llevan directo", con los pasos de cada una |
+| `04-viaje-elegido` | El recorrido dibujado y el panel con "Iniciar viaje" |
+| `05-guia-caminata` | Un paso de la guía: "Caminá hasta…" con los metros que faltan |
+| `06-guia-toma-la-2` | "Tomá la 2" con el botón del cartel para el chofer |
+| `07-cartel-chofer` | El cartel: la pantalla entera en verde con el 2 |
+| `08-alarma-armada` | "Viajá 10 paradas", el contador y el interruptor de la alarma |
+| `09-alarma-sonando` | La alarma sonando: "¡Preparate para bajar!" |
+
+Las cuatro que [`docs/lanzamiento.md`](../docs/lanzamiento.md) marca como las
+que venden, y que van también a la ficha de Play, son `01`, `04`, `08` y `02`.
 
 ---
 

@@ -36,6 +36,7 @@ chiquito, que es para lo que fue diseñado.
 | Highlight | Qué va adentro |
 |---|---|
 | `Cómo se usa` | El paso a paso, en stories. Es el manual. |
+| `La alarma` | Cómo se prende y qué hace. Es lo que más van a preguntar. |
 | `Qué NO hace` | La tesis. Que esté a mano para responder. |
 | `Tu línea` | Una story por línea, a medida que se van haciendo. |
 | `Tarifas` | Actualizado cada vez que aumenta. |
@@ -70,7 +71,7 @@ a esperar un colectivo que no viene. 🚌
 
 ### P2 · Los números
 
-> **1474** paradas · **133** recorridos · **32** líneas · **2612** lugares
+> **1474** paradas · **133** recorridos · **32** líneas · **58.000** alturas
 
 **Caption:** Los datos del Gran Resistencia y de Corrientes capital, mapeados
 por la comunidad de OpenStreetMap y publicados por la Municipalidad de
@@ -92,7 +93,22 @@ La marca sobre el negro, y esa sola línea.
 
 **Caption:** Por una persona, porque la necesitaba. Gratis y sin publicidad.🚌
 
-### P5 · El de la línea (plantilla, se repite)
+### P5 · La alarma
+
+> **Te despierta dos paradas antes de la tuya.**
+> Aunque el teléfono esté en silencio.
+
+Es el post de reposición más fuerte que hay: dice la función estrella en dos
+renglones y funciona suelto, sin carrusel.
+
+**Caption:** Prendés "Avisame para bajar" antes de arrancar el viaje y dormís
+tranquilo: dos paradas antes de la tuya el teléfono suena con el tono de
+alarma del sistema —aunque esté en silencio—, vibra, y la pantalla entera te
+pide que te bajes. Solo la apaga el botón.
+Lo único: necesita la app abierta. Con la pantalla apagada todavía no, y
+preferimos decirlo. 🚌
+
+### P6 · El de la línea (plantilla, se repite)
 
 > **La 9**
 > De [cabecera] a [cabecera] · [n] paradas · $1.885
@@ -115,7 +131,7 @@ Lo que se publica entre post y post. Nada de esto necesita diseño.
 - **Captura de un comentario** que pide una línea, con la respuesta. Muestra
   que hay alguien atrás.
 - **Encuesta**: "¿Qué línea tomás todos los días?" con las opciones. Después
-  se convierte en el P5 de esa línea.
+  se convierte en el P6 de esa línea.
 - **Caja de preguntas**: "¿A dónde no sabés cómo llegar?" — y se contesta con
   una captura del viaje armado. Es el mejor contenido que existe: útil,
   personalizado y gratis de producir.
@@ -135,6 +151,10 @@ Lo que se publica entre post y post. Nada de esto necesita diseño.
 ## Respuestas guardadas
 
 Para no reescribirlas cada vez.
+
+**"¿La alarma suena con la pantalla apagada?"**
+> Hoy no: necesita la app abierta. Es la limitación que más nos duele y por
+> eso la decimos antes y no después. Está en la próxima versión.
 
 **"¿Tiene los horarios de mi línea?"**
 > Hoy solo del ramal 904A, y transcriptos de lo que publicó la empresa, sin

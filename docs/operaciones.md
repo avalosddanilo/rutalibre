@@ -145,6 +145,30 @@ Lo que NO existe y por eso no gasta: colectivos en tiempo real. El día que
 exista esa fuente de datos, el diseño cambia (websockets/polling) y hay que
 redimensionar — está anotado en la propuesta de datos abiertos.
 
+## Qué se va a romper primero (para irse adelantando)
+
+En orden de probabilidad, con su respuesta:
+
+1. **La base degradada otra vez** (ya pasó dos veces el 28/8): viajes
+   cortos en timeout. Emergencia #1 de arriba — y verificar SIEMPRE con el
+   viaje corto.
+2. **"Los datos están viejos"**: una parada que se movió, un recorrido que
+   cambió. No es un bug, es la realidad cambiando: re-correr los
+   importadores cada 1-2 meses, re-aplicar seed y ANALYZE después.
+3. **Los tiles del mapa, si la app explota**: vienen de los servidores
+   gratuitos de OpenStreetMap, que tolueran apps chicas. Con miles de
+   usuarios bien; con decenas de miles, cambiar la URL del TileLayer a un
+   proveedor con tier gratis (MapTiler, Stadia) — es UNA línea en
+   map_screen.dart y la política de OSM lo pide.
+4. **Reseñas por los horarios que faltan**: la ficha lo avisa, igual van a
+   caer. Responder con la verdad y usar cada una como munición del reclamo
+   de datos abiertos.
+5. **GPS de gama baja**: el contador aparece y desaparece. La app se calla
+   en vez de inventar — es diseño, explicarlo así.
+6. **Pre-lanzamiento**: el proyecto free de Supabase SE PAUSA tras ~7 días
+   sin tráfico. Mientras dure la prueba cerrada, entrar al dashboard cada
+   tanto; con usuarios reales no pasa más.
+
 ## Qué sigue (después de la 1.0)
 
 La lista viva está en `ARCHITECTURE.md` → "Pendientes de la 1.1". Los tres
