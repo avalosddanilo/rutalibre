@@ -34,8 +34,10 @@ Corrientes capital. Rápida, limpia y sin publicidad.
   advertencia general, no un estado en vivo — ese dato no existe todavía
 - Arranque instantáneo (cache-first), dark mode, sin publicidad
 
-Para publicarla: [`docs/publicacion.md`](docs/publicacion.md). Qué incluye la
-v1.0: [`CHANGELOG.md`](CHANGELOG.md).
+Para publicarla: [`docs/publicacion.md`](docs/publicacion.md). El manual del
+día a día (lentitudes, emergencias, regenerar datos, capacidad):
+[`docs/operaciones.md`](docs/operaciones.md). Qué incluye la v1.0:
+[`CHANGELOG.md`](CHANGELOG.md).
 
 ## Setup rápido
 
