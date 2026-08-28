@@ -237,11 +237,30 @@ class _MapScreenState extends ConsumerState<MapScreen>
   /// error: la app se quedaba sin contestar su pregunta principal por algo
   /// que tiene una alternativa obvia. Si falla, se elige el origen a mano.
   Future<void> _startTrip() async {
+    // Primero la posición que el teléfono YA tiene: es instantánea. Esperar
+    // el fix fresco del GPS —hasta diez segundos adentro de un local— dejaba
+    // la pantalla muda entre el toque y la hoja, que es la eternidad
+    // perceptiva de una app. El fix fresco se pide IGUAL, en paralelo, y si
+    // difiere corrige el origen sin cerrar nada: el estado es vivo y la
+    // lista de viajes se recalcula sola.
+    final service = ref.read(locationServiceProvider);
+    final provisional = await service.lastKnownPosition();
+
+    if (!mounted) return;
+    if (provisional != null) {
+      ref.read(tripSearchProvider.notifier).startFrom(provisional);
+      _refineOriginInBackground(provisional);
+      await _askDestination(provisional);
+      return;
+    }
+
+    // Sin posición previa (primer uso, ubicación recién activada): el camino
+    // de siempre — esperar el GPS con el spinner a la vista.
     setState(() => _locating = true);
     LocationFix? fix;
     Object? error;
     try {
-      fix = await ref.read(locationServiceProvider).currentPosition();
+      fix = await service.currentPosition();
     } catch (thrown) {
       error = thrown;
     } finally {
@@ -271,6 +290,38 @@ class _MapScreenState extends ConsumerState<MapScreen>
     final origin = (lat: fix.position.lat, lng: fix.position.lng);
     ref.read(tripSearchProvider.notifier).startFrom(origin);
     await _askDestination(origin);
+  }
+
+  /// Pide el fix fresco sin que nadie lo espere, y corrige el origen SOLO si
+  /// se movió de verdad.
+  ///
+  /// El umbral de 75 m evita el doble trabajo del caso normal (la última
+  /// posición conocida ES donde estás): corregir por veinte metros
+  /// re-consultaría el planificador para dar el mismo viaje. Si el GPS
+  /// falla, el provisorio queda — el usuario tiene "Cambiar" a la vista. Y
+  /// si el modo ya se apagó (canceló), la corrección no revive nada:
+  /// setOrigin sobre TripIdle solo re-arma el modo, por eso se chequea.
+  void _refineOriginInBackground(MapPoint provisional) {
+    Future<void>(() async {
+      try {
+        final fix = await ref.read(locationServiceProvider).currentPosition();
+        if (!mounted) return;
+        if (ref.read(tripSearchProvider) is TripIdle) return;
+        final meters = const Distance().as(
+          LengthUnit.Meter,
+          LatLng(provisional.lat, provisional.lng),
+          LatLng(fix.position.lat, fix.position.lng),
+        );
+        if (meters > 75) {
+          ref.read(tripSearchProvider.notifier).setOrigin((
+            lat: fix.position.lat,
+            lng: fix.position.lng,
+          ));
+        }
+      } on Object {
+        // El provisorio queda; "Cambiar" está a un toque.
+      }
+    });
   }
 
   /// Con el origen ya puesto: mostrarlo en el mapa y pedir el destino.

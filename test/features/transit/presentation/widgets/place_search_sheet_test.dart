@@ -134,6 +134,78 @@ void main() {
     expect(c.read(tripSearchProvider), isA<TripPickingDestination>());
   });
 
+  group('calle con número de puerta', () {
+    // Hallazgo de campo: "Ameghino 1250" no matcheaba nada, porque los datos
+    // tienen ESQUINAS, no números de puerta. Para el usuario eso se leía
+    // como "la app no conoce mi calle".
+    testWidgets('"ameghino 1250" muestra las esquinas de Ameghino, y lo dice', (
+      tester,
+    ) async {
+      final c = container();
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), 'ameghino 1250');
+      await tester.pumpAndSettle();
+
+      // La esquina aparece…
+      expect(find.text('Ameghino y Sáenz Peña'), findsOneWidget);
+      // …y el cartel aclara que el número no se usó: mostrar esquinas como
+      // si fueran la dirección exacta sería dejar creer que una de esas ES.
+      expect(
+        find.textContaining('Los números de puerta no están'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Nada coincide'), findsNothing);
+    });
+
+    testWidgets('un número solo, sin calle, sigue sin inventar nada', (
+      tester,
+    ) async {
+      final c = container();
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), '1250');
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Nada coincide'), findsOneWidget);
+    });
+
+    testWidgets('una búsqueda que matchea entera no pasa por el recorte', (
+      tester,
+    ) async {
+      // "sáenz" matchea directo: ni cartel ni recorte.
+      final c = container();
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), 'saenz');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Ameghino y Sáenz Peña'), findsOneWidget);
+      expect(
+        find.textContaining('Los números de puerta no están'),
+        findsNothing,
+      );
+    });
+  });
+
   testWidgets('el destino elegido queda anotado como reciente', (tester) async {
     // El contraste con el origen: acá SÍ se anota.
     final c = container();

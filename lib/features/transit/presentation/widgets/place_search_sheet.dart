@@ -259,12 +259,38 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
     // como funcionaba antes. Una función que suma no puede romper la que ya
     // estaba.
     final places = ref.watch(placesProvider).value ?? const <Place>[];
-    final matches = searchDestinations(
+    var matches = searchDestinations(
       query: _query,
       places: places,
       stops: stops,
       limit: _maxResults,
     );
+
+    // "Ameghino 1250" no matchea nada: los datos tienen ESQUINAS, no números
+    // de puerta. Antes eso terminaba en "nada coincide" — para el usuario, la
+    // app no conoce la calle en la que vive. Si la consulta entera no dio
+    // nada y termina en un número, se reintenta SIN el número y se dice lo
+    // que se está mostrando. Solo como plan B: "Ruta 11" sí matchea entera y
+    // ni pasa por acá — el número ahí es parte del nombre.
+    String? droppedNumber;
+    if (matches.isEmpty) {
+      final withoutNumber = RegExp(
+        r'^(.*\S)\s+\d+\s*$',
+      ).firstMatch(_query.trim());
+      if (withoutNumber != null) {
+        final street = withoutNumber.group(1)!;
+        final retry = searchDestinations(
+          query: street,
+          places: places,
+          stops: stops,
+          limit: _maxResults,
+        );
+        if (retry.isNotEmpty) {
+          matches = retry;
+          droppedNumber = street;
+        }
+      }
+    }
 
     if (matches.isEmpty) {
       return Padding(
@@ -282,7 +308,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
         : LatLng(reference.lat, reference.lng);
 
     // Sin scroll propio: scrollea la hoja entera (ver el ListView del build).
-    return ListView.separated(
+    final results = ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 8),
@@ -325,6 +351,31 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
           ),
         );
       },
+    );
+    if (droppedNumber == null) return results;
+
+    // Se DICE que el número no se usó: mostrar esquinas de Ameghino como si
+    // fueran "Ameghino 1250" sin aclararlo sería dejar que el usuario crea
+    // que una de esas ES su dirección.
+    return Column(
+      // min y sin Flexible: esto vive dentro de un scroll sin altura acotada
+      // (la hoja entera scrollea), y la lista de abajo ya es shrinkWrap.
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+          child: Text(
+            'Los números de puerta no están en los datos: esto es lo que '
+            'hay sobre "$droppedNumber". Elegí la esquina más cercana, o '
+            'marcá el punto exacto tocando el mapa.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        results,
+      ],
     );
   }
 

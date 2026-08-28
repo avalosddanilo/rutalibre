@@ -610,6 +610,18 @@ publicar la política en una URL y probar el APK de release en el teléfono.
 11. **Publicarla**: cuenta de desarrollador, capturas, ficha y política de
     privacidad (obligatoria, la app usa ubicación).
 
+## Pendientes de la 1.1 (pedidos de la prueba de campo)
+
+1. **Alarma "avisame para bajar"**: hoy el contador vibra UNA vez con la app
+   abierta y la pantalla prendida. La versión para quien se queda dormido
+   arriba del colectivo —pasó de verdad— necesita un servicio en primer
+   plano de Android (geolocator lo trae: `foregroundNotificationConfig` en
+   AndroidSettings), con notificación persistente "viaje en curso", vibración
+   sostenida + sonido de alarma al entrar en zona de bajada, permiso
+   POST_NOTIFICATIONS (Android 13+), FOREGROUND_SERVICE_LOCATION en el
+   manifest y la política de privacidad actualizada. Opt-in por viaje, nunca
+   por defecto: seguir el GPS con la pantalla apagada es otra promesa.
+
 ## Fases del producto
 
 - **Fase 1 (actual)**: datos estáticos — trazados, paradas, horarios.
