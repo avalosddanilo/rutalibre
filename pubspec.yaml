@@ -53,15 +53,12 @@ dependencies:
   # su única función es verse desde un colectivo que viene con las luces
   # puestas, y un cartel al 30% de brillo no es un cartel.
   screen_brightness: ^2.1.0
-  # Los dos de la alarma "avisame para bajar". La pantalla que no se apaga
-  # mientras está armada (una alarma en una pantalla apagada no despierta a
-  # nadie — la versión con la app cerrada pide un servicio en primer plano y
-  # queda para la 1.1)…
+  # La alarma "avisame para bajar": la pantalla que no se apaga mientras
+  # está armada — una alarma en una pantalla apagada no despierta a nadie
+  # (la versión con la app cerrada pide un servicio en primer plano y queda
+  # para la 1.1). El TONO de la alarma no usa plugin: es un canal nativo
+  # propio de veinte líneas (ver MainActivity.kt y wake_alarm.dart).
   wakelock_plus: ^1.2.8
-  # …y el TONO DE ALARMA del sistema por el canal de alarmas, que suena
-  # aunque el teléfono esté en silencio. Arriba del colectivo el teléfono
-  # está en silencio justamente cuando uno se queda dormido.
-  flutter_ringtone_player: ^4.0.0
 
 dev_dependencies:
   flutter_test:

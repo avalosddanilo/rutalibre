@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -33,9 +32,20 @@ abstract interface class WakeAlarmGear {
   Future<void> silence();
 }
 
-/// La implementación real, sobre `wakelock_plus` y `flutter_ringtone_player`.
+/// La implementación real: `wakelock_plus` para la pantalla y un canal
+/// nativo propio para el tono.
+///
+/// El tono NO usa un plugin a propósito: lo único que hace falta es "el tono
+/// de alarma del sistema, en loop, por el canal de alarmas", que en Android
+/// son veinte líneas de `MediaPlayer` (ver `MainActivity.kt`). El plugin que
+/// lo hacía compilaba contra Android 33 y rompía el build de release — una
+/// dependencia entera, con su riesgo, por veinte líneas que podemos tener en
+/// casa. En iOS el canal no existe y el catch lo deja en silencio: la
+/// pantalla de alarma y la vibración despiertan igual.
 final class DeviceWakeAlarmGear implements WakeAlarmGear {
   const DeviceWakeAlarmGear();
+
+  static const _channel = MethodChannel('rutalibre/alarm');
 
   @override
   Future<void> keepScreenOn() async {
@@ -58,7 +68,7 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
   @override
   Future<void> ring() async {
     try {
-      await FlutterRingtonePlayer().playAlarm(asAlarm: true);
+      await _channel.invokeMethod<void>('ring');
     } on Object {
       // Queda la vibración de la pantalla de alarma, que no pasa por acá.
     }
@@ -67,7 +77,7 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
   @override
   Future<void> silence() async {
     try {
-      await FlutterRingtonePlayer().stop();
+      await _channel.invokeMethod<void>('silence');
     } on Object {
       // Si no llegó a sonar, no hay nada que parar.
     }
