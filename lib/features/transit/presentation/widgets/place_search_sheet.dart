@@ -524,17 +524,21 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
       Navigator.of(context).pop((lat: match.lat, lng: match.lng));
       return;
     }
-    ref.read(recentDestinationsProvider.notifier).record((
+    // El pop va PRIMERO y los notifiers se capturan antes: fijar el destino
+    // dispara EN EL ACTO el listener del mapa que abre la hoja de viajes, y
+    // con esta hoja todavía arriba la de viajes quedaba abajo — y el pop que
+    // venía después la mataba A ELLA. En el teléfono: la bandera aparecía y
+    // "cómo llegar" no, nunca (hallazgo de campo, dos veces).
+    final recents = ref.read(recentDestinationsProvider.notifier);
+    final trip = ref.read(tripSearchProvider.notifier);
+    Navigator.of(context).pop();
+    recents.record((
       id: match.savedId,
       name: match.name,
       lat: match.lat,
       lng: match.lng,
     ));
-    ref.read(tripSearchProvider.notifier).setDestination((
-      lat: match.lat,
-      lng: match.lng,
-    ));
-    Navigator.of(context).pop();
+    trip.setDestination((lat: match.lat, lng: match.lng));
   }
 
   /// Elegir algo ya guardado. **No se re-anota como reciente**: volver a
@@ -545,11 +549,12 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
       _setOrigin((lat: place.lat, lng: place.lng), name: place.name);
       return;
     }
-    ref.read(tripSearchProvider.notifier).setDestination((
-      lat: place.lat,
-      lng: place.lng,
-    ));
+    // Pop primero, por lo mismo que en _choose: fijar el destino abre la
+    // hoja de viajes en el acto, y tiene que abrirse ARRIBA de un buscador
+    // ya cerrado, no abajo de uno abierto.
+    final trip = ref.read(tripSearchProvider.notifier);
     Navigator.of(context).pop();
+    trip.setDestination((lat: place.lat, lng: place.lng));
   }
 
   void _setOrigin(MapPoint point, {String? name}) {
