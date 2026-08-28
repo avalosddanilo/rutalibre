@@ -30,6 +30,15 @@ class RideProgress {
   /// cuadras son de ~100 m, así que 250 es "dos cuadras y media" — tiempo de
   /// tocar el timbre, no de quedarse sentado.
   bool get shouldPrepare => stopsRemaining <= 1 || metersToAlight < 250;
+
+  /// Si la ALARMA tiene que sonar ya (una parada antes que [shouldPrepare]).
+  ///
+  /// Para quien va despierto mirando el renglón, avisar a una parada alcanza.
+  /// Para DESPERTAR a alguien no: entre abrir los ojos, entender dónde está y
+  /// juntar sus cosas, el aviso de la prueba de campo llegaba "muy justo".
+  /// Dos paradas —o 500 m— es margen para despertarse, no para dormirse de
+  /// vuelta.
+  bool get shouldWake => stopsRemaining <= 2 || metersToAlight < 500;
 }
 
 /// El progreso dentro de [leg], o null si no se puede decir con honestidad.

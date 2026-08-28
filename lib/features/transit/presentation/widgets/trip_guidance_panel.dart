@@ -236,6 +236,10 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
   /// Para vibrar UNA vez al entrar en zona de bajada, no en cada fix.
   bool _alerted = false;
 
+  /// Ídem para la alarma, que suena ANTES ([RideProgress.shouldWake]): a
+  /// quien hay que despertar no le alcanza el aviso de "una parada antes".
+  bool _woke = false;
+
   /// Si el contador llegó a mostrarse alguna vez en este tramo.
   ///
   /// Cambia qué es honesto cuando el GPS se muere a mitad de viaje (permiso
@@ -280,6 +284,7 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
       // Se salió de la zona del tramo: si vuelve a entrar, puede volver a
       // avisar (bajarse, caminar y volver a subir es raro pero existe).
       _alerted = false;
+      _woke = false;
       return const SizedBox.shrink();
     }
     _sawProgress = true;
@@ -296,20 +301,26 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
       // rearma al salir de la zona del tramo entero (el `progress == null`
       // de arriba), que es un cambio de situación real y no ruido.
       HapticFeedback.heavyImpact();
-      // Con la alarma armada, el aviso deja de ser discreto: pantalla de
-      // alarma con el tono del sistema en loop, para quien se durmió. En un
-      // post-frame porque abrir un diálogo en medio del build no se puede.
-      if (ref.read(wakeAlarmProvider)) {
-        final stopName = widget.leg.alightStop.name;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted) return;
-          WakeAlarmScreen.show(
-            context,
-            stopName: stopName,
-            gear: ref.read(wakeAlarmGearProvider),
-          );
-        });
-      }
+    }
+    // Con la alarma armada, el aviso deja de ser discreto: pantalla de
+    // alarma con el tono del sistema en loop, para quien se durmió. Suena
+    // UNA parada antes que la vibración (shouldWake, no shouldPrepare):
+    // despertarse, entender dónde estás y juntar tus cosas lleva más que
+    // levantar la vista — "muy justo", dijo la prueba de campo. En un
+    // post-frame porque abrir un diálogo en medio del build no se puede.
+    // El flag se consume recién cuando SUENA: si la alarma se arma tarde —ya
+    // adentro de la zona—, el próximo fix la dispara igual.
+    if (progress.shouldWake && !_woke && ref.read(wakeAlarmProvider)) {
+      _woke = true;
+      final stopName = widget.leg.alightStop.name;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        WakeAlarmScreen.show(
+          context,
+          stopName: stopName,
+          gear: ref.read(wakeAlarmGearProvider),
+        );
+      });
     }
 
     final scheme = Theme.of(context).colorScheme;

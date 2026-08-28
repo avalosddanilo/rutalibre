@@ -21,6 +21,7 @@ import '../../data/repositories/transit_repository_impl.dart';
 import '../../domain/entities/bus_line.dart';
 import '../../domain/entities/nearby_stop.dart';
 import '../../domain/entities/place.dart';
+import '../../domain/entities/street_addresses.dart';
 import '../../domain/entities/reference_stop.dart';
 import '../../domain/entities/route_at_stop.dart';
 import '../../domain/entities/route_variant.dart';
@@ -432,18 +433,28 @@ final tileProviderFactoryProvider = Provider<TileProvider Function()>(
   (ref) => NetworkTileProvider.new,
 );
 
-/// Los 2612 lugares, leídos del asset.
+/// Los lugares y las calles, leídos del asset.
 ///
-/// **`keepAlive` sin `autoDispose`**: son 200 KB que se parsean una vez y
-/// después se usan en cada tecla del buscador. Soltarlos al cerrar la hoja
-/// obligaría a releer y reparsear el asset cada vez que alguien vuelve a
-/// abrir "¿a dónde vas?".
+/// **`keepAlive` sin `autoDispose`**: se parsean una vez y después se usan
+/// en cada tecla del buscador. Soltarlos al cerrar la hoja obligaría a
+/// releer y reparsear el asset cada vez que alguien vuelve a abrir "¿a
+/// dónde vas?".
 ///
 /// Lo que SÍ importa es que esto no se toque hasta que alguien busque un
 /// destino: el asset no se lee en el arranque, que es lo que lo hace gratis.
 final placesProvider = FutureProvider<List<Place>>((ref) async {
   final result = await ref.watch(placesRepositoryProvider).getPlaces();
   return result.fold((failure) => throw failure, (places) => places);
+});
+
+/// Las alturas (números de puerta por calle), leídas de su propio asset.
+///
+/// Todavía más perezoso que [placesProvider]: es el archivo más pesado de la
+/// app (~58.000 puntos) y el buscador lo pide RECIÉN cuando la consulta
+/// termina en un número. Quien nunca escribe una altura nunca lo paga.
+final addressesProvider = FutureProvider<List<StreetAddresses>>((ref) async {
+  final result = await ref.watch(placesRepositoryProvider).getAddresses();
+  return result.fold((failure) => throw failure, (addresses) => addresses);
 });
 
 /// Las paradas de Corrientes capital, que no entran al planificador.

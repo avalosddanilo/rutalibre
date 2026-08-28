@@ -38,9 +38,16 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   son la misma calle (~2900 calles de OSM en el mismo asset de lugares).
   Elegir una como destino no adivina el punto: el mapa vuela a la calle y el
   lugar exacto lo marcás vos tocando.
-- **Los números de puerta no existen en los datos, y se dice**: "Ameghino
-  1250" no muere en "nada coincide" — se busca sin el número y el cartel
-  aclara que lo que se muestra son las esquinas y la calle, no esa dirección.
+- **Las ALTURAS también: "San Juan 5240" cae en la cuadra real.** El área
+  tiene ~58.000 números de puerta mapeados en OpenStreetMap (importes
+  catastrales) y la app los trae en su propio asset — que se carga recién
+  cuando alguien escribe un número: quien nunca lo hace, nunca lo paga. Si
+  el número justo no está mapeado, se ofrece **el mapeado más cercano con SU
+  número** ("San Juan 5249") y un cartel que lo dice: disfrazar el 5249 de
+  5240 sería mentir la dirección, e interpolar sería inventarla. Y si esa
+  calle no tiene números, quedan las esquinas y la calle entera con el mapa
+  para marcar — también con su cartel. Nunca "nada coincide" para una
+  dirección real.
 
 ### Viajes
 
@@ -74,8 +81,10 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - **Alarma "avisame para bajar", por si te dormís.** Pasa de verdad: uno se
   duerme arriba del colectivo y se despierta en la terminal. Con la guía
   andando y el contador en vivo, un interruptor arma la alarma: la pantalla
-  deja de apagarse sola y, al entrar en zona de bajada, suena **el tono de
-  alarma del sistema en loop por el canal de alarmas** —o sea, aunque el
+  deja de apagarse sola y, **dos paradas antes de la tuya** —a quien hay que
+  despertar no le alcanza el aviso de una parada: entre abrir los ojos y
+  juntar las cosas, "muy justo", dijo la prueba de campo—, suena **el tono
+  de alarma del sistema en loop por el canal de alarmas** —o sea, aunque el
   teléfono esté en silencio, que arriba del colectivo es exactamente cuándo
   hace falta— con vibración sostenida y la pantalla entera pidiendo bajarse.
   Solo la apaga el botón: una alarma que se apaga rozándola medio dormido no
@@ -83,6 +92,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   (hay que bajarse dos veces). Su límite honesto: necesita la app abierta —
   la versión que sigue con la pantalla apagada pide un servicio en primer
   plano de Android y queda para la 1.1.
+- **La cámara te sigue durante el viaje** — y te suelta apenas tocás. Al
+  iniciar, el mapa te enfoca; cada fix del GPS corre la cámara detrás tuyo,
+  con el contador de paradas a la vista. Arrastrar o pinzar el mapa apaga el
+  seguimiento EN EL ACTO —la cámara nunca le pelea el mapa al dedo— y un
+  botón lo vuelve a prender. Cada viaje nuevo arranca siguiendo: haber
+  corrido la cámara en un viaje no es una preferencia para el siguiente.
 - El mapa dibuja **el camino que hacés vos**, recortado entre la parada donde
   subís y la donde bajás, no el recorrido entero de la línea.
 - Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:

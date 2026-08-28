@@ -121,6 +121,22 @@ class _MapScreenState extends ConsumerState<MapScreen>
     _mapController.move(LatLng(lat, lng), zoom);
   }
 
+  /// La cámara detrás tuyo durante la guía.
+  ///
+  /// Respeta el zoom que hayas elegido mientras sea al menos el de la guía:
+  /// acercarse más no apaga el seguimiento — alejarse o arrastrar sí, pero
+  /// eso pasa por gestos y los gestos lo apagan solos (ver onMapEvent).
+  void _followTo(double lat, double lng) {
+    if (!isDrawableLatLng(lat, lng)) return;
+    var zoom = _guidanceZoom;
+    try {
+      zoom = math.max(_mapController.camera.zoom, _guidanceZoom);
+    } on Object {
+      // El mapa todavía no se dibujó: el zoom de la guía alcanza.
+    }
+    _mapController.move(LatLng(lat, lng), zoom);
+  }
+
   /// Encuadra el trazado completo dejando aire abajo para el panel.
   ///
   /// El padding inferior se adapta al alto real: 220 px fijos en landscape o
@@ -527,9 +543,31 @@ class _MapScreenState extends ConsumerState<MapScreen>
       if (next == null || steps == null || steps.isEmpty) {
         return;
       }
+      // Con el seguimiento andando y posición a mano, el foco sos VOS: al
+      // arrancar te enfoca, y al cambiar de paso no te suelta — saltar a la
+      // parada de bajada para volver a vos dos segundos después marearía.
+      // Sin posición (sin permiso, sin fix todavía), el paso como siempre.
+      final fix = ref.read(livePositionProvider).value;
+      if (ref.read(guidanceCameraFollowProvider) && fix != null) {
+        _followTo(fix.lat, fix.lng);
+        return;
+      }
       final step = steps[next.clamp(0, steps.length - 1)];
       _moveTo(step.focusLat, step.focusLng, _guidanceZoom);
     });
+
+    // El seguimiento en sí: cada fix corre la cámara detrás tuyo, mientras
+    // nadie haya agarrado el mapa (ver onMapEvent y el botón de seguirte).
+    // El listen es condicional a la guía activa: fuera de ella el stream de
+    // posición ni existe (muere solo al cerrar la guía).
+    if (steps != null) {
+      ref.listen(livePositionProvider, (previous, next) {
+        final fix = next.value;
+        if (fix == null || next.hasError) return;
+        if (!ref.read(guidanceCameraFollowProvider)) return;
+        _followTo(fix.lat, fix.lng);
+      });
+    }
 
     final nearbyArgs = nearbyQuery == null
         ? null
@@ -619,6 +657,26 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   return;
                 }
                 ref.read(selectedStopProvider.notifier).clear();
+              },
+              // Agarrar el mapa con la mano apaga el seguimiento de la guía:
+              // la cámara NUNCA le pelea el mapa al dedo. Zoom con doble tap
+              // no cuenta — acercarse a uno mismo no es irse a otro lado.
+              onMapEvent: (event) {
+                switch (event.source) {
+                  case MapEventSource.dragStart:
+                  case MapEventSource.onDrag:
+                  case MapEventSource.dragEnd:
+                  case MapEventSource.flingAnimationController:
+                  case MapEventSource.multiFingerGestureStart:
+                  case MapEventSource.onMultiFinger:
+                  case MapEventSource.multiFingerEnd:
+                  case MapEventSource.doubleTapHold:
+                    if (ref.read(guidanceCameraFollowProvider)) {
+                      ref.read(guidanceCameraFollowProvider.notifier).disable();
+                    }
+                  default:
+                    break;
+                }
               },
             ),
             children: [
@@ -749,6 +807,16 @@ class _MapScreenState extends ConsumerState<MapScreen>
             showFitRoute: routePoints.isNotEmpty,
             showClearNearby: nearbyQuery != null,
             showTrip: tripSearch is! TripIdle,
+            // "Volver a seguirte": solo con la guía andando y el seguimiento
+            // apagado por un gesto — si la cámara ya te sigue, sobra.
+            onFollowGuidance:
+                (steps != null && !ref.watch(guidanceCameraFollowProvider))
+                ? () {
+                    ref.read(guidanceCameraFollowProvider.notifier).enable();
+                    final fix = ref.read(livePositionProvider).value;
+                    if (fix != null) _followTo(fix.lat, fix.lng);
+                  }
+                : null,
             onShareTrip: (selectedTrip != null && tripSearch is TripRoute)
                 ? () => _shareTrip(selectedTrip, tripSearch)
                 : null,
@@ -1660,6 +1728,7 @@ class _MapActions extends StatelessWidget {
     required this.showTrip,
     required this.onShareTrip,
     required this.onStartGuidance,
+    required this.onFollowGuidance,
     required this.sheetExtent,
     required this.onPlanTrip,
     required this.onClearTrip,
@@ -1683,6 +1752,10 @@ class _MapActions extends StatelessWidget {
   /// Arranca la guía paso a paso. Null si todavía no hay un viaje elegido o
   /// si ya está en curso.
   final VoidCallback? onStartGuidance;
+
+  /// Vuelve a prender el seguimiento de cámara de la guía. Null si la guía
+  /// no corre o si la cámara ya te sigue.
+  final VoidCallback? onFollowGuidance;
 
   /// Fracción de pantalla que ocupa el panel inferior ahora mismo.
   final double sheetExtent;
@@ -1717,6 +1790,15 @@ class _MapActions extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
+            _PopIn(
+              visible: onFollowGuidance != null,
+              child: FloatingActionButton.small(
+                heroTag: 'follow-guidance',
+                tooltip: 'Volver a seguirte',
+                onPressed: onFollowGuidance,
+                child: const Icon(Icons.near_me),
+              ),
+            ),
             _PopIn(
               visible: onShareTrip != null,
               child: FloatingActionButton.small(

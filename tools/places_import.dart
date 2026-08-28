@@ -25,6 +25,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'src/address_import.dart';
 import 'src/place_import.dart';
 import 'src/street_import.dart';
 
@@ -77,6 +78,17 @@ const _localitiesQuery =
 [out:json][timeout:270];
 node["place"~"^(city|town|village)\$"]["name"]($_bbox);
 out;
+''';
+
+/// Las ALTURAS: todo lo que tenga calle + número de puerta. Son ~58.000
+/// puntos (importes catastrales a OSM) — la respuesta pesa, por eso va
+/// aparte y a su propio asset, que la app carga recién cuando alguien
+/// escribe un número.
+const _addressesQuery =
+    '''
+[out:json][timeout:270];
+nwr["addr:housenumber"]["addr:street"]($_bbox);
+out tags center;
 ''';
 
 Future<void> main(List<String> args) async {
@@ -194,6 +206,51 @@ Future<void> main(List<String> args) async {
   stdout.writeln('');
   stdout.writeln(
     '$outputPath escrito (${(encoded.length / 1024).toStringAsFixed(0)} KB).',
+  );
+
+  // Las alturas: su propio asset (ver la nota de _addressesQuery).
+  final addressesJson = await _load(
+    label: 'alturas',
+    query: _addressesQuery,
+    cachePath: cacheDir == null ? null : '$cacheDir/osm_addresses.json',
+  );
+  final rawAddresses = <RawAddress>[
+    for (final element
+        in ((addressesJson['elements'] as List<dynamic>?) ?? const [])
+            .cast<Map<String, dynamic>>())
+      (
+        street:
+            (element['tags'] as Map<String, dynamic>?)?['addr:street']
+                as String?,
+        housenumber:
+            (element['tags'] as Map<String, dynamic>?)?['addr:housenumber']
+                as String?,
+        lat: _coord(element, 'lat'),
+        lng: _coord(element, 'lon'),
+      ),
+  ];
+  final addressResult = buildAddresses(rawAddresses, localities);
+  final ar = addressResult.report;
+  stdout.writeln('');
+  stdout.writeln('Direcciones leídas: ${ar.total}');
+  stdout.writeln('  sin calle:              ${ar.sinCalle}');
+  stdout.writeln('  sin número usable:      ${ar.sinNumero}');
+  stdout.writeln('  sin coordenada:         ${ar.sinCoordenada}');
+  stdout.writeln('  fuera del área urbana:  ${ar.fueraDelArea}');
+  stdout.writeln('  números repetidos:      ${ar.duplicados}');
+  stdout.writeln(
+    '  → ALTURAS:              ${ar.numeros} números en ${ar.calles} calles',
+  );
+
+  final addressesOut =
+      _argValue(args, '--out-addresses') ?? 'assets/addresses.json';
+  final addressesEncoded = jsonEncode(encodeAddresses(addressResult.streets));
+  final addressesFile = File(addressesOut);
+  await addressesFile.parent.create(recursive: true);
+  await addressesFile.writeAsString(addressesEncoded);
+  stdout.writeln(
+    '$addressesOut escrito '
+    '(${(addressesEncoded.length / 1024).toStringAsFixed(0)} KB).',
   );
 }
 

@@ -9,18 +9,20 @@ Corrientes capital. Rápida, limpia y sin publicidad.
 - **Mapa** con las paradas visibles de entrada, sin pedir el GPS ni elegir una
   línea, y el trazado de cada recorrido
 - **Buscador** de líneas por número, barrio o **destino** (ignora tildes)
-- **Buscá por LUGAR o por CALLE**: el hospital, la escuela, el shopping, la
-  plaza — ~2600 lugares y ~2900 calles con su localidad ("San Juan
-  (Barranqueras)"), sin señal y sin saber la esquina
+- **Buscá por LUGAR, por CALLE o por DIRECCIÓN con altura**: el hospital, la
+  escuela, la plaza — ~2600 lugares, ~2900 calles con su localidad y
+  **~58.000 números de puerta** de OpenStreetMap: "San Juan 5240" cae en la
+  cuadra real, sin señal y sin saber la esquina
 - **"¿Cómo llego?"**: de dónde estás a dónde vas, con directos y un transbordo.
   El origen sale del GPS o **se elige a mano**, así que también sirve para
   planificar desde el sillón o sin dar el permiso de ubicación
-- **"Iniciar viaje"**: el viaje paso a paso, uno por pantalla, y el mapa
-  acompañando cada paso. Sin minutos inventados — ver el CHANGELOG
+- **"Iniciar viaje"**: el viaje paso a paso, uno por pantalla, con la cámara
+  **siguiéndote** (y soltándote apenas movés el mapa vos). Sin minutos
+  inventados — ver el CHANGELOG
 - **Alarma "avisame para bajar"**: por si te dormís arriba del colectivo —
-  la pantalla no se apaga y, al acercarse tu parada, suena el tono de alarma
-  del sistema (aunque el teléfono esté en silencio) y vibra hasta que la
-  apagues
+  la pantalla no se apaga y, dos paradas antes de la tuya, suena el tono de
+  alarma del sistema (aunque el teléfono esté en silencio) y vibra hasta que
+  la apagues
 - **"¿Qué colectivos pasan por acá?"** tocando cualquier parada, con a cuánto
   llegás caminando
 - **Cerca mío** por GPS, con la distancia real en metros
@@ -100,7 +102,7 @@ Detalles y decisiones en [`docs/osm-import.md`](docs/osm-import.md).
 
 ## Tests
 
-560 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
+579 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
 trazados, SQL), repositorio cache-first, mapeos DTO, usecases, resolución de
 feriados (computus), buscador de origen y destino, estado del viaje, assets
 empaquetados (lugares y paradas de Corrientes), panel de líneas, hoja de

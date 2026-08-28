@@ -19,6 +19,11 @@ enum PlaceKind {
   /// ("San Juan 5240") y los datos de paradas solo nombran esquinas: sin
   /// esto, quien buscaba su propia calle veía "nada coincide".
   calle,
+
+  /// Una dirección con altura ("San Juan 5240"). NUNCA viene en el asset:
+  /// la sintetiza el buscador cruzando la consulta con las alturas de
+  /// `assets/addresses.json` (ver `address_search.dart`).
+  direccion,
   otro;
 
   static PlaceKind parse(String raw) => PlaceKind.values.firstWhere(

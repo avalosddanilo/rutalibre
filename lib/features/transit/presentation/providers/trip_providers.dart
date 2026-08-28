@@ -345,3 +345,34 @@ final class TripGuidanceNotifier extends Notifier<int?> {
     ref.invalidate(savedTripProvider);
   }
 }
+
+/// Si la cámara del mapa te SIGUE durante la guía.
+///
+/// Pedido de la prueba de campo, palabra por palabra: "que enfoque mi
+/// ubicación y vaya diciendo cuánto falta, pero que también te deje
+/// moverte". Las dos mitades importan igual: arrancar la guía prende el
+/// seguimiento, y CUALQUIER gesto manual sobre el mapa lo apaga — la cámara
+/// no le pelea el mapa al dedo, nunca. El botón de "volver a seguirte" lo
+/// vuelve a prender.
+///
+/// Vive acá y no en el estado de la pantalla porque lo tocan tres lugares
+/// distintos: los gestos del mapa lo apagan, el botón lo prende, y el panel
+/// de guía ni se entera — como tiene que ser.
+final class GuidanceCameraFollow extends Notifier<bool> {
+  @override
+  bool build() {
+    // Cada guía nueva arranca siguiendo: haber corrido la cámara en un viaje
+    // no es una preferencia para el siguiente.
+    ref.listen(tripGuidanceProvider, (previous, next) {
+      if (previous == null && next != null) state = true;
+    });
+    return true;
+  }
+
+  void disable() => state = false;
+
+  void enable() => state = true;
+}
+
+final guidanceCameraFollowProvider =
+    NotifierProvider<GuidanceCameraFollow, bool>(GuidanceCameraFollow.new);

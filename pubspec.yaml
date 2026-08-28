@@ -92,11 +92,14 @@ flutter:
     # Las paradas de Corrientes capital. Ver tools/corrientes_stops_import.dart
     # para por qué van acá y no en la base.
     - assets/corrientes_stops.json
-    # Los lugares (hospitales, escuelas, plazas…) del buscador de destino.
-    # Se generan con `dart run tools/places_import.dart` y se leen RECIÉN al
-    # abrir el buscador, nunca en el arranque: son 200 KB que no tienen por
-    # qué costarle tiempo a quien solo quiere ver el mapa.
+    # Los lugares (hospitales, escuelas, plazas…) y las calles del buscador
+    # de destino. Se generan con `dart run tools/places_import.dart` y se
+    # leen RECIÉN al abrir el buscador, nunca en el arranque.
     - assets/places.json
+    # Las alturas (números de puerta por calle, de OSM). El asset más pesado
+    # de la app, y por eso va aparte: se carga solo cuando alguien escribe
+    # una altura ("San Juan 5240") — quien nunca lo hace, nunca lo paga.
+    - assets/addresses.json
 
   fonts:
     # Inter, en su versión VARIABLE: un solo archivo con todos los pesos.

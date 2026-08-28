@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/place.dart';
 import 'package:rutalibre/features/transit/domain/entities/stop.dart';
+import 'package:rutalibre/features/transit/domain/entities/street_addresses.dart';
 import 'package:rutalibre/features/transit/presentation/providers/transit_providers.dart';
 import 'package:rutalibre/features/transit/presentation/providers/trip_providers.dart';
 import 'package:rutalibre/features/transit/presentation/providers/user_prefs_providers.dart';
@@ -26,11 +27,18 @@ void main() {
     prefs = await SharedPreferences.getInstance();
   });
 
-  ProviderContainer container({List<Place> places = const []}) {
+  ProviderContainer container({
+    List<Place> places = const [],
+    List<StreetAddresses> addresses = const [],
+  }) {
     final c = ProviderContainer(
       overrides: [
         allStopsProvider.overrideWith((ref) async => _stops),
         placesProvider.overrideWith((ref) async => places),
+        // Siempre sobreescrito: sin esto, los tests de "calle + número"
+        // leerían el asset REAL de alturas y quedarían atados a lo que OSM
+        // tenga mapeado el día de la regeneración.
+        addressesProvider.overrideWith((ref) async => addresses),
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
     );
@@ -155,12 +163,9 @@ void main() {
 
       // La esquina aparece…
       expect(find.text('Ameghino y Sáenz Peña'), findsOneWidget);
-      // …y el cartel aclara que el número no se usó: mostrar esquinas como
+      // …y el cartel aclara que ese número no está: mostrar esquinas como
       // si fueran la dirección exacta sería dejar creer que una de esas ES.
-      expect(
-        find.textContaining('Los números de puerta no están'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('no está mapeado'), findsOneWidget);
       expect(find.textContaining('Nada coincide'), findsNothing);
     });
 
@@ -199,9 +204,95 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Ameghino y Sáenz Peña'), findsOneWidget);
+      expect(find.textContaining('no está mapeado'), findsNothing);
+    });
+  });
+
+  group('alturas mapeadas', () {
+    // La casa real detrás de todo esto: San Juan 5240, Barranqueras. El área
+    // tiene ~58.000 números de puerta en OSM, así que la altura puede caer
+    // en la cuadra REAL — y donde el número justo no está, se ofrece el
+    // mapeado más cercano y SE DICE.
+    const sanJuan = StreetAddresses(
+      street: 'San Juan',
+      locality: 'Barranqueras',
+      numbers: [
+        AddressPoint(number: 5200, lat: -27.47643, lng: -58.92416),
+        AddressPoint(number: 5249, lat: -27.47692, lng: -58.92359),
+      ],
+    );
+
+    testWidgets('el número exacto aparece como dirección, sin carteles', (
+      tester,
+    ) async {
+      final c = container(addresses: const [sanJuan]);
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), 'san juan 5200');
+      await tester.pumpAndSettle();
+
+      expect(find.text('San Juan 5200 (Barranqueras)'), findsOneWidget);
+      expect(find.textContaining('Dirección'), findsWidgets);
+      // Exacto = sin aviso: no hay nada que aclarar.
+      expect(find.textContaining('no está mapeado'), findsNothing);
+    });
+
+    testWidgets('sin el exacto: el vecino mapeado, con SU número y el aviso', (
+      tester,
+    ) async {
+      final c = container(addresses: const [sanJuan]);
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), 'san juan 5240');
+      await tester.pumpAndSettle();
+
+      // El 5249 con su número real — nunca disfrazado de 5240 — y el cartel
+      // que dice qué se está mostrando.
+      expect(find.text('San Juan 5249 (Barranqueras)'), findsOneWidget);
+      expect(find.textContaining('El 5240 justo no está'), findsOneWidget);
+    });
+
+    testWidgets('elegir la dirección fija el destino y queda de reciente', (
+      tester,
+    ) async {
+      // A diferencia de la CALLE (que manda al mapa a marcar), la dirección
+      // ES un punto: se elige y el viaje se planifica. Y queda anotada — la
+      // casa de uno es el reciente más reciente que existe.
+      final c = container(addresses: const [sanJuan]);
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+
+      await tester.enterText(find.byType(TextField), 'san juan 5200');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('San Juan 5200 (Barranqueras)'));
+      await tester.pumpAndSettle();
+
+      final state = c.read(tripSearchProvider);
+      expect(state, isA<TripRoute>());
+      expect((state as TripRoute).destination, (
+        lat: -27.47643,
+        lng: -58.92416,
+      ));
       expect(
-        find.textContaining('Los números de puerta no están'),
-        findsNothing,
+        c.read(recentDestinationsProvider).map((p) => p.name),
+        contains('San Juan 5200 (Barranqueras)'),
       );
     });
   });

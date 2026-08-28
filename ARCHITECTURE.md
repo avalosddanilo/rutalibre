@@ -115,6 +115,19 @@ instantánea, UX limpia sin publicidad, arquitectura impecable.
   respuesta. Si la búsqueda entera no matchea y termina en número, se
   reintenta sin el número Y SE DICE — mostrar esquinas como si fueran la
   dirección sería dejar creer que una de esas ES.
+- **Las ALTURAS tienen su propio asset (`assets/addresses.json`) y su propia
+  pereza.** El área tiene ~58.000 números de puerta en OSM (importes
+  catastrales; `tools/src/address_import.dart` los agrupa por calle +
+  localidad igual que las calles). Es el archivo más pesado de la app
+  (~1,5 MB) y por eso NO viaja con `places.json`: se carga recién cuando la
+  consulta termina en número — quien nunca escribe una altura nunca lo paga.
+  Dos reglas de honestidad (`address_search.dart`): el vecino mapeado más
+  cercano se muestra **con SU número** ("San Juan 5249", nunca disfrazado de
+  5240) y solo dentro de 150 de numeración (~una cuadra y media) — más lejos
+  es otra cuadra, y para eso está la calle con el mapa. Interpolar entre dos
+  números sería inventar: no se hace. Una `direccion` elegida SÍ fija el
+  destino y SÍ queda de reciente (a diferencia de la calle): es un punto de
+  verdad, y la casa de uno es el reciente más usado que existe.
 - **El buscador de destino mezcla lugares y paradas en UNA lista**, no en dos
   pestañas: pestañas obligarían a adivinar de antemano si lo que uno busca
   "es un lugar" o "es una parada", que es exactamente lo que el usuario no

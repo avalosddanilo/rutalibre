@@ -68,6 +68,21 @@ void main() {
     expect(progress.shouldPrepare, isTrue);
   });
 
+  test('la ALARMA suena una parada antes que el aviso discreto', () {
+    // A dos paradas de bajar: quien mira el teléfono todavía no necesita
+    // nada (shouldPrepare false), pero a quien hay que DESPERTAR ya le
+    // corre el reloj — entre abrir los ojos y juntar sus cosas, avisar a
+    // una parada quedaba "muy justo" (prueba de campo, textual).
+    final progress = _at(_routeStops[4].lng);
+    expect(progress!.stopsRemaining, 2);
+    expect(progress.shouldPrepare, isFalse);
+    expect(progress.shouldWake, isTrue);
+
+    // A tres, ni una ni la otra.
+    final far = _at(_routeStops[3].lng);
+    expect(far!.shouldWake, isFalse);
+  });
+
   test('lejos en distancia pero cerca en paradas: manda la distancia', () {
     // A 200 m de la bajada el contador diría "faltan 1", pero aunque dijera
     // más, <250 m ya es zona de prepararse.

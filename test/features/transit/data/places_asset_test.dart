@@ -126,9 +126,12 @@ void main() {
 
     test('hay de todas las categorías que la app sabe dibujar', () {
       final kinds = places.map((p) => p.kind).toSet();
-      // `otro` puede no estar si el import cambia; el resto tiene que estar.
+      // `otro` puede no estar si el import cambia; `direccion` NUNCA está:
+      // la sintetiza el buscador cruzando la consulta con las alturas de
+      // assets/addresses.json (ver address_search.dart). El resto tiene que
+      // estar.
       for (final kind in PlaceKind.values) {
-        if (kind == PlaceKind.otro) continue;
+        if (kind == PlaceKind.otro || kind == PlaceKind.direccion) continue;
         expect(
           kinds,
           contains(kind),

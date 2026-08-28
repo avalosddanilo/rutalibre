@@ -5,10 +5,12 @@ import 'package:latlong2/latlong.dart';
 import '../../../../app/widgets/staggered_in.dart';
 import '../../domain/entities/place.dart';
 import '../../domain/entities/stop.dart';
+import '../../domain/entities/street_addresses.dart';
 import '../providers/location_providers.dart';
 import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../providers/user_prefs_providers.dart';
+import '../utils/address_search.dart';
 import '../utils/destination_search.dart';
 import '../utils/failure_message.dart';
 
@@ -272,28 +274,52 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
       limit: _maxResults,
     );
 
-    // "Ameghino 1250" no matchea nada: los datos tienen ESQUINAS, no números
-    // de puerta. Antes eso terminaba en "nada coincide" — para el usuario, la
-    // app no conoce la calle en la que vive. Si la consulta entera no dio
-    // nada y termina en un número, se reintenta SIN el número y se dice lo
-    // que se está mostrando. Solo como plan B: "Ruta 11" sí matchea entera y
-    // ni pasa por acá — el número ahí es parte del nombre.
-    String? droppedNumber;
+    // "Calle + altura" ("San Juan 5240"). Primero las ALTURAS mapeadas: el
+    // área tiene ~58.000 números de puerta en OpenStreetMap, así que el 5240
+    // —o su vecino más cercano— puede ser un punto DE VERDAD. Después, el
+    // reintento sin el número: la calle entera y las esquinas, para afinar a
+    // ojo o marcar tocando el mapa. Solo como plan B de la búsqueda normal:
+    // "Ruta 11" matchea entera y ni pasa por acá — ahí el número es nombre.
+    String? numberNote;
     if (matches.isEmpty) {
-      final withoutNumber = RegExp(
-        r'^(.*\S)\s+\d+\s*$',
-      ).firstMatch(_query.trim());
-      if (withoutNumber != null) {
-        final street = withoutNumber.group(1)!;
+      final parts = splitStreetAndNumber(_query);
+      if (parts != null) {
+        // El asset de alturas se carga RECIÉN acá: es el más pesado de la
+        // app y solo sirve cuando la consulta trae un número.
+        final addresses =
+            ref.watch(addressesProvider).value ?? const <StreetAddresses>[];
+        final found = searchAddresses(query: _query, streets: addresses);
         final retry = searchDestinations(
-          query: street,
+          query: parts.street,
           places: places,
           stops: stops,
           limit: _maxResults,
         );
-        if (retry.isNotEmpty) {
-          matches = retry;
-          droppedNumber = street;
+        if (found.isNotEmpty || retry.isNotEmpty) {
+          matches = [
+            for (final address in found)
+              PlaceDestination(
+                Place(
+                  name: address.displayName,
+                  lat: address.point.lat,
+                  lng: address.point.lng,
+                  kind: PlaceKind.direccion,
+                ),
+              ),
+            ...retry,
+          ];
+          // El aviso dice EXACTAMENTE qué se está mostrando: un vecino no es
+          // la dirección pedida, y una esquina tampoco.
+          if (found.isEmpty) {
+            numberNote =
+                'El ${parts.number} de esa calle no está mapeado: esto es '
+                'lo que hay. Elegí lo más cercano, o marcá el punto exacto '
+                'tocando el mapa.';
+          } else if (!found.first.exact) {
+            numberNote =
+                'El ${parts.number} justo no está mapeado: esto es lo '
+                'mapeado más cerca.';
+          }
         }
       }
     }
@@ -358,11 +384,10 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
         );
       },
     );
-    if (droppedNumber == null) return results;
+    if (numberNote == null) return results;
 
-    // Se DICE que el número no se usó: mostrar esquinas de Ameghino como si
-    // fueran "Ameghino 1250" sin aclararlo sería dejar que el usuario crea
-    // que una de esas ES su dirección.
+    // Se DICE qué se está mostrando: un vecino mapeado o una esquina no SON
+    // la dirección pedida, y callarlo sería dejar que el usuario lo crea.
     return Column(
       // min y sin Flexible: esto vive dentro de un scroll sin altura acotada
       // (la hoja entera scrollea), y la lista de abajo ya es shrinkWrap.
@@ -372,9 +397,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
           child: Text(
-            'Los números de puerta no están en los datos: esto es lo que '
-            'hay sobre "$droppedNumber". Elegí la esquina más cercana, o '
-            'marcá el punto exacto tocando el mapa.',
+            numberNote,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -672,6 +695,7 @@ IconData _placeIcon(PlaceKind kind) => switch (kind) {
   PlaceKind.cultura => Icons.theater_comedy_outlined,
   PlaceKind.iglesia => Icons.church_outlined,
   PlaceKind.calle => Icons.signpost_outlined,
+  PlaceKind.direccion => Icons.home_outlined,
   PlaceKind.otro => Icons.place_outlined,
 };
 
@@ -687,5 +711,6 @@ String _placeLabel(PlaceKind kind) => switch (kind) {
   PlaceKind.cultura => 'Cultura',
   PlaceKind.iglesia => 'Templo',
   PlaceKind.calle => 'Calle',
+  PlaceKind.direccion => 'Dirección',
   PlaceKind.otro => 'Lugar',
 };
