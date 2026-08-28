@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../../app/theme/app_theme.dart';
 import '../../../../app/theme/brand.dart';
 import '../../../../app/theme/motion.dart';
 import '../../../../app/widgets/floating_panel.dart';
@@ -32,6 +33,7 @@ import '../utils/route_segment.dart';
 import '../utils/trip_guidance.dart';
 import '../utils/trip_share_text.dart';
 import '../widgets/corrientes_stop_sheet.dart';
+import '../widgets/line_badge.dart';
 import '../widgets/line_sheet.dart';
 import '../widgets/nearby_stops_sheet.dart';
 import '../widgets/place_search_sheet.dart';
@@ -872,14 +874,6 @@ class _MapScreenState extends ConsumerState<MapScreen>
             onShareTrip: (selectedTrip != null && tripSearch is TripRoute)
                 ? () => _shareTrip(selectedTrip, tripSearch)
                 : null,
-            // Solo cuando hay un viaje ELEGIDO y todavía no arrancó: mientras
-            // la guía corre, el botón sería un "empezar de nuevo" disfrazado.
-            onStartGuidance:
-                (selectedTrip != null &&
-                    tripSearch is TripRoute &&
-                    steps == null)
-                ? () => ref.read(tripGuidanceProvider.notifier).start()
-                : null,
             sheetExtent: sheetExtent,
             onPlanTrip: _startTrip,
             onClearTrip: () => ref.read(tripSearchProvider.notifier).clear(),
@@ -900,12 +894,141 @@ class _MapScreenState extends ConsumerState<MapScreen>
           ),
           // Con el viaje en curso el panel de líneas NO se dibuja: quien está
           // yendo a algún lado no está eligiendo qué colectivo mirar, y dos
-          // paneles apilados abajo dejarían el mapa en una franja.
-          if (steps == null)
-            LineSheet(onPlanTrip: _locating ? null : _startTrip)
+          // paneles apilados abajo dejarían el mapa en una franja. Y con un
+          // viaje ELEGIDO pero sin arrancar, lo que va abajo es el remate:
+          // el resumen con "Iniciar viaje" grande (ver _SelectedTripPanel).
+          if (steps != null)
+            TripGuidancePanel(steps: steps)
+          else if (selectedTrip != null && tripSearch is TripRoute)
+            _SelectedTripPanel(
+              plan: selectedTrip,
+              onStart: () => ref.read(tripGuidanceProvider.notifier).start(),
+              onOptions: _showTripResults,
+            )
           else
-            TripGuidancePanel(steps: steps),
+            LineSheet(onPlanTrip: _locating ? null : _startTrip),
         ],
+      ),
+    );
+  }
+}
+
+/// El viaje ELEGIDO, listo para arrancar: el remate de todo el embudo.
+///
+/// Existe porque el hallazgo de campo fue literal: "si no, podría parecer
+/// bug la app". Elegida una opción, la hoja de resultados se cerraba y
+/// quedaba el mapa pelado con un botón chico a un costado — el momento más
+/// importante del recorrido ("dale, empezá") era el más mudo. Ahora abajo,
+/// al medio, está el resumen del viaje con el botón grande, y la vuelta a
+/// las otras opciones a un toque.
+class _SelectedTripPanel extends StatelessWidget {
+  const _SelectedTripPanel({
+    required this.plan,
+    required this.onStart,
+    required this.onOptions,
+  });
+
+  final TripPlan plan;
+  final VoidCallback onStart;
+  final VoidCallback onOptions;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final stops = plan.legs.fold(0, (total, leg) => total + leg.stopCount);
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Material(
+            color: scheme.surface,
+            elevation: 6,
+            shadowColor: Colors.black.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(AppTheme.radius),
+            clipBehavior: Clip.antiAlias,
+            // Tope y scroll por lo mismo que el panel de la guía: con el
+            // texto del sistema al 200% esto tiene que achicarse, no romper.
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.45,
+              ),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        for (var i = 0; i < plan.legs.length; i++) ...[
+                          if (i > 0)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                size: 16,
+                                color: scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          LineBadge(
+                            code: plan.legs[i].displayCode,
+                            colorHex: plan.legs[i].colorHex,
+                            size: 34,
+                          ),
+                        ],
+                        const Spacer(),
+                        Text(
+                          '${plan.formattedWalk} a pie',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: scheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Subís en ${plan.legs.first.boardStop.name}',
+                      style: textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Bajás en ${plan.legs.last.alightStop.name} · '
+                      '${stops == 1 ? '1 parada' : '$stops paradas'}',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: onStart,
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        icon: const Icon(Icons.navigation),
+                        label: const Text('Iniciar viaje'),
+                      ),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: onOptions,
+                        child: const Text('Ver otras opciones'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -1779,7 +1902,6 @@ class _MapActions extends StatelessWidget {
     required this.showClearNearby,
     required this.showTrip,
     required this.onShareTrip,
-    required this.onStartGuidance,
     required this.onFollowGuidance,
     required this.sheetExtent,
     required this.onPlanTrip,
@@ -1800,10 +1922,6 @@ class _MapActions extends StatelessWidget {
 
   /// Null cuando no hay un viaje elegido para compartir.
   final VoidCallback? onShareTrip;
-
-  /// Arranca la guía paso a paso. Null si todavía no hay un viaje elegido o
-  /// si ya está en curso.
-  final VoidCallback? onStartGuidance;
 
   /// Vuelve a prender el seguimiento de cámara de la guía. Null si la guía
   /// no corre o si la cámara ya te sigue.
@@ -1860,22 +1978,10 @@ class _MapActions extends StatelessWidget {
                 child: const Icon(Icons.ios_share),
               ),
             ),
-            // "Iniciar viaje" NO es un botón chico como los demás: es la
-            // acción con la que termina todo el recorrido de la app —buscar,
-            // elegir destino, elegir colectivo— y tiene que verse como el
-            // final de ese camino, no como una opción más de la columna.
-            _PopIn(
-              visible: onStartGuidance != null,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: FloatingActionButton.extended(
-                  heroTag: 'start-trip',
-                  onPressed: onStartGuidance,
-                  icon: const Icon(Icons.navigation),
-                  label: const Text('Iniciar viaje'),
-                ),
-              ),
-            ),
+            // "Iniciar viaje" ya NO vive acá: como acción final de todo el
+            // recorrido de la app se mudó al panel del viaje elegido
+            // (_SelectedTripPanel), grande y abajo al medio — un botón chico
+            // a un costado en ese momento se leía como que faltaba algo.
             _PopIn(
               visible: showFitRoute,
               child: FloatingActionButton.small(

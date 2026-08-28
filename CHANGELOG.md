@@ -106,6 +106,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:
   uno eligió un nombre de una lista, y verlo en su cuadra es lo que confirma
   que era ese.
+- **Elegido el viaje, el panel de abajo lo resume y lo arranca**: qué
+  colectivo(s), dónde subís, dónde bajás, cuántas paradas y cuánto a pie —
+  con "Iniciar viaje" GRANDE abajo al medio y "ver otras opciones" a un
+  toque. Antes quedaba el mapa pelado con un botón chico a un costado: el
+  momento del "dale, empezá" era el más mudo de la app ("podría parecer
+  bug", dijo la prueba de campo — tenía razón).
 - **Compartir el viaje** por donde sea, con enlace al destino en OpenStreetMap.
 - **"¿Y para volver?"**: un toque invierte origen y destino y la lista de
   viajes se recalcula sola. La vuelta puede ser otro colectivo —o el mismo por

@@ -20,9 +20,11 @@ import 'package:rutalibre/core/providers/clock_provider.dart';
 import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/bus_line.dart';
 import 'package:rutalibre/features/transit/domain/entities/place.dart';
+import 'package:rutalibre/features/transit/domain/entities/route_variant.dart';
 import 'package:rutalibre/features/transit/domain/entities/stop.dart';
 import 'package:rutalibre/features/transit/domain/entities/street_addresses.dart';
 import 'package:rutalibre/features/transit/domain/entities/transit_network.dart';
+import 'package:rutalibre/features/transit/domain/entities/trip_plan.dart';
 import 'package:rutalibre/features/transit/domain/repositories/transit_repository.dart';
 import 'package:rutalibre/features/transit/presentation/providers/transit_providers.dart';
 import 'package:rutalibre/features/transit/presentation/providers/trip_providers.dart';
@@ -233,5 +235,63 @@ void main() {
     expect(find.byType(PlaceSearchSheet), findsNothing);
     expect(find.byType(TripResultsSheet), findsOneWidget);
     expect(c.read(tripSearchProvider), isA<TripRoute>());
+  });
+
+  testWidgets('elegido un viaje, el panel de abajo lo resume y lo arranca', (
+    tester,
+  ) async {
+    // El hallazgo de campo, textual: "en vez de tener que poner iniciar
+    // viaje a un costado, sea más grande en medio abajo... porque si no
+    // podría parecer bug la app". Elegida la opción quedaba el mapa pelado
+    // con un botón chico al costado — el momento del "dale, empezá" era el
+    // más mudo de la app.
+    final leg = TripLeg(
+      lineId: 'l3',
+      lineCode: '3',
+      lineName: 'Vial - Monte Alto',
+      colorHex: '#F57C00',
+      networkCode: 'gran-resistencia',
+      networkName: 'Gran Resistencia',
+      routeVariantId: 'rv1',
+      variantName: 'Ida',
+      branch: null,
+      direction: RouteDirection.outbound,
+      boardStop: _stops[0],
+      alightStop: _stops[1],
+      stopCount: 1,
+    );
+    final plan = TripPlan(
+      legs: [leg],
+      walkToBoardMeters: 200,
+      walkFromAlightMeters: 100,
+    );
+
+    final c = container();
+    await pumpMap(tester, c);
+
+    // Como un viaje ya elegido: TripRoute en una sola transición (restore no
+    // abre la hoja de resultados, que acá taparía justo lo que se prueba).
+    c
+        .read(tripSearchProvider.notifier)
+        .restore(
+          origin: (lat: _stops[0].lat, lng: _stops[0].lng),
+          destination: (lat: _stops[1].lat, lng: _stops[1].lng),
+        );
+    c.read(selectedTripProvider.notifier).select(plan);
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // El resumen, abajo y grande: qué tomás, dónde subís, dónde bajás.
+    expect(find.text('Subís en Ameghino y French'), findsOneWidget);
+    expect(find.text('Bajás en Guemes y Franklin · 1 parada'), findsOneWidget);
+    expect(find.text('Iniciar viaje'), findsOneWidget);
+    expect(find.text('Ver otras opciones'), findsOneWidget);
+
+    await tester.tap(find.text('Iniciar viaje'));
+    await tester.pump(const Duration(milliseconds: 400));
+
+    // Arrancó: la guía en pantalla y el panel del resumen ya cumplió.
+    expect(c.read(tripGuidanceProvider), 0);
+    expect(find.text('Iniciar viaje'), findsNothing);
+    expect(find.text('Siguiente'), findsOneWidget);
   });
 }
