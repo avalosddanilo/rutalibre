@@ -45,19 +45,28 @@ app:
 
 ### 1. "¿Cómo llego?" da error / plan_trip devuelve HTTP 500
 
-Pasó el 28/8/2026: Postgres perdió las estadísticas de las tablas y elegía
-un plan de consulta desastroso (timeout 57014 a los ~3 s). **El arreglo**,
-en Supabase → SQL Editor:
+Pasó DOS veces el 28/8/2026, y la segunda enseñó la lección importante:
+**verificar siempre con un viaje CORTO (las dos puntas dentro de
+Resistencia), nunca con el viaje a Corrientes.** El viaje largo es
+engañosamente rápido —el destino tiene una sola parada cerca— y da por
+sano un planificador que se muere en los viajes de todos los días, que
+tienen decenas de paradas cerca de cada punta.
+
+Primer auxilio (estadísticas perdidas), en Supabase → SQL Editor:
 
 ```sql
 analyze public.stops; analyze public.route_stops; analyze public.route_variants; analyze public.lines;
 ```
 
-("Success. No rows returned" es la respuesta normal.) Para verificar desde
-afuera, con la anon key:
+Si el ANALYZE no alcanza, el arreglo de fondo es la migración
+`0011_plan_trip_acotado.sql` (re-crear la función con las CTEs
+materializadas y los tramos acotados — leer su encabezado, ahí está toda
+la historia). Es idempotente: correrla de nuevo no rompe nada.
+
+Para verificar desde afuera, con la anon key — EL VIAJE CORTO:
 
 ```bash
-curl -s -o /dev/null -w "%{http_code} en %{time_total}s\n" -X POST "$SUPABASE_URL/rest/v1/rpc/plan_trip" -H "apikey: $ANON" -H "Authorization: Bearer $ANON" -H "Content-Type: application/json" -d '{"origin_lat":-27.4519,"origin_lng":-58.9865,"dest_lat":-27.4699,"dest_lng":-58.7823,"max_walk_m":700,"max_results":6}'
+curl -s -o /dev/null -w "%{http_code} en %{time_total}s\n" -X POST "$SUPABASE_URL/rest/v1/rpc/plan_trip" -H "apikey: $ANON" -H "Authorization: Bearer $ANON" -H "Content-Type: application/json" -d '{"origin_lat":-27.4519,"origin_lng":-58.9865,"dest_lat":-27.4546,"dest_lng":-58.9913,"max_walk_m":500,"max_results":6}'
 ```
 
 Sano: 200 en menos de un segundo. Si el ANALYZE no alcanza, en orden: (a)
