@@ -156,7 +156,7 @@ En orden de probabilidad, con su respuesta:
    cambió. No es un bug, es la realidad cambiando: re-correr los
    importadores cada 1-2 meses, re-aplicar seed y ANALYZE después.
 3. **Los tiles del mapa, si la app explota**: vienen de los servidores
-   gratuitos de OpenStreetMap, que tolueran apps chicas. Con miles de
+   gratuitos de OpenStreetMap, que toleran apps chicas. Con miles de
    usuarios bien; con decenas de miles, cambiar la URL del TileLayer a un
    proveedor con tier gratis (MapTiler, Stadia) — es UNA línea en
    map_screen.dart y la política de OSM lo pide.
