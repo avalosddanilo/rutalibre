@@ -352,9 +352,28 @@ class _MapScreenState extends ConsumerState<MapScreen>
       context,
       origin: origin,
     );
-    // Se eligió una CALLE: la cámara vuela ahí y el punto exacto lo marca el
-    // usuario tocando el mapa, con el banner del modo ya en pantalla.
-    if (focus != null && mounted) _moveTo(focus.lat, focus.lng, 16);
+    if (focus != null && mounted) _focusStreet(focus);
+  }
+
+  /// Se eligió una CALLE en el buscador: la cámara vuela ahí y el punto
+  /// exacto lo marca el usuario tocando el mapa.
+  ///
+  /// Con un snackbar ADEMÁS del banner de arriba: la prueba de campo mostró
+  /// que "elegí la calle y no pasó nada" es la lectura natural — la hoja se
+  /// cierra, el mapa se mueve y el banner, que ya estaba en pantalla desde
+  /// antes, no se registra como una instrucción nueva. El snackbar aparece
+  /// en ese momento exacto y dice qué falta.
+  void _focusStreet(MapPoint focus) {
+    _moveTo(focus.lat, focus.lng, 16);
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Es una calle entera: tocá el mapa justo donde querés ir.',
+          ),
+        ),
+      );
   }
 
   /// Manda el viaje elegido por donde el usuario quiera.
@@ -798,7 +817,7 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   context,
                   origin: origin,
                 );
-                if (focus != null && mounted) _moveTo(focus.lat, focus.lng, 16);
+                if (focus != null && mounted) _focusStreet(focus);
               },
               onCancel: () => ref.read(tripSearchProvider.notifier).clear(),
             ),
