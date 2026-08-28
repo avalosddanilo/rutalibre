@@ -96,8 +96,9 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   suelta apenas tocás. Al iniciar te enfoca al instante (el origen del viaje
   sos vos, sin esperar al GPS); caminando el zoom se mete hasta los metros
   —la vereda, la esquina que viene— y arriba del colectivo se abre a las
-  cuadras. Cada fix corre la cámara detrás tuyo con el contador a la vista. Arrastrar o pinzar el mapa apaga el
-  seguimiento EN EL ACTO —la cámara nunca le pelea el mapa al dedo— y un
+  cuadras. Cada fix corre la cámara detrás tuyo con el contador a la vista.
+  Arrastrar o pinzar el mapa apaga el seguimiento EN EL ACTO —la cámara
+  nunca le pelea el mapa al dedo— y un
   botón lo vuelve a prender. Cada viaje nuevo arranca siguiendo: haber
   corrido la cámara en un viaje no es una preferencia para el siguiente.
 - El mapa dibuja **el camino que hacés vos**, recortado entre la parada donde
