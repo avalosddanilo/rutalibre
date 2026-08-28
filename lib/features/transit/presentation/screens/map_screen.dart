@@ -121,21 +121,31 @@ class _MapScreenState extends ConsumerState<MapScreen>
     _mapController.move(LatLng(lat, lng), zoom);
   }
 
-  /// La cámara detrás tuyo durante la guía.
+  /// La cámara detrás tuyo durante la guía, al zoom que ya tenga.
   ///
-  /// Respeta el zoom que hayas elegido mientras sea al menos el de la guía:
-  /// acercarse más no apaga el seguimiento — alejarse o arrastrar sí, pero
-  /// eso pasa por gestos y los gestos lo apagan solos (ver onMapEvent).
+  /// El zoom por PASO lo pone el listener de la guía (ver [_followZoomFor]);
+  /// acá solo se acompaña la posición sin tocarlo, con un piso por si la
+  /// cámara quedó lejos: seguir a alguien desde zoom de ciudad no es seguir.
   void _followTo(double lat, double lng) {
     if (!isDrawableLatLng(lat, lng)) return;
     var zoom = _guidanceZoom;
     try {
-      zoom = math.max(_mapController.camera.zoom, _guidanceZoom);
+      zoom = math.max(_mapController.camera.zoom, 15);
     } on Object {
       // El mapa todavía no se dibujó: el zoom de la guía alcanza.
     }
     _mapController.move(LatLng(lat, lng), zoom);
   }
+
+  /// Cuánto acercarse según el paso, pedido textual de la prueba de campo:
+  /// "cuando aparece ese de caminá hasta tal lugar, unos metros y que lo
+  /// siga". Caminando se miran METROS —la vereda, la esquina que viene—;
+  /// arriba del colectivo, cuadras, que a zoom de vereda pasan volando.
+  static double _followZoomFor(GuidanceStep step) => switch (step) {
+    WalkStep() => 18,
+    RideStep() => 16.5,
+    _ => _guidanceZoom,
+  };
 
   /// Encuadra el trazado completo dejando aire abajo para el panel.
   ///
@@ -562,16 +572,27 @@ class _MapScreenState extends ConsumerState<MapScreen>
       if (next == null || steps == null || steps.isEmpty) {
         return;
       }
-      // Con el seguimiento andando y posición a mano, el foco sos VOS: al
-      // arrancar te enfoca, y al cambiar de paso no te suelta — saltar a la
-      // parada de bajada para volver a vos dos segundos después marearía.
-      // Sin posición (sin permiso, sin fix todavía), el paso como siempre.
-      final fix = ref.read(livePositionProvider).value;
-      if (ref.read(guidanceCameraFollowProvider) && fix != null) {
-        _followTo(fix.lat, fix.lng);
-        return;
-      }
       final step = steps[next.clamp(0, steps.length - 1)];
+      // Con el seguimiento andando, el foco sos VOS, al zoom del paso:
+      // caminando bien adentro (se ven los metros), viajando más abierto.
+      // Al arrancar todavía no suele haber fix — ahí te enfoca el ORIGEN del
+      // viaje, que sos vos (o el punto elegido a mano, que es de donde salís
+      // caminando): el "zoom a mí" es inmediato, no a los dos segundos.
+      // Sin seguimiento ni posición, el foco del paso como siempre.
+      if (ref.read(guidanceCameraFollowProvider)) {
+        final fix = ref.read(livePositionProvider).value;
+        final search = ref.read(tripSearchProvider);
+        final target =
+            fix ??
+            switch (search) {
+              TripRoute(:final origin) => origin,
+              _ => null,
+            };
+        if (target != null) {
+          _moveTo(target.lat, target.lng, _followZoomFor(step));
+          return;
+        }
+      }
       _moveTo(step.focusLat, step.focusLng, _guidanceZoom);
     });
 
@@ -829,11 +850,23 @@ class _MapScreenState extends ConsumerState<MapScreen>
             // "Volver a seguirte": solo con la guía andando y el seguimiento
             // apagado por un gesto — si la cámara ya te sigue, sobra.
             onFollowGuidance:
-                (steps != null && !ref.watch(guidanceCameraFollowProvider))
+                (steps != null &&
+                    guidanceIndex != null &&
+                    !ref.watch(guidanceCameraFollowProvider))
                 ? () {
                     ref.read(guidanceCameraFollowProvider.notifier).enable();
                     final fix = ref.read(livePositionProvider).value;
-                    if (fix != null) _followTo(fix.lat, fix.lng);
+                    if (fix != null) {
+                      // Al zoom del paso, no al que dejó el paneo: volver a
+                      // seguirse es volver a la vista de la guía.
+                      _moveTo(
+                        fix.lat,
+                        fix.lng,
+                        _followZoomFor(
+                          steps[guidanceIndex.clamp(0, steps.length - 1)],
+                        ),
+                      );
+                    }
                   }
                 : null,
             onShareTrip: (selectedTrip != null && tripSearch is TripRoute)

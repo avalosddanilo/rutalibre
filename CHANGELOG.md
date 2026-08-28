@@ -92,9 +92,11 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   (hay que bajarse dos veces). Su límite honesto: necesita la app abierta —
   la versión que sigue con la pantalla apagada pide un servicio en primer
   plano de Android y queda para la 1.1.
-- **La cámara te sigue durante el viaje** — y te suelta apenas tocás. Al
-  iniciar, el mapa te enfoca; cada fix del GPS corre la cámara detrás tuyo,
-  con el contador de paradas a la vista. Arrastrar o pinzar el mapa apaga el
+- **La cámara te sigue durante el viaje, al zoom de cada paso** — y te
+  suelta apenas tocás. Al iniciar te enfoca al instante (el origen del viaje
+  sos vos, sin esperar al GPS); caminando el zoom se mete hasta los metros
+  —la vereda, la esquina que viene— y arriba del colectivo se abre a las
+  cuadras. Cada fix corre la cámara detrás tuyo con el contador a la vista. Arrastrar o pinzar el mapa apaga el
   seguimiento EN EL ACTO —la cámara nunca le pelea el mapa al dedo— y un
   botón lo vuelve a prender. Cada viaje nuevo arranca siguiendo: haber
   corrido la cámara en un viaje no es una preferencia para el siguiente.
