@@ -44,14 +44,19 @@ respuesta sería "no hay" 6 de cada 10 veces. El origen sale del GPS o lo
 escribís vos, así que también podés planificar el viaje desde tu casa la noche
 anterior.
 
-Y cuando ya elegiste, "Iniciar viaje" te lleva paso a paso: caminá hasta tal
-parada, tomá la 3, viajá 14 paradas, bajate, llegaste. Un paso por pantalla,
-grande, para leerlo parado en la vereda.
+Y cuando ya elegiste, "Iniciar viaje" te lleva paso a paso, con el mapa
+siguiéndote y un contador en vivo de cuántas paradas faltan para bajarte. Un
+paso por pantalla, grande, para leerlo parado en la vereda.
 
-BUSCÁ POR LUGAR, NO POR ESQUINA
-El hospital, la escuela, el shopping, la plaza, la terminal. 2612 lugares del
-Gran Resistencia vienen adentro de la app, así que se buscan sin señal desde
-que la instalás.
+PARA NO QUEDARTE DORMIDO
+La alarma "avisame para bajar": la pantalla no se apaga y, dos paradas antes
+de la tuya, suena el tono de alarma del teléfono —aunque esté en silencio— y
+vibra hasta que la apagues. Para el que viaja cansado, que somos todos.
+
+BUSCÁ POR LUGAR, POR CALLE O POR DIRECCIÓN
+El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís "San Juan
+5240" y cae en la cuadra real. Miles de lugares, calles y números de puerta
+vienen adentro de la app, así que se buscan sin señal desde que la instalás.
 
 EL MAPA
 Las paradas se ven de entrada, sin pedirte el GPS ni obligarte a elegir una
@@ -67,6 +72,9 @@ fuente al lado. Un precio sin fecha es peor que no tener precio.
 
 EL RESTO
 - Paradas cerca tuyo, con la distancia real en metros
+- Cartel para el chofer: el número de la línea a toda pantalla y brillo, para
+  parar el colectivo de noche
+- El viaje sobrevive a cerrar la app: al reabrir te ofrece retomarlo
 - Favoritos: la línea y la parada de todos los días quedan a mano
 - Aviso de lluvia, con la probabilidad para tu zona
 - Modo oscuro
@@ -107,9 +115,11 @@ Hecha en Resistencia, Chaco.
 ```
 Primera versión.
 
-Mapa con las paradas visibles de entrada, buscador por lugar, "¿cómo llego?"
-con transbordos y guía paso a paso del viaje. Tarifas con fecha y fuente.
-Horarios del ramal 904A y frecuencia regulada de los tres ramales del 904.
+Mapa con las paradas visibles de entrada, buscador por lugar, calle y
+dirección con altura ("San Juan 5240"), "¿cómo llego?" con transbordos, guía
+paso a paso con contador de paradas en vivo y alarma para no quedarte
+dormido. Tarifas con fecha y fuente. Horarios del 904A y frecuencia regulada
+del 904.
 
 Sin publicidad, sin cuenta y funciona sin señal.
 ```
