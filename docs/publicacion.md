@@ -4,6 +4,31 @@ Todo lo que hay que hacer para sacar la v1.0.0, en orden. Lo que dice
 **"lo hacés vos"** requiere credenciales o el teléfono, y no está automatizado
 a propósito.
 
+## El orden, en una pantalla
+
+La regla que manda los tiempos: **las cuentas personales de Play creadas
+después del 13/11/2023 tienen que correr una prueba cerrada con 12 testers
+anotados 14 días SEGUIDOS antes de poder pedir producción.** No hay atajo,
+así que el día 0 termina con la prueba cerrada ANDANDO y esos 14 días se
+usan para el resto.
+
+| # | Paso | Cuándo | Dónde está |
+|---|---|---|---|
+| 1 | Keystore + `key.properties` (+ **backup en dos lados**) | día 0 | §2 y §3 |
+| 2 | AAB firmado y verificado con `keytool -printcert` | día 0 | §5 |
+| 3 | Política de privacidad en una URL pública | día 0 | §4 |
+| 4 | Crear la app en Play Console y cargar la ficha | día 0 | §6 |
+| 5 | Capturas (**ya están sacadas**: `marketing/capturas/`) | día 0 | §6 |
+| 6 | Formulario de seguridad de datos + clasificación | día 0 | §6 |
+| 7 | **Prueba cerrada**: subir el AAB y anotar 15-20 testers | día 0 | §7 |
+| 8 | Esperar 14 días con 12+ testers sin desanotarse | días 1-14 | §7 |
+| 9 | Pedir acceso a producción, subir el AAB, revisión | día 15 | §7 |
+| 10 | Publicar y difundir | al aprobar | `lanzamiento.md` |
+
+El plan de esos 14 días —los mails, el video, los grupos, la prensa— está en
+[`lanzamiento.md`](lanzamiento.md). Las emergencias, en
+[`operaciones.md`](operaciones.md).
+
 ---
 
 ## 1. Lo que ya está resuelto
@@ -169,19 +194,23 @@ poda distinto, por ejemplo). **Probalo antes de subir, no después.**
 | Novedades de la versión | ✅ en [`ficha-play.md`](ficha-play.md) |
 | Ícono de la ficha | 512×512 PNG. Sale de `assets/branding/icon.png` (1024×1024, redimensionar) |
 | Gráfico destacado | ✅ `assets/branding/feature_graphic.png`, 1024×500 exactos. Se regenera con `REGEN_BRAND=1 flutter test test/brand/brand_assets_test.dart` |
-| Capturas | Mínimo 2 de teléfono. **Es lo único que falta y necesita el teléfono** |
+| Capturas | ✅ **Ya sacadas**, 1080×2400, en `marketing/capturas/` |
 | Categoría | Mapas y navegación (o Viajes y guías locales) |
 | Clasificación de contenido | Cuestionario. Sin contenido sensible |
 | **Seguridad de los datos** | Ver abajo — es el que más se equivoca |
 
-### Qué capturas sacar
+### Qué capturas subir
 
-Cuatro alcanzan, y en este orden —la primera es la que decide la instalación:
+Ya están sacadas de la app real en `marketing/capturas/`. Cuatro alcanzan, y
+este orden es el que vende —la primera decide la instalación:
 
-1. El mapa con las paradas visibles y el panel abajo.
-2. El resultado de "¿cómo llego?" con un viaje elegido dibujado.
-3. Un paso de "Iniciar viaje" (la guía grande).
-4. El detalle de una parada con "qué colectivos pasan por acá".
+1. `01-mapa-paradas.png` — el mapa con las paradas y el panel abajo.
+2. `03-como-llego.png` — "6 líneas te llevan directo", con el paso a paso.
+3. `08-alarma-armada.png` — "Faltan 10 paradas" en vivo + el interruptor.
+4. `09-alarma-sonando.png` — "¡Preparate para bajar!", la que se recuerda.
+
+Si entran más, sumar `04-viaje-elegido` (el recorrido dibujado con "Iniciar
+viaje") y `07-cartel-chofer` (el número gigante).
 
 ### Formulario de "Seguridad de los datos"
 
@@ -201,13 +230,41 @@ elegí la que declara más.
 
 ---
 
-## 7. Después de publicar
+## 7. La prueba cerrada — el paso que marca el calendario
 
-- Subí a **prueba interna** primero, instalá desde ahí y recién después promové
-  a producción.
+**Cuenta personal creada después del 13/11/2023 = prueba cerrada obligatoria
+antes de producción**: 12 testers como mínimo, anotados **14 días corridos**.
+(Era 20 testers hasta diciembre de 2024.) Nada de esto se puede acelerar
+pagando ni pidiéndolo amablemente, así que arranca el día 0.
+
+1. Play Console → **Prueba → Prueba cerrada** → crear la versión y subir el
+   AAB.
+2. Crear una lista de testers **por correo electrónico** y agregar 15-20
+   personas. Doce es el mínimo legal: **hay que llevar margen**, porque el
+   que desinstala o se desanota te rompe la racha y el contador vuelve a
+   empezar.
+3. Mandarles el enlace de aceptación. **Anotarse no es instalar**: cada
+   persona tiene que (a) aceptar la invitación, (b) instalar desde Play y
+   (c) **quedarse anotada las dos semanas**. El mensaje de WhatsApp para
+   pedirlo está en [`lanzamiento.md`](lanzamiento.md).
+4. A los dos días, verificar en Play Console cuántos hay anotados de verdad.
+   Si son menos de 15, reclutar más ahí mismo.
+5. Durante los 14 días: mirar **Calidad → Android vitals** (cierres y ANR) y
+   arreglar solo lo grave. Se puede subir un AAB nuevo a la prueba sin
+   reiniciar el contador de días.
+6. Cumplidos los 14 días con 12+ anotados, en el panel aparece **"Solicitar
+   acceso a producción"**. Google pregunta qué aprendiste de la prueba:
+   contestar con la verdad —los hallazgos de campo están en el CHANGELOG—.
+7. Aprobado eso: subir el AAB a **producción**, completar el lanzamiento y
+   esperar la revisión (de horas a unos días).
+
+## 8. Después de publicar
+
 - Cada versión nueva necesita **`versionCode` mayor**: se sube tocando
   `version:` en `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`).
 - **Guardá el keystore.** Otra vez: sin él no hay actualizaciones nunca más.
+- Contestá todas las reseñas, las malas primero. El resto del primer mes
+  está en [`lanzamiento.md`](lanzamiento.md).
 
 ---
 
@@ -221,13 +278,17 @@ elegí la que declara más.
 - [x] CHANGELOG de la v1.0
 - [x] Textos de la ficha, con los caracteres contados por un test
 - [x] Gráfico destacado 1024×500, generado en código
-- [ ] Keystore generado y guardado *(vos)*
+- [x] Capturas de pantalla, de la app real (`marketing/capturas/`, 2026-08-28)
+- [x] Migración `0011` corrida en el Dashboard (2026-08-28) — el planificador
+      contesta los viajes cortos en menos de un segundo
+- [ ] Keystore generado y guardado *(vos)* ← **es el bloqueante de todo**
 - [ ] `android/key.properties` creado *(vos)*
 - [ ] Política de privacidad publicada en una URL *(vos)*
 - [ ] APK de release probado en el teléfono *(vos)*
 - [ ] AAB firmado y verificado con `keytool -printcert` *(vos)*
-- [ ] Capturas de pantalla *(vos — necesitan el teléfono)*
 - [ ] Formulario de seguridad de los datos *(vos)*
+- [ ] Prueba cerrada creada con 15-20 testers *(vos)* — §7, el reloj de los
+      14 días no arranca hasta que estén anotados
 - [x] Transbordo de `plan_trip` verificado contra la base real: 124 transbordos
       auditados, 0 rotos (`dart run tools/verify_transfers.dart`, 2026-08-25)
 - [x] Migración `0010` corrida en el Dashboard (2026-08-25)
