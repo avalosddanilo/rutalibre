@@ -56,6 +56,14 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 
 - **"¿Cómo llego?"**: de dónde estás a dónde vas, con viajes directos y de un
   transbordo. Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces.
+- **Cuando ningún colectivo te deja cerca, te dice cuál te ACERCA.** Un destino
+  en los barrios de Corrientes terminaba en "no encontramos cómo llegar",
+  aunque el 904 cruza el puente. Ahora aparece el colectivo que más te
+  acerca —un viaje real, que se puede iniciar— y aparte el último tramo:
+  la línea urbana que para cerca de donde te bajás Y de tu destino, según
+  las paradas de Corrientes en OpenStreetMap, con el aviso de que el
+  recorrido exacto no está en ningún dato y hay que confirmarlo con el
+  chofer. Si no hay paradas cargadas cerca, lo dice así en vez de callarse.
 - Una opción por línea, no por ramal: el pasajero piensa en "la 9".
 - El destino es **cualquier punto del mapa**, no solo una parada.
 - **El origen no es solo el GPS**: se elige a mano escribiendo el lugar, y se
@@ -109,9 +117,15 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   parada exacta, proyectada sobre el trazado: en una avenida recta los
   vértices del mapa están a cuadras entre sí, y cortar en el más cercano
   hacía que la línea arrancara antes de la parada.
-- **Iniciar viaje suena y vibra**: un "ding" corto con el sonido de
-  notificación del teléfono —que respeta el modo silencio— para saber que el
-  botón agarró antes de guardar el teléfono.
+- **Iniciar viaje suena y vibra**: dos notas cortas que suben —un sonido
+  propio de la app, generado por código, no el del sistema que en muchos
+  teléfonos es feo— y un toque de vibración, para saber que el botón agarró
+  antes de guardar el teléfono. Respeta el modo silencio.
+- **Siempre hay salida**: con un viaje elegido, una ✕ en el panel sale del
+  "¿cómo llego?", y el ATRÁS del teléfono desanda un paso por vez (viaje →
+  lista de opciones → mapa) en vez de cerrar la app. Con la guía andando,
+  atrás no la corta —un roce en el bolsillo no puede perder el viaje—: avisa
+  que se sale con "Terminar".
 - Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:
   uno eligió un nombre de una lista, y verlo en su cuadra es lo que confirma
   que era ese.

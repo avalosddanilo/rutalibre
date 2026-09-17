@@ -7,10 +7,12 @@ import '../../domain/entities/fare.dart';
 import '../../domain/entities/service_frequency.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../../domain/entities/walk_estimate.dart';
+import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../utils/color_hex.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
+import '../utils/last_mile.dart';
 import '../utils/trip_share_text.dart';
 import 'line_badge.dart';
 
@@ -147,8 +149,9 @@ class TripResultsSheet extends ConsumerWidget {
                     ],
                   ),
                 ),
-                data: (plans) =>
-                    plans.isEmpty ? const _NoTrips() : _TripList(plans: plans),
+                data: (plans) => plans.isEmpty
+                    ? _NoTrips(query: liveQuery)
+                    : _TripList(plans: plans),
               ),
             ),
           ],
@@ -158,10 +161,40 @@ class TripResultsSheet extends ConsumerWidget {
   }
 }
 
-/// Vacío NO es un error: puede que de verdad no haya cómo, y decirlo con
-/// claridad (y por qué) es mejor que un cartel genérico.
-class _NoTrips extends StatelessWidget {
-  const _NoTrips();
+/// Sin viaje a una distancia caminable.
+///
+/// Antes esto terminaba en "no encontramos cómo llegar" y nada más. Pero casi
+/// siempre SÍ hay un colectivo que te acerca —el 904 al centro de Corrientes,
+/// por ejemplo—, aunque te deje a kilómetros. Se muestra ese tramo, que es un
+/// viaje real y se puede iniciar, y aparte cómo seguir: la línea urbana que
+/// para cerca de la bajada y del destino, si las paradas de referencia la
+/// conocen. Lo que se sabe va como viaje; lo que se deduce va como sugerencia.
+class _NoTrips extends ConsumerWidget {
+  const _NoTrips({required this.query});
+
+  final TripQuery query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final approach = ref.watch(approachTripProvider(query));
+
+    return approach.when(
+      loading: () => const Padding(
+        padding: EdgeInsets.all(32),
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      // Si la búsqueda ampliada falla, queda el cartel de siempre: no poder
+      // ofrecer el plan B no es motivo para mostrar un error encima del "no".
+      error: (_, _) => const _NoTripsNotice(),
+      data: (plan) => plan == null
+          ? const _NoTripsNotice()
+          : _ApproachTrip(plan: plan, query: query),
+    );
+  }
+}
+
+class _NoTripsNotice extends StatelessWidget {
+  const _NoTripsNotice();
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -190,6 +223,139 @@ class _NoTrips extends StatelessWidget {
       ],
     ),
   );
+}
+
+/// "Ningún colectivo te deja cerca, pero este te acerca" + el último tramo.
+class _ApproachTrip extends ConsumerWidget {
+  const _ApproachTrip({required this.plan, required this.query});
+
+  final TripPlan plan;
+  final TripQuery query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final alight = plan.legs.last.alightStop;
+    // Las paradas de Corrientes se leen de un asset: si todavía no cargaron
+    // (o fallaron), el tramo que sí se sabe se muestra igual.
+    final referenceStops = ref.watch(corrientesStopsProvider).value ?? const [];
+    final suggestion = suggestLastMile(
+      stops: referenceStops,
+      fromLat: alight.lat,
+      fromLng: alight.lng,
+      toLat: query.destLat,
+      toLng: query.destLng,
+    );
+    final linesAtDestination = suggestion == null
+        ? linesNear(
+            stops: referenceStops,
+            lat: query.destLat,
+            lng: query.destLng,
+          )
+        : const <String>[];
+
+    return ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.only(bottom: 16),
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Text(
+            'Ningún colectivo te deja a una distancia caminable. '
+            'Este es el que más te acerca:',
+            style: theme.textTheme.labelMedium,
+          ),
+        ),
+        _TripTile(plan: plan),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: scheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    suggestion != null
+                        ? Icons.directions_bus_outlined
+                        : Icons.directions_walk,
+                    color: scheme.onSecondaryContainer,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Para el último tramo',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: scheme.onSecondaryContainer,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _lastMileText(suggestion, linesAtDestination),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: scheme.onSecondaryContainer,
+                          ),
+                        ),
+                        if (suggestion != null ||
+                            linesAtDestination.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          // El sentido y el orden de estas líneas NO están
+                          // en ningún dato: decirlo es la condición para
+                          // poder sugerirlas.
+                          Text(
+                            'Según las paradas de Corrientes en OpenStreetMap. '
+                            'No sabemos el recorrido exacto: confirmá con el '
+                            'chofer que vaya para ese lado.',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: scheme.onSecondaryContainer,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static String _lastMileText(
+    LastMileSuggestion? suggestion,
+    List<String> linesAtDestination,
+  ) {
+    if (suggestion != null) {
+      final lines = suggestion.lines.length == 1
+          ? 'la ${suggestion.lines.single}'
+          : 'la ${suggestion.lines.take(suggestion.lines.length - 1).join(', la ')} '
+                'o la ${suggestion.lines.last}';
+      return 'Cerca de donde te bajás podés tomar $lines en '
+          '${suggestion.boardStop.name}, y bajarte en '
+          '${suggestion.alightStop.name}.';
+    }
+    if (linesAtDestination.isNotEmpty) {
+      return 'Cerca de tu destino paran ${linesAtDestination.join(', ')}. '
+          'Desde donde te bajás, preguntá cuál te lleva.';
+    }
+    // Decir POR QUÉ no hay sugerencia: sin esto, "caminá 4 km" se lee como
+    // que la app no conoce otra forma, cuando lo que falta es el dato.
+    return 'No tenemos paradas de colectivos urbanos cargadas cerca de tu '
+        'destino, así que no podemos sugerirte uno para este tramo. Si tu '
+        'destino está en Corrientes, probablemente haya una línea: preguntá '
+        'en la parada donde te bajás.';
+  }
 }
 
 class _TripList extends ConsumerWidget {

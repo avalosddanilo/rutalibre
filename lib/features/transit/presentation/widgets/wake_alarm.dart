@@ -31,9 +31,10 @@ abstract interface class WakeAlarmGear {
   /// Silencio.
   Future<void> silence();
 
-  /// Un "ding" corto al arrancar un viaje, con el sonido de notificación del
-  /// sistema. Al revés que [ring], respeta el modo silencio: avisar que algo
-  /// empezó no justifica sonar en una reunión.
+  /// Un "ding" corto al arrancar un viaje: el sonido propio de la app
+  /// (`tools/trip_start_chime.dart`), no el del sistema, que en muchos
+  /// teléfonos es feo. Al revés que [ring], respeta el modo silencio: avisar
+  /// que algo empezó no justifica sonar en una reunión.
   Future<void> chime();
 }
 

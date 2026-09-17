@@ -436,6 +436,46 @@ class _MapScreenState extends ConsumerState<MapScreen>
     }
   }
 
+  /// Lo que hace el botón ATRÁS del teléfono: deshacer UN paso, el último.
+  ///
+  /// El orden es el inverso a cómo se llega a cada estado: viaje en curso →
+  /// viaje elegido → búsqueda del viaje → línea o paradas cercanas. Así
+  /// "atrás, atrás, atrás" desanda el camino en vez de tirar todo de golpe.
+  void _undoLast({required bool guiding}) {
+    // Con la guía andando, atrás NO la corta: el teléfono está en el
+    // bolsillo, un roce en el botón a mitad de viaje perdería la guía justo
+    // cuando más se la necesita. Se avisa cómo salir de verdad.
+    if (guiding) {
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Para salir del viaje, tocá "Terminar".'),
+          ),
+        );
+      return;
+    }
+    if (ref.read(selectedTripProvider) != null) {
+      // Vuelve a la LISTA de opciones: el que elige otro colectivo no quiere
+      // volver a escribir el destino.
+      ref.read(selectedTripProvider.notifier).select(null);
+      _showTripResults();
+      return;
+    }
+    if (ref.read(tripSearchProvider) is! TripIdle) {
+      ref.read(tripSearchProvider.notifier).clear();
+      return;
+    }
+    if (ref.read(selectedLineProvider) != null) {
+      ref.read(selectedLineProvider.notifier).select(null);
+      return;
+    }
+    if (ref.read(nearbyQueryProvider) != null) {
+      ref.read(nearbyQueryProvider.notifier).clear();
+      ref.read(selectedStopProvider.notifier).clear();
+    }
+  }
+
   /// Encuadra el viaje entero: origen, destino y todo el trazado del medio.
   void _fitTrip(TripPlan plan, TripRoute route) {
     _fitRoute([
@@ -658,274 +698,296 @@ class _MapScreenState extends ConsumerState<MapScreen>
         : ref.watch(routeGeometryProvider(selectedVariant.id)).value ??
               const <LatLng>[];
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: MapScreen.resistenciaCenter,
-              initialZoom: 13,
-              minZoom: 9,
-              maxZoom: 18,
-              // **SIN ROTACIÓN.** El default de flutter_map es
-              // `InteractiveFlag.all`, que la incluye: dos dedos apoyados con
-              // un poco de ángulo giran el mapa sin que nadie lo pida, y
-              // después no hay forma de volver al norte. En una app de
-              // colectivos girar el mapa no sirve para nada —las calles se
-              // leen igual, los nombres quedan de costado— y encima la
-              // cámara rotada es donde la librería hace las cuentas de
-              // tiles que reventaban con NaN.
-              interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+    // El botón ATRÁS del teléfono deshace lo último, en vez de cerrar la app.
+    // Hallazgo de campo: con un viaje elegido, "atrás" era la única salida
+    // visible y cerraba todo — se perdía el viaje buscado y parecía un
+    // crash. La app solo se cierra cuando ya no queda nada abierto.
+    final nothingToUndo =
+        steps == null &&
+        selectedTrip == null &&
+        tripSearch is TripIdle &&
+        selectedLine == null &&
+        nearbyQuery == null;
+
+    return PopScope(
+      canPop: nothingToUndo,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _undoLast(guiding: steps != null);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                initialCenter: MapScreen.resistenciaCenter,
+                initialZoom: 13,
+                minZoom: 9,
+                maxZoom: 18,
+                // **SIN ROTACIÓN.** El default de flutter_map es
+                // `InteractiveFlag.all`, que la incluye: dos dedos apoyados con
+                // un poco de ángulo giran el mapa sin que nadie lo pida, y
+                // después no hay forma de volver al norte. En una app de
+                // colectivos girar el mapa no sirve para nada —las calles se
+                // leen igual, los nombres quedan de costado— y encima la
+                // cámara rotada es donde la librería hace las cuentas de
+                // tiles que reventaban con NaN.
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+                ),
+                // El toque en el mapa vacío hace dos cosas según el modo. En
+                // "¿cómo llego?" pone el destino (por eso el destino puede ser
+                // CUALQUIER punto y no solo una parada: uno quiere ir al
+                // hospital, no a la parada tal). Si no, deselecciona la parada
+                // y vuelven a aparecer todas las cercanas — sin esa salida,
+                // elegir una parada era un callejón sin salida.
+                // Los marcadores absorben su propio toque, así que esto solo
+                // dispara en el mapa vacío.
+                onTap: (_, point) {
+                  // Si la cámara ya está rota, el punto tocado también lo está.
+                  // Guardarlo como destino haría permanente un estado del que no
+                  // se sale ni cerrando la hoja.
+                  if (!isDrawableLatLng(point.latitude, point.longitude)) {
+                    return;
+                  }
+                  if (tripSearch is TripPickingDestination) {
+                    ref.read(tripSearchProvider.notifier).setDestination((
+                      lat: point.latitude,
+                      lng: point.longitude,
+                    ));
+                    return;
+                  }
+                  ref.read(selectedStopProvider.notifier).clear();
+                },
+                // Agarrar el mapa con la mano apaga el seguimiento de la guía:
+                // la cámara NUNCA le pelea el mapa al dedo. Zoom con doble tap
+                // no cuenta — acercarse a uno mismo no es irse a otro lado.
+                onMapEvent: (event) {
+                  switch (event.source) {
+                    case MapEventSource.dragStart:
+                    case MapEventSource.onDrag:
+                    case MapEventSource.dragEnd:
+                    case MapEventSource.flingAnimationController:
+                    case MapEventSource.multiFingerGestureStart:
+                    case MapEventSource.onMultiFinger:
+                    case MapEventSource.multiFingerEnd:
+                    case MapEventSource.doubleTapHold:
+                      if (ref.read(guidanceCameraFollowProvider)) {
+                        ref
+                            .read(guidanceCameraFollowProvider.notifier)
+                            .disable();
+                      }
+                    default:
+                      break;
+                  }
+                },
               ),
-              // El toque en el mapa vacío hace dos cosas según el modo. En
-              // "¿cómo llego?" pone el destino (por eso el destino puede ser
-              // CUALQUIER punto y no solo una parada: uno quiere ir al
-              // hospital, no a la parada tal). Si no, deselecciona la parada
-              // y vuelven a aparecer todas las cercanas — sin esa salida,
-              // elegir una parada era un callejón sin salida.
-              // Los marcadores absorben su propio toque, así que esto solo
-              // dispara en el mapa vacío.
-              onTap: (_, point) {
-                // Si la cámara ya está rota, el punto tocado también lo está.
-                // Guardarlo como destino haría permanente un estado del que no
-                // se sale ni cerrando la hoja.
-                if (!isDrawableLatLng(point.latitude, point.longitude)) return;
-                if (tripSearch is TripPickingDestination) {
-                  ref.read(tripSearchProvider.notifier).setDestination((
-                    lat: point.latitude,
-                    lng: point.longitude,
-                  ));
-                  return;
-                }
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  // Requerido por la política de tiles de OSM.
+                  userAgentPackageName: 'com.rutalibre.rutalibre',
+                  // Inyectable para que la pantalla se pueda testear sin red.
+                  tileProvider: ref.watch(tileProviderFactoryProvider)(),
+                  // En modo oscuro, el mapa también. Los tiles de OSM vienen
+                  // siempre claros, y un panel negro sobre un mapa blanco
+                  // encandila de noche — que es justo cuándo uno está en la
+                  // parada con el brillo bajo. Se invierten los MISMOS tiles
+                  // con una matriz de color:
+                  // cambiar de proveedor a uno "oscuro" traería otra licencia y
+                  // otros límites de uso.
+                  tileBuilder: Theme.of(context).brightness == Brightness.dark
+                      ? darkModeTileBuilder
+                      : null,
+                ),
+                if (routePoints.isNotEmpty)
+                  PolylineLayer(
+                    polylines: [
+                      // Halo blanco debajo: sobre calles claras u oscuras el
+                      // trazado se sigue leyendo.
+                      Polyline(
+                        points: routePoints,
+                        strokeWidth: 8,
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
+                      Polyline(
+                        points: routePoints,
+                        strokeWidth: 4.5,
+                        color: routeColor,
+                      ),
+                    ],
+                  ),
+                // Abajo de todo lo demás: es el contexto sobre el que se
+                // dibujan las respuestas.
+                const _CorrientesStopMarkers(),
+                _AllStopMarkers(
+                  drawnElsewhere: [
+                    ...routeStops,
+                    for (final nearby in nearbyStops) nearby.stop,
+                  ],
+                  picking: tripSearch is TripPickingDestination,
+                ),
+                if (selectedTrip != null) _TripLayers(plan: selectedTrip),
+                if (routeStops.isNotEmpty)
+                  _RouteStopMarkers(stops: routeStops, color: routeColor),
+                if (nearbyStops.isNotEmpty)
+                  _NearbyStopMarkers(stops: nearbyStops),
+                if (tripSearch case TripRoute(:final destination))
+                  MarkerLayer(
+                    markers: [
+                      _pinMarker(
+                        point: LatLng(destination.lat, destination.lng),
+                        color: destinationMarkerColor,
+                        width: 30,
+                        glyph: const Icon(
+                          Icons.flag,
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                        tooltip: 'A dónde vas',
+                        onTap: () => _showTripResults(),
+                      ),
+                    ],
+                  ),
+                if (nearbyQuery != null)
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: LatLng(nearbyQuery.lat, nearbyQuery.lng),
+                        width: 22,
+                        height: 22,
+                        child: const DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            // Fijo por lo mismo que el marcador de parada: los
+                            // tiles no cambian con el tema de la app.
+                            color: userMarkerColor,
+                            border: Border.fromBorderSide(
+                              BorderSide(color: Colors.white, width: 3),
+                            ),
+                            boxShadow: [
+                              BoxShadow(blurRadius: 4, color: Colors.black38),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                // Vos, moviéndote, SOLO con la guía activa: es la única
+                // situación en que la app sigue la posición (ver
+                // livePositionProvider — el stream muere solo al cerrar la
+                // guía). Ver el propio punto avanzar por el trazado es lo que
+                // confirma "voy bien" sin leer nada.
+                if (steps != null) const _LiveGuidanceDot(),
+              ],
+            ),
+            _TopBar(
+              variantLabel: _mapLabel(selectedVariant, selectedTrip),
+              // El pronóstico se pide para donde está la persona si eso ya se
+              // sabe, y si no para el centro de Resistencia. `walkOriginProvider`
+              // NUNCA pide permiso —usa la última posición que tenga el
+              // sistema— así que el chip aparece sin que la app moleste, y el
+              // centro de respaldo lo hace aparecer igual en una instalación
+              // nueva. Con 20 km entre Resistencia y Corrientes la diferencia
+              // puede importar; sin ubicación, la ciudad más poblada es la
+              // mejor apuesta.
+              rainOrigin: ref.watch(walkOriginProvider).value,
+            ),
+            // El viaje que quedó a medio hacer al cerrarse la app, si hay uno
+            // fresco (menos de tres horas) y no se está haciendo otra cosa.
+            // OFRECE retomar, nunca retoma solo: la app no puede saber si el
+            // colectivo sigue andando o si te bajaste hace una hora.
+            if (tripSearch is TripIdle &&
+                steps == null &&
+                selectedVariant == null)
+              const _ResumeTripBanner(),
+            if (tripSearch case TripPickingDestination(:final origin))
+              _PickDestinationBanner(
+                // Sin el _moveTo inicial de _askDestination: quien reabre el
+                // buscador desde el banner puede estar recorriendo el mapa, y
+                // devolverle la cámara al origen le pisa lo que estaba mirando.
+                onSearch: () async {
+                  final focus = await PlaceSearchSheet.showDestination(
+                    context,
+                    origin: origin,
+                  );
+                  if (focus != null && mounted) _focusStreet(focus);
+                },
+                onCancel: () => ref.read(tripSearchProvider.notifier).clear(),
+              ),
+            _MapActions(
+              locating: _locating,
+              showFitRoute: routePoints.isNotEmpty,
+              showClearNearby: nearbyQuery != null,
+              showTrip: tripSearch is! TripIdle,
+              // "Volver a seguirte": solo con la guía andando y el seguimiento
+              // apagado por un gesto — si la cámara ya te sigue, sobra.
+              onFollowGuidance:
+                  (steps != null &&
+                      guidanceIndex != null &&
+                      !ref.watch(guidanceCameraFollowProvider))
+                  ? () {
+                      ref.read(guidanceCameraFollowProvider.notifier).enable();
+                      final fix = ref.read(livePositionProvider).value;
+                      if (fix != null) {
+                        // Al zoom del paso, no al que dejó el paneo: volver a
+                        // seguirse es volver a la vista de la guía.
+                        _moveTo(
+                          fix.lat,
+                          fix.lng,
+                          _followZoomFor(
+                            steps[guidanceIndex.clamp(0, steps.length - 1)],
+                          ),
+                        );
+                      }
+                    }
+                  : null,
+              onShareTrip: (selectedTrip != null && tripSearch is TripRoute)
+                  ? () => _shareTrip(selectedTrip, tripSearch)
+                  : null,
+              sheetExtent: sheetExtent,
+              onPlanTrip: _startTrip,
+              onClearTrip: () => ref.read(tripSearchProvider.notifier).clear(),
+              onFitRoute: () => _fitRoute(routePoints),
+              onClearNearby: () {
+                ref.read(nearbyQueryProvider.notifier).clear();
+                // Si no, la parada elegida sobrevive al modo que la mostró y
+                // la próxima vez que se active "cerca mío" arranca filtrado
+                // por una parada que el usuario ya no tiene en pantalla.
                 ref.read(selectedStopProvider.notifier).clear();
               },
-              // Agarrar el mapa con la mano apaga el seguimiento de la guía:
-              // la cámara NUNCA le pelea el mapa al dedo. Zoom con doble tap
-              // no cuenta — acercarse a uno mismo no es irse a otro lado.
-              onMapEvent: (event) {
-                switch (event.source) {
-                  case MapEventSource.dragStart:
-                  case MapEventSource.onDrag:
-                  case MapEventSource.dragEnd:
-                  case MapEventSource.flingAnimationController:
-                  case MapEventSource.multiFingerGestureStart:
-                  case MapEventSource.onMultiFinger:
-                  case MapEventSource.multiFingerEnd:
-                  case MapEventSource.doubleTapHold:
-                    if (ref.read(guidanceCameraFollowProvider)) {
-                      ref.read(guidanceCameraFollowProvider.notifier).disable();
-                    }
-                  default:
-                    break;
+              onShowNearbyList: () {
+                if (nearbyArgs != null) {
+                  NearbyStopsSheet.show(context, args: nearbyArgs);
                 }
               },
+              onLocate: _locateAndShowNearby,
             ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                // Requerido por la política de tiles de OSM.
-                userAgentPackageName: 'com.rutalibre.rutalibre',
-                // Inyectable para que la pantalla se pueda testear sin red.
-                tileProvider: ref.watch(tileProviderFactoryProvider)(),
-                // En modo oscuro, el mapa también. Los tiles de OSM vienen
-                // siempre claros, y un panel negro sobre un mapa blanco
-                // encandila de noche — que es justo cuándo uno está en la
-                // parada con el brillo bajo. Se invierten los MISMOS tiles
-                // con una matriz de color:
-                // cambiar de proveedor a uno "oscuro" traería otra licencia y
-                // otros límites de uso.
-                tileBuilder: Theme.of(context).brightness == Brightness.dark
-                    ? darkModeTileBuilder
-                    : null,
-              ),
-              if (routePoints.isNotEmpty)
-                PolylineLayer(
-                  polylines: [
-                    // Halo blanco debajo: sobre calles claras u oscuras el
-                    // trazado se sigue leyendo.
-                    Polyline(
-                      points: routePoints,
-                      strokeWidth: 8,
-                      color: Colors.white.withValues(alpha: 0.85),
-                    ),
-                    Polyline(
-                      points: routePoints,
-                      strokeWidth: 4.5,
-                      color: routeColor,
-                    ),
-                  ],
-                ),
-              // Abajo de todo lo demás: es el contexto sobre el que se
-              // dibujan las respuestas.
-              const _CorrientesStopMarkers(),
-              _AllStopMarkers(
-                drawnElsewhere: [
-                  ...routeStops,
-                  for (final nearby in nearbyStops) nearby.stop,
-                ],
-                picking: tripSearch is TripPickingDestination,
-              ),
-              if (selectedTrip != null) _TripLayers(plan: selectedTrip),
-              if (routeStops.isNotEmpty)
-                _RouteStopMarkers(stops: routeStops, color: routeColor),
-              if (nearbyStops.isNotEmpty)
-                _NearbyStopMarkers(stops: nearbyStops),
-              if (tripSearch case TripRoute(:final destination))
-                MarkerLayer(
-                  markers: [
-                    _pinMarker(
-                      point: LatLng(destination.lat, destination.lng),
-                      color: destinationMarkerColor,
-                      width: 30,
-                      glyph: const Icon(
-                        Icons.flag,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                      tooltip: 'A dónde vas',
-                      onTap: () => _showTripResults(),
-                    ),
-                  ],
-                ),
-              if (nearbyQuery != null)
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: LatLng(nearbyQuery.lat, nearbyQuery.lng),
-                      width: 22,
-                      height: 22,
-                      child: const DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          // Fijo por lo mismo que el marcador de parada: los
-                          // tiles no cambian con el tema de la app.
-                          color: userMarkerColor,
-                          border: Border.fromBorderSide(
-                            BorderSide(color: Colors.white, width: 3),
-                          ),
-                          boxShadow: [
-                            BoxShadow(blurRadius: 4, color: Colors.black38),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              // Vos, moviéndote, SOLO con la guía activa: es la única
-              // situación en que la app sigue la posición (ver
-              // livePositionProvider — el stream muere solo al cerrar la
-              // guía). Ver el propio punto avanzar por el trazado es lo que
-              // confirma "voy bien" sin leer nada.
-              if (steps != null) const _LiveGuidanceDot(),
-            ],
-          ),
-          _TopBar(
-            variantLabel: _mapLabel(selectedVariant, selectedTrip),
-            // El pronóstico se pide para donde está la persona si eso ya se
-            // sabe, y si no para el centro de Resistencia. `walkOriginProvider`
-            // NUNCA pide permiso —usa la última posición que tenga el
-            // sistema— así que el chip aparece sin que la app moleste, y el
-            // centro de respaldo lo hace aparecer igual en una instalación
-            // nueva. Con 20 km entre Resistencia y Corrientes la diferencia
-            // puede importar; sin ubicación, la ciudad más poblada es la
-            // mejor apuesta.
-            rainOrigin: ref.watch(walkOriginProvider).value,
-          ),
-          // El viaje que quedó a medio hacer al cerrarse la app, si hay uno
-          // fresco (menos de tres horas) y no se está haciendo otra cosa.
-          // OFRECE retomar, nunca retoma solo: la app no puede saber si el
-          // colectivo sigue andando o si te bajaste hace una hora.
-          if (tripSearch is TripIdle &&
-              steps == null &&
-              selectedVariant == null)
-            const _ResumeTripBanner(),
-          if (tripSearch case TripPickingDestination(:final origin))
-            _PickDestinationBanner(
-              // Sin el _moveTo inicial de _askDestination: quien reabre el
-              // buscador desde el banner puede estar recorriendo el mapa, y
-              // devolverle la cámara al origen le pisa lo que estaba mirando.
-              onSearch: () async {
-                final focus = await PlaceSearchSheet.showDestination(
-                  context,
-                  origin: origin,
-                );
-                if (focus != null && mounted) _focusStreet(focus);
-              },
-              onCancel: () => ref.read(tripSearchProvider.notifier).clear(),
-            ),
-          _MapActions(
-            locating: _locating,
-            showFitRoute: routePoints.isNotEmpty,
-            showClearNearby: nearbyQuery != null,
-            showTrip: tripSearch is! TripIdle,
-            // "Volver a seguirte": solo con la guía andando y el seguimiento
-            // apagado por un gesto — si la cámara ya te sigue, sobra.
-            onFollowGuidance:
-                (steps != null &&
-                    guidanceIndex != null &&
-                    !ref.watch(guidanceCameraFollowProvider))
-                ? () {
-                    ref.read(guidanceCameraFollowProvider.notifier).enable();
-                    final fix = ref.read(livePositionProvider).value;
-                    if (fix != null) {
-                      // Al zoom del paso, no al que dejó el paneo: volver a
-                      // seguirse es volver a la vista de la guía.
-                      _moveTo(
-                        fix.lat,
-                        fix.lng,
-                        _followZoomFor(
-                          steps[guidanceIndex.clamp(0, steps.length - 1)],
-                        ),
-                      );
-                    }
-                  }
-                : null,
-            onShareTrip: (selectedTrip != null && tripSearch is TripRoute)
-                ? () => _shareTrip(selectedTrip, tripSearch)
-                : null,
-            sheetExtent: sheetExtent,
-            onPlanTrip: _startTrip,
-            onClearTrip: () => ref.read(tripSearchProvider.notifier).clear(),
-            onFitRoute: () => _fitRoute(routePoints),
-            onClearNearby: () {
-              ref.read(nearbyQueryProvider.notifier).clear();
-              // Si no, la parada elegida sobrevive al modo que la mostró y
-              // la próxima vez que se active "cerca mío" arranca filtrado
-              // por una parada que el usuario ya no tiene en pantalla.
-              ref.read(selectedStopProvider.notifier).clear();
-            },
-            onShowNearbyList: () {
-              if (nearbyArgs != null) {
-                NearbyStopsSheet.show(context, args: nearbyArgs);
-              }
-            },
-            onLocate: _locateAndShowNearby,
-          ),
-          // Con el viaje en curso el panel de líneas NO se dibuja: quien está
-          // yendo a algún lado no está eligiendo qué colectivo mirar, y dos
-          // paneles apilados abajo dejarían el mapa en una franja. Y con un
-          // viaje ELEGIDO pero sin arrancar, lo que va abajo es el remate:
-          // el resumen con "Iniciar viaje" grande (ver _SelectedTripPanel).
-          if (steps != null)
-            TripGuidancePanel(steps: steps)
-          else if (selectedTrip != null && tripSearch is TripRoute)
-            _SelectedTripPanel(
-              plan: selectedTrip,
-              // Arrancar se SIENTE: un ding y un toque de vibración. Es el
-              // momento en que la persona guarda el teléfono y sale a
-              // caminar, y sin feedback no sabe si el botón agarró.
-              onStart: () {
-                HapticFeedback.mediumImpact();
-                ref.read(wakeAlarmGearProvider).chime();
-                ref.read(tripGuidanceProvider.notifier).start();
-              },
-              onOptions: _showTripResults,
-            )
-          else
-            LineSheet(onPlanTrip: _locating ? null : _startTrip),
-        ],
+            // Con el viaje en curso el panel de líneas NO se dibuja: quien está
+            // yendo a algún lado no está eligiendo qué colectivo mirar, y dos
+            // paneles apilados abajo dejarían el mapa en una franja. Y con un
+            // viaje ELEGIDO pero sin arrancar, lo que va abajo es el remate:
+            // el resumen con "Iniciar viaje" grande (ver _SelectedTripPanel).
+            if (steps != null)
+              TripGuidancePanel(steps: steps)
+            else if (selectedTrip != null && tripSearch is TripRoute)
+              _SelectedTripPanel(
+                plan: selectedTrip,
+                // Arrancar se SIENTE: un ding y un toque de vibración. Es el
+                // momento en que la persona guarda el teléfono y sale a
+                // caminar, y sin feedback no sabe si el botón agarró.
+                onStart: () {
+                  HapticFeedback.mediumImpact();
+                  ref.read(wakeAlarmGearProvider).chime();
+                  ref.read(tripGuidanceProvider.notifier).start();
+                },
+                onOptions: _showTripResults,
+                onClose: () => ref.read(tripSearchProvider.notifier).clear(),
+              )
+            else
+              LineSheet(onPlanTrip: _locating ? null : _startTrip),
+          ],
+        ),
       ),
     );
   }
@@ -944,11 +1006,17 @@ class _SelectedTripPanel extends StatelessWidget {
     required this.plan,
     required this.onStart,
     required this.onOptions,
+    required this.onClose,
   });
 
   final TripPlan plan;
   final VoidCallback onStart;
   final VoidCallback onOptions;
+
+  /// Salir del "¿cómo llego?" entero. El botón "Salir" flotante quedaba
+  /// tapado detrás de este panel, y sin esto la única salida era el ATRÁS
+  /// del teléfono — que cerraba la app.
+  final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
@@ -1005,6 +1073,12 @@ class _SelectedTripPanel extends StatelessWidget {
                           style: textTheme.bodySmall?.copyWith(
                             color: scheme.onSurfaceVariant,
                           ),
+                        ),
+                        IconButton(
+                          tooltip: 'Salir',
+                          visualDensity: VisualDensity.compact,
+                          onPressed: onClose,
+                          icon: const Icon(Icons.close),
                         ),
                       ],
                     ),

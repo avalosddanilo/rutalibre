@@ -206,6 +206,38 @@ final tripPlansProvider = FutureProvider.autoDispose
       return result.fold((failure) => throw failure, (plans) => plans);
     });
 
+/// Hasta dónde se busca "lo más cerca que llega un colectivo" cuando no hay
+/// viaje a una distancia caminable.
+///
+/// 5 km: la distancia del centro de Corrientes a sus barrios del sur, que es
+/// el caso que lo motivó. Medido contra la base real: contesta en ~0,5 s.
+const approachWalkMeters = 5000;
+
+/// El colectivo que MÁS TE ACERCA, para cuando [tripPlansProvider] vuelve
+/// vacío. Null si ni así hay nada.
+///
+/// No es un viaje planificado de punta a punta —puede dejarte a kilómetros—
+/// y la pantalla lo presenta así: como el tramo que sí se sabe, con el último
+/// tramo sugerido aparte (ver `last_mile.dart`). Se pide SOLO si la consulta
+/// normal volvió vacía: con viajes a mano, esto sería una consulta de más.
+final approachTripProvider = FutureProvider.autoDispose
+    .family<TripPlan?, TripQuery>((ref, query) async {
+      final result = await ref.watch(planTripProvider)(
+        PlanTripParams(
+          originLat: query.originLat,
+          originLng: query.originLng,
+          destLat: query.destLat,
+          destLng: query.destLng,
+          maxWalkMeters: approachWalkMeters,
+          maxResults: 1,
+        ),
+      );
+      return result.fold(
+        (failure) => throw failure,
+        (plans) => plans.isEmpty ? null : plans.first,
+      );
+    });
+
 /// El viaje que se está mirando en el mapa, o null.
 final selectedTripProvider = NotifierProvider<SelectedTripNotifier, TripPlan?>(
   SelectedTripNotifier.new,

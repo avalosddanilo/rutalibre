@@ -300,4 +300,102 @@ void main() {
     // Y se SINTIÓ: el ding del arranque, pedido en la prueba de campo.
     expect(gear.calls, contains('chime'));
   });
+
+  group('salir de un viaje elegido', () {
+    // El hallazgo de campo: con un viaje elegido el botón "Salir" quedaba
+    // tapado detrás del panel, y el ATRÁS del teléfono cerraba la app.
+    TripPlan plan() => TripPlan(
+      legs: [
+        TripLeg(
+          lineId: 'l3',
+          lineCode: '3',
+          lineName: 'Vial - Monte Alto',
+          colorHex: '#F57C00',
+          networkCode: 'gran-resistencia',
+          networkName: 'Gran Resistencia',
+          routeVariantId: 'rv1',
+          variantName: 'Ida',
+          branch: null,
+          direction: RouteDirection.outbound,
+          boardStop: _stops[0],
+          alightStop: _stops[1],
+          stopCount: 1,
+        ),
+      ],
+      walkToBoardMeters: 200,
+      walkFromAlightMeters: 100,
+    );
+
+    Future<ProviderContainer> pumpWithTrip(WidgetTester tester) async {
+      final c = container(
+        extra: [
+          wakeAlarmGearProvider.overrideWithValue(FakeWakeAlarmGear()),
+          tripPlansProvider.overrideWith((ref, query) async => [plan()]),
+        ],
+      );
+      await pumpMap(tester, c);
+      c
+          .read(tripSearchProvider.notifier)
+          .restore(
+            origin: (lat: _stops[0].lat, lng: _stops[0].lng),
+            destination: (lat: _stops[1].lat, lng: _stops[1].lng),
+          );
+      c.read(selectedTripProvider.notifier).select(plan());
+      await tester.pump(const Duration(milliseconds: 400));
+      return c;
+    }
+
+    testWidgets('la cruz del panel sale del "¿cómo llego?"', (tester) async {
+      final c = await pumpWithTrip(tester);
+
+      await tester.tap(find.byTooltip('Salir').last);
+      await tester.pump(const Duration(milliseconds: 400));
+
+      expect(c.read(tripSearchProvider), isA<TripIdle>());
+      expect(find.text('Iniciar viaje'), findsNothing);
+      // Al salir vuelve el panel de líneas con su entrada escalonada.
+      await tester.pump(const Duration(seconds: 1));
+    });
+
+    testWidgets('ATRÁS desanda un paso por vez y no cierra la app', (
+      tester,
+    ) async {
+      final c = await pumpWithTrip(tester);
+
+      // Primer atrás: suelta el viaje elegido y vuelve a la lista.
+      await tester.binding.handlePopRoute();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(c.read(selectedTripProvider), isNull);
+      expect(c.read(tripSearchProvider), isA<TripRoute>());
+      expect(find.byType(TripResultsSheet), findsOneWidget);
+
+      // Segundo: cierra la lista (la hoja se cierra sola con atrás).
+      await tester.binding.handlePopRoute();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(find.byType(TripResultsSheet), findsNothing);
+
+      // Tercero: sale del modo. Recién ahí no queda nada que deshacer.
+      await tester.binding.handlePopRoute();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(c.read(tripSearchProvider), isA<TripIdle>());
+      await tester.pump(const Duration(seconds: 1));
+    });
+
+    testWidgets('con la guía andando, ATRÁS avisa en vez de cortarla', (
+      tester,
+    ) async {
+      final c = await pumpWithTrip(tester);
+      c.read(tripGuidanceProvider.notifier).start();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.binding.handlePopRoute();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      // Un roce en el bolsillo no puede perder la guía a mitad de viaje.
+      expect(c.read(tripGuidanceProvider), 0);
+      expect(find.textContaining('tocá "Terminar"'), findsOneWidget);
+    });
+  });
 }
