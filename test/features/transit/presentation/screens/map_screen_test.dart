@@ -31,9 +31,12 @@ import 'package:rutalibre/features/transit/presentation/providers/trip_providers
 import 'package:rutalibre/features/transit/presentation/screens/map_screen.dart';
 import 'package:rutalibre/features/transit/presentation/widgets/place_search_sheet.dart';
 import 'package:rutalibre/features/transit/presentation/widgets/trip_results_sheet.dart';
+import 'package:rutalibre/features/transit/presentation/widgets/wake_alarm.dart';
 import 'package:rutalibre/features/weather/domain/entities/rain_forecast.dart';
 import 'package:rutalibre/features/weather/presentation/providers/weather_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widgets/wake_alarm_test.dart' show FakeWakeAlarmGear;
 
 class _MockRepo extends Mock implements TransitRepository {}
 
@@ -266,7 +269,8 @@ void main() {
       walkFromAlightMeters: 100,
     );
 
-    final c = container();
+    final gear = FakeWakeAlarmGear();
+    final c = container(extra: [wakeAlarmGearProvider.overrideWithValue(gear)]);
     await pumpMap(tester, c);
 
     // Como un viaje ya elegido: TripRoute en una sola transición (restore no
@@ -293,5 +297,7 @@ void main() {
     expect(c.read(tripGuidanceProvider), 0);
     expect(find.text('Iniciar viaje'), findsNothing);
     expect(find.text('Siguiente'), findsOneWidget);
+    // Y se SINTIÓ: el ding del arranque, pedido en la prueba de campo.
+    expect(gear.calls, contains('chime'));
   });
 }

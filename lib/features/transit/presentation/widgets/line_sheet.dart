@@ -458,17 +458,23 @@ class _NetworkHeader extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      // Wrap y no Row: con el texto del sistema agrandado, el precio con su
+      // fecha ocupaba todo el renglón y al nombre de la red le quedaban tres
+      // letras de ancho — "GRA / N RE / SIST", en el teléfono de una persona
+      // que agranda la letra justamente para poder leer. Si entran, nombre y
+      // precio van en la misma línea, uno a cada punta; si no, el precio baja.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.end,
+        spacing: 12,
+        runSpacing: 2,
         children: [
-          Expanded(
-            child: Text(
-              name.toUpperCase(),
-              style: labelStyle?.copyWith(
-                color: scheme.onSurfaceVariant,
-                letterSpacing: 1,
-                fontWeight: FontWeight.bold,
-              ),
+          Text(
+            name.toUpperCase(),
+            style: labelStyle?.copyWith(
+              color: scheme.onSurfaceVariant,
+              letterSpacing: 1,
+              fontWeight: FontWeight.bold,
             ),
           ),
           // La tarifa va en el encabezado de la RED y no en cada línea:
@@ -494,7 +500,7 @@ class _NetworkHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
             ),
         ],
       ),

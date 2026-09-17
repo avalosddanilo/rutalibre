@@ -41,6 +41,7 @@ import '../widgets/stop_details_sheet.dart';
 import '../widgets/stop_pin.dart';
 import '../widgets/trip_guidance_panel.dart';
 import '../widgets/trip_results_sheet.dart';
+import '../widgets/wake_alarm.dart';
 
 /// Área tocable mínima de un marcador. Las pautas de accesibilidad piden
 /// 44-48 px; el dibujo puede ser más chico (un pin mide 22), el TARGET no:
@@ -728,6 +729,16 @@ class _MapScreenState extends ConsumerState<MapScreen>
                 userAgentPackageName: 'com.rutalibre.rutalibre',
                 // Inyectable para que la pantalla se pueda testear sin red.
                 tileProvider: ref.watch(tileProviderFactoryProvider)(),
+                // En modo oscuro, el mapa también. Los tiles de OSM vienen
+                // siempre claros, y un panel negro sobre un mapa blanco
+                // encandila de noche — que es justo cuándo uno está en la
+                // parada con el brillo bajo. Se invierten los MISMOS tiles
+                // con una matriz de color:
+                // cambiar de proveedor a uno "oscuro" traería otra licencia y
+                // otros límites de uso.
+                tileBuilder: Theme.of(context).brightness == Brightness.dark
+                    ? darkModeTileBuilder
+                    : null,
               ),
               if (routePoints.isNotEmpty)
                 PolylineLayer(
@@ -902,7 +913,14 @@ class _MapScreenState extends ConsumerState<MapScreen>
           else if (selectedTrip != null && tripSearch is TripRoute)
             _SelectedTripPanel(
               plan: selectedTrip,
-              onStart: () => ref.read(tripGuidanceProvider.notifier).start(),
+              // Arrancar se SIENTE: un ding y un toque de vibración. Es el
+              // momento en que la persona guarda el teléfono y sale a
+              // caminar, y sin feedback no sabe si el botón agarró.
+              onStart: () {
+                HapticFeedback.mediumImpact();
+                ref.read(wakeAlarmGearProvider).chime();
+                ref.read(tripGuidanceProvider.notifier).start();
+              },
               onOptions: _showTripResults,
             )
           else
@@ -1782,10 +1800,15 @@ class _TopBar extends StatelessWidget {
                         // La marca, no un ícono de catálogo: es la misma que
                         // el ícono de la app, dibujada por el mismo painter.
                         // Sobre el panel claro la carrocería va en el negro de
-                        // marca y los faros en el acento.
-                        const BrandMark(
+                        // marca; sobre el oscuro, en blanco — en negro sobre
+                        // negro quedaban solo los faros flotando, dos puntos
+                        // azules que no se leían como nada.
+                        BrandMark(
                           size: 20,
-                          bodyColor: Brand.black,
+                          bodyColor:
+                              Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Brand.black,
                           accentColor: Brand.accent,
                         ),
                         const SizedBox(width: 8),
@@ -1945,107 +1968,120 @@ class _MapActions extends StatelessWidget {
     // Los botones siguen al panel: si se quedaran fijos, al expandirlo
     // quedarían tapados.
     final bottom = MediaQuery.sizeOf(context).height * sheetExtent + 12;
+    // …pero con el panel subido casi entero no hay mapa al que acompañar, y
+    // siguiéndolo terminaban ENCIMA del encabezado, tapando el crédito de
+    // OpenStreetMap (hallazgo de campo). Ahí se desvanecen; al bajar el panel
+    // vuelven. La mitad de la pantalla es el corte: por arriba de eso el
+    // mapa que queda visible es una franja donde nadie va a tocar "centrar".
+    final crowded = sheetExtent > 0.55;
     return Positioned(
       right: 12,
       bottom: bottom,
-      // AnimatedSize porque los botones aparecen y desaparecen según el
-      // estado (hay recorrido, hay "cerca mío", hay viaje): sin esto la
-      // columna pega saltos y los de abajo se corren de golpe justo cuando
-      // el dedo va hacia ellos.
-      child: AnimatedSize(
-        duration: Motion.base,
-        curve: Motion.curve,
-        alignment: Alignment.bottomRight,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            _PopIn(
-              visible: onFollowGuidance != null,
-              child: FloatingActionButton.small(
-                heroTag: 'follow-guidance',
-                tooltip: 'Volver a seguirte',
-                onPressed: onFollowGuidance,
-                child: const Icon(Icons.near_me),
-              ),
-            ),
-            _PopIn(
-              visible: onShareTrip != null,
-              child: FloatingActionButton.small(
-                heroTag: 'share-trip',
-                tooltip: 'Compartir mi viaje',
-                onPressed: onShareTrip,
-                child: const Icon(Icons.ios_share),
-              ),
-            ),
-            // "Iniciar viaje" ya NO vive acá: como acción final de todo el
-            // recorrido de la app se mudó al panel del viaje elegido
-            // (_SelectedTripPanel), grande y abajo al medio — un botón chico
-            // a un costado en ese momento se leía como que faltaba algo.
-            _PopIn(
-              visible: showFitRoute,
-              child: FloatingActionButton.small(
-                heroTag: 'fit-route',
-                tooltip: 'Encuadrar el recorrido',
-                onPressed: onFitRoute,
-                child: const Icon(Icons.crop_free),
-              ),
-            ),
-            _PopIn(
-              visible: showClearNearby,
-              child: FloatingActionButton.small(
-                heroTag: 'nearby-list',
-                tooltip: 'Ver la lista de paradas cercanas',
-                onPressed: onShowNearbyList,
-                child: const Icon(Icons.format_list_bulleted),
-              ),
-            ),
-            _PopIn(
-              visible: showClearNearby,
-              child: FloatingActionButton.small(
-                heroTag: 'clear-nearby',
-                tooltip: 'Ocultar paradas cercanas',
-                onPressed: onClearNearby,
-                child: const Icon(Icons.location_off),
-              ),
-            ),
-            FloatingActionButton.small(
-              heroTag: 'locate',
-              tooltip: 'Paradas cerca mío',
-              onPressed: locating ? null : onLocate,
-              // AnimatedSwitcher y no un if: el ícono se cambia por la
-              // ruedita y al volver, sin el parpadeo de reemplazar el hijo.
-              child: AnimatedSwitcher(
-                duration: Motion.quick,
-                child: locating
-                    ? const SizedBox(
-                        key: ValueKey('locating'),
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2.5),
-                      )
-                    : const Icon(Icons.my_location, key: ValueKey('idle')),
-              ),
-            ),
-            // "¿Cómo llego?" ya NO vive acá: subió al panel de abajo, que es
-            // donde se hace la pregunta (ver `_DestinationCta`). Lo único que
-            // queda es la salida del modo, y solo mientras el modo está
-            // activo — un botón para salir de algo en lo que no estás es
-            // ruido en la pantalla más cargada de la app.
-            _PopIn(
-              visible: showTrip,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: FloatingActionButton.extended(
-                  heroTag: 'trip',
-                  tooltip: 'Salir de "cómo llego"',
-                  onPressed: onClearTrip,
-                  icon: const Icon(Icons.close),
-                  label: const Text('Salir'),
+      child: IgnorePointer(
+        ignoring: crowded,
+        child: AnimatedOpacity(
+          duration: Motion.quick,
+          opacity: crowded ? 0 : 1,
+          // AnimatedSize porque los botones aparecen y desaparecen según el
+          // estado (hay recorrido, hay "cerca mío", hay viaje): sin esto la
+          // columna pega saltos y los de abajo se corren de golpe justo cuando
+          // el dedo va hacia ellos.
+          child: AnimatedSize(
+            duration: Motion.base,
+            curve: Motion.curve,
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _PopIn(
+                  visible: onFollowGuidance != null,
+                  child: FloatingActionButton.small(
+                    heroTag: 'follow-guidance',
+                    tooltip: 'Volver a seguirte',
+                    onPressed: onFollowGuidance,
+                    child: const Icon(Icons.near_me),
+                  ),
                 ),
-              ),
+                _PopIn(
+                  visible: onShareTrip != null,
+                  child: FloatingActionButton.small(
+                    heroTag: 'share-trip',
+                    tooltip: 'Compartir mi viaje',
+                    onPressed: onShareTrip,
+                    child: const Icon(Icons.ios_share),
+                  ),
+                ),
+                // "Iniciar viaje" ya NO vive acá: como acción final de todo el
+                // recorrido de la app se mudó al panel del viaje elegido
+                // (_SelectedTripPanel), grande y abajo al medio — un botón chico
+                // a un costado en ese momento se leía como que faltaba algo.
+                _PopIn(
+                  visible: showFitRoute,
+                  child: FloatingActionButton.small(
+                    heroTag: 'fit-route',
+                    tooltip: 'Encuadrar el recorrido',
+                    onPressed: onFitRoute,
+                    child: const Icon(Icons.crop_free),
+                  ),
+                ),
+                _PopIn(
+                  visible: showClearNearby,
+                  child: FloatingActionButton.small(
+                    heroTag: 'nearby-list',
+                    tooltip: 'Ver la lista de paradas cercanas',
+                    onPressed: onShowNearbyList,
+                    child: const Icon(Icons.format_list_bulleted),
+                  ),
+                ),
+                _PopIn(
+                  visible: showClearNearby,
+                  child: FloatingActionButton.small(
+                    heroTag: 'clear-nearby',
+                    tooltip: 'Ocultar paradas cercanas',
+                    onPressed: onClearNearby,
+                    child: const Icon(Icons.location_off),
+                  ),
+                ),
+                FloatingActionButton.small(
+                  heroTag: 'locate',
+                  tooltip: 'Paradas cerca mío',
+                  onPressed: locating ? null : onLocate,
+                  // AnimatedSwitcher y no un if: el ícono se cambia por la
+                  // ruedita y al volver, sin el parpadeo de reemplazar el hijo.
+                  child: AnimatedSwitcher(
+                    duration: Motion.quick,
+                    child: locating
+                        ? const SizedBox(
+                            key: ValueKey('locating'),
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2.5),
+                          )
+                        : const Icon(Icons.my_location, key: ValueKey('idle')),
+                  ),
+                ),
+                // "¿Cómo llego?" ya NO vive acá: subió al panel de abajo, que es
+                // donde se hace la pregunta (ver `_DestinationCta`). Lo único que
+                // queda es la salida del modo, y solo mientras el modo está
+                // activo — un botón para salir de algo en lo que no estás es
+                // ruido en la pantalla más cargada de la app.
+                _PopIn(
+                  visible: showTrip,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: FloatingActionButton.extended(
+                      heroTag: 'trip',
+                      tooltip: 'Salir de "cómo llego"',
+                      onPressed: onClearTrip,
+                      icon: const Icon(Icons.close),
+                      label: const Text('Salir'),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -83,6 +83,21 @@ void main() {
       );
     });
 
+    test(
+      'con la parada ENTRE dos vértices, el dibujo arranca en la parada',
+      () {
+        // El hallazgo de campo: una avenida recta tiene vértices cada varias
+        // cuadras, y cortando en el vértice más cercano el tramo arrancaba
+        // cuadras antes de la parada. Acá la subida cae a mitad de camino
+        // entre el vértice 2 y el 3, y la bajada entre el 5 y el 6.
+        final result = segment(-58.975, -58.945);
+        expect(result.first.longitude, closeTo(-58.975, 0.0001));
+        expect(result.last.longitude, closeTo(-58.945, 0.0001));
+        // Punta, los vértices 3, 4 y 5 del medio, y punta.
+        expect(result, hasLength(5));
+      },
+    );
+
     test('las puntas del tramo son las paradas, no el final de la línea', () {
       // Es la garantía que hace que el dibujo se lea como un camino: empieza
       // donde subís y termina donde bajás.

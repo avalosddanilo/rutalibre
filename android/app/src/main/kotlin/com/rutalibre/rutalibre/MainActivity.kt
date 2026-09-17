@@ -50,6 +50,20 @@ class MainActivity : FlutterActivity() {
                     }
                     result.success(null)
                 }
+                "chime" -> {
+                    // El "arrancó el viaje": el sonido de NOTIFICACIÓN del
+                    // sistema, una sola vez. A propósito no es el canal de
+                    // alarmas: un aviso de que algo empezó tiene que
+                    // respetar el modo silencio — solo la alarma lo atraviesa.
+                    try {
+                        val uri =
+                            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                        RingtoneManager.getRingtone(this, uri)?.play()
+                    } catch (_: Exception) {
+                        // Sin sonido, la vibración del lado de Dart avisa igual.
+                    }
+                    result.success(null)
+                }
                 "silence" -> {
                     try {
                         alarmPlayer?.stop()

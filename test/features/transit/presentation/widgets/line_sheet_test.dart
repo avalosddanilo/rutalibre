@@ -164,6 +164,42 @@ void main() {
     );
   });
 
+  testWidgets('con la letra al 200% el nombre de la red no se parte letra por '
+      'letra', (tester) async {
+    // El hallazgo de campo, en el teléfono de una persona que agranda la
+    // letra para poder leer: el precio con su fecha ocupaba el renglón y el
+    // nombre quedaba en tres letras de ancho — "GRA / N RE / SIST / ENC / IA".
+    tester.view
+      ..physicalSize = const Size(360 * 3, 800 * 3)
+      ..devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: _container(repo, prefs),
+        child: MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(2)),
+            child: child!,
+          ),
+          home: const Scaffold(body: Stack(children: [LineSheet()])),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final name = find.text('GRAN RESISTENCIA');
+    expect(name, findsOneWidget);
+    // El nombre tiene el renglón entero para él, y a lo sumo se parte por
+    // PALABRA ("GRAN / RESISTENCIA": dos renglones de 32 px). Con el bug
+    // medía 480 px de alto: quince renglones de tres letras.
+    final size = tester.getSize(name);
+    expect(size.width, greaterThan(200));
+    expect(size.height, lessThanOrEqualTo(64));
+  });
+
   testWidgets('el buscador filtra por número de línea', (tester) async {
     await tester.pumpWidget(_app(_container(repo, prefs)));
     await tester.pumpAndSettle();

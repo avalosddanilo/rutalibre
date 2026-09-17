@@ -11,6 +11,9 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 ### Mapa y recorridos
 
 - Mapa de OpenStreetMap con el crédito de la licencia ODbL siempre visible.
+- **Modo oscuro de verdad, mapa incluido**: con el teléfono en modo oscuro,
+  también las calles se oscurecen —los mismos tiles de OSM invertidos—, así
+  que el mapa no encandila de noche en la parada.
 - **Las paradas se ven de entrada**, sin pedir el GPS ni elegir una línea: el
   mapa nunca arranca vacío.
 - Trazado de cada recorrido con halo blanco, para que se lea sobre calles
@@ -102,7 +105,13 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   botón lo vuelve a prender. Cada viaje nuevo arranca siguiendo: haber
   corrido la cámara en un viaje no es una preferencia para el siguiente.
 - El mapa dibuja **el camino que hacés vos**, recortado entre la parada donde
-  subís y la donde bajás, no el recorrido entero de la línea.
+  subís y la donde bajás, no el recorrido entero de la línea. El corte es en la
+  parada exacta, proyectada sobre el trazado: en una avenida recta los
+  vértices del mapa están a cuadras entre sí, y cortar en el más cercano
+  hacía que la línea arrancara antes de la parada.
+- **Iniciar viaje suena y vibra**: un "ding" corto con el sonido de
+  notificación del teléfono —que respeta el modo silencio— para saber que el
+  botón agarró antes de guardar el teléfono.
 - Al elegir el destino el mapa **se acerca a él** antes de ofrecer los viajes:
   uno eligió un nombre de una lista, y verlo en su cuadra es lo que confirma
   que era ese.

@@ -30,6 +30,11 @@ abstract interface class WakeAlarmGear {
 
   /// Silencio.
   Future<void> silence();
+
+  /// Un "ding" corto al arrancar un viaje, con el sonido de notificación del
+  /// sistema. Al revés que [ring], respeta el modo silencio: avisar que algo
+  /// empezó no justifica sonar en una reunión.
+  Future<void> chime();
 }
 
 /// La implementación real: `wakelock_plus` para la pantalla y un canal
@@ -80,6 +85,15 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
       await _channel.invokeMethod<void>('silence');
     } on Object {
       // Si no llegó a sonar, no hay nada que parar.
+    }
+  }
+
+  @override
+  Future<void> chime() async {
+    try {
+      await _channel.invokeMethod<void>('chime');
+    } on Object {
+      // Sin sonido el viaje arranca igual; la vibración ya avisó.
     }
   }
 }

@@ -18,6 +18,8 @@ final class FakeWakeAlarmGear implements WakeAlarmGear {
   Future<void> ring() async => calls.add('ring');
   @override
   Future<void> silence() async => calls.add('silence');
+  @override
+  Future<void> chime() async => calls.add('chime');
 }
 
 void main() {
