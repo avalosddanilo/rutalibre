@@ -217,8 +217,12 @@ viaje") y `07-cartel-chofer` (el número gigante).
 Lo que corresponde declarar, según lo que la app hace de verdad:
 
 - **¿Recolecta datos?** → *La app recolecta ubicación aproximada y precisa.*
-- **¿Se transmiten a terceros?** → **Sí** (las coordenadas van a la base para
-  resolver la consulta).
+- **¿Se comparten?** → **No.** Las coordenadas van a Supabase (planificar el
+  viaje, paradas cercanas) y, redondeadas a ~1 km, a Open-Meteo (lluvia). Los
+  dos son servicios que la app usa para funcionar, y la definición de Google
+  excluye a esos proveedores de "compartir". Sí cuenta como **recopilar**.
+- **¿Se procesan de forma efímera?** → **Sí.**
+- **¿Encriptados en tránsito?** → **Sí** (todo por HTTPS).
 - **¿Se almacenan?** → **No.** Las coordenadas se usan para resolver la
   consulta y no se guardan ni se asocian a una identidad.
 - **¿Es obligatoria?** → **No.** La app funciona sin el permiso.
