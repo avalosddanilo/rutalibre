@@ -11,7 +11,7 @@ No se probó en un dispositivo ni se atacó la base real.
 | Severidad | Hallazgos |
 |---|---|
 | 🔴 Alta | 0 |
-| 🟠 Media | 2 — las dos requieren verificación en el dashboard |
+| 🟠 Media | 1 — cuota (S4); S2 quedó verificado el 2026-09-18 |
 | 🟡 Baja | 1 — sin caché persistente de tiles |
 | ⚪ Informativo | 3 |
 | ✅ Corregido | 4 |
@@ -64,7 +64,7 @@ por completo. No está en el repo y no tiene que estar nunca en la app.
 > `"role"`. Tiene que decir `anon`. Si dice `service_role`, hay que rotarla
 > **ya** desde Supabase → Settings → API.
 
-## 🟠 S2 — Superficie de ataque de Supabase: el código está bien, falta confirmarlo en el dashboard
+## ✅ S2 — Superficie de ataque de Supabase: verificado en el dashboard (2026-09-18)
 
 ### Qué puede hacer alguien con la anon key
 
@@ -94,12 +94,29 @@ Verificado leyendo las migraciones:
 - La migración 0007 le pone `set search_path = public` a todas las funciones
   propias (CVE-2018-1058).
 
-### ⚠️ Por qué esto igual es un hallazgo, y no un ✅
+### Por qué hacía falta verificarlo, y qué se verificó
 
 **Las migraciones se corren A MANO en el editor de Supabase.** El repo dice
 cuál es la intención; no prueba cuál es el estado real de la base. Una
 migración salteada, una policy tocada desde la UI o una tabla creada a mano
 después no aparecerían acá.
+
+**Corrido el 2026-09-18, las 5 verificaciones dieron lo esperado.** La que
+prueba algo de verdad es la 4, porque no mira la configuración sino el
+comportamiento: el `INSERT` con la anon key contra `stops` devolvió
+
+```
+HTTP 401
+{"code":"42501", ... "message":"new row violates row-level security policy for table \"stops\""}
+```
+
+que es exactamente lo que tiene que pasar. Las otras tres confirmaron RLS
+activo en las 6 tablas, las 6 policies en `SELECT` y ninguna función propia
+en `security definer`.
+
+**Esto vence.** Cada migración nueva corrida a mano puede cambiar el estado,
+así que la verificación se repite después de tocar el esquema, no una vez
+para siempre.
 
 ### Checklist para verificar en el dashboard
 
@@ -403,11 +420,15 @@ externa: [OSV-Scanner](https://google.github.io/osv-scanner/) lee
 
 **Antes de publicar**
 
-1. Correr las **5 verificaciones del dashboard** de S2. La número 4 —intentar
-   el `INSERT`— es la única que prueba algo de verdad.
-2. Confirmar que la clave del `env.json` tiene `"role": "anon"`.
+1. ~~Correr las **5 verificaciones del dashboard** de S2.~~ **Hecho el
+   2026-09-18**: las cinco dieron lo esperado, incluida la número 4, que es
+   la única que prueba algo de verdad (el `INSERT` con la anon key rebotó
+   con `42501`).
+2. ~~Confirmar que la clave del `env.json` tiene `"role": "anon"`.~~ Hecho:
+   es la que usa la prueba de arriba.
 3. Dejar puesta la **alerta de uso** de Supabase (S4, punto 1). Es un minuto
    y es lo único que avisa de un abuso antes de que llegue el resumen.
+   **Es lo único que queda antes de publicar.**
 
 **Cuando haya tráfico real**
 

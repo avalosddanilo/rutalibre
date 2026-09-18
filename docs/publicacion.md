@@ -296,8 +296,9 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
 - [x] Transbordo de `plan_trip` verificado contra la base real: 124 transbordos
       auditados, 0 rotos (`dart run tools/verify_transfers.dart`, 2026-08-25)
 - [x] Migración `0010` corrida en el Dashboard (2026-08-25)
-- [ ] Verificaciones de RLS en el dashboard de Supabase *(vos)* — las 5 de
-      [`auditoria-seguridad.md`](auditoria-seguridad.md), S2
+- [x] Verificaciones de RLS en el dashboard de Supabase (2026-09-18) — las 5
+      de [`auditoria-seguridad.md`](auditoria-seguridad.md), S2. El `INSERT`
+      con la anon key rebota con `42501`, que es la que prueba algo
 - [ ] Alerta de uso de Supabase al 50% y 80% *(vos)* — S4 de la misma
       auditoría. Es lo único que avisa de un abuso de cuota antes de que
       llegue el resumen de la tarjeta
