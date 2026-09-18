@@ -207,7 +207,9 @@ funciones):
 
 - **Reseñas**: contestar TODAS desde Play Console, las malas primero, con
   la misma voz honesta ("tenés razón, no está; está pedido/anotado"). Una
-  mala reseña bien contestada suma más que una buena.
+  mala reseña bien contestada suma más que una buena. Los textos ya están
+  escritos en [`resenas.md`](resenas.md), incluidas las cinco que seguro van
+  a llegar.
 - **Métricas**, dos veces por semana y no más: instalaciones (Play),
   cierres inesperados (vitals), uso de Supabase (con las alertas al 50/80%
   puestas). Los umbrales y qué hacer si se acercan: `operaciones.md`.
