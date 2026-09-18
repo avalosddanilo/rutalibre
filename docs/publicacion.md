@@ -299,6 +299,7 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
 - [x] Verificaciones de RLS en el dashboard de Supabase (2026-09-18) — las 5
       de [`auditoria-seguridad.md`](auditoria-seguridad.md), S2. El `INSERT`
       con la anon key rebota con `42501`, que es la que prueba algo
-- [ ] Alerta de uso de Supabase al 50% y 80% *(vos)* — S4 de la misma
-      auditoría. Es lo único que avisa de un abuso de cuota antes de que
-      llegue el resumen de la tarjeta
+- [ ] Mail de facturación de la organización de Supabase, verificado *(vos)*
+      — S4. La alerta al 50/80% **no existe en el plan Free** (comprobado el
+      2026-09-18): el único aviso es un mail a esa dirección cuando ya te
+      pasaste de la cuota. Mirar el Egress en *Usage* → **All Projects**

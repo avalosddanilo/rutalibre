@@ -136,10 +136,30 @@ mes, y una instancia chica de cómputo. Cómo gasta la app:
   planifica no consulta cada segundo, consulta una vez por viaje.
 
 Traducido: **para el lanzamiento y los primeros miles de usuarios, el plan
-gratis alcanza y sobra.** Las alertas de uso al 50% y 80% (Dashboard →
-Settings → Usage) avisan con tiempo; si algún mes explota de usuarios, el
-plan Pro (US$25/mes) multiplica todos los límites — y ese sería un gran
-problema para tener.
+gratis alcanza y sobra.** Si algún mes explota de usuarios, el plan Pro
+(US$25/mes) multiplica todos los límites — y ese sería un gran problema para
+tener.
+
+**Ojo con las alertas: en el plan Free NO se pueden configurar.** El Spend
+Cap es del plan Pro, y los avisos por porcentaje no existen. Lo que hace
+Supabase en Free es mandar un mail a la **dirección de facturación** cuando
+ya te pasaste de la cuota, y meter el proyecto en un período de gracia — o
+sea, te enterás tarde, no con tiempo. Verificado contra la documentación el
+2026-09-18.
+
+Con lo cual, el control de uso en Free es a mano y son tres cosas:
+
+1. **Que el mail de facturación de la organización sea uno que leas.**
+   Es la única notificación que existe.
+2. **Mirar el Egress** en Dashboard → *Usage*, con el filtro en **All
+   Projects** (con el filtro en un proyecto no te muestra la cuota, solo el
+   consumo de ese proyecto).
+3. **Saber el presupuesto**: la cuota de egress en Free es de **5 GB por
+   mes**, y la consulta cara, `get_all_stops`, pesa ~267 KB por respuesta.
+   Eso da **~19.600 descargas completas de datos por mes**. Como la app es
+   cache-first, una instalación descarga una vez y después casi no vuelve:
+   para los primeros miles de usuarios sobra, y si un día no sobra, es
+   porque la app explotó.
 
 Lo que NO existe y por eso no gasta: colectivos en tiempo real. El día que
 exista esa fuente de datos, el diseño cambia (websockets/polling) y hay que

@@ -204,10 +204,22 @@ verificar. Queda anotado acá como **pendiente de configuración**.
 
 ### Qué hay que dejar configurado — **lo hacés vos, en el dashboard**
 
-**1. Alerta de uso.** Es lo primero porque es lo que avisa antes de que
-duela. Supabase → *Settings → Billing → Usage* (o *Reports*): poner una
-alerta al **50% y al 80%** de la transferencia mensual del plan. Sin esto,
-el primero en enterarse de un abuso es el resumen de la tarjeta.
+**1. Vigilancia de uso.** ⚠️ **Corregido el 2026-09-18**: la recomendación
+original decía "poner una alerta al 50% y 80%", y **eso no se puede hacer en
+el plan Free**. El Spend Cap es del plan Pro y los avisos por porcentaje no
+existen; en Free, Supabase manda un mail a la dirección de facturación
+cuando ya te pasaste, y mete el proyecto en un período de gracia. Tampoco
+hay factura sorpresa: en Free no se cobra el excedente, se restringe el
+servicio.
+
+Lo que sí se puede hacer, y es lo que reemplaza a la alerta:
+
+- Que el **mail de facturación** de la organización sea uno que leas.
+- Mirar el **Egress** en *Usage*, con el filtro en **All Projects** — con el
+  filtro puesto en un proyecto, el dashboard no muestra la cuota.
+- Tener el número en la cabeza: **5 GB/mes** de egress en Free contra los
+  ~267 KB de `get_all_stops` son **~19.600 descargas completas por mes**, y
+  la app es cache-first (una descarga por instalación, no por uso).
 
 **2. Rate limiting.** Supabase → *Authentication → Rate Limits* cubre auth,
 que la app no usa. Para la API de datos el control real está en el **plan** y
