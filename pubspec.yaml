@@ -98,7 +98,7 @@ flutter:
     - assets/places.json
     # Las alturas (números de puerta por calle, de OSM). El asset más pesado
     # de la app, y por eso va aparte: se carga solo cuando alguien escribe
-    # una altura ("San Juan 5240") — quien nunca lo hace, nunca lo paga.
+    # una altura ("9 de Julio 1260") — quien nunca lo hace, nunca lo paga.
     - assets/addresses.json
 
   fonts:

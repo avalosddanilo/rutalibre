@@ -18,7 +18,7 @@ class AddressPoint extends Equatable {
 
 /// Los números de puerta mapeados de UNA calle en UNA localidad.
 ///
-/// **Existe porque "San Juan 5240" es como la gente dice su casa** — y el
+/// **Existe porque "9 de Julio 1260" es como la gente dice su casa** — y el
 /// área tiene ~58.000 direcciones con número en OpenStreetMap (importes
 /// catastrales), así que la app puede caer en la cuadra real sin inventar.
 /// La localidad separa homónimas: el 5240 de la San Juan de Barranqueras no

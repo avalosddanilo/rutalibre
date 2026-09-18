@@ -235,7 +235,7 @@ const _carruseles = <String, List<_Slide>>{
     _Slide.captura(
       'Ahora escribís la dirección con el número.',
       '02-buscador-altura.png',
-      cuerpo: '«San Juan 5240» cae en la cuadra real.',
+      cuerpo: '«9 de Julio 1260» cae en la cuadra real.',
       alineacion: -0.55,
     ),
     _Slide.numero(
@@ -247,7 +247,7 @@ const _carruseles = <String, List<_Slide>>{
       cuerpo: 'Te ofrece el más cercano [[con su número]], y te avisa.',
     ),
     _Slide(
-      'Disfrazar el 5249 de 5240 sería mentirte la dirección.',
+      'Disfrazar el 1260 de 1250 sería mentirte la dirección.',
       cuerpo: 'E interpolarla sería inventarla.',
       fondo: _Fondo.azul,
     ),

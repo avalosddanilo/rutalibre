@@ -274,7 +274,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
       limit: _maxResults,
     );
 
-    // "Calle + altura" ("San Juan 5240"). Primero las ALTURAS mapeadas: el
+    // "Calle + altura" ("9 de Julio 1260"). Primero las ALTURAS mapeadas: el
     // área tiene ~58.000 números de puerta en OpenStreetMap, así que el 5240
     // —o su vecino más cercano— puede ser un punto DE VERDAD. Después, el
     // reintento sin el número: la calle entera y las esquinas, para afinar a

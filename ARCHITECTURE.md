@@ -101,7 +101,7 @@ instantánea, UX limpia sin publicidad, arquitectura impecable.
   cambia seguido y por eso está en código con su fecha**, que es un problema
   distinto con otra solución.
 - **Las CALLES son entradas del buscador, rotuladas por localidad; los
-  números de puerta NO existen en los datos.** "San Juan 5240, Barranqueras"
+  números de puerta NO existen en los datos.** "9 de Julio 1260, Resistencia"
   no aparecía: las paradas nombran esquinas y en Barranqueras ninguna se
   llama San Juan. Ahora la calle es una entrada propia ("San Juan
   (Barranqueras)", `PlaceKind.calle`, armada en `tools/src/street_import.dart`

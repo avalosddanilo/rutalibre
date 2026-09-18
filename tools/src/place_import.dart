@@ -18,7 +18,7 @@ enum PlaceKind {
   iglesia,
 
   /// Una calle con nombre. No sale de un tag como los demás: la arma
-  /// `street_import.dart` desde los ways de OSM, para que "San Juan 5240"
+  /// `street_import.dart` desde los ways de OSM, para que "9 de Julio 1260"
   /// encuentre la calle aunque ninguna parada se llame así.
   calle,
   otro,

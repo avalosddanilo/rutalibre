@@ -54,9 +54,10 @@ de la tuya, suena el tono de alarma del teléfono —aunque esté en silencio—
 vibra hasta que la apagues. Para el que viaja cansado, que somos todos.
 
 BUSCÁ POR LUGAR, POR CALLE O POR DIRECCIÓN
-El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís "San Juan
-5240" y cae en la cuadra real. Miles de lugares, calles y números de puerta
-vienen adentro de la app, así que se buscan sin señal desde que la instalás.
+El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís "9 de
+Julio 1260" y cae en la cuadra real. Miles de lugares, calles y números de
+puerta vienen adentro de la app, así que se buscan sin señal desde que la
+instalás.
 
 EL MAPA
 Las paradas se ven de entrada, sin pedirte el GPS ni obligarte a elegir una
@@ -116,7 +117,7 @@ Hecha en Resistencia, Chaco.
 Primera versión.
 
 Mapa con las paradas visibles de entrada, buscador por lugar, calle y
-dirección con altura ("San Juan 5240"), "¿cómo llego?" con transbordos, guía
+dirección con altura ("9 de Julio 1260"), "¿cómo llego?" con transbordos, guía
 paso a paso con contador de paradas en vivo y alarma para no quedarte
 dormido. Tarifas con fecha y fuente. Horarios del 904A y frecuencia regulada
 del 904.

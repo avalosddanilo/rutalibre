@@ -11,7 +11,7 @@ Corrientes capital. Rápida, limpia y sin publicidad.
 - **Buscador** de líneas por número, barrio o **destino** (ignora tildes)
 - **Buscá por LUGAR, por CALLE o por DIRECCIÓN con altura**: el hospital, la
   escuela, la plaza — ~2600 lugares, ~2900 calles con su localidad y
-  **~58.000 números de puerta** de OpenStreetMap: "San Juan 5240" cae en la
+  **~58.000 números de puerta** de OpenStreetMap: "9 de Julio 1260" cae en la
   cuadra real, sin señal y sin saber la esquina
 - **"¿Cómo llego?"**: de dónde estás a dónde vas, con directos y un transbordo.
   El origen sale del GPS o **se elige a mano**, así que también sirve para

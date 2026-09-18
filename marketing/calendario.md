@@ -57,7 +57,7 @@ esta etapa funciona sin la app publicada.
 | 4 | IG stories | Caja de preguntas: "¿A dónde no sabés cómo llegar?" |
 | 5 | TikTok | **T4** — "Lo que mi app NO hace" |
 | 6 | IG | **C8** — "El mapa es de todos" |
-| 8 | IG | **C4** — "San Juan 5240" |
+| 8 | IG | **C4** — "Tu casa tiene altura" |
 | 9 | TikTok | **T2** — POV: no sos de acá |
 | 10 | IG | **P1** — "Preferimos decir no sabemos" |
 | 12 | IG | **C3** — La alarma ⭐ |
@@ -92,7 +92,8 @@ después la prensa — así cuando la prensa mire, ya hay gente usándola.
 
 **Adaptar el texto por grupo** (esto es lo que evita que los admins lo borren
 por spam):
-- Grupos de Barranqueras y de barrios → arrancar por **"San Juan 5240"** (C4)
+- Grupos de Barranqueras y de barrios → arrancar por **la dirección con
+  altura** (C4)
 - Grupos de la UNNE y estudiantes → arrancar por el **904 al Campus** y la
   tarifa (C7)
 - Grupos de noticias y vecinos → arrancar por **la alarma** (C3)

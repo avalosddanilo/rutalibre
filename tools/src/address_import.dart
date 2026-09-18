@@ -38,7 +38,7 @@ typedef AddressImportResult = ({
 ///
 /// **Existe porque "¿o eso es re exhaustivo?" tenía respuesta: no.** El área
 /// tiene ~58.000 direcciones con número mapeadas (importes catastrales a
-/// OSM), así que "San Juan 5240" puede caer en la cuadra REAL sin inventar
+/// OSM), así que "9 de Julio 1260" puede caer en la cuadra REAL sin inventar
 /// nada — que era la única razón para no hacerlo. Donde el número exacto no
 /// está, el buscador ofrece el mapeado más cercano Y LO DICE; interpolar
 /// entre dos números sería volver a inventar.

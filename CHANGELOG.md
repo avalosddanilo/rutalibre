@@ -41,7 +41,7 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   son la misma calle (~2900 calles de OSM en el mismo asset de lugares).
   Elegir una como destino no adivina el punto: el mapa vuela a la calle y el
   lugar exacto lo marcás vos tocando.
-- **Las ALTURAS también: "San Juan 5240" cae en la cuadra real.** El área
+- **Las ALTURAS también: "9 de Julio 1260" cae en la cuadra real.** El área
   tiene ~58.000 números de puerta mapeados en OpenStreetMap (importes
   catastrales) y la app los trae en su propio asset — que se carga recién
   cuando alguien escribe un número: quien nunca lo hace, nunca lo paga. Si

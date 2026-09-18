@@ -39,7 +39,7 @@ Es **pantalla grabada** del flujo entero, sin actores y sin salir a la calle.
 | Tiempo | Pantalla | Texto en pantalla | Voz |
 |---|---|---|---|
 | 0-3 s | El mapa abierto, lleno de paradas | **una app de colectivos para Resistencia y Corrientes** | "Hice una app de colectivos para Resistencia y Corrientes." |
-| 3-9 s | Se toca "¿A dónde vas?" y se escribe **San Juan 5240** | **buscás tu casa con la altura** | "Buscás tu casa con la altura, no una esquina." |
+| 3-9 s | Se toca "¿A dónde vas?" y se escribe **9 de julio 1250** | **buscás tu casa con la altura** | "Buscás tu casa con la altura, no una esquina." |
 | 9-15 s | La lista de viajes: "6 líneas te llevan directo" | **te dice qué colectivo tomar** | "Y te dice qué colectivo tomar, dónde subir y dónde bajarte." |
 | 15-21 s | El recorrido dibujado, se toca **Iniciar viaje** | | "Iniciás el viaje y te lleva paso a paso." |
 | 21-27 s | La guía: "Caminá hasta…", después "Tomá la 2" | **un paso por pantalla** | "Un paso por pantalla, grande, para leerlo parado en la vereda." |
@@ -57,6 +57,9 @@ cuenta #Resistencia #Chaco #Corrientes #Colectivos
 > muertos en CapCut, no acelerar: un flujo acelerado no se entiende.
 > **Que se vea el crédito de OpenStreetMap** en el mapa: es obligación de la
 > licencia y además es la mejor parte de la historia.
+> **Grabalo lejos de tu casa y no busques tu dirección**: durante la guía el
+> punto azul del mapa muestra dónde estás de verdad, y el video lo va a ver
+> todo el mundo. El ejemplo del buscador es "9 de julio 1250".
 
 ---
 

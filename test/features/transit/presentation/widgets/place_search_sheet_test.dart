@@ -209,10 +209,10 @@ void main() {
   });
 
   group('alturas mapeadas', () {
-    // La casa real detrás de todo esto: San Juan 5240, Barranqueras. El área
-    // tiene ~58.000 números de puerta en OSM, así que la altura puede caer
-    // en la cuadra REAL — y donde el número justo no está, se ofrece el
-    // mapeado más cercano y SE DICE.
+    // El caso que motivó todo esto: una casa con altura, en una calle que se
+    // repite en dos localidades. El área tiene ~58.000 números de puerta en
+    // OSM, así que la altura puede caer en la cuadra REAL — y donde el número
+    // justo no está, se ofrece el mapeado más cercano y SE DICE.
     const sanJuan = StreetAddresses(
       street: 'San Juan',
       locality: 'Barranqueras',

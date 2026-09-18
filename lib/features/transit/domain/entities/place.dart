@@ -16,11 +16,11 @@ enum PlaceKind {
   iglesia,
 
   /// Una calle con nombre. Existe porque la gente TAMBIÉN piensa en calles
-  /// ("San Juan 5240") y los datos de paradas solo nombran esquinas: sin
+  /// ("9 de Julio 1260") y los datos de paradas solo nombran esquinas: sin
   /// esto, quien buscaba su propia calle veía "nada coincide".
   calle,
 
-  /// Una dirección con altura ("San Juan 5240"). NUNCA viene en el asset:
+  /// Una dirección con altura ("9 de Julio 1260"). NUNCA viene en el asset:
   /// la sintetiza el buscador cruzando la consulta con las alturas de
   /// `assets/addresses.json` (ver `address_search.dart`).
   direccion,

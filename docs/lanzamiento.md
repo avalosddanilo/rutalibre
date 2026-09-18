@@ -35,8 +35,8 @@ Nada de esta lista puede esperar, porque todo lo demás espera a esto.
 5. **Capturas**: 4 mínimo, del teléfono con la versión final. Las cuatro que
    venden: (a) el mapa con las paradas, (b) "¿cómo llego?" con un viaje
    dibujado, (c) la guía paso a paso con el contador "Faltan 3 paradas",
-   (d) el buscador encontrando "San Juan 5240". Sin datos personales a la
-   vista.
+   (d) el buscador encontrando "9 de Julio 1260". Sin datos personales a la
+   vista — ni tu dirección, ni la ubicación real en el mapa.
 6. **Crear la PRUEBA CERRADA** (Testing → Closed testing), subir el AAB, y
    crear una lista de testers por mail.
 7. **Reclutar 15–20 testers** (12 es el mínimo: llevar margen, porque el que
@@ -72,7 +72,7 @@ vacío):**
 - **Crear el Instagram de la app** (@rutalibre.app o similar): foto = ícono,
   bio = "Colectivos del Gran Resistencia y Corrientes. Gratis, sin
   publicidad. 🚌". Tres posteos preparados en borrador: la presentación, la
-  alarma, el "san juan 5240".
+  alarma, el "9 de julio 1260".
 - **Grabar UN video** de 30–60 segundos con el teléfono: pantalla grabada
   del flujo completo (busco mi casa → elijo el viaje → iniciar → contador →
   alarma sonando). Ese video ES la publicidad: sirve para Instagram, TikTok,
@@ -121,8 +121,9 @@ así cuando la prensa mire, ya hay gente usándola y opinando.
    con el video. Pedirle a los testers que compartan — son 15 personas que
    ya la usan y eso vale más que cualquier aviso.
 3. **Día L+1**: los grupos de Facebook e Instagram locales. Un grupo por
-   vez, con el texto adaptado (en el de Barranqueras, arrancar por "san juan
-   5240"; en el de la UNNE, por el 904 al campus). Nunca el mismo texto
+   vez, con el texto adaptado (en el de Barranqueras, arrancar por la
+   búsqueda por dirección con altura; en el de la UNNE, por el 904 al
+   campus). Nunca el mismo texto
    calcado en todos: huele a spam y los admins lo borran.
 4. **Día L+2**: los medios. El mensaje corto (abajo). Los medios locales
    VIVEN de historias así: pibe de acá hace gratis lo que no existía.
@@ -152,7 +153,7 @@ así cuando la prensa mire, ya hay gente usándola y opinando.
 > Gran Resistencia y Corrientes: mapa de las 1400+ paradas, "¿cómo llego?"
 > con transbordos, guía paso a paso con contador de paradas en vivo, alarma
 > para no quedarse dormido en el colectivo, y buscador por dirección con
-> altura ("San Juan 5240"). La hice solo, con datos abiertos de
+> altura ("9 de Julio 1260"). La hice solo, con datos abiertos de
 > OpenStreetMap y del municipio de Corrientes.
 >
 > Les escribo porque creo que a sus lectores/oyentes les sirve, y porque
@@ -174,10 +175,12 @@ funciones):
 1. *La alarma*: "Me quedé dormido en el colectivo y me desperté quién sabe
    dónde. Le puse una alarma que suena dos paradas antes de la tuya aunque
    el teléfono esté en silencio. La probé yo."
-2. *Las alturas*: "Buscaba mi propia casa —San Juan al 5200, Barranqueras—
-   y la app no la encontraba, porque las paradas se nombran por esquinas.
-   Hoy podés escribir la dirección con altura y cae en la cuadra real,
+2. *Las alturas*: "Buscaba mi propia casa y la app no la encontraba, porque
+   las paradas se nombran por esquinas y nadie piensa su casa como una
+   esquina. Hoy escribís la dirección con altura y cae en la cuadra real,
    gracias a 58.000 direcciones que la comunidad de OpenStreetMap mapeó."
+   **La dirección no se dice.** La historia funciona igual sin el número, y
+   una nota sale publicada con tu nombre al lado.
 
 **Decir siempre**:
 - Gratis, sin publicidad, sin cuenta, funciona sin señal. Nadie rastrea nada.
@@ -197,6 +200,9 @@ funciones):
   datos. Postura: "quiero colaborar, no competir".
 - No dar números de usuarios que no tenés, ni fechas de funciones que no
   empezaste.
+- **No decir tu dirección**, ni al aire ni en una nota ni en un posteo. El
+  ejemplo público es "9 de Julio 1260", una avenida del centro. La historia
+  de "buscaba mi propia casa" se cuenta sin el número.
 
 ## Semana 4 — después del ruido
 

@@ -41,7 +41,7 @@ REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart
 
 El orden de los carruseles no es caprichoso: **C1** es la tesis (lo único que
 no se puede copiar), **C2** presenta el producto, y **C3** (la alarma) y
-**C4** ("San Juan 5240") son las dos historias humanas que el plan de
+**C4** ("Tu casa tiene altura") son las dos historias humanas que el plan de
 lanzamiento manda contar primero.
 
 ## Por qué el arte se dibuja en Dart
