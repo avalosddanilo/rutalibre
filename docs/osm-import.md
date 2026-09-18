@@ -14,9 +14,33 @@ Las alternativas que se evaluaron:
 | Fuente | Estado |
 |---|---|
 | **OpenStreetMap** | ✅ Cobertura completa del Gran Resistencia. Licencia ODbL. **Es la que se usa.** |
-| SITAM / ChacoBus (provincia) | ❌ Apps propietarias, sin API pública ni datos abiertos. |
+| SITAM / ChacoBus (provincia) | ❌ Apps propietarias, sin API pública ni datos abiertos. **Y hace rato que ni siquiera funcionan** — ver abajo. |
 | [Datos abiertos de Corrientes](https://datos.ciudaddecorrientes.gov.ar/dataset?tags=colectivos) | ✅ **Ya integrado** para Corrientes capital (10 líneas, 60 recorridos) con `tools/corrientes_import.dart`. Sin paradas: ese recurso fue dado de baja del portal. ⚠️ **El portal no declara licencia** — ver más abajo. |
 | GTFS nacional | ❌ No existe feed para el Gran Resistencia. |
+
+### El estado real de SITAM (observación de campo, 2026-09-18)
+
+No es solo que SITAM no tenga API: como app **está caída hace un buen rato**.
+Lo que se ve al abrirla:
+
+- **No dibuja los recorridos.** El mapa queda sin trazado.
+- **Tocar una parada no lista ninguna línea.** La pantalla aparece vacía.
+- **No hay GPS de las unidades.** Nunca lo hubo público, y hoy tampoco lo
+  muestra la app oficial.
+
+Es una observación propia, no un anuncio oficial: si mañana vuelve a andar,
+esta nota se corrige con fecha. Pero mientras siga así, sostiene dos cosas
+que ya decíamos:
+
+1. **Depender de OSM no era una preferencia, era la única opción.** La única
+   fuente que no se cae es la que está en el repo.
+2. **"No hay GPS público en la flota" no es una excusa nuestra.** Ni la app
+   de la provincia lo tiene. Por eso no se promete "en vivo" en ningún lado
+   (ver `marketing/estrategia.md` → palabras prohibidas).
+
+Lo que **no** se hace con esto: usarlo como argumento de venta. No se habla
+mal de SITAM en ningún posteo, mail ni respuesta. Que ellos estén caídos no
+nos hace buenos; lo que nos hace buenos es andar.
 
 **Lo que OSM NO tiene: horarios.** Esa es la pieza que solo puede aportar la
 Secretaría de Transporte (ver `docs/propuesta-datos-abiertos.md`).

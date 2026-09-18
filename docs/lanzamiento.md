@@ -93,6 +93,24 @@ adelantó, el buscador no encontraba direcciones y se agregaron 58.000
 alturas, etc.). Aprobado eso, subir el AAB final a **Producción** y mandarlo
 a revisión. La revisión tarda de horas a unos días.
 
+## Un supuesto que conviene tener claro: nadie usa ninguna app
+
+SITAM está caída hace rato (no muestra recorridos, tocar una parada no lista
+líneas, no hay GPS) y, sobre todo, **la gente de acá no usa ninguna app para
+el colectivo**: pregunta. Eso significa que **nadie va a buscar "colectivos
+Resistencia" en Play**, así que la ficha no nos trae usuarios sola. Todo el
+tráfico va a venir de que alguien le pase el enlace a alguien.
+
+Consecuencia práctica para este plan, no para el discurso:
+
+- El video de 30–60 segundos y el enlace de Play son **el** canal. Todo lo
+  demás existe para que circulen.
+- Pedirle a cada tester que se la muestre a UNA persona en vivo, en la
+  parada, con el teléfono en la mano. Vale más que un posteo.
+- A los medios se les cuenta el problema (no existe el dato), nunca "la app
+  oficial no anda": eso convierte la nota en una pelea y nos quema con la
+  Secretaría a la que le pedimos los horarios.
+
 ## La semana del lanzamiento (cuando Play apruebe)
 
 El orden importa: primero lo propio, después los grupos, después la prensa —
