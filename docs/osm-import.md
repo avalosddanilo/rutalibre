@@ -42,6 +42,11 @@ Lo que **no** se hace con esto: usarlo como argumento de venta. No se habla
 mal de SITAM en ningún posteo, mail ni respuesta. Que ellos estén caídos no
 nos hace buenos; lo que nos hace buenos es andar.
 
+**Lo que OSM tiene viejo o incompleto se corrige EN OSM**, no en el repo: lo
+que cuenta la gente sobre recorridos que no coinciden se contrasta y se anota
+en [`aportes-de-campo.md`](aportes-de-campo.md), con el primer caso medido (la
+línea a Colonia Benítez, a la que le falta toda la punta del centro).
+
 **Lo que OSM NO tiene: horarios.** Esa es la pieza que solo puede aportar la
 Secretaría de Transporte (ver `docs/propuesta-datos-abiertos.md`).
 
