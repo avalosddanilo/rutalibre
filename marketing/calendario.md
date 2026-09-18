@@ -39,34 +39,69 @@ para Instagram, TikTok, WhatsApp y para mandarle a los medios. Es la pieza de
 mayor rendimiento de toda la campaña.
 
 El guion está en [`tiktok-guiones.md`](tiktok-guiones.md) como **T0 · El
-video** — pantalla grabada del flujo entero: busco mi casa con la altura →
+video** — pantalla grabada del flujo entero: busco una dirección con altura →
 elijo el viaje → iniciar → el contador bajando → la alarma sonando.
 
 ---
 
 ## Días 1–14 · Mientras corre la prueba cerrada
 
-El objetivo no es vender —todavía no hay link— sino **existir**. Todo lo de
-esta etapa funciona sin la app publicada.
+El objetivo no es vender —todavía no hay link— sino **existir y juntar
+testers**. Todo lo de esta etapa funciona sin la app publicada.
+
+### Las piezas de esta etapa van en `assets/prelanzamiento/`
+
+Son los mismos carruseles con **un solo cambio**: el slide de cierre dice
+`@rutalibre.app` en vez de "Gratis en Google Play". No dice "pronto": la
+imagen de un carrusel publicado no se edita y queda en el perfil para siempre,
+así que lo que vence va en el caption, que sí se edita.
+
+**No subir nada de `assets/` suelto (sin `prelanzamiento/`) hasta que la app
+esté en Play**, salvo los posts P1–P5, que no tienen cierre.
+
+### El orden
 
 | Día | Dónde | Qué |
 |---|---|---|
+| 0 | IG stories | **Story de testers** (`prelanzamiento/story-testers.png`) — repetirla cada 2–3 días hasta tener 15–20 |
+| 1 | IG | **C1** — "Lo que esta app NO hace". Es el que dice qué es la app |
 | 1 | TikTok | **T7** — "Hice una app para los colectivos de mi ciudad" |
-| 1 | IG | **P4** — "Hecha en Resistencia, Chaco" + story presentándose |
-| 3 | IG | **C1** — "Lo que esta app NO hace" |
-| 4 | IG stories | Caja de preguntas: "¿A dónde no sabés cómo llegar?" |
+| 4 | IG | **C4** — "Tu casa tiene altura" |
 | 5 | TikTok | **T4** — "Lo que mi app NO hace" |
-| 6 | IG | **C8** — "El mapa es de todos" |
-| 8 | IG | **C4** — "San Juan 5240" |
+| 6 | IG | **P1** — "Preferimos decir no sabemos" |
+| 8 | IG | **C8** — "El mapa es de todos" · el mismo día que salen los mails institucionales |
 | 9 | TikTok | **T2** — POV: no sos de acá |
-| 10 | IG | **P1** — "Preferimos decir no sabemos" |
 | 12 | IG | **C3** — La alarma ⭐ |
 | 13 | TikTok | **T1** — El cartel para el chofer |
-| 14 | IG stories | Responder la caja de preguntas con viajes armados |
 
+> **C1 va primero y C8 no**: con el perfil casi vacío, el primer carrusel es
+> el que define de qué se trata la cuenta, y C8 habla de OpenStreetMap, no de
+> para qué sirve la app. C8 rinde más cerca de los mails al municipio, cuando
+> el ángulo de datos abiertos es noticia.
+>
 > **C3 (la alarma) va el día 12 y no antes.** Es la pieza más fuerte y
-> conviene que pegue con la cuenta ya andando y cerca del lanzamiento, no en
-> el día 1 con 20 seguidores.
+> conviene que pegue con la cuenta ya andando y cerca del lanzamiento.
+
+### El final de cada caption, mientras la app no salga
+
+Agregarlo abajo de cada caption de esta etapa:
+
+> Sale en Google Play en unas semanas. ¿La querés probar antes? Si tenés
+> Android, mandanos tu Gmail por DM y te sumamos a la prueba.
+
+**El día que salga, editar esos captions** y cambiar ese párrafo por:
+
+> Ya está en Google Play, gratis. Link en la bio.
+
+### La story de testers
+
+Es story y no post a propósito: el pedido dura dos semanas, y un post que
+dice "buscamos testers" quedaría en el perfil para siempre. Guardarla en un
+destacado **"Testers"** mientras dure la prueba, y borrar el destacado cuando
+la app salga.
+
+Cuando se llegue a 12, una story sin diseño que lo diga ("¡ya somos 12, gracias!")
+junta los que faltan para el margen mejor que repetir el pedido.
 
 **En paralelo**, lo que dice `lanzamiento.md`: mandar los dos mails, grabar el
 video, armar la lista de grupos de Facebook y de medios locales. Y hablar con
@@ -92,7 +127,7 @@ después la prensa — así cuando la prensa mire, ya hay gente usándola.
 
 **Adaptar el texto por grupo** (esto es lo que evita que los admins lo borren
 por spam):
-- Grupos de Barranqueras y de barrios → arrancar por **"San Juan 5240"** (C4)
+- Grupos de Barranqueras y de barrios → arrancar por **las alturas**: buscar la casa con el número (C4)
 - Grupos de la UNNE y estudiantes → arrancar por el **904 al Campus** y la
   tarifa (C7)
 - Grupos de noticias y vecinos → arrancar por **la alarma** (C3)

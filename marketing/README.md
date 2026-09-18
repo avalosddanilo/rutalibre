@@ -17,7 +17,8 @@ prueba cerrada de 14 días y los trámites. Acá está qué se publica y cuándo
 | [`tiktok-guiones.md`](tiktok-guiones.md) | Los 9 videos con tiempos, texto en pantalla, voz y notas de rodaje. Sirven igual para Reels. |
 | [`ig-posts-y-stories.md`](ig-posts-y-stories.md) | Los posts sueltos, las stories, la bio, los highlights y las respuestas guardadas. |
 | [`calendario.md`](calendario.md) | Qué se publica cada día, colgado de los 14 días de prueba cerrada. |
-| `assets/` | Las 64 piezas, a 1080 × 1350, listas para subir. |
+| `assets/` | Las piezas para cuando la app esté en Play, a 1080 × 1350. |
+| `assets/prelanzamiento/` | **Lo que se sube ANTES de que salga**: C1, C4, C8 y C3 con un cierre que no dice "Google Play", y la story para juntar testers. |
 | `capturas/` | Las 9 capturas del teléfono, de la versión final. |
 
 ## Lo primero de todo: el video
@@ -27,7 +28,7 @@ para Instagram, TikTok, WhatsApp, el posteo personal y para mandarle a los
 medios. Es la pieza de mayor rendimiento de toda la campaña.
 
 El guion está en [`tiktok-guiones.md`](tiktok-guiones.md) como **T0 · El
-video**: pantalla grabada del flujo entero — busco mi casa con la altura →
+video**: pantalla grabada del flujo entero — busco una dirección con altura →
 elijo el viaje → iniciar → el contador bajando → la alarma sonando.
 
 ## Las piezas
@@ -41,7 +42,7 @@ REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart
 
 El orden de los carruseles no es caprichoso: **C1** es la tesis (lo único que
 no se puede copiar), **C2** presenta el producto, y **C3** (la alarma) y
-**C4** ("San Juan 5240") son las dos historias humanas que el plan de
+**C4** (las alturas) son las dos historias humanas que el plan de
 lanzamiento manda contar primero.
 
 ## Por qué el arte se dibuja en Dart

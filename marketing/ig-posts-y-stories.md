@@ -163,11 +163,13 @@ Para no reescribirlas cada vez.
 > mostrarte un horario inventado.
 
 **"¿Sirve en Corrientes?"**
-> A medias, y te lo decimos de frente: se ven las 254 paradas y qué líneas
-> paran en cada una, pero todavía no se puede armar un viaje adentro de
-> Corrientes capital. El municipio publica 10 de las 22 líneas que circulan, y
-> con media red la respuesta sería adivinada. Ya está pedido. Cruzar el puente
-> desde Resistencia sí funciona.
+> A medias, y te lo decimos de frente. Cruzar el puente desde Resistencia
+> funciona entero. Adentro de Corrientes capital, el municipio publica 10 de
+> las 22 líneas y sin el orden de las paradas, así que no podemos armarte el
+> viaje completo: te llevamos con el colectivo que MÁS te acerca, y para el
+> último tramo te decimos qué línea para cerca de tu destino, avisándote que
+> ese recorrido no está en ningún dato. Donde no hay paradas cargadas, lo
+> decimos. El resto de las líneas ya están pedidas.
 
 **"¿Es gratis? ¿Cuál es el negocio?"**
 > Es gratis y no hay negocio. Sin publicidad, sin cuentas, sin venta de datos.
