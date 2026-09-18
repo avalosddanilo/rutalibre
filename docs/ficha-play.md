@@ -34,8 +34,10 @@ encuentra deja una reseña de una estrella, y con razón.
 Ruta Libre contesta la pregunta con la que uno abre una app de colectivos:
 ¿cómo llego de acá hasta allá?
 
-Es gratuita, no tiene publicidad, no pide que te registres y funciona sin
-señal.
+Te dice qué colectivo tomar, en qué esquina subir y en cuál bajar. Y te
+despierta dos paradas antes de la tuya, por si te dormís.
+
+Gratis, sin publicidad, sin cuenta, y funciona sin señal.
 
 CÓMO LLEGO
 Decís a dónde vas y te dice qué colectivo tomar, en qué esquina subir y en
@@ -49,9 +51,10 @@ siguiéndote y un contador en vivo de cuántas paradas faltan para bajarte. Un
 paso por pantalla, grande, para leerlo parado en la vereda.
 
 PARA NO QUEDARTE DORMIDO
-La alarma "avisame para bajar": la pantalla no se apaga y, dos paradas antes
-de la tuya, suena el tono de alarma del teléfono —aunque esté en silencio— y
-vibra hasta que la apagues. Para el que viaja cansado, que somos todos.
+La hice porque me quedé dormido y me desperté en la terminal. La alarma
+"avisame para bajar": la pantalla no se apaga y, dos paradas antes de la tuya,
+suena el tono de alarma del teléfono —aunque esté en silencio— y vibra hasta
+que la apagues. Para el que viaja cansado, que somos todos.
 
 BUSCÁ POR LUGAR, POR CALLE O POR DIRECCIÓN
 El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís la calle

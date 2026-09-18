@@ -77,11 +77,11 @@ vacío):**
   del flujo completo (busco una dirección → elijo el viaje → iniciar → contador →
   alarma sonando). Ese video ES la publicidad: sirve para Instagram, TikTok,
   WhatsApp y para mandarle a los medios.
-- **Escribir la lista de difusión**: los grupos de Facebook grandes de
-  Resistencia y Barranqueras (compra-venta, noticias del barrio, "vecinos
-  de..."), los grupos de estudiantes (UNNE, UTN), y los medios locales con
-  sus formas de contacto (los diarios digitales chaqueños tienen mail de
-  redacción o Instagram con DM abierto; las radios, WhatsApp al aire).
+- **Escribir la lista de difusión**: está empezada en
+  [`difusion.md`](difusion.md) — los medios con lo que se pudo verificar, la
+  receta para buscar los grupos de Facebook el mismo día, y el texto adaptado
+  por grupo. Lo que falta ahí son mails de redacción que hay que conseguir a
+  mano.
 
 ## Día 15–16 — pedir producción
 
