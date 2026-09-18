@@ -238,6 +238,12 @@ flutter pub get
 #    supabase/migrations/0010_stop_osm_node_id.sql
 #                                        (el nodo de OSM llega al cliente:
 #                                         habilita "corregí esta parada")
+#    supabase/migrations/0011_plan_trip_acotado.sql
+#                                        (los viajes cortos no mueren en
+#                                         el timeout)
+#    supabase/migrations/0012_904_cruza_el_rio.sql
+#                                        (el 904 solo de una orilla a la
+#                                         otra + repone el search_path)
 #    supabase/seed/seed_gran_resistencia.sql       (datos REALES, ~815 KB)
 #    supabase/seed/seed_corrientes.sql             (Corrientes capital)
 #    supabase/seed/seed_horarios.sql               (DESPUÉS de los recorridos)
@@ -306,7 +312,11 @@ flutter analyze && flutter test
   anteponer un esquema con su propia `st_distance`. Es el CVE-2018-1058.
   Se fija en `public` y no en `''` porque PostGIS vive ahí; `pg_temp` NO se
   nombra (nombrarlo lo vuelve buscable y una tabla temporal puede tapar a
-  una real).
+  una real). **Y toda función RE-CREADA también**: `create or replace`
+  borra los atributos puestos con `alter function`, sin avisar. Pasó: la
+  0010 re-creó tres funciones y la 0011 re-creó `plan_trip`, y las cuatro
+  perdieron el search_path de la 0007 hasta que la 0012 lo repuso. Va
+  DENTRO del `create`, no en un `alter` aparte.
 - **Los avisos del linter de Supabase sobre PostGIS NO son nuestros y no se
   arreglan. Ya se intentó.** Quedan (y van a quedar): `spatial_ref_sys` sin
   RLS, `Extension in Public: postgis`, y `st_estimatedextent` como SECURITY

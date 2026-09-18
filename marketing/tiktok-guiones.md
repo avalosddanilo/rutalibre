@@ -39,7 +39,7 @@ Es **pantalla grabada** del flujo entero, sin actores y sin salir a la calle.
 | Tiempo | Pantalla | Texto en pantalla | Voz |
 |---|---|---|---|
 | 0-3 s | El mapa abierto, lleno de paradas | **una app de colectivos para Resistencia y Corrientes** | "Hice una app de colectivos para Resistencia y Corrientes." |
-| 3-9 s | Se toca "¿A dónde vas?" y se escribe **9 de julio 1250** | **buscás tu casa con la altura** | "Buscás tu casa con la altura, no una esquina." |
+| 3-9 s | Se toca "¿A dónde vas?" y se escribe una dirección con altura: **9 de Julio 1260**, nunca la tuya | **buscás tu casa con la altura** | "Buscás tu casa con la altura, no una esquina." |
 | 9-15 s | La lista de viajes: "6 líneas te llevan directo" | **te dice qué colectivo tomar** | "Y te dice qué colectivo tomar, dónde subir y dónde bajarte." |
 | 15-21 s | El recorrido dibujado, se toca **Iniciar viaje** | | "Iniciás el viaje y te lleva paso a paso." |
 | 21-27 s | La guía: "Caminá hasta…", después "Tomá la 2" | **un paso por pantalla** | "Un paso por pantalla, grande, para leerlo parado en la vereda." |
@@ -51,6 +51,10 @@ Es **pantalla grabada** del flujo entero, sin actores y sin salir a la calle.
 **Descripción:** la hice porque la necesitaba 🚌 gratis, sin publicidad y sin
 cuenta #Resistencia #Chaco #Corrientes #Colectivos
 
+> **Nunca tu dirección, ni tu casa en el mapa**: el video va a circular por
+> todos lados. En el buscador, "9 de Julio 1260". Y grabalo lejos de tu
+> casa: durante la guía, el punto azul del mapa es tu ubicación real.
+>
 > **Cómo grabarlo**: grabación de pantalla del teléfono, con el viaje ya
 > probado una vez para que no haya titubeos. La alarma hay que dispararla de
 > verdad — vale hacer un viaje corto para que suene. Cortar los tiempos

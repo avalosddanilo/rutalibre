@@ -131,11 +131,15 @@ La segunda historia humana: buscaba mi propia casa y la app no la encontraba.
 **El ejemplo que se muestra NO es la casa propia**: es "9 de Julio 1260", una
 avenida del centro, que es lo que se ve en la captura.
 
+> **Nunca con tu dirección, ni de ejemplo.** Los números del slide 6 son los
+> de la captura (9 de Julio: el 1250 no está mapeado, se ofrece el 1260), que
+> ya es pública. Si hace falta otro ejemplo, que sea de un lugar público.
+
 | # | Texto | Captura |
 |---|---|---|
 | 1 | **¿Cómo buscás tu casa en una app de colectivos?** | — |
 | 2 | **Las paradas se llaman por esquinas.** Tu casa tiene altura. | — |
-| 3 | **Ahora escribís la dirección con el número.** "9 de Julio 1260" cae en la cuadra real. | `02-buscador-altura` |
+| 3 | **Ahora escribís la dirección con el número.** Y cae en la cuadra real. | `02-buscador-altura` |
 | 4 | **58.000** números de puerta mapeados en OpenStreetMap, adentro de la app | — |
 | 5 | **¿Y si tu número justo no está mapeado?** Te ofrece el más cercano con su número, y te avisa. | — |
 | 6 | **Disfrazar el 1260 de 1250 sería mentirte la dirección.** E interpolarla sería inventarla. *(fondo azul)* | — |
@@ -270,7 +274,7 @@ credibilidad y el que consigue que otros hablen de la app.
 > gente común, bajo licencia ODbL. Los recorridos de Corrientes capital salen
 > del portal de datos abiertos de la Municipalidad.
 >
-> Las 58.000 alturas que hacen que "9 de Julio 1260" caiga en la cuadra real
+> Las 58.000 alturas que hacen que tu dirección caiga en la cuadra real
 > también salen de ahí: las mapeó gente, gratis.
 >
 > Por eso, cuando encontrás una parada que ya no existe, la app no te pide que

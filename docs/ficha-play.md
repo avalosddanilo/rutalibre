@@ -54,10 +54,10 @@ de la tuya, suena el tono de alarma del teléfono —aunque esté en silencio—
 vibra hasta que la apagues. Para el que viaja cansado, que somos todos.
 
 BUSCÁ POR LUGAR, POR CALLE O POR DIRECCIÓN
-El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís "9 de
-Julio 1260" y cae en la cuadra real. Miles de lugares, calles y números de
-puerta vienen adentro de la app, así que se buscan sin señal desde que la
-instalás.
+El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís la calle
+con el número ("9 de Julio 1260") y cae en la cuadra real. Miles de lugares,
+calles y números de puerta vienen adentro de la app, así que se buscan sin
+señal desde que la instalás.
 
 EL MAPA
 Las paradas se ven de entrada, sin pedirte el GPS ni obligarte a elegir una

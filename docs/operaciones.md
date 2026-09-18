@@ -58,10 +58,13 @@ Primer auxilio (estadísticas perdidas), en Supabase → SQL Editor:
 analyze public.stops; analyze public.route_stops; analyze public.route_variants; analyze public.lines;
 ```
 
-Si el ANALYZE no alcanza, el arreglo de fondo es la migración
-`0011_plan_trip_acotado.sql` (re-crear la función con las CTEs
-materializadas y los tramos acotados — leer su encabezado, ahí está toda
-la historia). Es idempotente: correrla de nuevo no rompe nada.
+Si el ANALYZE no alcanza, el arreglo de fondo es re-crear la función con
+la versión VIGENTE, que hoy es `0012_904_cruza_el_rio.sql` (las CTEs
+materializadas y los tramos acotados de la 0011, más la regla del 904 —
+leer los dos encabezados, ahí está toda la historia). Es idempotente:
+correrla de nuevo no rompe nada. **No re-correr la 0011 suelta**: pisaría
+la 0012 y volvería a ofrecer el 904 para viajes dentro del Chaco, además
+de borrar el search_path.
 
 Para verificar desde afuera, con la anon key — EL VIAJE CORTO:
 

@@ -48,6 +48,10 @@ const _gris = Color(0xFFA8A8A8);
 /// lee como una captura de pantalla y no como una pieza.
 const _pad = 34.0;
 
+/// El lienzo de la story, en lógicos: con `pixelRatio: 3` da los
+/// **1080 × 1920** del 9:16.
+const _story = Size(360, 640);
+
 // ─────────────────────────────────────────────────────────────────────────
 // El modelo de un slide
 // ─────────────────────────────────────────────────────────────────────────
@@ -235,7 +239,7 @@ const _carruseles = <String, List<_Slide>>{
     _Slide.captura(
       'Ahora escribís la dirección con el número.',
       '02-buscador-altura.png',
-      cuerpo: '«9 de Julio 1260» cae en la cuadra real.',
+      cuerpo: 'Y cae en la cuadra real.',
       alineacion: -0.55,
     ),
     _Slide.numero(
@@ -373,6 +377,50 @@ const _posts = <String, _Slide>{
   ),
 };
 
+// ── Antes de que la app salga ───────────────────────────────────────────
+
+/// Lo que dice el slide de cierre cuando la app ya está en la tienda.
+const _cierreTienda = 'Gratis en Google Play';
+
+/// Y lo que dice ANTES de que esté.
+///
+/// No es "Pronto en Google Play", y a propósito: un carrusel publicado no se
+/// puede editar, así que la imagen queda en el perfil para siempre, y en tres
+/// semanas "pronto" sería mentira. Lo que vence va en el caption, que sí se
+/// edita. En la imagen, solo lo que no vence.
+const _cierrePrelanzamiento = '@rutalibre.app';
+
+/// Los carruseles que se publican mientras la app no está en Play, en el
+/// orden en que se publican (ver `marketing/calendario.md`). Salen en
+/// `prelanzamiento/` con el cierre que no vence. C2 NO está: es la
+/// presentación del día que sale, y se publica con el link andando.
+const _prelanzamiento = ['c1', 'c4', 'c8', 'c3'];
+
+/// La story para juntar testers de la prueba cerrada.
+///
+/// Es story y no post a propósito: el pedido dura dos semanas, y un post que
+/// dice "buscamos testers" quedaría en el perfil para siempre.
+const _testers = (
+  rotulo: 'BUSCAMOS TESTERS',
+  titulo: '¿La querés probar antes que nadie?',
+  porque:
+      'Google nos pide 12 personas probándola 14 días antes de dejarnos '
+      'publicarla.',
+  pasos: [
+    (texto: 'Mandanos tu Gmail por DM', nota: null),
+    (texto: 'Aceptá la invitación y bajala de Play Store', nota: null),
+    (
+      texto: 'Dejala instalada 14 días',
+      // Es el renglón que más importa: el que la desinstala le reinicia el
+      // contador a la prueba entera, y nadie lo sabe si no se lo dicen.
+      nota: 'Si la desinstalás, el contador de Google vuelve a cero.',
+    ),
+  ],
+  pie: 'Solo Android · Gratis · Sin publicidad',
+);
+
+const _storyTesters = 'prelanzamiento/story-testers.png';
+
 // ─────────────────────────────────────────────────────────────────────────
 // El dibujo
 // ─────────────────────────────────────────────────────────────────────────
@@ -400,6 +448,15 @@ List<TextSpan> _spans(String raw, Color acento) {
 /// El texto sin las marcas de acento. Es lo que el guardarraíl de honestidad
 /// lee, porque `[[` y `]]` no se imprimen.
 String _plano(String raw) => raw.replaceAll(RegExp(r'\[\[|\]\]'), '');
+
+/// Todo el texto que queda impreso en la story de testers.
+List<String> _textoStory() => [
+  _testers.rotulo,
+  _testers.titulo,
+  _testers.porque,
+  for (final paso in _testers.pasos) ...[paso.texto, ?paso.nota],
+  _testers.pie,
+];
 
 /// El pie de cada slide: la marca chiquita y el nombre.
 ///
@@ -446,6 +503,7 @@ Widget _plate(
   _Slide slide, {
   required int numero,
   required int total,
+  required String cierre,
   required Map<String, ui.Image> imagenes,
 }) {
   final sobreAzul = slide.fondo == _Fondo.azul;
@@ -661,11 +719,12 @@ Widget _plate(
           Expanded(child: centro),
           // El cierre no lleva el pie: ya tiene la marca grande arriba, y
           // repetirla chiquita abajo la muestra dos veces en el mismo slide.
-          // En su lugar va lo único que falta decir, que es dónde se baja.
+          // En su lugar va lo único que falta decir: dónde se baja, o —antes
+          // de que esté en la tienda— dónde encontrarla.
           if (slide.tipo == _Tipo.cierre)
-            const Text(
-              'Gratis en Google Play',
-              style: TextStyle(
+            Text(
+              cierre,
+              style: const TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
@@ -689,6 +748,132 @@ Widget _plate(
     ),
   );
 }
+
+/// La story para juntar testers, a 9:16.
+///
+/// Los márgenes de arriba y de abajo son grandes a propósito: Instagram tapa
+/// el tope con la barra del perfil y el pie con la de respuesta, así que ahí
+/// no puede ir nada que haya que leer.
+Widget _storyWidget() => ColoredBox(
+  color: Brand.black,
+  child: Padding(
+    padding: const EdgeInsets.fromLTRB(30, 64, 30, 96),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _pie(sobreAzul: false),
+        const SizedBox(height: 28),
+        Text(
+          _testers.rotulo,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            color: Brand.accent,
+            letterSpacing: 1.6,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          _testers.titulo,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 32,
+            height: 1.1,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: -1.4,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          _testers.porque,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 16,
+            height: 1.4,
+            fontWeight: FontWeight.w500,
+            color: _gris,
+          ),
+        ),
+        const SizedBox(height: 22),
+        // Numerados porque SON un orden: sin el Gmail no hay invitación, y
+        // sin instalar no cuenta.
+        for (final (i, paso) in _testers.pasos.indexed) ...[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: Brand.accent,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '${i + 1}',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Text(
+                        paso.texto,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 17,
+                          height: 1.25,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: -0.3,
+                        ),
+                      ),
+                    ),
+                    if (paso.nota != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        paso.nota!,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 13,
+                          height: 1.35,
+                          fontWeight: FontWeight.w500,
+                          color: _gris,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+        ],
+        const Spacer(),
+        Text(
+          _testers.pie,
+          style: const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: _gris,
+          ),
+        ),
+      ],
+    ),
+  ),
+);
 
 /// Carga Inter de verdad para rasterizar.
 ///
@@ -716,19 +901,90 @@ Future<Map<String, ui.Image>> _cargarCapturas(Iterable<String> nombres) async {
   return imagenes;
 }
 
-/// Todos los slides, aplanados, con el nombre de archivo que les toca.
-List<({String archivo, _Slide slide, int numero, int total})> _piezas() => [
-  for (final MapEntry(key: carrusel, value: slides) in _carruseles.entries)
+typedef _Pieza = ({
+  String archivo,
+  _Slide slide,
+  int numero,
+  int total,
+  String cierre,
+});
+
+/// Los slides de un carrusel, con el nombre de archivo que les toca.
+List<_Pieza> _carrusel(
+  String codigo, {
+  String carpeta = '',
+  required String cierre,
+}) {
+  final slides = _carruseles[codigo]!;
+  return [
     for (var i = 0; i < slides.length; i++)
       (
-        archivo: '$carrusel-${(i + 1).toString().padLeft(2, '0')}.png',
+        archivo: '$carpeta$codigo-${(i + 1).toString().padLeft(2, '0')}.png',
         slide: slides[i],
         numero: i + 1,
         total: slides.length,
+        cierre: cierre,
       ),
+  ];
+}
+
+/// Todas las piezas de 4:5, aplanadas: la campaña del lanzamiento y, aparte,
+/// los carruseles de antes de que la app salga.
+List<_Pieza> _piezas() => [
+  for (final codigo in _carruseles.keys)
+    ..._carrusel(codigo, cierre: _cierreTienda),
   for (final MapEntry(key: nombre, value: slide) in _posts.entries)
-    (archivo: '$nombre.png', slide: slide, numero: 1, total: 1),
+    (
+      archivo: '$nombre.png',
+      slide: slide,
+      numero: 1,
+      total: 1,
+      cierre: _cierreTienda,
+    ),
+  for (final codigo in _prelanzamiento)
+    ..._carrusel(
+      codigo,
+      carpeta: 'prelanzamiento/',
+      cierre: _cierrePrelanzamiento,
+    ),
 ];
+
+/// Captura [key] a `pixelRatio: 3`, verifica el tamaño y escribe el PNG.
+Future<void> _escribir(
+  WidgetTester tester,
+  GlobalKey key,
+  String archivo,
+  Size tamano,
+) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 50));
+  final boundary =
+      key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+  await tester.runAsync(() async {
+    final image = await boundary.toImage(pixelRatio: 3);
+    expect(image.width, tamano.width * 3, reason: archivo);
+    expect(image.height, tamano.height * 3, reason: archivo);
+    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+    image.dispose();
+    final file = File('$_dir/$archivo');
+    await file.parent.create(recursive: true);
+    await file.writeAsBytes(bytes!.buffer.asUint8List());
+  });
+}
+
+/// Monta [child] a [tamano] adentro de un RepaintBoundary con [key].
+///
+/// RepaintBoundary y no PictureRecorder: dentro de `testWidgets`,
+/// `Picture.toImage()` no completa nunca y el test se cuelga.
+Widget _lienzo(GlobalKey key, Size tamano, Widget child) => Directionality(
+  textDirection: TextDirection.ltr,
+  child: Center(
+    child: RepaintBoundary(
+      key: key,
+      child: SizedBox.fromSize(size: tamano, child: child),
+    ),
+  ),
+);
 
 void main() {
   final piezas = _piezas();
@@ -736,19 +992,19 @@ void main() {
   test(
     'los PNG de la campaña están y no están vacíos',
     () {
-      for (final pieza in piezas) {
-        final file = File('$_dir/${pieza.archivo}');
+      for (final archivo in [...piezas.map((p) => p.archivo), _storyTesters]) {
+        final file = File('$_dir/$archivo');
         expect(
           file.existsSync(),
           isTrue,
           reason:
-              'Falta $_dir/${pieza.archivo}. Generalo: '
+              'Falta $_dir/$archivo. Generalo: '
               'REGEN_SOCIAL=1 flutter test test/marketing/social_assets_test.dart',
         );
         expect(
           file.lengthSync(),
           greaterThan(1000),
-          reason: '${pieza.archivo} es muy chico',
+          reason: '$archivo es muy chico',
         );
       }
     },
@@ -780,6 +1036,7 @@ void main() {
       _plano(p.slide.titulo),
       _plano(p.slide.cuerpo ?? ''),
     ],
+    ..._textoStory(),
   ].join('\n').toLowerCase();
 
   test('ningún slide promete lo que la app no hace', () {
@@ -817,6 +1074,27 @@ void main() {
     expect(c3, contains('1.1'));
   });
 
+  test('lo de antes de salir no dice que la app ya está en la tienda', () {
+    // La imagen de un carrusel publicado no se edita: si el cierre dijera
+    // "Google Play" o "pronto", sería falso hoy o dentro de tres semanas.
+    final cierre = _cierrePrelanzamiento.toLowerCase();
+    expect(cierre, isNot(contains('play')));
+    expect(cierre, isNot(contains('pronto')));
+    // Y C2, la presentación, se guarda para el día que sale.
+    expect(_prelanzamiento, isNot(contains('c2')));
+  });
+
+  test('la story de testers dice lo que le pide a la gente', () {
+    // Un tester que no sabe que tiene que quedarse 14 días la desinstala al
+    // tercero y reinicia el contador de la prueba entera. Y uno con iPhone
+    // manda su mail para nada.
+    final story = _textoStory().join(' ').toLowerCase();
+    expect(story, contains('14 días'));
+    expect(story, contains('android'));
+    expect(story, contains('gmail'));
+    expect(story, contains('desinstal'));
+  });
+
   test('cada carrusel cierra con la marca', () {
     _carruseles.forEach((nombre, slides) {
       expect(
@@ -843,63 +1121,48 @@ void main() {
         });
       });
 
-      // Se limpia antes de escribir: si un carrusel pierde un slide, el PNG
-      // sobrante se quedaría en la carpeta para siempre y alguien lo subiría.
+      // Se limpia antes de escribir, subcarpetas incluidas: si un carrusel
+      // pierde un slide, el PNG sobrante se quedaría en la carpeta para
+      // siempre y alguien lo subiría.
       final dir = Directory(_dir);
       if (dir.existsSync()) {
-        for (final f in dir.listSync()) {
-          if (f.path.endsWith('.png')) f.deleteSync();
+        for (final f in dir.listSync(recursive: true)) {
+          if (f is File && f.path.endsWith('.png')) f.deleteSync();
         }
       }
 
+      // El lienzo de la vista alcanza para el más grande de los dos formatos.
       tester.view
-        ..physicalSize = Size(_feed.width + 40, _feed.height + 40)
+        ..physicalSize = Size(_story.width + 40, _story.height + 40)
         ..devicePixelRatio = 1;
       addTearDown(tester.view.reset);
 
       for (final pieza in piezas) {
         final key = GlobalKey();
-        // RepaintBoundary y no PictureRecorder: dentro de `testWidgets`,
-        // `Picture.toImage()` no completa nunca y el test se cuelga.
         await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: Center(
-              child: RepaintBoundary(
-                key: key,
-                child: SizedBox.fromSize(
-                  size: _feed,
-                  child: _plate(
-                    pieza.slide,
-                    numero: pieza.numero,
-                    total: pieza.total,
-                    imagenes: imagenes,
-                  ),
-                ),
-              ),
+          _lienzo(
+            key,
+            _feed,
+            _plate(
+              pieza.slide,
+              numero: pieza.numero,
+              total: pieza.total,
+              cierre: pieza.cierre,
+              imagenes: imagenes,
             ),
           ),
         );
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 50));
-
-        final boundary =
-            key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
-        await tester.runAsync(() async {
-          // pixelRatio 3 sobre 360×450 = los 1080×1350 de Instagram.
-          final image = await boundary.toImage(pixelRatio: 3);
-          expect(image.width, 1080, reason: pieza.archivo);
-          expect(image.height, 1350, reason: pieza.archivo);
-          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-          image.dispose();
-          final file = File('$_dir/${pieza.archivo}');
-          await file.parent.create(recursive: true);
-          await file.writeAsBytes(bytes!.buffer.asUint8List());
-        });
+        // pixelRatio 3 sobre 360×450 = los 1080×1350 de Instagram.
+        await _escribir(tester, key, pieza.archivo, _feed);
       }
 
-      for (final pieza in piezas) {
-        expect(File('$_dir/${pieza.archivo}').lengthSync(), greaterThan(1000));
+      final key = GlobalKey();
+      await tester.pumpWidget(_lienzo(key, _story, _storyWidget()));
+      // Y sobre 360×640, los 1080×1920 de la story.
+      await _escribir(tester, key, _storyTesters, _story);
+
+      for (final archivo in [...piezas.map((p) => p.archivo), _storyTesters]) {
+        expect(File('$_dir/$archivo').lengthSync(), greaterThan(1000));
       }
     },
   );

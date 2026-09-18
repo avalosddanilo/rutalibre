@@ -285,6 +285,9 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
 - [x] Capturas de pantalla, de la app real (`marketing/capturas/`, 2026-08-28)
 - [x] Migración `0011` corrida en el Dashboard (2026-08-28) — el planificador
       contesta los viajes cortos en menos de un segundo
+- [ ] Migración `0012` corrida en el Dashboard *(vos)* — el 904 deja de
+      ofrecerse para viajes dentro del Chaco. Con sus controles del final:
+      el 0 ANTES (tiene que dar true) y los otros tres después
 - [ ] Keystore generado y guardado *(vos)* ← **es el bloqueante de todo**
 - [ ] `android/key.properties` creado *(vos)*
 - [ ] Política de privacidad publicada en una URL *(vos)*

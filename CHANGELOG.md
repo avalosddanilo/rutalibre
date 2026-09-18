@@ -62,6 +62,17 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 
 - **"¿Cómo llego?"**: de dónde estás a dónde vas, con viajes directos y de un
   transbordo. Sin transbordos la respuesta sería "no hay" 6 de cada 10 veces.
+- **El 904 solo aparece para cruzar el río.** Hallazgo de la prueba
+  cerrada: el 904 no levanta gente para viajes dentro del Chaco ("de
+  Barranqueras a Resistencia centro no deja subir"), pero sus paradas del
+  lado Chaco eran paradas como cualquiera y el planificador lo ofrecía.
+  Ahora un tramo en el 904 solo vale si la subida y la bajada quedan en
+  orillas distintas — también como parte de un transbordo, así que "un
+  urbano hasta Barranqueras y ahí el 904 a Corrientes" sigue apareciendo.
+  El río es el meridiano -58.86, que sale de los datos: cae en el agua,
+  entre la cabecera del puente del lado Chaco y la primera parada de
+  Corrientes. Es del servidor (migración 0012): no hace falta una versión
+  nueva de la app.
 - **Cuando ningún colectivo te deja cerca, te dice cuál te ACERCA.** Un destino
   en los barrios de Corrientes terminaba en "no encontramos cómo llegar",
   aunque el 904 cruza el puente. Ahora aparece el colectivo que más te

@@ -49,7 +49,7 @@ flutter pub get
 #    {"SUPABASE_URL": "https://<proyecto>.supabase.co", "SUPABASE_ANON_KEY": "<anon key>"}
 
 # 3. Base de datos (Supabase → SQL Editor, EN ORDEN):
-#    supabase/migrations/0001..0010  ← ver la lista completa en ARCHITECTURE.md
+#    supabase/migrations/0001..0012  ← ver la lista completa en ARCHITECTURE.md
 #    supabase/seed/seed_gran_resistencia.sql  ← los datos reales (~890 KB)
 #    supabase/seed/seed_corrientes.sql        ← Corrientes capital
 #    supabase/seed/seed_horarios.sql          ← DESPUÉS de los recorridos
@@ -104,7 +104,7 @@ Detalles y decisiones en [`docs/osm-import.md`](docs/osm-import.md).
 
 ## Tests
 
-583 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
+598 tests unitarios y de widgets — incluidos los de accesibilidad (texto del sistema al 200%) y los primeros de la pantalla del mapa, con un TileProvider inyectable para no tocar la red: importador (parser, geometría, cosido de
 trazados, SQL), repositorio cache-first, mapeos DTO, usecases, resolución de
 feriados (computus), buscador de origen y destino, estado del viaje, assets
 empaquetados (lugares y paradas de Corrientes), panel de líneas, hoja de
