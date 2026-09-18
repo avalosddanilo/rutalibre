@@ -165,9 +165,10 @@ Para no reescribirlas cada vez.
 **"¿Sirve en Corrientes?"**
 > A medias, y te lo decimos de frente: se ven las 254 paradas y qué líneas
 > paran en cada una, pero todavía no se puede armar un viaje adentro de
-> Corrientes capital. El municipio publica 10 de las 22 líneas que circulan, y
-> con media red la respuesta sería adivinada. Ya está pedido. Cruzar el puente
-> desde Resistencia sí funciona.
+> Corrientes capital. El portal del municipio publica los recorridos pero no
+> las paradas, y sin saber dónde para cada línea la respuesta sería
+> adivinada. Ya está pedido. Cruzar el puente desde Resistencia sí
+> funciona.
 
 **"¿Es gratis? ¿Cuál es el negocio?"**
 > Es gratis y no hay negocio. Sin publicidad, sin cuentas, sin venta de datos.

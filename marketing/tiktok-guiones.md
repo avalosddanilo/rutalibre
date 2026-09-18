@@ -258,8 +258,8 @@ los 14 días de prueba cerrada que pide Google.
 - **"no está mi línea"** → pedir el número y el barrio. Eso es investigación
   gratis: cada comentario así es un dato que falta en OSM.
 - **"no anda en Corrientes"** → decir la verdad: el planificador todavía no
-  entra a Corrientes capital porque el municipio publica 10 de las 22 líneas.
-  Las paradas sí se ven.
+  entra a Corrientes capital porque el portal del municipio publica los
+  recorridos pero no las paradas. Las paradas sí se ven.
 - **"esto ya existe"** → no discutir. "Puede ser, probala y decime qué le
   falta."
 - **Comentarios pidiendo horarios** → guardarlos todos. Son la munición del

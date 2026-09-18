@@ -241,9 +241,11 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   el pedido formal está en `docs/propuesta-datos-abiertos.md`.
 - **"¿Cómo llego?" no funciona dentro de Corrientes capital.** Las paradas se
   ven y se puede consultar qué líneas paran en cada una, pero no se puede
-  planificar un viaje: el dataset municipal publica 10 de las 22 líneas que
-  circulan, y sin la red completa la respuesta sería adivinada. Los 12 códigos
-  que faltan están pedidos en `docs/mails-para-mandar.md`.
+  planificar un viaje: el dataset municipal publica los recorridos y no las
+  paradas —ese recurso fue dado de baja del portal—, y de las 254 paradas que
+  sí están mapeadas en OSM solo 93 caen a menos de 80 m del recorrido de su
+  propia línea. Sin saber dónde para cada línea, la respuesta sería
+  adivinada. El pedido está en `docs/mails-para-mandar.md`.
 - Las paradas que ya no existen en la realidad pero OSM todavía mapea son
   indistinguibles de las vigentes. Ahora se pueden corregir en OSM desde la
   app, pero el cambio recién se ve cuando reimportamos los datos: no hay

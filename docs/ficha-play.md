@@ -92,8 +92,8 @@ Preferimos decir "no sabemos" antes que inventar un horario. Un horario
 inventado manda a alguien a esperar un colectivo que no viene.
 
 Dentro de Corrientes capital todavía no se puede planificar un viaje: el
-municipio publica 10 de las 22 líneas que circulan, y con media red la
-respuesta sería adivinada. Está pedido.
+portal municipal publica los recorridos pero no las paradas, y sin saber
+dónde para cada línea la respuesta sería adivinada. Está pedido.
 
 DE DÓNDE SALEN LOS DATOS
 Los recorridos y las paradas son de OpenStreetMap, mapeados por la comunidad,
