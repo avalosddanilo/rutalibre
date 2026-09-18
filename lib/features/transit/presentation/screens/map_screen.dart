@@ -869,8 +869,9 @@ class _MapScreenState extends ConsumerState<MapScreen>
                 // Con la guarda de dibujable, igual que el trazado: un
                 // marcador con la coordenada rota rompe la proyección y deja
                 // el mapa gris.
-                if (tripSearch case TripRoute(:final destination)
-                    when isDrawableLatLng(destination.lat, destination.lng))
+                if (tripSearch case TripRoute(
+                  :final destination,
+                ) when isDrawableLatLng(destination.lat, destination.lng))
                   MarkerLayer(
                     markers: [
                       _pinMarker(

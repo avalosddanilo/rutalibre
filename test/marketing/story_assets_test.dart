@@ -171,36 +171,33 @@ Future<void> _loadInter() async {
 }
 
 void main() {
-  testWidgets(
-    'las stories no prometen lo que la app no hace',
-    (tester) async {
-      // El mismo guardarraíl que los carruseles y la ficha: una story se
-      // comparte suelta, sin contexto, y sobrevive en la galería de alguien.
-      final copy = _stories
-          .map((s) => '${s.titulo} ${s.acento} ${s.cuerpo} ${s.pie}')
-          .join(' ')
-          .toLowerCase();
-      expect(copy, isNot(contains('tiempo real')));
-      expect(copy, isNot(contains('en vivo')));
-      expect(copy, isNot(contains('cuándo llega')));
-      // Y dicen lo que tienen que decir para servir de algo.
-      expect(copy, contains('android'));
-      expect(copy, contains('14 días'));
-      // Y NADA de emojis: las piezas se rasterizan con Inter, que no tiene
-      // glifos de emoji, así que un 🙌 sale dibujado como un cuadradito con
-      // la palabra "NO GLYPH" adentro. Pasó, y en una story no se ve hasta
-      // que está publicada.
-      for (final rune in copy.runes) {
-        expect(
-          rune,
-          lessThan(0x2190),
-          reason:
-              'el carácter U+${rune.toRadixString(16).toUpperCase()} no lo '
-              'dibuja Inter: va a salir como un cuadradito',
-        );
-      }
-    },
-  );
+  testWidgets('las stories no prometen lo que la app no hace', (tester) async {
+    // El mismo guardarraíl que los carruseles y la ficha: una story se
+    // comparte suelta, sin contexto, y sobrevive en la galería de alguien.
+    final copy = _stories
+        .map((s) => '${s.titulo} ${s.acento} ${s.cuerpo} ${s.pie}')
+        .join(' ')
+        .toLowerCase();
+    expect(copy, isNot(contains('tiempo real')));
+    expect(copy, isNot(contains('en vivo')));
+    expect(copy, isNot(contains('cuándo llega')));
+    // Y dicen lo que tienen que decir para servir de algo.
+    expect(copy, contains('android'));
+    expect(copy, contains('14 días'));
+    // Y NADA de emojis: las piezas se rasterizan con Inter, que no tiene
+    // glifos de emoji, así que un 🙌 sale dibujado como un cuadradito con
+    // la palabra "NO GLYPH" adentro. Pasó, y en una story no se ve hasta
+    // que está publicada.
+    for (final rune in copy.runes) {
+      expect(
+        rune,
+        lessThan(0x2190),
+        reason:
+            'el carácter U+${rune.toRadixString(16).toUpperCase()} no lo '
+            'dibuja Inter: va a salir como un cuadradito',
+      );
+    }
+  });
 
   testWidgets(
     'regenera las stories',
