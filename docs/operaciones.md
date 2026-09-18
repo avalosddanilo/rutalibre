@@ -159,6 +159,9 @@ Con lo cual, el control de uso en Free es a mano y son tres cosas:
    consumo de ese proyecto).
 3. **Saber el presupuesto**: la cuota de egress en Free es de **5 GB por
    mes**, y la consulta cara, `get_all_stops`, pesa ~267 KB por respuesta.
+   *(Medido el 2026-09-18, con la app todavía sin publicar: egress 0,002 GB,
+   base 0,038 de 0,5 GB, 0 MAU. El punto de partida, para comparar cuando
+   haya gente arriba.)*
    Eso da **~19.600 descargas completas de datos por mes**. Como la app es
    cache-first, una instalación descarga una vez y después casi no vuelve:
    para los primeros miles de usuarios sobra, y si un día no sobra, es

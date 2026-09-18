@@ -302,7 +302,8 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
 - [x] Verificaciones de RLS en el dashboard de Supabase (2026-09-18) — las 5
       de [`auditoria-seguridad.md`](auditoria-seguridad.md), S2. El `INSERT`
       con la anon key rebota con `42501`, que es la que prueba algo
-- [ ] Mail de facturación de la organización de Supabase, verificado *(vos)*
-      — S4. La alerta al 50/80% **no existe en el plan Free** (comprobado el
-      2026-09-18): el único aviso es un mail a esa dirección cuando ya te
-      pasaste de la cuota. Mirar el Egress en *Usage* → **All Projects**
+- [x] Mail de facturación de la organización de Supabase, verificado
+      (2026-09-18) — S4. La alerta al 50/80% **no existe en el plan Free**:
+      el único aviso es un mail a esa dirección cuando ya te pasaste. Medido
+      ese día con *Usage* → **All Projects**: egress 0,002/5 GB (<1%), base
+      0,038/0,5 GB (8%), 0 MAU
