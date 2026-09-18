@@ -11,6 +11,12 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 ### Mapa y recorridos
 
 - Mapa de OpenStreetMap con el crédito de la licencia ODbL siempre visible.
+- **Si las calles del mapa no cargan, la app lo dice.** Hallazgo de la prueba
+  cerrada: un tester vio el mapa en blanco, sin calles ni paradas, y la app no
+  daba ninguna explicación — parecía rota. Los tiles de OSM son lo único de la
+  pantalla que necesita red sí o sí, así que ahora, cuando no llegan, aparece
+  un cartel que dice eso y aclara que lo que ya está bajado sigue andando. Se
+  va solo apenas entra un tile.
 - **Modo oscuro de verdad, mapa incluido**: con el teléfono en modo oscuro,
   también las calles se oscurecen —los mismos tiles de OSM invertidos—, así
   que el mapa no encandila de noche en la parada.

@@ -26,6 +26,7 @@ import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../utils/color_hex.dart';
 import '../utils/failure_message.dart';
+import '../providers/tile_health_provider.dart';
 import '../utils/map_safety.dart';
 import '../utils/marker_colors.dart';
 import '../utils/marker_declutter.dart';
@@ -111,6 +112,19 @@ class _MapScreenState extends ConsumerState<MapScreen>
     if (state == AppLifecycleState.resumed) {
       ref.invalidate(savedTripProvider);
     }
+  }
+
+  /// Anota si los tiles están llegando o no, para el cartel de "el mapa no
+  /// carga".
+  ///
+  /// Diferido al próximo cuadro: lo llama el `tileBuilder`, que corre dentro
+  /// del build, y cambiar el estado de un provider ahí revienta.
+  void _reportTiles({required bool loaded}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final health = ref.read(tileHealthProvider.notifier);
+      loaded ? health.reportLoaded() : health.reportError();
+    });
   }
 
   /// Centra el mapa, salvo que la coordenada esté rota.
@@ -693,10 +707,18 @@ class _MapScreenState extends ConsumerState<MapScreen>
         ? const <Stop>[]
         : ref.watch(stopsForRouteProvider(selectedVariant.id)).value ??
               const <Stop>[];
+    // `drawablePoints` y no la lista cruda: estos puntos van a una
+    // `Polyline`, y una `Polyline` es la ÚNICA entrada al mapa que no pasaba
+    // por `map_safety`. El encuadre ya filtraba (`_fitRoute`), pero la capa
+    // no: un punto roto no mueve la cámara y aun así revienta la proyección
+    // al dibujar, y lo que se ve es el mapa GRIS con el panel intacto
+    // encima. Filtrar acá arriba cubre los dos usos de una vez.
     final routePoints = selectedVariant == null
         ? const <LatLng>[]
-        : ref.watch(routeGeometryProvider(selectedVariant.id)).value ??
-              const <LatLng>[];
+        : drawablePoints(
+            ref.watch(routeGeometryProvider(selectedVariant.id)).value ??
+                const <LatLng>[],
+          );
 
     // El botón ATRÁS del teléfono deshace lo último, en vez de cerrar la app.
     // Hallazgo de campo: con un viaje elegido, "atrás" era la única salida
@@ -796,9 +818,21 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   // con una matriz de color:
                   // cambiar de proveedor a uno "oscuro" traería otra licencia y
                   // otros límites de uso.
-                  tileBuilder: Theme.of(context).brightness == Brightness.dark
-                      ? darkModeTileBuilder
-                      : null,
+                  tileBuilder: (context, tileWidget, tile) {
+                    // De paso que pasa por acá cada tile, se reporta si llegó
+                    // o no: es lo que decide el cartel de "el mapa no carga"
+                    // (ver `tile_health_provider.dart`). Se difiere al
+                    // próximo cuadro porque esto corre DENTRO del build, y
+                    // tocar un provider ahí es un error de Riverpod.
+                    if (tile.loadFinishedAt != null && !tile.loadError) {
+                      _reportTiles(loaded: true);
+                    }
+                    return Theme.of(context).brightness == Brightness.dark
+                        ? darkModeTileBuilder(context, tileWidget, tile)
+                        : tileWidget;
+                  },
+                  errorTileCallback: (tile, error, stackTrace) =>
+                      _reportTiles(loaded: false),
                 ),
                 if (routePoints.isNotEmpty)
                   PolylineLayer(
@@ -832,7 +866,11 @@ class _MapScreenState extends ConsumerState<MapScreen>
                   _RouteStopMarkers(stops: routeStops, color: routeColor),
                 if (nearbyStops.isNotEmpty)
                   _NearbyStopMarkers(stops: nearbyStops),
-                if (tripSearch case TripRoute(:final destination))
+                // Con la guarda de dibujable, igual que el trazado: un
+                // marcador con la coordenada rota rompe la proyección y deja
+                // el mapa gris.
+                if (tripSearch case TripRoute(:final destination)
+                    when isDrawableLatLng(destination.lat, destination.lng))
                   MarkerLayer(
                     markers: [
                       _pinMarker(
@@ -849,7 +887,8 @@ class _MapScreenState extends ConsumerState<MapScreen>
                       ),
                     ],
                   ),
-                if (nearbyQuery != null)
+                if (nearbyQuery != null &&
+                    isDrawableLatLng(nearbyQuery.lat, nearbyQuery.lng))
                   MarkerLayer(
                     markers: [
                       Marker(
@@ -1647,13 +1686,18 @@ class _TripLayers extends ConsumerWidget {
       // SOLO el pedazo que se viaja. Dibujar el recorrido entero no dejaba
       // distinguir "por acá vas" de "por acá pasa el colectivo", que es justo
       // lo que uno abre el mapa a mirar.
-      final points = segmentBetween(
-        points: full,
-        boardLat: leg.boardStop.lat,
-        boardLng: leg.boardStop.lng,
-        alightLat: leg.alightStop.lat,
-        alightLng: leg.alightStop.lng,
+      // Mismo filtro que el trazado de la línea: lo que entra a una
+      // `Polyline` tiene que ser dibujable (ver `map_safety.dart`).
+      final points = drawablePoints(
+        segmentBetween(
+          points: full,
+          boardLat: leg.boardStop.lat,
+          boardLng: leg.boardStop.lng,
+          alightLat: leg.alightStop.lat,
+          alightLng: leg.alightStop.lng,
+        ),
       );
+      if (points.isEmpty) continue;
       polylines
         ..add(
           Polyline(
@@ -1681,6 +1725,11 @@ class _TripLayers extends ConsumerWidget {
           LatLng(search.destination.lat, search.destination.lng),
         ),
       ]) {
+        // El origen sale del GPS, que es de donde salió el NaN que dejó el
+        // mapa muerto la primera vez (ver `map_safety.dart`). Acá entra
+        // DERECHO a una `Polyline`: si un extremo no es dibujable, la
+        // caminata no se dibuja y el resto del viaje sí.
+        if (drawablePoints([from, to]).length != 2) continue;
         walks.add(
           Polyline(
             points: [from, to],
@@ -1834,6 +1883,61 @@ class _PickDestinationBanner extends StatelessWidget {
   }
 }
 
+/// El cartel de "las calles del mapa no están llegando".
+///
+/// Aparece solo cuando fallan varios tiles seguidos y se va solo cuando entra
+/// uno (ver `tile_health_provider.dart`). Dice lo que pasa Y lo que igual
+/// funciona: sin esa segunda mitad, el que lo lee cierra la app.
+///
+/// **No ofrece "Reintentar"**: flutter_map ya reintenta solo al moverse el
+/// mapa, y un botón que no hace más que lo que ya pasa es mentir sobre quién
+/// tiene el control.
+class _TilesDownNotice extends ConsumerWidget {
+  const _TilesDownNotice();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // AnimatedSize por lo mismo que el cartel del recorrido: sin transición,
+    // el resto de la barra pega un salto vertical.
+    return AnimatedSize(
+      duration: Motion.base,
+      curve: Motion.curve,
+      alignment: Alignment.topLeft,
+      child: !ref.watch(tileHealthProvider)
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: FloatingPanel(
+                radius: 10,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.cloud_off,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        'El dibujo del mapa no carga. Revisá la conexión: las '
+                        'paradas y los recorridos que ya bajaste siguen '
+                        'andando.',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
+}
+
 /// La marca, arriba a la izquierda.
 
 /// Encabezado flotante: identidad de la app, recorrido activo y el crédito
@@ -1930,6 +2034,14 @@ class _TopBar extends StatelessWidget {
                 lat: rainOrigin?.lat ?? MapScreen.resistenciaCenter.latitude,
                 lng: rainOrigin?.lng ?? MapScreen.resistenciaCenter.longitude,
               ),
+            ),
+            // Y si las calles del mapa no están llegando, se dice. Sin esto
+            // la pantalla queda en blanco sin explicación —el reporte fue
+            // textual: "no le dejaba hacer nada"— y parece la app rota y no
+            // la conexión.
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: _TilesDownNotice(),
             ),
             // El cartel del recorrido entra y sale animado: aparece al elegir
             // una línea y desaparece al soltarla, y sin transición el resto de
