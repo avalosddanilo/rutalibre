@@ -139,8 +139,8 @@ La versión video del carrusel C1. Texto puro sobre negro, ritmo rápido.
 |---|---|---|
 | 0-2 s | **hice una app de colectivos que NO te dice cuándo llega el colectivo** | "Hice una app de colectivos que no te dice cuándo llega el colectivo." |
 | 2-5 s | **y es a propósito** | "Y es a propósito." |
-| 5-10 s | **no hay GPS público en la flota** | "Acá nadie sabe dónde está cada coche ahora. Ni el municipio." |
-| 10-15 s | **las apps que te dicen "llega en 7 min" se lo están inventando** | "Así que la que te dice que llega en siete minutos se lo está inventando." |
+| 5-10 s | **no hay ningún dato público de dónde está cada coche** | "Acá no existe ningún dato público y abierto de dónde está cada coche." |
+| 10-15 s | **sin ese dato, "llega en 7 min" es una estimación** | "Así que ese 'llega en siete minutos' es una estimación, no un dato." |
 | 15-20 s | **un horario inventado te deja esperando algo que no viene** | "Y un horario inventado te deja parado esperando algo que no viene." |
 | 20-27 s | **lo que sí hace: te dice qué colectivo tomar, dónde subir y dónde bajar** | "Lo que sí hace: te dice cuál tomar, dónde subir y dónde bajarte." |
 | 27-30 s | **Ruta Libre · gratis, sin publicidad, sin cuenta** | |

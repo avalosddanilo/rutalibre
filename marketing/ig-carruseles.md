@@ -31,7 +31,7 @@ app de transporte puede copiar — para copiarlo tendría que dejar de inventar.
 | # | Texto |
 |---|---|
 | 1 | **Lo que esta app de colectivos NO hace** *(el "NO" en azul)* |
-| 2 | **No te dice a qué hora llega el colectivo.** Nadie lo sabe: no hay GPS público en la flota. |
+| 2 | **No te dice a qué hora llega el colectivo.** No existe ningún dato público de dónde está cada coche. |
 | 3 | **No inventa horarios.** Un horario inventado manda a alguien a esperar un colectivo que no viene. |
 | 4 | **No tiene publicidad.** Ni una. |
 | 5 | **No te pide que te registres.** No hay cuenta, no hay mail, no hay contraseña. |
@@ -43,9 +43,9 @@ app de transporte puede copiar — para copiarlo tendría que dejar de inventar.
 
 > Hay apps de colectivos que te dicen que el 3 llega en 7 minutos.
 >
-> No pueden saberlo. Acá no hay GPS público en la flota: nadie —ni el
-> municipio— sabe dónde está cada colectivo ahora mismo. Ese numerito está
-> estimado sobre un horario que muchas veces tampoco existe.
+> Acá no existe ningún dato público y abierto de dónde está cada colectivo.
+> Sin eso, ninguna app independiente puede saberlo de verdad: ese numerito
+> sale de estimar sobre un horario que muchas veces tampoco existe.
 >
 > Preferimos decirte "no sabemos" y que llegues a la parada sabiendo que no
 > sabés, antes que mandarte a esperar algo que no viene.

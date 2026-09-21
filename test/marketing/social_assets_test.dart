@@ -131,7 +131,7 @@ const _carruseles = <String, List<_Slide>>{
     _Slide('Lo que esta app de colectivos [[NO]] hace'),
     _Slide(
       'No te dice a qué hora llega el colectivo.',
-      cuerpo: 'Nadie lo sabe: no hay GPS público en la flota.',
+      cuerpo: 'No existe ningún dato público de dónde está cada coche.',
     ),
     _Slide(
       'No inventa horarios.',
@@ -1040,7 +1040,10 @@ void main() {
   ].join('\n').toLowerCase();
 
   test('ningún slide promete lo que la app no hace', () {
-    // La app NO sabe dónde está el colectivo: no hay GPS público en la flota.
+    // La app NO sabe dónde está el colectivo: no existe ningún feed público y
+    // abierto de posición. Se afirma la falta del DATO ABIERTO y nunca que
+    // "nadie tiene GPS" — hay unidades que sí lo tienen, ver
+    // docs/competencia.md.
     // Prometerlo consigue una instalación y pierde a la persona para siempre.
     expect(copy, isNot(contains('tiempo real')));
     expect(copy, isNot(contains('en vivo')));
@@ -1059,7 +1062,15 @@ void main() {
         .join(' ')
         .toLowerCase();
     expect(c1, contains('no inventa horarios'));
-    expect(c1, contains('no hay gps público en la flota'));
+    // El renglón incómodo. Dice la FALTA DEL DATO ABIERTO y no "nadie tiene
+    // GPS": hay unidades con GPS y hay un sistema de arribos montado sobre 16
+    // líneas que hoy devuelve 500 (ver docs/competencia.md). Que a otro se le
+    // caiga el servidor no nos habilita a decir que no existe.
+    expect(c1, contains('no existe ningún dato público'));
+    // Y nunca una acusación contra un tercero: eso ya lo prohíbe
+    // marketing/estrategia.md, y encima sería falso.
+    expect(c1, isNot(contains('inventando')));
+    expect(c1, isNot(contains('nadie lo sabe')));
   });
 
   test('el carrusel de la alarma dice su límite', () {

@@ -27,8 +27,10 @@ Lo que se ve al abrirla:
 
 - **No dibuja los recorridos.** El mapa queda sin trazado.
 - **Tocar una parada no lista ninguna línea.** La pantalla aparece vacía.
-- **No hay GPS de las unidades.** Nunca lo hubo público, y hoy tampoco lo
-  muestra la app oficial.
+- **No hay GPS de las unidades.** Ni ahí ni en ningún feed abierto. Para el
+  panorama completo y verificado —ChacoBus anunciado y sin publicar, el
+  sistema de arribos de SmartMove devolviendo 500— ver
+  [`competencia.md`](competencia.md).
 
 Es una observación propia, no un anuncio oficial: si mañana vuelve a andar,
 esta nota se corrige con fecha. Pero mientras siga así, sostiene dos cosas
@@ -36,9 +38,10 @@ que ya decíamos:
 
 1. **Depender de OSM no era una preferencia, era la única opción.** La única
    fuente que no se cae es la que está en el repo.
-2. **"No hay GPS público en la flota" no es una excusa nuestra.** Ni la app
-   de la provincia lo tiene. Por eso no se promete "en vivo" en ningún lado
-   (ver `marketing/estrategia.md` → palabras prohibidas).
+2. **Que no haya un feed abierto de posición no es una excusa nuestra.** Por
+   eso no se promete "en vivo" en ningún lado (ver `marketing/estrategia.md`
+   → palabras prohibidas). Cómo se dice esto sin exagerar está en
+   [`competencia.md`](competencia.md).
 
 Lo que **no** se hace con esto: usarlo como argumento de venta. No se habla
 mal de SITAM en ningún posteo, mail ni respuesta. Que ellos estén caídos no
