@@ -58,27 +58,42 @@ Son los cruces del puente, con paradas de los dos lados.
 
 `transporte:vw_puntos_recarga_sube` — los puntos de recarga SUBE.
 
-## Por qué no se bajó nada
+## Por qué no se bajó nada: **el WFS está apagado**
 
-Dos muros, los dos del lado de ellos:
+Probado desde un navegador en Corrientes, el 2026-09-21. El servidor
+responde, y responde bien:
 
-1. **Un Web Application Firewall bloquea el acceso automático.** Un
-   `GetCapabilities` de WFS por HTTP devuelve `403 Web Application Firewall
-   — Event Type: signature`.
-2. **Por HTTPS el certificado no valida** (cadena incompleta), y el visor
-   responde 503 a un cliente que no sea un navegador.
+```xml
+<ows:ExceptionText>org.geoserver.platform.ServiceException:
+  Service WFS is disabled</ows:ExceptionText>
+```
 
-**No se evade un firewall.** Punto. Lo que corresponde es pedir acceso, y
-ahora se puede pedir por el nombre exacto de cada capa.
+**Eso es lo mejor que podía pasar**, y conviene entender por qué:
+
+- **No es el firewall.** No es un permiso, no es una licencia, no es que
+  no tengan los datos. El GeoServer contesta con su propio formato de error
+  (`ows:ExceptionReport`), o sea que está vivo, sano y atendiendo.
+- **Es una casilla.** En GeoServer, WFS se prende desde *Services → WFS →
+  Enable WFS*. Un tilde. No hay que exportar nada, ni mantener nada, ni
+  subir nada a ningún portal.
+- **El WMS sí funciona** — de hecho es lo que dibuja el visor. Pero WMS
+  devuelve imágenes: sirve para ver, no para obtener coordenadas.
+
+Desde el contenedor de desarrollo hay además dos muros propios que no son de
+ellos: un WAF que bloquea el `GetCapabilities` por HTTP (`403`, event type
+`signature`) y un certificado que no valida por HTTPS. **No se evade un
+firewall**: lo que corresponde es pedir, y ahora se puede pedir con una
+precisión que no teníamos.
 
 ## Lo que hay que pedir
 
 En el mismo mail de `docs/mails-para-mandar.md`. Cualquiera de las tres
 formas sirve, de menos a más trabajo para ellos:
 
-1. **Habilitar WFS público** en esas capas
-   (`?service=WFS&request=GetFeature&outputFormat=application/json`). Cero
-   trabajo recurrente: se actualiza solo.
+1. **Habilitar WFS** (*Services → WFS → Enable WFS*). Es la opción que
+   menos les cuesta —un tilde— y la mejor para los dos: cero trabajo
+   recurrente y los datos quedan siempre al día sin que nadie los exporte a
+   mano nunca más.
 2. **Un export de GeoJSON o shapefile** de `vw_paradas_colectivos` y de los
    `recorrido_ramal_*`.
 3. **Republicar el recurso de paradas** en el portal de datos abiertos, que
