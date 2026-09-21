@@ -31,8 +31,9 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   paran en cada una. Se dibujan con un marcador **hueco**, distinto del de las
   del Gran Resistencia, porque hacen algo distinto: abren una hoja corta que
   dice qué líneas paran ahí y de dónde sale el dato. No entran al
-  planificador —medido: solo 93 de las 254 caen a menos de 80 m del recorrido
-  de su propia línea— y verse iguales haría leer esa diferencia como un bug.
+  planificador —la cobertura de OSM es muy despareja: la 104 tiene una parada
+  cada 61 m y la 101 tiene una sola en doce kilómetros— y verse iguales haría
+  leer esa diferencia como un bug.
 
 ### Buscar
 
@@ -263,9 +264,11 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 - **"¿Cómo llego?" no funciona dentro de Corrientes capital.** Las paradas se
   ven y se puede consultar qué líneas paran en cada una, pero no se puede
   planificar un viaje: el dataset municipal publica los recorridos y no las
-  paradas —ese recurso fue dado de baja del portal—, y de las 254 paradas que
-  sí están mapeadas en OSM solo 93 caen a menos de 80 m del recorrido de su
-  propia línea. Sin saber dónde para cada línea, la respuesta sería
+  paradas —ese recurso fue dado de baja del portal—. Las 254 paradas que OSM
+  sí tiene encajan bien con esos recorridos (202 a menos de 80 m, mediana de
+  5 m), pero están repartidas de forma muy despareja: una sola línea, la 104,
+  concentra más de la mitad, y cuatro líneas no llegan ni a cinco paradas en
+  más de diez kilómetros. Sin saber dónde para cada línea, la respuesta sería
   adivinada. El pedido está en `docs/mails-para-mandar.md`.
 - Las paradas que ya no existen en la realidad pero OSM todavía mapea son
   indistinguibles de las vigentes. Ahora se pueden corregir en OSM desde la

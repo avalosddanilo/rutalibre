@@ -5,13 +5,22 @@ import 'package:equatable/equatable.dart';
 /// **Por qué existe una segunda clase de parada.** En Corrientes capital hay
 /// 254 paradas mapeadas en OpenStreetMap, con los números de línea que paran
 /// en cada una. Pero el dataset municipal de recorridos solo publica 10 de
-/// las 22 líneas que esas paradas mencionan, y de las 254 apenas 93 caen a
-/// menos de 80 m del recorrido de su propia línea.
+/// las 22 líneas que esas paradas mencionan.
 ///
-/// Con datos así de ralos, meterlas al planificador sería peor que no
-/// tenerlas: "¿cómo llego?" mandaría a caminar un kilómetro hasta la única
-/// parada que conoce, teniendo una en la esquina. Parecería una respuesta y
-/// estaría mal.
+/// **Las paradas sí encajan con los recorridos**: 202 de las 254 caen a menos
+/// de 80 m del recorrido de una de sus líneas, con una mediana de 5 m. (Una
+/// versión anterior de este comentario decía 93, medido contra el VÉRTICE más
+/// cercano del trazado en vez del segmento — ver
+/// `test/tools/corrientes_cobertura_test.dart`.)
+///
+/// Lo que falta es **cobertura pareja**. La 104 tiene una parada cada 61 m;
+/// la 101 tiene UNA en doce kilómetros y el Aerobus ninguna. Meterlas al
+/// planificador así contestaría bien para la 104 y mandaría a caminar
+/// kilómetros para el resto: parecería una respuesta y estaría mal.
+///
+/// La diferencia importa, porque este motivo SÍ tiene arreglo: mapear paradas
+/// en OSM, línea por línea. Cada línea que llegue a densidad usable es una
+/// línea que puede entrar.
 ///
 /// Entonces se muestran por lo que SON: dónde parar y qué líneas paran ahí.
 /// Es lo que contesta la pregunta de quien está parado en la vereda en
