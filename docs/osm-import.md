@@ -16,6 +16,7 @@ Las alternativas que se evaluaron:
 | **OpenStreetMap** | ✅ Cobertura completa del Gran Resistencia. Licencia ODbL. **Es la que se usa.** |
 | SITAM / ChacoBus (provincia) | ❌ Apps propietarias, sin API pública ni datos abiertos. **Y hace rato que ni siquiera funcionan** — ver abajo. |
 | [Datos abiertos de Corrientes](https://datos.ciudaddecorrientes.gov.ar/dataset?tags=colectivos) | ✅ **Ya integrado** para Corrientes capital (10 líneas, 60 recorridos) con `tools/corrientes_import.dart`. Sin paradas: ese recurso fue dado de baja del portal. ⚠️ **El portal no declara licencia** — ver más abajo. |
+| [Itinerarios del sitio de la Municipalidad](../docs/corrientes-itinerarios.md) | ✅ Las **calles** de los 24 ramales, incluidos 12 de los 13 que el dataset no publica. No es geometría: es la fuente legítima para trazarlos **en OSM**. ⚠️ Tampoco declara licencia. |
 | GTFS nacional | ❌ No existe feed para el Gran Resistencia. |
 
 ### El estado real de SITAM (observación de campo, 2026-09-18)
