@@ -1,0 +1,106 @@
+# El GeoServer del municipio de Corrientes
+
+**Los datos existen, están completos, actualizados y son de ellos.** Este
+documento dice exactamente qué hay y cómo se llama cada cosa, que es lo que
+convierte un pedido vago en uno que se puede contestar en cinco minutos.
+
+Relevado el **2026-09-21**.
+
+## Qué es
+
+La IDE municipal (`gis.ciudaddecorrientes.gov.ar/idemcc/`) es un visor
+Leaflet sobre un **GeoServer**. El visor anterior
+(`/gis/transporte_urbano/`) declara sus capas en `capas/publico.js`, y de ahí
+sale el inventario: **39 capas en el espacio de nombres `transporte`**.
+
+Endpoint declarado en `mapa/mapa.js`:
+
+```
+https://gisdesa.ciudaddecorrientes.gov.ar:8282/geoserver/wms
+```
+
+## El inventario completo
+
+### Las dos que resuelven todo
+
+| Capa | Qué es |
+|---|---|
+| `transporte:vw_paradas_colectivos` | **Las paradas de colectivo urbano.** Es el recurso que el portal de datos dio de baja, vivo y mantenido. |
+| `transporte:vw_recorrido_total_colectivo` | El recorrido total de colectivos. |
+
+### Los 29 recorridos por ramal
+
+`transporte:recorrido_ramal_…` — `101_B`, `101_C`, `102_A`, `102_B`, `102_C`,
+`103_A`, `103_B`, `103_C_directo`, `103_C_esperanza_montania`, `103_D`,
+`104_A`, `104_B`, `104_C`, `104_D`, `105_A`, `105_B`, `105_C_250_viv`,
+`105_C_perichon`, `106_A`, `106_B`, `106_C`, `106_D`, `108_AB`, `108_C`,
+`109_A_Laguna_Soto`, `109_B_Yecoha`, `110_A`, `110_B`,
+`110_C_sta_catalina`.
+
+**Están los 13 que nos faltaban**, el `110_B` incluido — el que ninguna otra
+fuente tenía. Y hay uno que no conocíamos: `106_D`.
+
+Los nombres coinciden con los ramales del seed actual (`C 250 VIV.`,
+`C PERICHON`, `B YECOHA`, `A LAGUNA SOTO`, `C SANTA CATALINA`), así que el
+empalme con lo que ya tenemos es directo.
+
+### Los interurbanos Chaco–Corrientes
+
+| Capa | |
+|---|---|
+| `transporte:vw_paradas_barranqueras` · `vw_recorrido_barranqueras` | La que cruza a **Barranqueras** |
+| `transporte:vw_paradas_campus` · `vw_recorrido_campus` | La del **Campus** |
+| `transporte:vw_paradas_sarmiento` · `vw_recorrido_sarmiento` | La **Sarmiento** |
+
+Son los cruces del puente, con paradas de los dos lados.
+
+### De yapa
+
+`transporte:vw_puntos_recarga_sube` — los puntos de recarga SUBE.
+
+## Por qué no se bajó nada
+
+Dos muros, los dos del lado de ellos:
+
+1. **Un Web Application Firewall bloquea el acceso automático.** Un
+   `GetCapabilities` de WFS por HTTP devuelve `403 Web Application Firewall
+   — Event Type: signature`.
+2. **Por HTTPS el certificado no valida** (cadena incompleta), y el visor
+   responde 503 a un cliente que no sea un navegador.
+
+**No se evade un firewall.** Punto. Lo que corresponde es pedir acceso, y
+ahora se puede pedir por el nombre exacto de cada capa.
+
+## Lo que hay que pedir
+
+En el mismo mail de `docs/mails-para-mandar.md`. Cualquiera de las tres
+formas sirve, de menos a más trabajo para ellos:
+
+1. **Habilitar WFS público** en esas capas
+   (`?service=WFS&request=GetFeature&outputFormat=application/json`). Cero
+   trabajo recurrente: se actualiza solo.
+2. **Un export de GeoJSON o shapefile** de `vw_paradas_colectivos` y de los
+   `recorrido_ramal_*`.
+3. **Republicar el recurso de paradas** en el portal de datos abiertos, que
+   es de donde lo sacaron.
+
+Y en las tres: **decir la licencia**, que sigue sin figurar.
+
+## Lo que ya se recuperó del archivo
+
+El visor de 2020 (`/gis/emergencia/`) tenía sus capas exportadas como
+GeoJSON dentro de archivos `.js`, y el Internet Archive las conserva. Son
+**11 ramales** (101B, 101C, 102A, 102B, 102C, 103B, 106A, 109A, 110A, 110B,
++ Servicio de Combis) en WGS84, con `ramal`, `nombre`, `descrip` (IDA/VUELTA)
+y `LINEA`.
+
+De los 13 ramales que nos faltan aporta solo tres —**103B, 110A y 110B**—,
+pero el **110B** es el que no tenía absolutamente ninguna otra fuente.
+
+```bash
+curl -sSL -o 110B.js \
+  "https://web.archive.org/web/20200219id_/http://gis.ciudaddecorrientes.gov.ar/gis/emergencia/layers/110B_5.js"
+```
+
+Es de **2020** y sin licencia declarada: vale lo mismo que se dijo en
+`docs/corrientes-paradas-archivadas.md`. **No se usa hasta preguntar.**

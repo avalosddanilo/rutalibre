@@ -17,6 +17,7 @@ Las alternativas que se evaluaron:
 | SITAM / ChacoBus (provincia) | ❌ Apps propietarias, sin API pública ni datos abiertos. **Y hace rato que ni siquiera funcionan** — ver abajo. |
 | [Datos abiertos de Corrientes](https://datos.ciudaddecorrientes.gov.ar/dataset?tags=colectivos) | ✅ **Ya integrado** para Corrientes capital (10 líneas, 60 recorridos) con `tools/corrientes_import.dart`. Sin paradas: ese recurso fue dado de baja del portal. ⚠️ **El portal no declara licencia** — ver más abajo. |
 | [Itinerarios del sitio de la Municipalidad](../docs/corrientes-itinerarios.md) | ✅ Las **calles** de los 24 ramales, incluidos 12 de los 13 que el dataset no publica. No es geometría: es la fuente legítima para trazarlos **en OSM**. ⚠️ Tampoco declara licencia. |
+| [GeoServer del municipio](../docs/corrientes-geoserver.md) | ⏸️ **La fuente buena**: 39 capas, las paradas urbanas y los 29 recorridos por ramal, mantenidos por ellos. Bloqueado por su firewall — hay que **pedir acceso**, no evadirlo. |
 | [Paradas de Corrientes archivadas](../docs/corrientes-paradas-archivadas.md) | ⏸️ **1437 paradas oficiales** con ramal y sentido, del recurso que el municipio dio de baja, recuperadas del Internet Archive. Medidas contra la geometría actual: mediana de 5 m. **No se usan todavía** — primero hay que preguntarle al municipio. |
 | GTFS nacional | ❌ No existe feed para el Gran Resistencia. |
 
