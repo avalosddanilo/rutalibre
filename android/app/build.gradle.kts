@@ -37,8 +37,8 @@ android {
         applicationId = "com.rutalibre.rutalibre"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        // Los dos salen de `version:` en pubspec.yaml (1.0.0+1 → versionName
-        // "1.0.0", versionCode 1). Se cambian ahí y en ningún otro lado.
+        // Los dos salen de `version:` en pubspec.yaml (1.0.0+3 → versionName
+        // "1.0.0", versionCode 3). Se cambian ahí y en ningún otro lado.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
