@@ -194,10 +194,45 @@ del lado correntino son micros interurbanos de larga distancia. Sus
 recorridos salen del portal municipal:
 
 ```bash
+# Solo recorridos
 dart run tools/corrientes_import.dart
+
+# Recorridos + PARADAS (baja el CSV archivado del Internet Archive)
+dart run tools/corrientes_import.dart --con-paradas
+
+# Con un CSV de paradas local, y con el callejero crudo de Overpass
+dart run tools/corrientes_import.dart --paradas paradas.csv --calles osm_streets.json
 ```
 
-Genera `supabase/seed/seed_corrientes.sql` (10 líneas, 60 recorridos).
+Genera `supabase/seed/seed_corrientes.sql`: **10 líneas, 60 recorridos y
+1357 paradas** en 2202 entradas de secuencia.
+
+### Las paradas
+
+Salen del recurso `paradas-colectivos.csv` del **mismo dataset** que los
+recorridos, que el municipio retiró del portal y el Internet Archive
+conserva. Por qué se puede usar un dato de 2022 con recorridos de 2026 está
+medido en [`corrientes-paradas-archivadas.md`](corrientes-paradas-archivadas.md):
+mediana de 5 metros contra la geometría actual.
+
+**Identidad**: `stops.source_ref = 'ctes:<gid>'`, no `osm_node_id` — no son
+nodos de OSM y decir que lo son sería mentir sobre qué es el dato. Requiere
+la migración **0013**.
+
+**El orden NO sale del archivo**: cada parada se proyecta sobre el trazado y
+se ordena por cuánto se avanzó, igual que en el Gran Resistencia. Se
+descarta lo que caiga a más de 250 m.
+
+**Los nombres salen del callejero**, con la misma máquina que el importador
+de OSM. Sin `--calles` usa `assets/addresses.json`, que ya viaja en el repo
+con 541 calles de Corrientes pero reconstruye cada calle uniendo portales,
+no el eje de la calzada: **496 de las 1357 se quedan sin esquina** y
+conservan su código (`Parada 1234`). Con el callejero crudo de Overpass
+salen mejor. Feo y verdadero le gana a bonito e inventado.
+
+**Lo que queda afuera**: el ramal `108-A-B`, porque el dataset de recorridos
+solo publica el 108 ramal C y meter esas paradas en otro ramal sería mandar
+a alguien a esperar donde no pasa.
 
 Tres diferencias con el importador de OSM, que es por lo que son dos
 pipelines y no uno:

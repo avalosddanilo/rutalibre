@@ -15,6 +15,7 @@
 /// Dart PURO — sin red, sin SQL, sin Flutter.
 library;
 
+import 'corrientes_stops_csv.dart';
 import 'csv_reader.dart';
 import 'gauss_kruger.dart';
 import 'geometry.dart';
@@ -309,6 +310,9 @@ String emitCorrientesSql(
   CorrientesImportResult result, {
   required String generatedAt,
   required String sourceUrl,
+  CorrientesStopsResult? stops,
+  String? stopsSourceUrl,
+  String Function(GeoPoint point)? stopName,
 }) {
   final buffer = StringBuffer()
     ..writeln('-- ${'=' * 68}')
@@ -321,8 +325,21 @@ String emitCorrientesSql(
     ..writeln('-- Fuente: Municipalidad de la Ciudad de Corrientes,')
     ..writeln('--   Dirección General de Sistemas de Información Geográfica.')
     ..writeln('--   $sourceUrl')
-    ..writeln('--   OJO: el portal NO declara licencia. Atribución obligatoria')
-    ..writeln('--   y revisar antes de publicar comercialmente.')
+    ..writeln('--   OJO: el portal NO declara licencia, aunque el servicio')
+    ..writeln('--   WMS del municipio declara <AccessConstraints>NONE</>.')
+    ..writeln('--   Atribución obligatoria. Ver docs/corrientes-geoserver.md.')
+    ..writeln('--')
+    ..writeln(
+      stopsSourceUrl == null
+          ? '-- Paradas: no se importaron en esta corrida.'
+          : '-- Paradas: recurso `paradas-colectivos.csv` del MISMO dataset,',
+    )
+    ..writeln(
+      stopsSourceUrl == null
+          ? '--'
+          : '--   retirado del portal y recuperado del Internet Archive:',
+    )
+    ..writeln(stopsSourceUrl == null ? '--' : '--   $stopsSourceUrl')
     ..writeln('--')
     ..writeln('-- Coordenadas: el origen viene en Gauss-Krüger Faja 5 y se')
     ..writeln('-- reproyecta a WGS84 en el importador (ver gauss_kruger.dart).')
@@ -330,9 +347,9 @@ String emitCorrientesSql(
     ..writeln('-- Fecha de extracción: $generatedAt')
     ..writeln(
       '-- Líneas: ${result.lines.length} | '
-      'Recorridos: ${result.variants.length} | Paradas: 0 (el portal dio',
+      'Recorridos: ${result.variants.length} | '
+      'Paradas: ${stops?.stops.length ?? 0}',
     )
-    ..writeln('-- de baja el recurso de paradas).')
     ..writeln('--')
     ..writeln('-- REQUIERE la migración 0003 aplicada.')
     ..writeln('-- ${'=' * 68}')
@@ -416,6 +433,84 @@ String emitCorrientesSql(
       ..writeln('    geom = excluded.geom,')
       ..writeln('    is_active = true;');
   }
+  if (stops != null && stops.stops.isNotEmpty) {
+    buffer
+      ..writeln()
+      ..writeln('-- ${'-' * 60}')
+      ..writeln('-- 3. Paradas (${stops.stops.length})')
+      ..writeln('--    Identidad: `source_ref` = ctes:<gid> del dataset')
+      ..writeln('--    municipal. NO son nodos de OSM (ver migración 0013).')
+      ..writeln('-- ${'-' * 60}');
+    for (final stop in stops.stops) {
+      // Sin esquina derivada queda el código del municipio. Feo y
+      // verdadero le gana a bonito e inventado.
+      final derivado = stopName?.call(stop.point) ?? '';
+      final nombre = derivado.isEmpty ? 'Parada ${stop.gid}' : derivado;
+      buffer
+        ..writeln(
+          'insert into public.stops '
+          '(source_ref, name, description, geom, is_active)',
+        )
+        ..writeln(
+          'values (${sqlString('ctes:${stop.gid}')}, ${sqlString(nombre)}, '
+          '${sqlString('Parada ${stop.gid} · Municipalidad de Corrientes')},',
+        )
+        ..writeln(
+          '        st_setsrid(st_point(${stop.point.lng.toStringAsFixed(6)}, '
+          '${stop.point.lat.toStringAsFixed(6)}), 4326)::geography, true)',
+        )
+        ..writeln('on conflict (source_ref) do update set')
+        ..writeln('    name = excluded.name,')
+        ..writeln('    description = excluded.description,')
+        ..writeln('    geom = excluded.geom,')
+        ..writeln('    is_active = true;');
+    }
+
+    final total = stops.byVariant.values.fold(0, (n, v) => n + v.length);
+    buffer
+      ..writeln()
+      ..writeln('-- ${'-' * 60}')
+      ..writeln('-- 4. Secuencia de paradas por recorrido ($total)')
+      ..writeln('--    El orden NO sale del archivo: cada parada se proyecta')
+      ..writeln('--    sobre el trazado y se ordena por cuánto se avanzó.')
+      ..writeln('-- ${'-' * 60}')
+      ..writeln('delete from public.route_stops rs')
+      ..writeln('  using public.route_variants rv, public.lines l,')
+      ..writeln('        public.networks n')
+      ..writeln(' where rs.route_variant_id = rv.id')
+      ..writeln('   and rv.line_id = l.id and l.network_id = n.id')
+      ..writeln('   and n.code = ${sqlString(_networkCode)};');
+    for (final v in result.variants) {
+      final gids =
+          stops.byVariant['${v.lineCode}/${v.branch ?? ''}/${v.direction}'];
+      if (gids == null) continue;
+      for (var i = 0; i < gids.length; i++) {
+        buffer
+          ..writeln(
+            'insert into public.route_stops '
+            '(route_variant_id, stop_id, stop_order)',
+          )
+          ..writeln(
+            'values ((select rv.id from public.route_variants rv '
+            'join public.lines l on l.id = rv.line_id',
+          )
+          ..writeln(
+            '         join public.networks n on n.id = l.network_id '
+            'where n.code = ${sqlString(_networkCode)}',
+          )
+          ..writeln(
+            '           and l.code = ${sqlString(v.lineCode)} '
+            'and rv.branch is not distinct from ${sqlString(v.branch)}',
+          )
+          ..writeln('           and rv.direction = ${v.direction}),')
+          ..writeln(
+            '        (select id from public.stops where source_ref = '
+            '${sqlString('ctes:${gids[i]}')}), ${i + 1});',
+          );
+      }
+    }
+  }
+
   buffer
     ..writeln()
     ..writeln('commit;')
@@ -427,6 +522,9 @@ String emitCorrientesSql(
     ..writeln('-- ${'=' * 68}');
   _section(buffer, 'Filas descartadas', result.skipped);
   _section(buffer, 'Advertencias de datos', result.warnings);
+  if (stops != null) {
+    _section(buffer, 'Paradas', stops.warnings);
+  }
 
   return buffer.toString();
 }

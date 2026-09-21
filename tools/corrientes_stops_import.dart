@@ -24,7 +24,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'src/corrientes_stops.dart';
-import 'src/geometry.dart';
 import 'src/stop_naming.dart';
 
 const _bbox = '-27.62,-59.15,-27.32,-58.70';
@@ -73,7 +72,7 @@ Future<void> main(List<String> args) async {
   // El mismo índice de calles que usa el importador del Gran Resistencia: la
   // parada correntina tampoco tiene nombre propio, así que se la bautiza con
   // la esquina.
-  final index = StreetIndex(_streetsFrom(streetsJson));
+  final index = StreetIndex(streetsFromOverpass(streetsJson));
 
   final raw = <RawStop>[
     for (final element
@@ -118,40 +117,6 @@ Future<void> main(List<String> args) async {
   stdout.writeln(
     '$outputPath escrito (${(encoded.length / 1024).toStringAsFixed(0)} KB).',
   );
-}
-
-/// Reconstruye los tramos de calle con nombre desde la respuesta de Overpass.
-List<NamedStreet> _streetsFrom(Map<String, dynamic> json) {
-  final points = <int, GeoPoint>{};
-  final ways = <Map<String, dynamic>>[];
-  for (final element
-      in ((json['elements'] as List<dynamic>?) ?? const [])
-          .cast<Map<String, dynamic>>()) {
-    switch (element['type']) {
-      case 'node':
-        final lat = (element['lat'] as num?)?.toDouble();
-        final lng = (element['lon'] as num?)?.toDouble();
-        final id = (element['id'] as num?)?.toInt();
-        if (lat != null && lng != null && id != null) {
-          points[id] = (lat: lat, lng: lng);
-        }
-      case 'way':
-        ways.add(element);
-    }
-  }
-
-  final streets = <NamedStreet>[];
-  for (final way in ways) {
-    final name = (way['tags'] as Map<String, dynamic>?)?['name'] as String?;
-    if (name == null || name.isEmpty) continue;
-    final nodes = (way['nodes'] as List<dynamic>?) ?? const [];
-    final geometry = <GeoPoint>[
-      for (final node in nodes) ?points[(node as num).toInt()],
-    ];
-    if (geometry.length < 2) continue;
-    streets.add(NamedStreet(name: name, points: geometry));
-  }
-  return streets;
 }
 
 String? _argValue(List<String> args, String flag) {

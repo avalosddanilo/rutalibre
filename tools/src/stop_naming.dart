@@ -150,3 +150,88 @@ String joinStreetNames(String first, String second) {
       (normalized.startsWith('hi') && !normalized.startsWith('hie'));
   return '$first ${startsWithI ? 'e' : 'y'} $second';
 }
+
+/// Reconstruye los tramos de calle con nombre desde la respuesta de Overpass.
+List<NamedStreet> streetsFromOverpass(Map<String, dynamic> json) {
+  final points = <int, GeoPoint>{};
+  final ways = <Map<String, dynamic>>[];
+  for (final element
+      in ((json['elements'] as List<dynamic>?) ?? const [])
+          .cast<Map<String, dynamic>>()) {
+    switch (element['type']) {
+      case 'node':
+        final lat = (element['lat'] as num?)?.toDouble();
+        final lng = (element['lon'] as num?)?.toDouble();
+        final id = (element['id'] as num?)?.toInt();
+        if (lat != null && lng != null && id != null) {
+          points[id] = (lat: lat, lng: lng);
+        }
+      case 'way':
+        ways.add(element);
+    }
+  }
+
+  final streets = <NamedStreet>[];
+  for (final way in ways) {
+    final name = (way['tags'] as Map<String, dynamic>?)?['name'] as String?;
+    if (name == null || name.isEmpty) continue;
+    final nodes = (way['nodes'] as List<dynamic>?) ?? const [];
+    final geometry = <GeoPoint>[
+      for (final node in nodes) ?points[(node as num).toInt()],
+    ];
+    if (geometry.length < 2) continue;
+    streets.add(NamedStreet(name: name, points: geometry));
+  }
+  return streets;
+}
+
+/// Callejero armado desde `assets/addresses.json`, el de las alturas.
+///
+/// **Por qué existe además de [streetsFromOverpass].** Overpass no siempre
+/// contesta —cuando este archivo se escribió devolvía 504— y el asset de
+/// alturas ya viaja en el repo con 541 calles de Corrientes. No es tan bueno
+/// como la geometría real de OSM: acá cada calle se reconstruye uniendo sus
+/// puntos de altura, que son portales, no el eje de la calzada.
+///
+/// **Los puntos se ordenan por el eje dominante** (el que más se extiende,
+/// norte-sur o este-oeste). Sin eso la polilínea zigzaguea entre alturas
+/// desordenadas e inventa tramos que cruzan manzanas enteras. Para calles
+/// urbanas, que son rectas, alcanza.
+List<NamedStreet> streetsFromAddressAsset(Map<String, dynamic> json) {
+  final streets = <NamedStreet>[];
+  for (final entry in ((json['s'] as List<dynamic>?) ?? const [])) {
+    if (entry is! List || entry.length < 3) continue;
+    final name = entry[0];
+    final raw = entry[2];
+    if (name is! String || raw is! List) continue;
+
+    final points = <GeoPoint>[
+      for (final p in raw)
+        if (p is List && p.length >= 3)
+          (lat: (p[1] as num).toDouble(), lng: (p[2] as num).toDouble()),
+    ];
+    if (points.length < 2) continue;
+
+    var minLat = points.first.lat, maxLat = points.first.lat;
+    var minLng = points.first.lng, maxLng = points.first.lng;
+    for (final p in points) {
+      if (p.lat < minLat) minLat = p.lat;
+      if (p.lat > maxLat) maxLat = p.lat;
+      if (p.lng < minLng) minLng = p.lng;
+      if (p.lng > maxLng) maxLng = p.lng;
+    }
+    // A esta latitud un grado de longitud mide ~0,887 de uno de latitud: se
+    // compara en metros y no en grados, o las calles este-oeste se ordenan
+    // por el eje equivocado.
+    final spanLat = maxLat - minLat;
+    final spanLng = (maxLng - minLng) * 0.887;
+    points.sort(
+      spanLat >= spanLng
+          ? (a, b) => a.lat.compareTo(b.lat)
+          : (a, b) => a.lng.compareTo(b.lng),
+    );
+
+    streets.add(NamedStreet(name: name, points: points));
+  }
+  return streets;
+}

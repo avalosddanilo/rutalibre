@@ -7,15 +7,20 @@
 /// sus 279 paradas se descartaban enteras aunque estuvieran ahí, bajadas y
 /// con nombre.
 ///
-/// **Lo que NO hace: meterlas en el planificador.** Se midió: de 254 paradas
-/// con número de línea, solo 93 caen a menos de 80 m del recorrido de su
-/// propia línea, y 49 mencionan líneas que el dataset municipal ni publica
-/// (tiene 10 de las 22 que OSM conoce). Con paradas tan ralas, "¿cómo llego?"
-/// mandaría a caminar un kilómetro hasta la única parada que conoce teniendo
-/// una en la esquina — peor que decir "no sé", porque parece una respuesta.
+/// **⚠️ Este importador quedó superado.** Desde que
+/// `tools/corrientes_import.dart --con-paradas` carga las **1437 paradas
+/// oficiales del municipio** —con ramal, sentido y orden sobre el
+/// recorrido—, estas 254 de OSM son un subconjunto peor: menos, sin orden y
+/// sin sentido. Ver `docs/osm-import.md`.
 ///
-/// Lo que sí hace: que en Corrientes se VEA dónde parar y qué líneas paran
-/// ahí. Hoy es un mapa con líneas y ninguna parada.
+/// **Queda pendiente decidir qué pasa con el asset**: si las dos capas se
+/// dibujan a la vez, en Corrientes se ven paradas duplicadas. Lo más
+/// probable es que haya que retirarlo. No se tocó todavía porque es un
+/// cambio de la app, no del importador.
+///
+/// (El comentario anterior justificaba dejarlas fuera del planificador con
+/// un número mal medido —"solo 93 de 254"—, que en realidad son 202. El
+/// error y su causa están en `test/tools/corrientes_cobertura_test.dart`.)
 library;
 
 /// El número de línea sale del NOMBRE de la parada.
