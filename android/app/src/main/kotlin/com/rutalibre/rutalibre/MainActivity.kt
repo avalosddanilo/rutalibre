@@ -1,9 +1,14 @@
 package com.rutalibre.rutalibre
 
+import android.app.KeyguardManager
+import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.os.Build
+import android.os.PowerManager
+import android.view.WindowManager
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -18,6 +23,13 @@ class MainActivity : FlutterActivity() {
     // Referencia viva al del "arrancó el viaje": un MediaPlayer sin nadie
     // que lo sostenga puede recolectarse a mitad del sonido y cortarlo.
     private var chimePlayer: MediaPlayer? = null
+
+    // El wakelock que ENCIENDE la pantalla cuando la alarma suena con el
+    // teléfono en el bolsillo. Las banderas de ventana
+    // (setTurnScreenOn/setShowWhenLocked) hacen que la pantalla de alarma se
+    // vea sobre el bloqueo, pero no prenden una pantalla apagada desde una
+    // actividad pausada; esto sí.
+    private var screenLock: PowerManager.WakeLock? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -92,6 +104,69 @@ class MainActivity : FlutterActivity() {
                     }
                     result.success(null)
                 }
+                "holdTrip" -> {
+                    // El servicio en primer plano: el proceso deja de
+                    // congelarse y el GPS sigue llegando con la pantalla
+                    // apagada. Ver TripService.
+                    try {
+                        TripService.start(this@MainActivity)
+                        result.success(true)
+                    } catch (_: Exception) {
+                        // Contesta FALSE y no un error: el lado de Dart usa
+                        // esa respuesta para dejar el wakelock de pantalla
+                        // como red, que es el comportamiento de la 1.0.
+                        result.success(false)
+                    }
+                }
+                "releaseTrip" -> {
+                    try {
+                        TripService.stop(this@MainActivity)
+                    } catch (_: Exception) {
+                        // Parar lo que no arrancó no es un problema.
+                    }
+                    result.success(null)
+                }
+                "wakeScreen" -> {
+                    try {
+                        runOnUiThread {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                                setShowWhenLocked(true)
+                                setTurnScreenOn(true)
+                                val keyguard =
+                                    getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+                                keyguard.requestDismissKeyguard(this@MainActivity, null)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                window.addFlags(
+                                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
+                                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or
+                                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
+                                )
+                            }
+                            // Ya despierto, que no se vuelva a apagar
+                            // mientras la alarma esté en pantalla.
+                            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                        }
+                        val power = getSystemService(Context.POWER_SERVICE) as PowerManager
+                        releaseScreenLock()
+                        @Suppress("DEPRECATION")
+                        screenLock = power.newWakeLock(
+                            PowerManager.SCREEN_BRIGHT_WAKE_LOCK or
+                                PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                            "rutalibre:alarma",
+                        ).apply {
+                            // Con vencimiento: si algo sale mal y nadie
+                            // llama a silence, el wakelock se suelta solo a
+                            // los dos minutos en vez de dejar la pantalla
+                            // prendida hasta que muera la batería.
+                            acquire(2 * 60 * 1000L)
+                        }
+                    } catch (_: Exception) {
+                        // Sin pantalla encendida quedan el tono y la
+                        // vibración, que es como despertaba antes.
+                    }
+                    result.success(null)
+                }
                 "silence" -> {
                     try {
                         alarmPlayer?.stop()
@@ -100,11 +175,28 @@ class MainActivity : FlutterActivity() {
                     }
                     alarmPlayer?.release()
                     alarmPlayer = null
+                    // La pantalla vuelve a ser del usuario: soltar el
+                    // wakelock y la bandera juntos, o queda prendida para
+                    // siempre.
+                    releaseScreenLock()
+                    runOnUiThread {
+                        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    }
                     result.success(null)
                 }
                 else -> result.notImplemented()
             }
         }
+    }
+
+    /** Soltar un wakelock que no está tomado TIRA, así que se pregunta. */
+    private fun releaseScreenLock() {
+        try {
+            screenLock?.let { if (it.isHeld) it.release() }
+        } catch (_: Exception) {
+            // Nada que soltar.
+        }
+        screenLock = null
     }
 
     override fun onDestroy() {
@@ -114,6 +206,7 @@ class MainActivity : FlutterActivity() {
         alarmPlayer = null
         chimePlayer?.release()
         chimePlayer = null
+        releaseScreenLock()
         super.onDestroy()
     }
 }

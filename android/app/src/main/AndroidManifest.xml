@@ -5,6 +5,24 @@
     <!-- Ubicación aproximada y fina para "paradas cerca mío". -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- La alarma "avisame para bajar" con la pantalla apagada.
+
+         FOREGROUND_SERVICE + _LOCATION: sin un servicio en primer plano de
+         tipo `location`, Android congela el proceso al apagar la pantalla y
+         el GPS deja de llegar — la alarma nunca se entera de que llegaste.
+         Es la limitación que tenía la 1.0. NO habilita ubicación en segundo
+         plano (eso es ACCESS_BACKGROUND_LOCATION, que NO pedimos): solo
+         mantiene vivo lo que el usuario dejó andando.
+
+         POST_NOTIFICATIONS: la notificación fija del viaje. Si el usuario la
+         niega, el servicio corre igual y la alarma funciona; solo no se ve
+         el cartelito. Por eso no se pide con un diálogo.
+
+         WAKE_LOCK: encender la pantalla cuando la alarma suena. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- allowBackup="false": lo único que la app guarda en el teléfono es
          cache de datos PÚBLICOS del transporte más los favoritos, y todo eso
          se regenera solo. Subirlo a Drive gasta cuota de backup del usuario
@@ -40,6 +58,13 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- El servicio que sostiene el viaje guiado mientras la alarma
+             está armada. `exported="false"`: lo arranca y lo para esta app y
+             nadie más. Ver TripService.kt. -->
+        <service
+            android:name=".TripService"
+            android:exported="false"
+            android:foregroundServiceType="location"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

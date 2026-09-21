@@ -386,7 +386,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Avisame para bajar'));
       await tester.pumpAndSettle();
-      expect(gear.calls, contains('keepScreenOn'));
+      expect(gear.calls, contains('holdTrip'));
 
       // Llega la zona de bajada: pantalla de alarma + tono en loop.
       gps.add((lat: -27.4519, lng: _routeStops[5].lng));
@@ -442,7 +442,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(c.read(wakeAlarmProvider), isFalse);
-      expect(gear.calls, containsAllInOrder(['silence', 'allowScreenOff']));
+      expect(gear.calls, containsAllInOrder(['silence', 'releaseTrip']));
     });
   });
 }

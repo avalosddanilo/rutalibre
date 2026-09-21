@@ -108,8 +108,8 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   de fondo.
 - **Alarma "avisame para bajar", por si te dormís.** Pasa de verdad: uno se
   duerme arriba del colectivo y se despierta en la terminal. Con la guía
-  andando y el contador en vivo, un interruptor arma la alarma: la pantalla
-  deja de apagarse sola y, **dos paradas antes de la tuya** —a quien hay que
+  andando y el contador en vivo, un interruptor arma la alarma y, **dos
+  paradas antes de la tuya** —a quien hay que
   despertar no le alcanza el aviso de una parada: entre abrir los ojos y
   juntar las cosas, "muy justo", dijo la prueba de campo—, suena **el tono
   de alarma del sistema en loop por el canal de alarmas** —o sea, aunque el
@@ -117,9 +117,19 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   hace falta— con vibración sostenida y la pantalla entera pidiendo bajarse.
   Solo la apaga el botón: una alarma que se apaga rozándola medio dormido no
   despertó a nadie. Es opt-in por viaje y queda armada en los transbordos
-  (hay que bajarse dos veces). Su límite honesto: necesita la app abierta —
-  la versión que sigue con la pantalla apagada pide un servicio en primer
-  plano de Android y queda para la 1.1.
+  (hay que bajarse dos veces).
+- **Y anda con la pantalla apagada y el teléfono en el bolsillo** — que es,
+  justamente, la única situación en la que uno se duerme. Hasta acá la alarma
+  obligaba a dejar la pantalla prendida, y estaba avisado: con la pantalla
+  apagada Android congela el proceso, el GPS deja de llegar y la alarma nunca
+  se entera de que llegaste. Ahora, mientras la alarma está armada, corre un
+  servicio en primer plano —con su notificación fija, que es el trato— que
+  mantiene vivo el viaje; y cuando suena, **enciende la pantalla y se muestra
+  sobre el bloqueo**, así el que se despierta tiene algo para leer y no solo
+  un ruido. La notificación aparece SOLO si armaste la alarma: quien solo
+  mira cuántas paradas faltan no ve nada nuevo. Donde el servicio no se puede
+  —iOS, o un Android que lo rechaza— la alarma vuelve sola al
+  comportamiento anterior en vez de fallar.
 - **La cámara te sigue durante el viaje, al zoom de cada paso** — y te
   suelta apenas tocás. Al iniciar te enfoca al instante (el origen del viaje
   sos vos, sin esperar al GPS); caminando el zoom se mete hasta los metros

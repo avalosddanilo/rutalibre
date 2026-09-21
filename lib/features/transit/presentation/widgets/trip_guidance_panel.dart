@@ -401,7 +401,7 @@ class _WakeAlarmToggle extends ConsumerWidget {
       // La promesa se lee ANTES de armar: qué va a pasar y a qué precio.
       subtitle: const Text(
         'Por si te dormís: suena fuerte aunque el teléfono esté en '
-        'silencio, y la pantalla queda prendida.',
+        'silencio y con la pantalla apagada.',
       ),
     );
   }

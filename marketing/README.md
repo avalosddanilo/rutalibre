@@ -75,6 +75,24 @@ verifica el texto que va impreso en las imágenes:
 3. **El carrusel de la alarma dice su límite** — que necesita la app abierta.
    Venderla sin ese renglón haría que alguien se durmiera confiando en algo
    que, con la pantalla apagada, no suena.
+
+   > **⚠️ Este renglón está por caducar, pero todavía NO caducó.** El código
+   > de la alarma con la pantalla apagada ya está hecho (servicio en primer
+   > plano, `TripService.kt`, versionCode 3) y pasa los tests. Lo que **no**
+   > está es probado en un teléfono de verdad ni aprobado por Google, que
+   > para `FOREGROUND_SERVICE_LOCATION` pide una declaración aparte (ver
+   > `docs/publicacion.md`).
+   >
+   > Hasta que las dos cosas estén, **la copy pública no se toca**: decir que
+   > anda con la pantalla apagada antes de verlo andar es exactamente la
+   > clase de promesa que esta lista existe para impedir, y el que se
+   > duerme confiando en ella se pasa de parada igual.
+   >
+   > Cuando esté verificado, lo que hay que actualizar es: este renglón, el
+   > slide 7 y el pie de `ig-carruseles.md`, los dos pasajes de
+   > `ig-posts-y-stories.md`, los dos de `tiktok-guiones.md`, la regla de
+   > `estrategia.md`, la ficha de Play (`docs/ficha-play.md`) y la respuesta
+   > «La alarma no sonó» de `docs/resenas.md`.
 4. **Cada carrusel cierra con la marca** y no pasa de 10 slides.
 5. **Las capturas que usan los slides existen** — un slide que apunta a un
    archivo borrado no falla al generar, falla cincuenta PNG después.

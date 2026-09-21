@@ -39,9 +39,9 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
 | `applicationId` | `com.rutalibre.rutalibre` — **no se puede cambiar** después de publicar |
 | Ícono | Generado desde `BrandMarkPainter`, con capa adaptable y monocroma (Android 13+) |
 | Splash | `flutter_native_splash`, fondo `#161616`, con variante para Android 12+ |
-| `versionCode` / `versionName` | Salen de `version:` en `pubspec.yaml` (hoy `1.0.0+1` → `versionName 1.0.0`, `versionCode 1`) |
+| `versionCode` / `versionName` | Salen de `version:` en `pubspec.yaml` (hoy `1.0.0+3` → `versionName 1.0.0`, `versionCode 3`; el 1 y el 2 ya se usaron en la prueba cerrada y Play no los acepta de nuevo) |
 | minSdk / targetSdk | 24 / 36 |
-| Permisos | Verificados sobre el manifest **fusionado**: solo `INTERNET`, `ACCESS_COARSE_LOCATION` y `ACCESS_FINE_LOCATION`. Ningún plugin agrega otros |
+| Permisos | Verificados sobre el manifest **fusionado**: `INTERNET`, `ACCESS_COARSE_LOCATION`, `ACCESS_FINE_LOCATION` y —desde la alarma con pantalla apagada— `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_LOCATION`, `POST_NOTIFICATIONS` y `WAKE_LOCK`. Ningún plugin agrega otros |
 | Config de firma | `build.gradle.kts` lee `android/key.properties` (que está en `.gitignore`) |
 
 ### Por qué esos tres permisos y no menos
@@ -52,8 +52,38 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
 - **`ACCESS_FINE_LOCATION`** + **`ACCESS_COARSE_LOCATION`**: para "cerca mío",
   el origen del viaje y la distancia caminando. Desde Android 12 **hay que
   declarar las dos**: pedir solo la fina sin la aproximada no funciona.
-- **No hay ubicación en segundo plano**, y no la va a haber: es lo que
-  dispararía una revisión extra de Google con video justificativo.
+- **`FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_LOCATION`**: la alarma
+  "avisame para bajar" con la pantalla apagada. Sin un servicio en primer
+  plano, Android congela el proceso al apagarse la pantalla y el GPS deja de
+  llegar. Ver `TripService.kt`.
+- **`POST_NOTIFICATIONS`**: la notificación fija del viaje, que es el precio
+  obligatorio del servicio anterior. Si el usuario la niega, el servicio corre
+  igual y la alarma funciona; por eso no se pide con un diálogo.
+- **`WAKE_LOCK`**: encender la pantalla cuando la alarma suena.
+- **No hay ubicación en segundo plano**, y no la va a haber:
+  `ACCESS_BACKGROUND_LOCATION` **no está** en el manifest. El servicio en
+  primer plano no es lo mismo: mantiene vivo lo que el usuario dejó andando
+  adelante, no le da a la app ubicación cuando no la está usando.
+
+> ### ⚠️ `FOREGROUND_SERVICE_LOCATION` pide una declaración en Play Console
+>
+> Apuntando a Android 14+, Google exige completar el formulario de
+> **"Permisos de servicios en primer plano"** (Contenido de la app → Permisos
+> de servicio en primer plano) antes de publicar una versión que lo use.
+> Pide, por cada tipo declarado:
+>
+> - **para qué se usa** — "que la alarma de bajada siga funcionando con la
+>   pantalla apagada, mientras el usuario viaja en colectivo";
+> - **por qué no alcanza otra cosa** — porque con la pantalla apagada el
+>   sistema congela el proceso y deja de llegar la ubicación, así que la
+>   alarma nunca se entera de que llegó a la parada;
+> - **un video** mostrando la función en uso. Es el mismo video que ya hace
+>   falta para todo lo demás, con la parte de la alarma incluida.
+>
+> **No es lo mismo que la revisión de ubicación en segundo plano** (esa sigue
+> sin aplicar, porque no pedimos `ACCESS_BACKGROUND_LOCATION`), pero **sí es
+> un trámite nuevo que antes no existía**, y la versión no sale hasta que esté
+> aprobado. Contalo en el calendario.
 
 > El manifest declara además un bloque `<queries>` con `VIEW` sobre `https`,
 > para abrir el nodo de la parada en OpenStreetMap. **No es un permiso** y no

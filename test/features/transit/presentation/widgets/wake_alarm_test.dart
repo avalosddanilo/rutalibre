@@ -10,10 +10,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 final class FakeWakeAlarmGear implements WakeAlarmGear {
   final calls = <String>[];
 
+  /// Lo que contesta [holdTrip]: true = consiguió el servicio en primer
+  /// plano. False es el teléfono donde la alarma necesita la pantalla.
+  bool hayServicio = true;
+
   @override
-  Future<void> keepScreenOn() async => calls.add('keepScreenOn');
+  Future<bool> holdTrip() async {
+    calls.add('holdTrip');
+    return hayServicio;
+  }
+
   @override
-  Future<void> allowScreenOff() async => calls.add('allowScreenOff');
+  Future<void> releaseTrip() async => calls.add('releaseTrip');
+  @override
+  Future<void> wakeScreen() async => calls.add('wakeScreen');
   @override
   Future<void> ring() async => calls.add('ring');
   @override
@@ -47,26 +57,41 @@ void main() {
   }
 
   group('WakeAlarmNotifier', () {
-    test('armar agarra la pantalla; desarmar la suelta', () async {
+    test('armar sostiene el viaje; desarmar lo suelta', () async {
       final c = container();
 
       await c.read(wakeAlarmProvider.notifier).setArmed(true);
       expect(c.read(wakeAlarmProvider), isTrue);
-      expect(gear.calls, ['keepScreenOn']);
+      expect(gear.calls, ['holdTrip']);
 
       await c.read(wakeAlarmProvider.notifier).setArmed(false);
       expect(c.read(wakeAlarmProvider), isFalse);
-      expect(gear.calls, ['keepScreenOn', 'allowScreenOff']);
+      expect(gear.calls, ['holdTrip', 'releaseTrip']);
+    });
+
+    test('un teléfono sin servicio igual queda armado', () async {
+      // `holdTrip` contestando false es iOS, o un Android que rechazó el
+      // servicio en primer plano: ahí la alarma vuelve a necesitar la
+      // pantalla prendida (el wakelock lo pone la implementación real). Lo
+      // que NO puede pasar es que la alarma quede desarmada por eso: sin
+      // servicio despierta peor, pero despierta.
+      final c = container();
+      gear.hayServicio = false;
+
+      await c.read(wakeAlarmProvider.notifier).setArmed(true);
+
+      expect(c.read(wakeAlarmProvider), isTrue);
+      expect(gear.calls, ['holdTrip']);
     });
 
     test('armar dos veces no duplica el pedido', () async {
       final c = container();
       await c.read(wakeAlarmProvider.notifier).setArmed(true);
       await c.read(wakeAlarmProvider.notifier).setArmed(true);
-      expect(gear.calls, ['keepScreenOn']);
+      expect(gear.calls, ['holdTrip']);
     });
 
-    test('terminar la guía desarma, calla y devuelve la pantalla', () async {
+    test('terminar la guía desarma, calla y suelta el teléfono', () async {
       // "Terminar" con la alarma armada (o sonando) no puede dejar ni el
       // wakelock agarrado ni el tono en loop sobre el mapa.
       final c = container();
@@ -80,7 +105,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
 
       expect(c.read(wakeAlarmProvider), isFalse);
-      expect(gear.calls, ['keepScreenOn', 'silence', 'allowScreenOff']);
+      expect(gear.calls, ['holdTrip', 'silence', 'releaseTrip']);
     });
   });
 
@@ -116,6 +141,15 @@ void main() {
       expect(gear.calls, contains('ring'));
       expect(find.text('¡Preparate para bajar!'), findsOneWidget);
       expect(find.text('Tu parada es French y Güemes.'), findsOneWidget);
+    });
+
+    testWidgets('enciende la pantalla ANTES de sonar', (tester) async {
+      // El caso para el que se hizo todo esto: el teléfono en el bolsillo,
+      // pantalla apagada y bloqueada. Si el tono arranca antes que la
+      // pantalla, el que se despierta lo hace a oscuras sin saber por qué.
+      await pumpAndShow(tester);
+
+      expect(gear.calls, containsAllInOrder(['wakeScreen', 'ring']));
     });
 
     testWidgets('solo el botón la apaga, y apaga de verdad', (tester) async {

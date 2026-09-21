@@ -15,13 +15,29 @@ import '../providers/trip_providers.dart';
 /// plugin falte no puede romper la guía — la alarma que no pudo sonar deja
 /// la vibración y el renglón encendido, que ya existían.
 abstract interface class WakeAlarmGear {
-  /// La pantalla no se apaga sola mientras la alarma esté armada: una alarma
-  /// en una pantalla apagada no despierta a nadie (la app queda pausada y el
-  /// GPS deja de llegar).
-  Future<void> keepScreenOn();
+  /// Mantiene el viaje vivo mientras la alarma esté armada, **aunque el
+  /// usuario apague la pantalla**.
+  ///
+  /// En Android eso es un servicio en primer plano de tipo `location`: sin
+  /// él, el sistema congela el proceso al apagarse la pantalla y el GPS deja
+  /// de llegar, así que la alarma nunca se entera de que llegaste. Ver
+  /// `TripService.kt`.
+  ///
+  /// Devuelve **true si lo consiguió**. False es el mundo de la 1.0 —iOS, o
+  /// un Android que rechazó el servicio— donde la alarma sigue andando pero
+  /// necesita la pantalla prendida; el que devuelve false ya dejó puesto el
+  /// wakelock que la sostiene.
+  Future<bool> holdTrip();
 
-  /// La pantalla vuelve a apagarse como siempre.
-  Future<void> allowScreenOff();
+  /// Suelta todo: se va el servicio, se va el wakelock, el teléfono vuelve a
+  /// ser del usuario.
+  Future<void> releaseTrip();
+
+  /// Enciende la pantalla y se muestra sobre el bloqueo.
+  ///
+  /// Se llama al SONAR, no al armar: es lo que convierte "suena en el
+  /// bolsillo" en "suena y además hay algo para leer cuando lo sacás".
+  Future<void> wakeScreen();
 
   /// El tono de ALARMA del sistema, en loop, por el canal de alarmas: suena
   /// aunque el teléfono esté en silencio — que arriba del colectivo es
@@ -38,8 +54,8 @@ abstract interface class WakeAlarmGear {
   Future<void> chime();
 }
 
-/// La implementación real: `wakelock_plus` para la pantalla y un canal
-/// nativo propio para el tono.
+/// La implementación real: un canal nativo propio para el servicio, la
+/// pantalla y el tono, con `wakelock_plus` como única red.
 ///
 /// El tono NO usa un plugin a propósito: lo único que hace falta es "el tono
 /// de alarma del sistema, en loop, por el canal de alarmas", que en Android
@@ -48,26 +64,58 @@ abstract interface class WakeAlarmGear {
 /// dependencia entera, con su riesgo, por veinte líneas que podemos tener en
 /// casa. En iOS el canal no existe y el catch lo deja en silencio: la
 /// pantalla de alarma y la vibración despiertan igual.
+///
+/// Lo mismo vale para el servicio: donde no hay canal, [holdTrip] devuelve
+/// false y cae al wakelock, que es exactamente como funcionaba la 1.0.
 final class DeviceWakeAlarmGear implements WakeAlarmGear {
   const DeviceWakeAlarmGear();
 
   static const _channel = MethodChannel('rutalibre/alarm');
 
   @override
-  Future<void> keepScreenOn() async {
+  Future<bool> holdTrip() async {
+    var servicio = false;
     try {
-      await WakelockPlus.enable();
+      servicio = await _channel.invokeMethod<bool>('holdTrip') ?? false;
     } on Object {
-      // Sin wakelock la alarma sirve igual mientras la pantalla esté prendida.
+      // iOS no tiene el canal, y un Android puede rechazar el servicio.
+      servicio = false;
     }
+    if (!servicio) {
+      // La red de la 1.0: sin servicio, la única forma de que el GPS siga
+      // llegando es que la pantalla no se apague. Peor, pero funciona.
+      try {
+        await WakelockPlus.enable();
+      } on Object {
+        // Y sin wakelock, la alarma sirve mientras la app esté adelante.
+      }
+    }
+    return servicio;
   }
 
   @override
-  Future<void> allowScreenOff() async {
+  Future<void> releaseTrip() async {
+    // Los dos, siempre y sin preguntar cuál se usó: el estado de "qué agarré"
+    // se puede perder (la actividad se recrea al rotar) y lo que NO se puede
+    // es dejar el servicio corriendo o la pantalla clavada prendida.
+    try {
+      await _channel.invokeMethod<void>('releaseTrip');
+    } on Object {
+      // Parar lo que no arrancó no es un problema.
+    }
     try {
       await WakelockPlus.disable();
     } on Object {
       // Nada que soltar si nunca se pudo agarrar.
+    }
+  }
+
+  @override
+  Future<void> wakeScreen() async {
+    try {
+      await _channel.invokeMethod<void>('wakeScreen');
+    } on Object {
+      // Sin pantalla encendida quedan el tono y la vibración.
     }
   }
 
@@ -126,7 +174,7 @@ final class WakeAlarmNotifier extends Notifier<bool> {
     if (state == armed) return;
     state = armed;
     final gear = ref.read(wakeAlarmGearProvider);
-    await (armed ? gear.keepScreenOn() : gear.allowScreenOff());
+    armed ? await gear.holdTrip() : await gear.releaseTrip();
   }
 
   /// Desarma y devuelve el teléfono como estaba: silencio y pantalla normal.
@@ -134,7 +182,7 @@ final class WakeAlarmNotifier extends Notifier<bool> {
     state = false;
     final gear = ref.read(wakeAlarmGearProvider);
     await gear.silence();
-    await gear.allowScreenOff();
+    await gear.releaseTrip();
   }
 }
 
@@ -149,9 +197,9 @@ final wakeAlarmProvider = NotifierProvider<WakeAlarmNotifier, bool>(
 /// para quien va mirando el teléfono, invisible para quien se durmió con el
 /// teléfono en el bolsillo. Esto es la versión que despierta: el tono de
 /// alarma del sistema en loop por el canal de alarmas (suena en silencio),
-/// vibración sostenida, y la pantalla —que la alarma armada mantuvo
-/// prendida— entera de un color que no es el de ninguna otra pantalla de la
-/// app.
+/// vibración sostenida, y la pantalla —que [WakeAlarmGear.wakeScreen]
+/// enciende, aunque estuviera apagada y bloqueada— entera de un color que no
+/// es el de ninguna otra pantalla de la app.
 ///
 /// Se apaga SOLO con el botón (o el gesto de atrás): una alarma que se puede
 /// apagar sin querer, rozándola medio dormido, no despertó a nadie.
@@ -207,6 +255,10 @@ class _WakeAlarmScreenState extends State<WakeAlarmScreen> {
   @override
   void initState() {
     super.initState();
+    // Primero encender la pantalla y recién después sonar: al revés, el
+    // medio segundo que tarda el tono en arrancar es medio segundo de
+    // alguien despertándose a oscuras sin saber por qué.
+    widget.gear.wakeScreen();
     widget.gear.ring();
     // La vibración acompaña al tono, una sacudida por segundo: en el
     // bolsillo, contra la pierna, es lo que se siente antes de oír nada.
