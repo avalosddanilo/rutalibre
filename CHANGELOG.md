@@ -119,18 +119,17 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   Solo la apaga el botón: una alarma que se apaga rozándola medio dormido no
   despertó a nadie. Es opt-in por viaje y queda armada en los transbordos
   (hay que bajarse dos veces).
-- **Y anda con la pantalla apagada y el teléfono en el bolsillo** — que es,
-  justamente, la única situación en la que uno se duerme. Hasta acá la alarma
-  obligaba a dejar la pantalla prendida, y estaba avisado: con la pantalla
-  apagada Android congela el proceso, el GPS deja de llegar y la alarma nunca
-  se entera de que llegaste. Ahora, mientras la alarma está armada, corre un
-  servicio en primer plano —con su notificación fija, que es el trato— que
-  mantiene vivo el viaje; y cuando suena, **enciende la pantalla y se muestra
-  sobre el bloqueo**, así el que se despierta tiene algo para leer y no solo
-  un ruido. La notificación aparece SOLO si armaste la alarma: quien solo
-  mira cuántas paradas faltan no ve nada nuevo. Donde el servicio no se puede
-  —iOS, o un Android que lo rechaza— la alarma vuelve sola al
-  comportamiento anterior en vez de fallar.
+  Su límite honesto: **necesita la app abierta.** Con la pantalla apagada
+  todavía no suena.
+- **Media obra hecha para sacarle ese límite.** Mientras la alarma está
+  armada corre un servicio en primer plano —con su notificación fija, que es
+  el trato de Android— que mantiene el proceso vivo y el GPS llegando. Eso
+  está probado y funciona. **Pero no alcanza**: la decisión de sonar vive del
+  lado de Flutter, que con la pantalla apagada deja de dibujar y por lo tanto
+  de pensar, así que la alarma espera a que enciendas la pantalla. Se midió
+  en emulador y quedó documentado en `docs/alarma-pantalla-apagada.md` con el
+  plan para terminarlo. Por eso la app y la ficha siguen diciendo que
+  necesita la app abierta: es lo que es hoy.
 - **La cámara te sigue durante el viaje, al zoom de cada paso** — y te
   suelta apenas tocás. Al iniciar te enfoca al instante (el origen del viaje
   sos vos, sin esperar al GPS); caminando el zoom se mete hasta los metros

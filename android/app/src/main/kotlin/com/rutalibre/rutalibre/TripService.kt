@@ -22,6 +22,13 @@ import android.os.IBinder
  * con el teléfono en el bolsillo, que es EXACTAMENTE para quien se hizo la
  * alarma, se pasaba de parada igual.
  *
+ * ⚠️ **Esto solo, NO alcanza.** Probado en emulador el 2026-09-21: el
+ * servicio arranca bien y el GPS sigue llegando, pero la alarma igual no
+ * suena hasta encender la pantalla, porque la DECISIÓN de sonar vive adentro
+ * de `build()` del lado de Dart y Flutter no dibuja cuadros con la pantalla
+ * apagada. Lo de acá está bien y no hay que tocarlo; lo que falta está en
+ * `docs/alarma-pantalla-apagada.md`.
+ *
  * Un servicio en primer plano con tipo `location` es la única forma que da
  * Android de decir "este proceso no se congela y sigue recibiendo ubicación".
  * El precio es la notificación fija, que no se puede sacar: es el trato, y

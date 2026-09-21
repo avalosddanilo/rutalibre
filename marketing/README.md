@@ -76,12 +76,11 @@ verifica el texto que va impreso en las imágenes:
    Venderla sin ese renglón haría que alguien se durmiera confiando en algo
    que, con la pantalla apagada, no suena.
 
-   > **⚠️ Este renglón está por caducar, pero todavía NO caducó.** El código
-   > de la alarma con la pantalla apagada ya está hecho (servicio en primer
-   > plano, `TripService.kt`, versionCode 3) y pasa los tests. Lo que **no**
-   > está es probado en un teléfono de verdad ni aprobado por Google, que
-   > para `FOREGROUND_SERVICE_LOCATION` pide una declaración aparte (ver
-   > `docs/publicacion.md`).
+   > **⚠️ Este renglón NO caduca todavía, y ahora sabemos por qué.** Se
+   > probó en emulador el 2026-09-21: el servicio en primer plano funciona,
+   > pero la alarma igual no suena hasta encender la pantalla. La función
+   > **no está terminada**. Diagnóstico y plan en
+   > `docs/alarma-pantalla-apagada.md`.
    >
    > Hasta que las dos cosas estén, **la copy pública no se toca**: decir que
    > anda con la pantalla apagada antes de verlo andar es exactamente la

@@ -302,6 +302,20 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
       // de arriba), que es un cambio de situación real y no ruido.
       HapticFeedback.heavyImpact();
     }
+    // ⚠️ ACÁ ESTÁ EL BUG DE LA ALARMA CON LA PANTALLA APAGADA.
+    //
+    // Este disparo vive adentro de `build()`, y con la pantalla apagada
+    // Flutter deja de dibujar cuadros: las posiciones siguen llegando —el
+    // servicio en primer plano se encarga— pero `build()` no corre y la
+    // condición nunca se evalúa. Al encender la pantalla, corre con la
+    // última posición y la alarma suena "tarde". Probado en emulador el
+    // 2026-09-21.
+    //
+    // El arreglo es mudar la decisión a un provider que escuche el stream,
+    // porque los listeners de Riverpod corren con el event loop y no con el
+    // scheduler de cuadros. El plan completo, con la prueba para repetirlo,
+    // está en `docs/alarma-pantalla-apagada.md`.
+    //
     // Con la alarma armada, el aviso deja de ser discreto: pantalla de
     // alarma con el tono del sistema en loop, para quien se durmió. Suena
     // UNA parada antes que la vibración (shouldWake, no shouldPrepare):
