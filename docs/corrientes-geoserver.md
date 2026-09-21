@@ -13,11 +13,60 @@ Leaflet sobre un **GeoServer**. El visor anterior
 (`/gis/transporte_urbano/`) declara sus capas en `capas/publico.js`, y de ahí
 sale el inventario: **39 capas en el espacio de nombres `transporte`**.
 
-Endpoint declarado en `mapa/mapa.js`:
+Endpoint:
 
 ```
 https://gisdesa.ciudaddecorrientes.gov.ar:8282/geoserver/wms
 ```
+
+**El WMS está abierto y responde** (`GetCapabilities` verificado el
+2026-09-21 desde un navegador en Corrientes). De su propia metadata sale
+todo lo que sigue.
+
+### Tres cosas del GetCapabilities que valen oro
+
+**1. El servicio declara que no tiene restricciones.**
+
+```xml
+<Fees>NONE</Fees>
+<AccessConstraints>NONE</AccessConstraints>
+```
+
+Ojo con cómo se usa esto: **no es una licencia** —no dice CC-BY ni dominio
+público— y no reemplaza la respuesta del municipio. Pero es una declaración
+formal, hecha por ellos, en el estándar OGC, de que el servicio no tiene
+costo ni restricciones de acceso. Es el argumento más fuerte que tenemos
+para pedir que lo digan explícito.
+
+**2. Hay un espacio de nombres llamado `wfs_idemcc`.**
+
+Además de `transporte:`, varias capas están duplicadas en un workspace cuyo
+nombre es, literalmente, **WFS**: `wfs_idemcc:vw_paradas_colectivos`,
+`wfs_idemcc:vw_recorrido_total_colectivo`, `wfs_idemcc:vw_recorrido_campus`.
+
+Alguien preparó esas capas *para servirlas por WFS*. El servicio está
+apagado, pero la intención quedó escrita en el nombre. Eso convierte el
+pedido en "terminen algo que ya empezaron".
+
+**3. El contacto real, que no estaba en ningún lado.**
+
+> Dirección General de S.I.G. — Municipalidad de Corrientes
+> Brasil 1282, Corrientes (3400)
+
+Es el área que administra estos datos. Mucho mejor que la casilla genérica
+de datos abiertos, que no contestó.
+
+### Y una validación que no esperábamos
+
+El `EX_GeographicBoundingBox` de `transporte:vw_paradas_colectivos` es
+**-58.8550 / -58.7147 · -27.5835 / -27.4118**.
+
+El CSV archivado de 2022 (`docs/corrientes-paradas-archivadas.md`) da
+**-58.8544 / -58.7164 · -27.5826 / -27.4121**.
+
+Coinciden hasta la tercera decimal. **La copia archivada y la capa viva son
+prácticamente el mismo conjunto de paradas**, lo que refuerza lo ya medido:
+ese dato de 2022 sigue vigente.
 
 ## El inventario completo
 
@@ -90,7 +139,8 @@ precisión que no teníamos.
 En el mismo mail de `docs/mails-para-mandar.md`. Cualquiera de las tres
 formas sirve, de menos a más trabajo para ellos:
 
-1. **Habilitar WFS** (*Services → WFS → Enable WFS*). Es la opción que
+1. **Habilitar WFS** (*Services → WFS → Enable WFS*), aunque sea solo para
+   el workspace `wfs_idemcc`, que ya está armado para eso. Es la opción que
    menos les cuesta —un tilde— y la mejor para los dos: cero trabajo
    recurrente y los datos quedan siempre al día sin que nadie los exporte a
    mano nunca más.
