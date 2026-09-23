@@ -122,14 +122,20 @@ Tampoco: fechas prometidas, ni pedirle a nadie que cambie su calificación.
 ## `privado/` no está en el repo
 
 Hay referencias en los docs a archivos bajo `privado/` —estrategia de
-comunicación, contactos de prensa, borradores de mails sin mandar—. Están en
-el disco y **fuera del control de versiones a propósito**, por dos razones:
-tienen datos de contacto de terceros que no me corresponde publicar, y son
-decisiones comerciales que no hacen al software.
+comunicación, contactos de prensa, borradores de mails sin mandar, los
+guiones y calendarios de publicación—. Están en el disco y **fuera del
+control de versiones a propósito**, por dos razones: tienen datos de
+contacto de terceros que no me corresponde publicar, y son decisiones
+comerciales que no hacen al software.
+
+Lo que **sí** está acá de `marketing/` es la parte que es software: el
+generador de piezas (`tools/`) y los tests que verifican que los PNG se
+rasterizan bien y que la copy no promete de más
+(`test/marketing/`). Eso es código y se queda.
 
 Si clonaste el repo, esa carpeta no va a existir. No falta nada: ningún
 build, test ni migración depende de ella.
-| Reglas de la copy pública | `marketing/README.md` |
+
 
 ## Estado
 

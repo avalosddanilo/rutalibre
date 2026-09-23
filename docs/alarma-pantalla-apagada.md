@@ -90,4 +90,4 @@ falten dos paradas.
 Nunca se tocó, justamente porque la regla del proyecto es que no se anuncia
 lo que no está verificado. Hoy esa frase es verdad. Los ocho lugares a
 actualizar, para cuando de verdad funcione, están listados en
-`marketing/README.md`.
+`privado/marketing/README.md`.
