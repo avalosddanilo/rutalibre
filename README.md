@@ -113,3 +113,15 @@ parada y pantalla de horarios.
 ```bash
 flutter test
 ```
+
+## Licencia
+
+**Código: [AGPL-3.0](LICENSE).** Se puede usar, estudiar, modificar y
+redistribuir. La contrapartida: una versión modificada que se distribuya o se
+ofrezca por red también tiene que publicar su fuente. Para una licencia
+cerrada, ver [`LICENCIA-COMERCIAL.md`](LICENCIA-COMERCIAL.md).
+
+**Datos: no son MÍOS ni son AGPL.** Los recorridos, paradas y calles son de
+**OpenStreetMap** bajo ODbL 1.0 — © colaboradores de OpenStreetMap — y los de
+Corrientes capital del portal de datos abiertos del municipio. La atribución
+es obligatoria: ver [`DATOS.md`](DATOS.md).

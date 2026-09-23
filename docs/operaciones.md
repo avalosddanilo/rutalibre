@@ -203,7 +203,7 @@ primeros, en orden de valor:
 1. La alarma "avisame para bajar" con la pantalla apagada (servicio en
    primer plano de Android).
 2. Horarios de más líneas — depende de conseguir la fuente (ver
-   `propuesta-datos-abiertos.md` y `mails-para-mandar.md`).
+   `propuesta-datos-abiertos.md` y `privado/mails-para-mandar.md`).
 3. Lo que diga la gente que la use. Las mejores funciones de la 1.0
    salieron de probarla en la calle: la alarma, las alturas, el panel de
    iniciar viaje. Escuchar quejas es el roadmap más barato que existe.

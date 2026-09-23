@@ -12,7 +12,7 @@ prueba cerrada de 14 días y los trámites. Acá está qué se publica y cuándo
 
 | Archivo | Qué es |
 |---|---|
-| [`estrategia.md`](estrategia.md) | **Leer esto primero.** Posicionamiento, público, los cinco mensajes, las dos historias humanas, el tono y las tres frases que no se escriben nunca. |
+| `privado/estrategia.md` | **Leer esto primero.** Posicionamiento, público, los cinco mensajes, las dos historias humanas, el tono y las tres frases que no se escriben nunca. |
 | [`ig-carruseles.md`](ig-carruseles.md) | Los 8 carruseles slide por slide, con su caption y sus hashtags. |
 | [`tiktok-guiones.md`](tiktok-guiones.md) | Los 9 videos con tiempos, texto en pantalla, voz y notas de rodaje. Sirven igual para Reels. |
 | [`ig-posts-y-stories.md`](ig-posts-y-stories.md) | Los posts sueltos, las stories, la bio, los highlights y las respuestas guardadas. |
@@ -90,8 +90,8 @@ verifica el texto que va impreso en las imágenes:
    > Cuando esté verificado, lo que hay que actualizar es: este renglón, el
    > slide 7 y el pie de `ig-carruseles.md`, los dos pasajes de
    > `ig-posts-y-stories.md`, los dos de `tiktok-guiones.md`, la regla de
-   > `estrategia.md`, la ficha de Play (`docs/ficha-play.md`) y la respuesta
-   > «La alarma no sonó» de `docs/resenas.md`.
+   > `privado/estrategia.md`, la ficha de Play (`docs/ficha-play.md`) y la respuesta
+   > «La alarma no sonó» de `privado/resenas.md`.
 4. **Cada carrusel cierra con la marca** y no pasa de 10 slides.
 5. **Las capturas que usan los slides existen** — un slide que apunta a un
    archivo borrado no falla al generar, falla cincuenta PNG después.

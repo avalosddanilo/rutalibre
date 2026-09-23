@@ -54,3 +54,7 @@ test/*_tmp_test.dart
 android/key.properties
 *.jks
 *.keystore
+
+# Estrategia comercial, contactos de terceros y borradores sin mandar.
+# Se quedan en el disco, NO en un repo publico.
+privado/

@@ -164,7 +164,7 @@ privacidad*.
 
 > **Antes de hacer público el repo del código**, revisá qué hay en `docs/`:
 > `auditoria-seguridad.md` describe la superficie de ataque del proyecto y
-> `mails-para-mandar.md` tiene borradores dirigidos a personas con nombre y
+> `privado/mails-para-mandar.md` tiene borradores dirigidos a personas con nombre y
 > apellido. Ninguno de los dos tiene secretos, pero ninguno de los dos fue
 > escrito para leerse de afuera.
 

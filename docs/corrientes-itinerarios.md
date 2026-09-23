@@ -61,7 +61,7 @@ requiere dibujar nada.
 **El sitio no declara licencia**, igual que el portal de datos abiertos (ver
 `docs/osm-import.md` → Licencia). Se atribuye la fuente en todos lados y
 **queda pendiente confirmarlo con la Municipalidad**. Conviene sumarlo al
-mismo pedido que ya está escrito en `docs/mails-para-mandar.md`, junto con el
+mismo pedido que ya está escrito en `privado/mails-para-mandar.md`, junto con el
 reclamo por el recurso de paradas que dieron de baja.
 
 ---
