@@ -1,5 +1,9 @@
 # Ruta Libre 🚌
 
+[![CI](https://github.com/avalosddanilo/rutalibre/actions/workflows/ci.yml/badge.svg)](https://github.com/avalosddanilo/rutalibre/actions/workflows/ci.yml)
+[![Licencia: AGPL v3](https://img.shields.io/badge/licencia-AGPL--3.0-blue.svg)](LICENSE)
+[![Datos: ODbL](https://img.shields.io/badge/datos-ODbL%201.0-green.svg)](DATOS.md)
+
 App de transporte público y movilidad para el Gran Resistencia (Chaco) y
 Corrientes capital. Rápida, limpia y sin publicidad.
 
@@ -38,6 +42,15 @@ Para publicarla: [`docs/lanzamiento.md`](docs/lanzamiento.md) (el plan del prime
 día a día (lentitudes, emergencias, regenerar datos, capacidad):
 [`docs/operaciones.md`](docs/operaciones.md). Qué incluye la v1.0:
 [`CHANGELOG.md`](CHANGELOG.md).
+
+## Cómo se ve
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="marketing/capturas/01-mapa-paradas.png" width="230"> | <img src="marketing/capturas/02-buscador-altura.png" width="230"> | <img src="marketing/capturas/03-como-llego.png" width="230"> |
+| Las paradas visibles de entrada, sin pedir GPS | Buscar por dirección con altura, sin señal | De dónde estás a dónde vas |
+| <img src="marketing/capturas/06-guia-toma-la-2.png" width="230"> | <img src="marketing/capturas/07-cartel-chofer.png" width="230"> | <img src="marketing/capturas/08-alarma-armada.png" width="230"> |
+| El viaje paso a paso, uno por pantalla | El cartel para mostrarle al chofer | «Avisame para bajar» |
 
 ## Setup rápido
 
