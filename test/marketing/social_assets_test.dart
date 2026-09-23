@@ -19,7 +19,7 @@
 // Se recortan acá con `BoxFit.cover` y una alineación por slide: nunca se
 // retoca una captura para que muestre algo que la app no hace.
 //
-// El guion, los captions y los hashtags viven en `marketing/ig-carruseles.md`.
+// El guion, los captions y los hashtags viven en `privado/marketing/ig-carruseles.md`.
 // Esto es la fuente de verdad de lo que queda dibujado en el PNG.
 import 'dart:io';
 import 'dart:typed_data';
@@ -307,7 +307,7 @@ const _carruseles = <String, List<_Slide>>{
   ],
 
   // C7 · El más «noticia», y el único que envejece. Ver el aviso en
-  // marketing/ig-carruseles.md antes de reponerlo.
+  // privado/marketing/ig-carruseles.md antes de reponerlo.
   'c7': [
     _Slide('¿Cuánto sale el boleto hoy?'),
     _Slide.numero('\$1.885', 'Gran Resistencia'),
@@ -391,7 +391,7 @@ const _cierreTienda = 'Gratis en Google Play';
 const _cierrePrelanzamiento = '@rutalibre.app';
 
 /// Los carruseles que se publican mientras la app no está en Play, en el
-/// orden en que se publican (ver `marketing/calendario.md`). Salen en
+/// orden en que se publican (ver `privado/marketing/calendario.md`). Salen en
 /// `prelanzamiento/` con el cierre que no vence. C2 NO está: es la
 /// presentación del día que sale, y se publica con el link andando.
 const _prelanzamiento = ['c1', 'c4', 'c8', 'c3'];
