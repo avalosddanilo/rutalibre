@@ -58,3 +58,9 @@ android/key.properties
 # Estrategia comercial, contactos de terceros y borradores sin mandar.
 # Se quedan en el disco, NO en un repo publico.
 privado/
+
+# Excluir guiones y contenido de marketing sensible
+marketing/tiktok-guiones.md
+marketing/ig-carruseles.md
+marketing/ig-posts-y-stories.md
+marketing/calendario.md
