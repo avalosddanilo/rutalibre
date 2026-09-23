@@ -1,8 +1,13 @@
-# La alarma con la pantalla apagada: qué falta
+# La alarma con la pantalla apagada
 
-**Estado: NO funciona.** El servicio en primer plano está hecho y anda, pero
-la alarma no suena hasta que alguien prende la pantalla. Este documento es el
-diagnóstico completo para poder retomarlo sin repetir el trabajo.
+**Estado: arreglado en el código, SIN verificar en un teléfono.**
+
+La decisión ya no vive en un widget (ver *El arreglo*, más abajo) y hay siete
+tests que la disparan **sin dibujar un solo cuadro**, que es la condición que
+el teléfono dormido impone. Pero un test no es un teléfono: hasta que no se
+repita la prueba del emulador de acá abajo y la alarma suene sola, **esto no
+se anuncia en ningún lado**. La copy del interruptor sigue diciendo
+"Necesita la app abierta" a propósito.
 
 Probado el **2026-09-21** en un emulador Android (targetSdk 36) con el
 recorrido del 904A reproducido por GPX.
@@ -42,26 +47,61 @@ observado.
 **El servicio en primer plano era necesario pero no suficiente.** Mantiene el
 proceso vivo y el GPS llegando; no hace que la UI piense.
 
-## Qué hay que hacer
+## El arreglo
 
-Sacar la decisión de la capa que se duerme.
+`lib/features/transit/presentation/providers/wake_alarm_watch.dart`.
 
-1. **Un provider que escuche el stream**, no un widget. Los listeners de
-   Riverpod corren con el event loop de Dart, no con el scheduler de cuadros:
-   siguen andando con la app en segundo plano mientras el proceso viva (y el
-   servicio garantiza que viva).
-2. Ese provider combina lo que hoy junta el widget —tramo, paradas, posición
-   y si la alarma está armada—, calcula `rideProgress` y, cuando
-   `shouldWake`, llama **directo** a `WakeAlarmGear.wakeScreen()` y `ring()`.
-   El sonido y el encendido salen del canal nativo, que no depende de Flutter
-   dibujando.
-3. El widget pasa a ser consumidor: muestra la pantalla roja cuando puede,
-   leyendo un estado "hay una alarma sonando", en vez de decidirlo él.
-4. Los flags `_woke` y `_alerted` se mudan con la lógica. Ojo con el reseteo
-   al salir de la zona del tramo, que hoy vive en el mismo `build()`.
+1. **Un provider escucha el stream**, no un widget. Los listeners de Riverpod
+   corren con el event loop de Dart, no con el scheduler de cuadros: siguen
+   andando con la app en segundo plano mientras el proceso viva (y el
+   servicio en primer plano garantiza que viva).
+2. Ese provider junta lo que antes juntaba el widget —tramo, paradas,
+   posición y si la alarma está armada—, calcula `rideProgress` y, cuando
+   `shouldWake`, llama **directo** a `wakeScreen()` y `ring()`. Salen por el
+   canal nativo, que no depende de Flutter dibujando.
+3. `WakeAlarmScreen` pasó a ser consumidora: **ya no hace sonar nada**.
+   Dibuja y vibra. Cuando se monta, el teléfono ya está sonando.
+4. El renglón en vivo solo registra cuál es el tramo activo (`initState`) y
+   muestra la alarma que el provider ya prendió.
 
-**Lo que NO hay que tocar**: `TripService.kt`, el manifest y los permisos
-están bien y probados. El problema es del lado de Dart.
+**Lo que NO se tocó**: `TripService.kt`, el manifest y los permisos estaban
+bien y probados. El problema era todo del lado de Dart.
+
+### Tres trampas de Riverpod que costaron encontrar
+
+Quedan escritas porque las tres estaban calladas y las tres las encontró un
+test, no una lectura del código:
+
+* **`ref` no se puede usar en `dispose()`** ni para leer ni para escribir.
+  Se guarda el notifier en un campo en `initState`, y la escritura va en un
+  `Future.microtask`.
+* **Leer un provider por primera vez desde adentro de un listener deja la
+  suscripción rota**: no llega un fix más. Por eso la alarma armada se
+  `watch`ea en el `build`, no se `read`ea en el callback.
+* **Escribir en un provider desde el listener de otro** tira excepción. Por
+  eso el fin de la guía lo escucha el propio provider de la alarma en vez de
+  que `WakeAlarmNotifier.release()` venga a bajarla.
+
+Y una de Dart, no de Riverpod: **los records comparan por valor**, así que
+dos fixes con coordenadas idénticas no son un cambio de estado y el listener
+no se dispara. Por eso al armar la alarma se re-evalúa con la última
+posición conocida en vez de esperar un fix nuevo, que con el colectivo
+parado en un semáforo podía no llegar nunca.
+
+## Los tests
+
+`test/features/transit/presentation/providers/wake_alarm_watch_test.dart`.
+
+**No tiene un solo `testWidgets`, y esa es la prueba.** Sin árbol de
+widgets, sin `tester`, sin un cuadro dibujado. Si la alarma suena ahí, suena
+con la pantalla apagada; si alguien devuelve la decisión a un widget, se
+ponen rojos.
+
+Cubren: que suene en zona de bajada, que encienda la pantalla **antes** de
+sonar, que sin armar no despierte a nadie, que el GPS oscilando no la haga
+sonar dos veces, que armarla tarde —ya adentro de la zona— dispare igual,
+que sin tramo activo no se escuche el GPS (la app no sigue a nadie fuera de
+la guía) y que salir de la zona rearme el aviso.
 
 ## Cómo probarlo cuando esté
 
@@ -83,6 +123,9 @@ adb shell dumpsys activity services com.rutalibre.rutalibre
 
 La alarma tiene que sonar **sin tocar nada**, con la pantalla apagada, cuando
 falten dos paradas.
+
+**Esta prueba es la que falta.** Mientras no se haga, el estado de arriba
+sigue diciendo "sin verificar" y la copy sigue sin prometer nada.
 
 ## Lo que esto NO cambia
 

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../providers/trip_providers.dart';
+import '../providers/wake_alarm_watch.dart';
 
 /// Lo que la alarma le pide al teléfono, con nombre de lo que hace acá.
 ///
@@ -180,6 +181,10 @@ final class WakeAlarmNotifier extends Notifier<bool> {
   /// Desarma y devuelve el teléfono como estaba: silencio y pantalla normal.
   Future<void> release() async {
     state = false;
+    // Bajar la pantalla roja no se hace desde acá: lo hace
+    // `WakeAlarmWatchNotifier`, que escucha el fin de la guía igual que este
+    // notifier. Escribir en otro provider desde adentro de un listener tira
+    // una excepción de Riverpod.
     final gear = ref.read(wakeAlarmGearProvider);
     await gear.silence();
     await gear.releaseTrip();
@@ -203,17 +208,11 @@ final wakeAlarmProvider = NotifierProvider<WakeAlarmNotifier, bool>(
 ///
 /// Se apaga SOLO con el botón (o el gesto de atrás): una alarma que se puede
 /// apagar sin querer, rozándola medio dormido, no despertó a nadie.
-class WakeAlarmScreen extends StatefulWidget {
-  const WakeAlarmScreen({
-    required this.stopName,
-    required this.gear,
-    super.key,
-  });
+class WakeAlarmScreen extends ConsumerStatefulWidget {
+  const WakeAlarmScreen({required this.stopName, super.key});
 
   /// Dónde bajarse: lo primero que necesita leer alguien recién despierto.
   final String stopName;
-
-  final WakeAlarmGear gear;
 
   /// True mientras hay una alarma en pantalla: el GPS oscila y dos fixes
   /// seguidos en zona de bajada no pueden apilar dos alarmas.
@@ -227,7 +226,6 @@ class WakeAlarmScreen extends StatefulWidget {
   static Future<void> show(
     BuildContext context, {
     required String stopName,
-    required WakeAlarmGear gear,
   }) async {
     if (_showing) return;
     _showing = true;
@@ -238,7 +236,7 @@ class WakeAlarmScreen extends StatefulWidget {
         // Tocar afuera no existe: es pantalla completa. El botón es el único
         // camino (y el gesto de atrás, que pasa por dispose igual).
         barrierDismissible: false,
-        builder: (context) => WakeAlarmScreen(stopName: stopName, gear: gear),
+        builder: (context) => WakeAlarmScreen(stopName: stopName),
       );
     } finally {
       _showing = false;
@@ -246,20 +244,33 @@ class WakeAlarmScreen extends StatefulWidget {
   }
 
   @override
-  State<WakeAlarmScreen> createState() => _WakeAlarmScreenState();
+  ConsumerState<WakeAlarmScreen> createState() => _WakeAlarmScreenState();
 }
 
-class _WakeAlarmScreenState extends State<WakeAlarmScreen> {
+class _WakeAlarmScreenState extends ConsumerState<WakeAlarmScreen> {
   Timer? _vibration;
+
+  /// El notifier guardado, porque `ref` en `dispose()` ya no es seguro: para
+  /// entonces el widget está desmontándose y su BuildContext no sirve.
+  /// Riverpod lo dice con todas las letras si uno lo intenta.
+  late final WakeAlarmWatchNotifier _watch;
 
   @override
   void initState() {
     super.initState();
-    // Primero encender la pantalla y recién después sonar: al revés, el
-    // medio segundo que tarda el tono en arrancar es medio segundo de
-    // alguien despertándose a oscuras sin saber por qué.
-    widget.gear.wakeScreen();
-    widget.gear.ring();
+    _watch = ref.read(wakeAlarmWatchProvider.notifier);
+    // ESTA PANTALLA NO HACE SONAR NADA, y no es un olvido.
+    //
+    // Encender la pantalla y arrancar el tono los hace
+    // `WakeAlarmWatchNotifier` cuando decide que la alarma tiene que sonar,
+    // porque salen por el canal nativo y no dependen de que Flutter esté
+    // dibujando. Si el tono esperara a que este widget se monte, con la
+    // pantalla apagada no sonaría nunca — que es exactamente el bug que
+    // estamos arreglando. Ver `docs/alarma-pantalla-apagada.md`.
+    //
+    // Para cuando este initState corre, el teléfono ya está sonando y la
+    // pantalla ya se encendió sola. Lo único que falta es la vibración.
+    //
     // La vibración acompaña al tono, una sacudida por segundo: en el
     // bolsillo, contra la pierna, es lo que se siente antes de oír nada.
     HapticFeedback.heavyImpact();
@@ -273,7 +284,12 @@ class _WakeAlarmScreenState extends State<WakeAlarmScreen> {
     // En dispose y no en el onPressed: el gesto de atrás del sistema también
     // cierra esta pantalla y no pasa por ningún botón.
     _vibration?.cancel();
-    widget.gear.silence();
+    // En un microtask porque Riverpod prohíbe modificar un provider desde
+    // `dispose` —el árbol todavía se está desmontando—. El retraso es de
+    // microsegundos y el tono se apaga igual; hacerlo derecho acá tira una
+    // excepción que en release se tragaría, dejando la alarma sonando
+    // encima del mapa.
+    Future.microtask(_watch.dismiss);
     super.dispose();
   }
 
