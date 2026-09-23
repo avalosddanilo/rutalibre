@@ -40,8 +40,21 @@
 -- el error y avisa, en vez de tumbar la migración. Este script
 -- SOLO puede arreglar o no hacer nada: nunca deja la base peor.
 --
--- Correr en: Supabase Dashboard → SQL Editor. LEER LOS NOTICE.
+-- Correr en: Supabase Dashboard → SQL Editor. Devuelve una fila: esa
+-- fila es el veredicto.
 -- ============================================================
+
+-- CÓMO ESTÁ ESCRITA, Y POR QUÉ NO ES UN `do $$` PELADO COMO LA 0006.
+-- La 0006 avisaba por `raise notice`, y el SQL Editor de Supabase muestra
+-- "Success. No rows returned" para CUALQUIER bloque anónimo: ande o no
+-- ande, se ve igual. Tuvimos la migración corrida y sin saber si había
+-- hecho algo. Así que acá el bloque arregla y después un `select` DEVUELVE
+-- EL ESTADO: una fila que se lee sola.
+--
+-- El `when others` es a propósito y no es pereza: `revoke` sobre una tabla
+-- ajena puede tirar `insufficient_privilege` o `42501` según la versión, y
+-- lo que importa no es cuál de los dos fue sino que el select de abajo
+-- muestre qué quedó. El `sqlerrm` sale por notice para el diagnóstico.
 
 do $$
 begin
@@ -49,29 +62,44 @@ begin
         on public.spatial_ref_sys
       from anon, authenticated;
 
-    raise notice 'OK: se intentó el revoke sin error. Verificá con la consulta de control de abajo: anon tiene que quedar SOLO con SELECT.';
-
 exception
-    when insufficient_privilege then
-        raise notice 'NO SE PUDO: spatial_ref_sys pertenece a otro rol (la extensión PostGIS) y este rol no puede revocar lo que no otorgó.';
-        raise notice 'ESTO SÍ HAY QUE RESOLVER, no es como el aviso de RLS: un anónimo puede escribir el catálogo EPSG.';
-        raise notice 'Salida: abrir un ticket en Supabase support pidiendo revocar la escritura de anon sobre public.spatial_ref_sys.';
+    when others then
+        raise notice 'El revoke falló: % (%)', sqlerrm, sqlstate;
 end;
 $$;
 
+-- El veredicto. Esto SÍ devuelve filas.
+select
+    current_user                        as rol_que_corre,
+    pg_get_userbyid(c.relowner)         as dueno_de_la_tabla,
+    coalesce((
+        select string_agg(distinct privilege_type, ', ' order by privilege_type)
+          from information_schema.role_table_grants
+         where table_schema = 'public'
+           and table_name   = 'spatial_ref_sys'
+           and grantee      = 'anon'
+    ), '(ninguno)')                     as anon_puede,
+    coalesce((
+        select string_agg(distinct privilege_type, ', ' order by privilege_type)
+          from information_schema.role_table_grants
+         where table_schema = 'public'
+           and table_name   = 'spatial_ref_sys'
+           and grantee      = 'authenticated'
+    ), '(ninguno)')                     as authenticated_puede
+  from pg_class c
+ where c.relname = 'spatial_ref_sys';
+
 -- ============================================================
--- CONTROL — correr esto aparte y mirar el resultado. El
--- "Success. No rows returned" del bloque de arriba NO dice nada:
--- es lo que devuelve cualquier `do $$ ... $$`, ande o no ande.
+-- CÓMO SE LEE EL RESULTADO
 --
---   select grantee, privilege_type
---     from information_schema.role_table_grants
---    where table_schema = 'public'
---      and table_name   = 'spatial_ref_sys'
---      and grantee in ('anon', 'authenticated')
---    order by grantee, privilege_type;
+--   anon_puede = 'SELECT'  → arreglado. Leer el catálogo EPSG es
+--   inofensivo (es data pública) y PostGIS lo necesita.
 --
--- Esperado: como mucho una fila por rol, y siempre SELECT.
--- Si aparece INSERT, UPDATE, DELETE o TRUNCATE, el revoke no
--- entró y hay que ir por soporte.
+--   anon_puede con INSERT/UPDATE/DELETE/TRUNCATE → el revoke no entró.
+--   Mirá `dueno_de_la_tabla` contra `rol_que_corre`: si no coinciden, es
+--   eso, y no hay nada más que hacer desde el SQL Editor.
+--   Ahí va ticket a soporte de Supabase pidiendo revocar la escritura de
+--   anon sobre public.spatial_ref_sys. ESTO NO SE DEJA PASAR como el
+--   aviso de RLS de la 0006: aquel era "un anónimo puede leer que EPSG
+--   4326 es WGS84", este es "un anónimo puede vaciar el catálogo".
 -- ============================================================

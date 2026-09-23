@@ -211,10 +211,28 @@ Con la anon key —pública por diseño— se podía vaciar el catálogo EPSG po
 PostgREST y romper `st_transform`. Sin datos de usuario de por medio, pero
 era la única cosa escribible por un anónimo en toda la base.
 
+**Y la `0006` falló**: comprobado el 2026-09-23, `relrowsecurity = false`.
+No es un detalle — significa que en esa tabla **no hay policy que frene
+nada** y el `GRANT` es la única reja que existe.
+
 Se arregla con la migración `0014_spatial_ref_sys_grants.sql`. Puede fallar
 por la misma razón que la `0006` (la tabla es de la extensión); si falla,
 **esto no se deja pasar como el aviso de RLS**: va ticket a soporte de
 Supabase.
+
+**7. Probar el ataque sobre `spatial_ref_sys`.** Igual que el punto 4: mirar
+la config no demuestra nada, mandar el request sí. El filtro `srid=eq.999999`
+**no matchea ninguna fila**, así que la prueba es segura aunque el permiso
+esté abierto — no borra nada.
+
+```bash
+curl -i -X DELETE "https://TU-PROYECTO.supabase.co/rest/v1/spatial_ref_sys?srid=eq.999999" -H "apikey: TU_ANON_KEY" -H "Authorization: Bearer TU_ANON_KEY"
+```
+
+- `401` / `403` / `42501` → el `DELETE` está frenado. Arreglado.
+- `204` → **la tabla es escribible por cualquiera con la anon key.** El
+  revoke no entró; el `999999` no existía, pero un `srid=gt.0` sí vacía el
+  catálogo.
 
 ## ✅ S3 — Inyección: no hay superficie
 
