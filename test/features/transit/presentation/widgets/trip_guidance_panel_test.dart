@@ -372,6 +372,28 @@ void main() {
       expect(find.text('Avisame para bajar'), findsNothing);
     });
 
+    testWidgets('el interruptor NO promete que suene con la pantalla apagada', (
+      tester,
+    ) async {
+      // Esta frase se lee justo antes de armar la alarma y dormirse. Entre
+      // 0865008 y hoy dijo "y con la pantalla apagada", porque el servicio
+      // en primer plano arrancó bien y se dio por hecho que alcanzaba. No
+      // alcanza —ver `docs/alarma-pantalla-apagada.md`—, y la persona que
+      // le creyera se pasa de parada durmiendo.
+      //
+      // El test no se borra cuando la alarma ande: se da vuelta, y recién
+      // ahí vuelve la frase.
+      final gps = StreamController<({double lat, double lng})>();
+      addTearDown(gps.close);
+      final c = container(positionStream: gps.stream);
+      await pumpPanel(tester, c, steps: steps, stepIndex: 1);
+      gps.add((lat: -27.4519, lng: _routeStops[3].lng));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('pantalla apagada'), findsNothing);
+      expect(find.textContaining('Necesita la app abierta'), findsOneWidget);
+    });
+
     testWidgets('armada, al entrar en zona de bajada SUENA a toda pantalla', (
       tester,
     ) async {

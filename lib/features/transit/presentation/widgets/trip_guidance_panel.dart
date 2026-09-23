@@ -413,9 +413,18 @@ class _WakeAlarmToggle extends ConsumerWidget {
       secondary: Icon(armed ? Icons.alarm_on : Icons.alarm_add),
       title: const Text('Avisame para bajar'),
       // La promesa se lee ANTES de armar: qué va a pasar y a qué precio.
+      //
+      // NO DICE "con la pantalla apagada", y no es un olvido. Lo dijo entre
+      // 0865008 y hoy, cuando el servicio en primer plano arrancó bien y se
+      // dio por hecho que alcanzaba. No alcanza: ver
+      // `docs/alarma-pantalla-apagada.md`. Con la pantalla apagada Flutter
+      // deja de dibujar y el disparo nunca se evalúa.
+      //
+      // Esta frase se lee justo antes de armar la alarma y dormirse. Se
+      // vuelve a poner el día que la prueba del emulador dé ✅, no antes.
       subtitle: const Text(
         'Por si te dormís: suena fuerte aunque el teléfono esté en '
-        'silencio y con la pantalla apagada.',
+        'silencio. Necesita la app abierta.',
       ),
     );
   }
