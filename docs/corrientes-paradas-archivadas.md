@@ -83,7 +83,7 @@ Tres reparos, y ninguno es técnico:
    versión actual, no consagrar una foto vieja.
 
 Los tres se resuelven con **el mismo mail que ya está pendiente** en
-`docs/mails-para-mandar.md`. Conviene sumar, textual:
+`privado/mails-para-mandar.md`. Conviene sumar, textual:
 
 > Vimos que el recurso de paradas (`paradas-colectivos.csv`) del dataset de
 > transporte urbano ya no está en el portal. ¿Sigue vigente? ¿Hay una versión

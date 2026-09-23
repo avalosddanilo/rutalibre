@@ -30,7 +30,7 @@ franjas en que la gente está viajando o volviendo.
 | ☑ | Las 64 piezas de arte generadas | `marketing/assets/` |
 | ☐ | Cuentas de IG y TikTok creadas, con foto, bio y highlights | [`ig-posts-y-stories.md`](ig-posts-y-stories.md) |
 | ☐ | **El video de 30–60 s** del flujo completo | ver abajo |
-| ☐ | Los dos mails institucionales mandados | `docs/mails-para-mandar.md` |
+| ☐ | Los dos mails institucionales mandados | `privado/mails-para-mandar.md` |
 
 ### El video
 

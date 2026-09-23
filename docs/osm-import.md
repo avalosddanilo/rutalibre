@@ -31,7 +31,7 @@ Lo que se ve al abrirla:
 - **No hay GPS de las unidades.** Ni ahí ni en ningún feed abierto. Para el
   panorama completo y verificado —ChacoBus anunciado y sin publicar, el
   sistema de arribos de SmartMove devolviendo 500— ver
-  [`competencia.md`](competencia.md).
+  `privado/competencia.md`.
 
 Es una observación propia, no un anuncio oficial: si mañana vuelve a andar,
 esta nota se corrige con fecha. Pero mientras siga así, sostiene dos cosas
@@ -40,9 +40,9 @@ que ya decíamos:
 1. **Depender de OSM no era una preferencia, era la única opción.** La única
    fuente que no se cae es la que está en el repo.
 2. **Que no haya un feed abierto de posición no es una excusa nuestra.** Por
-   eso no se promete "en vivo" en ningún lado (ver `marketing/estrategia.md`
+   eso no se promete "en vivo" en ningún lado (ver `privado/estrategia.md`
    → palabras prohibidas). Cómo se dice esto sin exagerar está en
-   [`competencia.md`](competencia.md).
+   `privado/competencia.md`.
 
 Lo que **no** se hace con esto: usarlo como argumento de venta. No se habla
 mal de SITAM en ningún posteo, mail ni respuesta. Que ellos estén caídos no

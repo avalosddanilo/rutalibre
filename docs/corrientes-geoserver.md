@@ -136,7 +136,7 @@ precisión que no teníamos.
 
 ## Lo que hay que pedir
 
-En el mismo mail de `docs/mails-para-mandar.md`. Cualquiera de las tres
+En el mismo mail de `privado/mails-para-mandar.md`. Cualquiera de las tres
 formas sirve, de menos a más trabajo para ellos:
 
 1. **Habilitar WFS** (*Services → WFS → Enable WFS*), aunque sea solo para

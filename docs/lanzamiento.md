@@ -66,7 +66,7 @@ Nada de esta lista puede esperar, porque todo lo demás espera a esto.
 
 **Mientras tanto (esto es lo que hace que el lanzamiento no sea un tuit al
 vacío):**
-- **Mandar los dos mails** de [`mails-para-mandar.md`](mails-para-mandar.md)
+- **Mandar los dos mails** de `privado/mails-para-mandar.md`
   (municipalidad de Corrientes y empresa). Mandarlos ANTES del lanzamiento:
   si después hay prensa, el reclamo por los datos ya está hecho y con fecha.
 - **Crear el Instagram de la app** (@rutalibre.app o similar): foto = ícono,
@@ -78,7 +78,7 @@ vacío):**
   alarma sonando). Ese video ES la publicidad: sirve para Instagram, TikTok,
   WhatsApp y para mandarle a los medios.
 - **Escribir la lista de difusión**: está empezada en
-  [`difusion.md`](difusion.md) — los medios con lo que se pudo verificar, la
+  `privado/difusion.md` — los medios con lo que se pudo verificar, la
   receta para buscar los grupos de Facebook el mismo día, y el texto adaptado
   por grupo. Lo que falta ahí son mails de redacción que hay que conseguir a
   mano.
@@ -208,7 +208,7 @@ funciones):
 - **Reseñas**: contestar TODAS desde Play Console, las malas primero, con
   la misma voz honesta ("tenés razón, no está; está pedido/anotado"). Una
   mala reseña bien contestada suma más que una buena. Los textos ya están
-  escritos en [`resenas.md`](resenas.md), incluidas las cinco que seguro van
+  escritos en `privado/resenas.md`, incluidas las cinco que seguro van
   a llegar.
 - **Métricas**, dos veces por semana y no más: instalaciones (Play),
   cierres inesperados (vitals), uso de Supabase (con las alertas al 50/80%

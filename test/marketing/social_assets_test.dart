@@ -1043,7 +1043,7 @@ void main() {
     // La app NO sabe dónde está el colectivo: no existe ningún feed público y
     // abierto de posición. Se afirma la falta del DATO ABIERTO y nunca que
     // "nadie tiene GPS" — hay unidades que sí lo tienen, ver
-    // docs/competencia.md.
+    // privado/competencia.md.
     // Prometerlo consigue una instalación y pierde a la persona para siempre.
     expect(copy, isNot(contains('tiempo real')));
     expect(copy, isNot(contains('en vivo')));
@@ -1064,11 +1064,11 @@ void main() {
     expect(c1, contains('no inventa horarios'));
     // El renglón incómodo. Dice la FALTA DEL DATO ABIERTO y no "nadie tiene
     // GPS": hay unidades con GPS y hay un sistema de arribos montado sobre 16
-    // líneas que hoy devuelve 500 (ver docs/competencia.md). Que a otro se le
+    // líneas que hoy devuelve 500 (ver privado/competencia.md). Que a otro se le
     // caiga el servidor no nos habilita a decir que no existe.
     expect(c1, contains('no existe ningún dato público'));
     // Y nunca una acusación contra un tercero: eso ya lo prohíbe
-    // marketing/estrategia.md, y encima sería falso.
+    // privado/estrategia.md, y encima sería falso.
     expect(c1, isNot(contains('inventando')));
     expect(c1, isNot(contains('nadie lo sabe')));
   });

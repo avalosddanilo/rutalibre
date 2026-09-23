@@ -268,7 +268,7 @@ Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
   5 m), pero están repartidas de forma muy despareja: una sola línea, la 104,
   concentra más de la mitad, y cuatro líneas no llegan ni a cinco paradas en
   más de diez kilómetros. Sin saber dónde para cada línea, la respuesta sería
-  adivinada. El pedido está en `docs/mails-para-mandar.md`.
+  adivinada. El pedido está en `privado/mails-para-mandar.md`.
 - Las paradas que ya no existen en la realidad pero OSM todavía mapea son
   indistinguibles de las vigentes. Ahora se pueden corregir en OSM desde la
   app, pero el cambio recién se ve cuando reimportamos los datos: no hay
