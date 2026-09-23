@@ -59,8 +59,11 @@ android/key.properties
 # Se quedan en el disco, NO en un repo publico.
 privado/
 
-# Excluir guiones y contenido de marketing sensible
-marketing/tiktok-guiones.md
-marketing/ig-carruseles.md
-marketing/ig-posts-y-stories.md
-marketing/calendario.md
+# Los guiones, carruseles, posteos y el calendario de publicación NO van
+# acá: viven en privado/marketing/, que la regla de arriba ya ignora.
+#
+# Estuvieron listados por ruta un rato (marketing/tiktok-guiones.md y
+# compañía) y no sirvió de nada: .gitignore solo ignora lo que NO está
+# trackeado, y esos archivos ya estaban en el repo. Un archivo que git ya
+# sigue se saca moviéndolo o con `git rm --cached`, no agregándolo acá.
+# Queda escrito porque es el error de git más fácil de cometer dos veces.
