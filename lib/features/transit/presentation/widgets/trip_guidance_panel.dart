@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -12,6 +11,7 @@ import '../../domain/entities/trip_plan.dart';
 import '../providers/location_providers.dart';
 import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
+import '../providers/wake_alarm_watch.dart';
 import '../utils/ride_progress.dart';
 import '../utils/trip_guidance.dart';
 import 'hail_screen.dart';
@@ -233,13 +233,6 @@ class _LiveRideRow extends ConsumerStatefulWidget {
 
 class _LiveRideRowState extends ConsumerState<_LiveRideRow>
     with _StaleFixTicker {
-  /// Para vibrar UNA vez al entrar en zona de bajada, no en cada fix.
-  bool _alerted = false;
-
-  /// Ídem para la alarma, que suena ANTES ([RideProgress.shouldWake]): a
-  /// quien hay que despertar no le alcanza el aviso de "una parada antes".
-  bool _woke = false;
-
   /// Si el contador llegó a mostrarse alguna vez en este tramo.
   ///
   /// Cambia qué es honesto cuando el GPS se muere a mitad de viaje (permiso
@@ -249,9 +242,58 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
   /// la deja contando esquinas sin saber que ya nadie cuenta por ella.
   bool _sawProgress = false;
 
+  /// Le avisa al provider que decide cuál es el tramo activo.
+  ///
+  /// En un microtask y no derecho acá: tocar un provider mientras el árbol
+  /// se está construyendo es un error de Riverpod. Los microtasks corren en
+  /// el event loop, así que esto NO depende del scheduler de cuadros — y
+  /// aunque dependiera daría igual: esta registración pasa una vez, al
+  /// arrancar el viaje, con la pantalla prendida. Lo que no podía depender
+  /// de un cuadro era la decisión de sonar, y esa ya no vive acá.
+  /// Guardado en un campo porque `ref` ya no sirve en `dispose()`: para
+  /// entonces el widget se está desmontando y su BuildContext no vale.
+  late final WatchedRideLegNotifier _watched;
+
+  @override
+  void initState() {
+    super.initState();
+    _watched = ref.read(watchedRideLegProvider.notifier);
+    final leg = widget.leg;
+    // En un microtask: tocar un provider mientras el árbol se construye es
+    // un error de Riverpod.
+    Future.microtask(() {
+      if (!mounted) return;
+      _watched.watch(leg);
+    });
+  }
+
+  @override
+  void dispose() {
+    // Sin esto el provider seguiría escuchando el GPS después del viaje, y
+    // `livePositionProvider` es autoDispose justamente para que eso no pase.
+    //
+    // En un microtask por lo mismo que en initState: Riverpod tampoco deja
+    // modificar un provider desde `dispose`, con el árbol desmontándose.
+    final watched = _watched;
+    Future.microtask(() => watched.watch(null));
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final positionAsync = ref.watch(livePositionProvider);
+
+    // Quién decide que suene es `wakeAlarmWatchProvider`, no este build.
+    // Acá solo se DIBUJA la alarma que ya está sonando — y si la pantalla
+    // estaba apagada, este build corre recién cuando el propio provider la
+    // encendió. Ver `docs/alarma-pantalla-apagada.md`.
+    final alert = ref.watch(wakeAlarmWatchProvider);
+    if (alert != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        WakeAlarmScreen.show(context, stopName: alert.stopName);
+      });
+    }
 
     // El stream murió con error. Riverpod CONSERVA el último valor en el
     // estado de error, así que sin este corte el contador quedaría congelado
@@ -280,62 +322,16 @@ class _LiveRideRowState extends ConsumerState<_LiveRideRow>
       lat: position.lat,
       lng: position.lng,
     );
-    if (progress == null) {
-      // Se salió de la zona del tramo: si vuelve a entrar, puede volver a
-      // avisar (bajarse, caminar y volver a subir es raro pero existe).
-      _alerted = false;
-      _woke = false;
-      return const SizedBox.shrink();
-    }
+    if (progress == null) return const SizedBox.shrink();
     _sawProgress = true;
 
     final prepare = progress.shouldPrepare;
-    if (prepare && !_alerted) {
-      _alerted = true;
-      // Háptica y no sonido: arriba del colectivo el teléfono está en la
-      // mano o el bolsillo, y un pitido compite con el ruido del motor.
-      //
-      // Y UNA sola vez por acercamiento: el flag NO se resetea cuando
-      // `prepare` vuelve a falso, porque el GPS oscila — un fix a 240 m y el
-      // siguiente a 260 harían vibrar el teléfono en cada vaivén. Solo se
-      // rearma al salir de la zona del tramo entero (el `progress == null`
-      // de arriba), que es un cambio de situación real y no ruido.
-      HapticFeedback.heavyImpact();
-    }
-    // ⚠️ ACÁ ESTÁ EL BUG DE LA ALARMA CON LA PANTALLA APAGADA.
-    //
-    // Este disparo vive adentro de `build()`, y con la pantalla apagada
-    // Flutter deja de dibujar cuadros: las posiciones siguen llegando —el
-    // servicio en primer plano se encarga— pero `build()` no corre y la
-    // condición nunca se evalúa. Al encender la pantalla, corre con la
-    // última posición y la alarma suena "tarde". Probado en emulador el
-    // 2026-09-21.
-    //
-    // El arreglo es mudar la decisión a un provider que escuche el stream,
-    // porque los listeners de Riverpod corren con el event loop y no con el
-    // scheduler de cuadros. El plan completo, con la prueba para repetirlo,
-    // está en `docs/alarma-pantalla-apagada.md`.
-    //
-    // Con la alarma armada, el aviso deja de ser discreto: pantalla de
-    // alarma con el tono del sistema en loop, para quien se durmió. Suena
-    // UNA parada antes que la vibración (shouldWake, no shouldPrepare):
-    // despertarse, entender dónde estás y juntar tus cosas lleva más que
-    // levantar la vista — "muy justo", dijo la prueba de campo. En un
-    // post-frame porque abrir un diálogo en medio del build no se puede.
-    // El flag se consume recién cuando SUENA: si la alarma se arma tarde —ya
-    // adentro de la zona—, el próximo fix la dispara igual.
-    if (progress.shouldWake && !_woke && ref.read(wakeAlarmProvider)) {
-      _woke = true;
-      final stopName = widget.leg.alightStop.name;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        WakeAlarmScreen.show(
-          context,
-          stopName: stopName,
-          gear: ref.read(wakeAlarmGearProvider),
-        );
-      });
-    }
+    // La vibración de "preparate" y el disparo de la alarma NO viven acá.
+    // Vivían, y ese era el bug: con la pantalla apagada Flutter deja de
+    // dibujar, este `build()` no corre y ninguna de las dos cosas pasaba
+    // hasta que alguien encendía la pantalla a mano. Ahora las decide
+    // `WakeAlarmWatchNotifier`, que escucha el stream desde el event loop.
+    // Este renglón solo MUESTRA. Ver `docs/alarma-pantalla-apagada.md`.
 
     final scheme = Theme.of(context).colorScheme;
     final text = switch (progress.stopsRemaining) {

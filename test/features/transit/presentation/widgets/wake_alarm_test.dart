@@ -112,17 +112,19 @@ void main() {
   group('WakeAlarmScreen', () {
     Future<void> pumpAndShow(WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => Center(
-                child: ElevatedButton(
-                  onPressed: () => WakeAlarmScreen.show(
-                    context,
-                    stopName: 'French y Güemes',
-                    gear: gear,
+        UncontrolledProviderScope(
+          container: container(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => Center(
+                  child: ElevatedButton(
+                    onPressed: () => WakeAlarmScreen.show(
+                      context,
+                      stopName: 'French y Güemes',
+                    ),
+                    child: const Text('sonar'),
                   ),
-                  child: const Text('sonar'),
                 ),
               ),
             ),
@@ -135,21 +137,27 @@ void main() {
       await tester.pump();
     }
 
-    testWidgets('suena al abrir y dice dónde bajarse', (tester) async {
+    testWidgets('dice dónde bajarse, que es lo primero que se lee', (
+      tester,
+    ) async {
       await pumpAndShow(tester);
 
-      expect(gear.calls, contains('ring'));
       expect(find.text('¡Preparate para bajar!'), findsOneWidget);
       expect(find.text('Tu parada es French y Güemes.'), findsOneWidget);
     });
 
-    testWidgets('enciende la pantalla ANTES de sonar', (tester) async {
-      // El caso para el que se hizo todo esto: el teléfono en el bolsillo,
-      // pantalla apagada y bloqueada. Si el tono arranca antes que la
-      // pantalla, el que se despierta lo hace a oscuras sin saber por qué.
+    testWidgets('la pantalla NO es la que hace sonar el tono', (tester) async {
+      // Parece un test al revés y es el más importante del archivo.
+      //
+      // El tono lo arranca `WakeAlarmWatchNotifier` al decidir, no este
+      // widget al montarse. Si volviera a sonar desde acá, con la pantalla
+      // apagada no sonaría nunca —Flutter no dibuja, el widget no se monta—
+      // y estaríamos de vuelta en el bug de `docs/alarma-pantalla-apagada.md`
+      // con los tests en verde.
       await pumpAndShow(tester);
 
-      expect(gear.calls, containsAllInOrder(['wakeScreen', 'ring']));
+      expect(gear.calls, isNot(contains('ring')));
+      expect(gear.calls, isNot(contains('wakeScreen')));
     });
 
     testWidgets('solo el botón la apaga, y apaga de verdad', (tester) async {
@@ -167,24 +175,26 @@ void main() {
       // veces, y dos alarmas apiladas obligan a apagar dos veces.
       late BuildContext ctx;
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) {
-                ctx = context;
-                return const SizedBox.shrink();
-              },
+        UncontrolledProviderScope(
+          container: container(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) {
+                  ctx = context;
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           ),
         ),
       );
-      WakeAlarmScreen.show(ctx, stopName: 'French y Güemes', gear: gear);
-      WakeAlarmScreen.show(ctx, stopName: 'French y Güemes', gear: gear);
+      WakeAlarmScreen.show(ctx, stopName: 'French y Güemes');
+      WakeAlarmScreen.show(ctx, stopName: 'French y Güemes');
       await tester.pump();
       await tester.pump();
 
       expect(find.text('¡Preparate para bajar!'), findsOneWidget);
-      expect(gear.calls.where((c) => c == 'ring'), hasLength(1));
 
       // Cerrar para no dejar la vibración periódica viva en el test.
       await tester.tap(find.text('Listo, estoy despierto'));
