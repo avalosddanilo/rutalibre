@@ -132,9 +132,14 @@ select tablename, rowsecurity
 ```
 
 Esperado: las 6 tablas con `rowsecurity = true`.
-`spatial_ref_sys` va a aparecer en `false` — **es de PostGIS, no nuestra, y
-ya se comprobó que no se puede cambiar** (ver `ARCHITECTURE.md`). No es un
-hallazgo.
+`spatial_ref_sys` va a aparecer en `false` — es de PostGIS, no nuestra, y
+puede que el rol del SQL Editor no la pueda cambiar (ver `ARCHITECTURE.md`
+y la migración `0006`).
+
+⚠️ **Que esa fila diga `false` no es el final de la revisión, es el
+principio.** Si RLS no se pudo habilitar, lo único que frena a un anónimo
+sobre esa tabla son los `GRANT` — y ahí estaba el problema real. Ver el
+punto 6.
 
 **2. ¿Alguna policy permite escribir?**
 
@@ -176,6 +181,40 @@ Esperado: un error `42501` / *"new row violates row-level security policy"*.
 de escritura que no debería existir.
 
 **5. Confirmar que la anon key es anon** — ver el recuadro de S1.
+
+**6. ¿Qué puede ESCRIBIR `anon`, más allá de las policies?** Esta es la que
+faltaba, y la que encontró el único agujero real de la auditoría.
+
+```sql
+select table_name, grantee, privilege_type
+  from information_schema.role_table_grants
+ where table_schema = 'public'
+   and grantee in ('anon', 'authenticated')
+   and privilege_type in ('INSERT', 'UPDATE', 'DELETE', 'TRUNCATE')
+ order by table_name, grantee, privilege_type;
+```
+
+Esperado: **cero filas**.
+
+**Por qué no la cubren los puntos 1 a 4.** RLS y `GRANT` son dos rejas
+distintas: PostgREST mira primero el `GRANT` y después la policy. Con RLS
+activo, el `GRANT` de escritura sobrante es inofensivo —la policy frena—,
+así que el punto 1 lo tapa. **En una tabla sin RLS, el `GRANT` es lo único
+que hay.** Y el linter de Supabase avisa por RLS, no por grants: por eso
+esto pasó doce migraciones sin que nadie lo viera.
+
+**Encontrado el 2026-09-23**: `anon` tenía `INSERT, UPDATE, DELETE,
+TRUNCATE, REFERENCES, TRIGGER` sobre `public.spatial_ref_sys`. No lo puso
+nadie: Supabase corre `grant all on all tables in schema public to anon,
+authenticated` al crear el proyecto, y PostGIS creó su tabla en `public`.
+Con la anon key —pública por diseño— se podía vaciar el catálogo EPSG por
+PostgREST y romper `st_transform`. Sin datos de usuario de por medio, pero
+era la única cosa escribible por un anónimo en toda la base.
+
+Se arregla con la migración `0014_spatial_ref_sys_grants.sql`. Puede fallar
+por la misma razón que la `0006` (la tabla es de la extensión); si falla,
+**esto no se deja pasar como el aviso de RLS**: va ticket a soporte de
+Supabase.
 
 ## ✅ S3 — Inyección: no hay superficie
 
