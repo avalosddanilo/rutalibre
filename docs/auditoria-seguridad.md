@@ -271,18 +271,21 @@ mete en "cerrar cuando se pueda".
    PostGIS**, así que es una postura de ellos, no un error nuestro.
 
 **7. Probar el ataque sobre `spatial_ref_sys`.** Igual que el punto 4: mirar
-la config no demuestra nada, mandar el request sí. El filtro `srid=eq.999999`
-**no matchea ninguna fila**, así que la prueba es segura aunque el permiso
-esté abierto — no borra nada.
+la config no demuestra nada, mandar el request sí. Se hace con un `DELETE`
+de PostgREST contra esa tabla, con la anon key y un filtro que **no matchee
+ninguna fila**, para que la prueba sea segura aunque el permiso esté abierto.
 
-```bash
-curl -i -X DELETE "https://TU-PROYECTO.supabase.co/rest/v1/spatial_ref_sys?srid=eq.999999" -H "apikey: TU_ANON_KEY" -H "Authorization: Bearer TU_ANON_KEY"
-```
+- Si responde `401` / `403` / `42501` → el `DELETE` está frenado. Arreglado.
+- Si responde `204` → la tabla es escribible por cualquiera con la anon key,
+  o sea que el revoke de la `0014` no entró.
 
-- `401` / `403` / `42501` → el `DELETE` está frenado. Arreglado.
-- `204` → **la tabla es escribible por cualquiera con la anon key.** El
-  revoke no entró; el `999999` no existía, pero un `srid=gt.0` sí vacía el
-  catálogo.
+> **Por qué acá no está el comando escrito.** Este repositorio es público y
+> esta es la única prueba de la lista cuyo request, hoy, **funciona**: el
+> punto 4 documenta un ataque que rebota, este documenta uno que entra. Una
+> cosa es dejar escrito el hallazgo —eso se hace, es el sentido del
+> documento— y otra es dejar el comando listo para copiar y pegar. El que
+> tenga que correrlo lo arma en treinta segundos con lo de arriba; el que
+> pasaba por acá aburrido, no.
 
 ## ✅ S3 — Inyección: no hay superficie
 
