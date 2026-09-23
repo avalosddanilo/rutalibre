@@ -12,11 +12,9 @@
 --
 --     anon → SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER
 --
--- O sea: cualquiera con la anon key —que es pública por diseño y
--- está en el repo— podía hacer `DELETE` sobre el catálogo EPSG por
--- PostgREST. No hay datos de usuario adentro, pero vaciarlo rompe
--- st_transform y cualquier reproyección futura. Es la única cosa
--- escribible por un anónimo en toda la base.
+-- O sea: cualquiera con la anon key —que es pública por diseño—
+-- puede hacer `DELETE` sobre el catálogo EPSG por PostgREST. Es la
+-- única cosa escribible por un anónimo en toda la base.
 --
 -- DE DÓNDE SALIÓ: nadie lo escribió a mano. Supabase corre
 -- `grant all on all tables in schema public to anon, authenticated`
@@ -34,11 +32,18 @@
 -- pública del registro EPSG) y hay funciones de PostGIS que lo
 -- consultan. Lo que se saca es todo lo que escribe.
 --
--- PUEDE FALLAR, IGUAL QUE LA 0006. `revoke` lo tiene que correr
--- quien otorgó el permiso; si la tabla es de `supabase_admin`, el
--- rol del SQL Editor no puede. Por eso va en un bloque que atrapa
--- el error y avisa, en vez de tumbar la migración. Este script
--- SOLO puede arreglar o no hacer nada: nunca deja la base peor.
+-- ⚠️ CORRIDA EL 2026-09-23: NO FUNCIONÓ, Y NO PUEDE FUNCIONAR.
+-- El `revoke` lo tiene que correr quien otorgó el permiso. La tabla
+-- es de `supabase_admin` y el SQL Editor corre como `postgres`:
+--
+--     rol_que_corre     dueno_de_la_tabla   anon_puede
+--     postgres          supabase_admin      DELETE, INSERT, ... UPDATE
+--
+-- Se deja igual, y corrida, por dos razones: el bloque atrapa el
+-- error y nunca deja la base peor, y el `select` de abajo es la
+-- verificación que hay que repetir si Supabase algún día cambia el
+-- dueño o resuelve el ticket. Ver `docs/auditoria-seguridad.md`
+-- para qué se decidió hacer con esto.
 --
 -- Correr en: Supabase Dashboard → SQL Editor. Devuelve una fila: esa
 -- fila es el veredicto.

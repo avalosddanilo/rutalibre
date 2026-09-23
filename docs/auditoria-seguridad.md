@@ -215,10 +215,60 @@ era la única cosa escribible por un anónimo en toda la base.
 No es un detalle — significa que en esa tabla **no hay policy que frene
 nada** y el `GRANT` es la única reja que existe.
 
-Se arregla con la migración `0014_spatial_ref_sys_grants.sql`. Puede fallar
-por la misma razón que la `0006` (la tabla es de la extensión); si falla,
-**esto no se deja pasar como el aviso de RLS**: va ticket a soporte de
-Supabase.
+**No se puede arreglar desde el SQL Editor.** La migración
+`0014_spatial_ref_sys_grants.sql` lo intentó y devolvió:
+
+```
+rol_que_corre   dueno_de_la_tabla   anon_puede
+postgres        supabase_admin      DELETE, INSERT, REFERENCES, SELECT, TRIGGER, TRUNCATE, UPDATE
+```
+
+`revoke` lo tiene que correr quien otorgó el permiso. La tabla es de
+`supabase_admin`, el editor corre como `postgres`. Fin: ni RLS (0006) ni
+grants (0014).
+
+### Qué tan grave es, medido y no supuesto
+
+⚠️ **Acá hay que corregir lo que dijimos antes.** La primera lectura fue
+"vaciarlo rompe `st_transform` y cualquier reproyección futura". Fuimos a
+mirar el código y **eso no aplica a esta app**:
+
+```bash
+grep -rn -i "st_transform" supabase/ tools/ lib/
+```
+
+Solo aparece en comentarios. Ninguna migración la usa. Las consultas reales
+son `st_point`, `st_x`, `st_y`, `st_dwithin`, `st_distance` sobre
+`geography` 4326 y `st_asgeojson` — todas resuelven con el esferoide
+compilado en PostGIS, sin tocar el catálogo.
+
+Y la reproyección que el proyecto **sí** necesita —Gauss-Krüger Faja 5 para
+los recorridos de Corrientes— se resuelve en Dart, no en la base, y
+`tools/src/gauss_kruger.dart` dice explícitamente por qué: *"no depende de
+que la base tenga cargado el EPSG 5347 en `spatial_ref_sys`"*. La decisión
+ya estaba tomada, por otro motivo, y nos dejó parados justo afuera.
+
+**Entonces el radio real es: un desconocido puede vaciar una tabla de
+referencia que Ruta Libre no lee nunca.** No se cae ni una pantalla, no se
+pierde un dato de nadie, y el contenido es reconstruible (es el registro
+EPSG público). Eso no lo vuelve aceptable, pero lo saca de "urgente" y lo
+mete en "cerrar cuando se pueda".
+
+### Qué se decidió
+
+1. **No se hace un backup de la tabla.** Sería ~5 MB de una cuota Free de
+   500 MB para asegurar algo que, si se rompe, no rompe nada. El costo es
+   real y el beneficio no.
+2. **No se mueve PostGIS fuera de `public`.** Es la otra salida técnica y
+   también necesita ser dueño de la extensión, así que tampoco se puede —
+   y aunque se pudiera, romper las 13 migraciones por esto no se paga.
+3. **Queda abierto y anotado**, con la verificación del punto 6 corriendo
+   cada vez que se toca el esquema. Si Supabase cambia el dueño o contesta
+   el ticket, la `0014` ya está escrita: se vuelve a correr y listo.
+4. **Vale mandar el ticket**, sin apuro: esto no lo configuramos nosotros,
+   sale del `grant all on all tables in schema public` que Supabase corre
+   al crear el proyecto. Le pasa a **cualquier proyecto Supabase con
+   PostGIS**, así que es una postura de ellos, no un error nuestro.
 
 **7. Probar el ataque sobre `spatial_ref_sys`.** Igual que el punto 4: mirar
 la config no demuestra nada, mandar el request sí. El filtro `srid=eq.999999`
