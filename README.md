@@ -45,6 +45,9 @@ día a día (lentitudes, emergencias, regenerar datos, capacidad):
 
 ## Cómo se ve
 
+<p align="center"><img src="marketing/social-preview.png" width="620" alt="Ruta Libre"></p>
+
+
 | | | |
 |:---:|:---:|:---:|
 | <img src="marketing/capturas/01-mapa-paradas.png" width="230"> | <img src="marketing/capturas/02-buscador-altura.png" width="230"> | <img src="marketing/capturas/03-como-llego.png" width="230"> |
