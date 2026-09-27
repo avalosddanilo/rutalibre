@@ -1,0 +1,69 @@
+# Mantiene despierta la base de Supabase.
+#
+# POR QUÉ EXISTE. El plan Free pausa un proyecto tras ~7 días sin tráfico, y
+# esta app es cache-first a propósito: una instalación descarga los datos una
+# vez y después casi no vuelve a la red. O sea que con usuarios reales
+# igual puede haber semanas de silencio, y el diseño que ahorra datos a la
+# gente es el mismo que hace que Supabase crea que el proyecto está muerto.
+#
+# Si la base se pausa, la app deja de funcionar para todos. Durante la prueba
+# cerrada de Google Play eso es peor todavía: son 14 días seguidos con 12
+# verificadores, y si la app se rompe en el medio el contador se reinicia.
+#
+# `docs/operaciones.md` decía "entrar al dashboard cada tanto". Eso depende
+# de acordarse, y el 2026-09-27 llegó el aviso de pausa con la prueba cerrada
+# en el día 9 de 14. Por eso ahora lo hace una máquina.
+#
+# QUÉ CONSULTA. La más barata que existe: un `id` de una tabla chica, con
+# `limit=1`. NO se usa `get_all_stops`, que pesa ~267 KB por respuesta: son
+# ~8 MB al mes de la cuota de 5 GB, tirados a la basura para decir "hola".
+# Así son unos pocos bytes por día.
+#
+# LAS CLAVES van como secrets del repositorio y no en este archivo. La anon
+# key es pública por diseño —la lleva adentro cada APK— pero eso no es razón
+# para dejarla escrita: el día que se rote, se cambia en un solo lugar.
+#   Settings -> Secrets and variables -> Actions
+#     SUPABASE_URL       https://<proyecto>.supabase.co
+#     SUPABASE_ANON_KEY  la anon key
+name: Mantener viva la base
+
+on:
+  schedule:
+    # Todos los días a las 11:00 UTC (08:00 en Argentina). Diario y no
+    # semanal porque el margen es de ~7 días: si GitHub se saltea una
+    # corrida —el cron de Actions se atrasa o se pierde bajo carga, está
+    # documentado— quedan seis intentos antes de que importe.
+    - cron: '0 11 * * *'
+  # Para poder despertarla a mano el día que llegue un aviso de pausa.
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "Faltan los secrets SUPABASE_URL y SUPABASE_ANON_KEY."
+            echo "Settings -> Secrets and variables -> Actions"
+            exit 1
+          fi
+
+          # -f para que un 4xx/5xx sea un fallo del job y no un silencio: si
+          # la base YA está pausada, esto se tiene que poner rojo y avisar,
+          # no fingir que anduvo.
+          codigo=$(curl -sS -o /tmp/respuesta.json -w '%{http_code}' \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
+            "$URL/rest/v1/lines?select=id&limit=1")
+
+          echo "HTTP $codigo"
+          head -c 200 /tmp/respuesta.json; echo
+
+          if [ "$codigo" != "200" ]; then
+            echo "::error::La base no contestó 200. Puede estar pausada: revisá el dashboard de Supabase."
+            exit 1
+          fi

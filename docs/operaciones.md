@@ -191,9 +191,24 @@ En orden de probabilidad, con su respuesta:
    de datos abiertos.
 5. **GPS de gama baja**: el contador aparece y desaparece. La app se calla
    en vez de inventar — es diseño, explicarlo así.
-6. **Pre-lanzamiento**: el proyecto free de Supabase SE PAUSA tras ~7 días
-   sin tráfico. Mientras dure la prueba cerrada, entrar al dashboard cada
-   tanto; con usuarios reales no pasa más.
+6. **La base pausada por inactividad.** El proyecto free de Supabase SE
+   PAUSA tras ~7 días sin tráfico. Si eso pasa, la app deja de funcionar
+   para todos.
+
+   ⚠️ **Y no es solo de prelanzamiento, como decía acá antes.** La app es
+   cache-first a propósito: una instalación descarga los datos una vez y
+   casi no vuelve. Con usuarios reales igual puede haber semanas de
+   silencio — el diseño que le ahorra datos a la gente es el mismo que hace
+   que Supabase crea que el proyecto está muerto.
+
+   Lo resuelve `.github/workflows/mantener-viva.yml`, que consulta la base
+   una vez por día. **Corrió por primera vez el 2026-09-27**, cuando llegó
+   el aviso de pausa con la prueba cerrada en el día 9 de 14: perderla ahí
+   habría reiniciado el contador de los 14 días.
+
+   La versión anterior de este punto decía "entrar al dashboard cada
+   tanto". Eso depende de acordarse, y no funcionó. Si el workflow se pone
+   rojo, la base puede estar pausada de verdad: mirar el dashboard.
 
 ## Qué sigue (después de la 1.0)
 
