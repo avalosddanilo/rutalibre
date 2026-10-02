@@ -76,9 +76,28 @@ dart format --set-exit-if-changed .
 flutter test
 ```
 
-El CI está pineado a **Flutter 3.44.8 / Dart 3.12.2**. Si tu SDK local es
-más nuevo, `dart format` puede dar distinto que el CI: ante la duda, formatear
-con la versión del CI. Ya rompió el CI una vez por esto.
+El CI está pineado a **Flutter 3.44.8 / Dart 3.12.2**, y el formateador
+cambia de reglas entre versiones de Dart. Si tu SDK local es más nuevo,
+`dart format` te deja el archivo distinto de como lo quiere el CI, y el
+build se pone rojo por formato con los tests en verde.
+
+**Ya rompió el CI dos veces.** La segunda, con el archivo recién escrito en
+el commit anterior. "Ante la duda formateá con la del CI" no alcanzaba
+porque no decía cómo, así que acá está:
+
+```bash
+# Una vez: bajar EXACTAMENTE el Dart del CI, al lado y sin pisar el tuyo.
+curl -L -o /tmp/dartsdk.zip \
+  https://storage.googleapis.com/dart-archive/channels/stable/release/3.12.2/sdk/dartsdk-linux-x64-release.zip
+unzip -q /tmp/dartsdk.zip -d /tmp
+
+# Y antes de pushear, el mismo chequeo que corre el CI:
+/tmp/dart-sdk/bin/dart format --output=none --set-exit-if-changed lib test tools
+```
+
+La regla que más pega hoy es `test('nombre', () { ... }, skip: ...)`: Dart
+3.13 lo colapsa en una llamada corta, 3.12.2 lo abre en varias líneas. Si
+viste ese cambio en un diff que no pediste, es esto.
 
 Y si tocaste algo de `android/`: **compilá**. Los tests de Dart no ven una
 línea de Kotlin.

@@ -191,17 +191,21 @@ void main() {
     }
   });
 
-  test('el PNG está y no está vacío', () {
-    final file = File(_archivo);
-    expect(
-      file.existsSync(),
-      isTrue,
-      reason:
-          'Falta $_archivo. Generalo: REGEN_SOCIAL_PREVIEW=1 flutter test '
-          'test/marketing/social_preview_test.dart',
-    );
-    expect(file.lengthSync(), greaterThan(1000));
-  }, skip: Platform.environment['REGEN_SOCIAL_PREVIEW'] == '1');
+  test(
+    'el PNG está y no está vacío',
+    () {
+      final file = File(_archivo);
+      expect(
+        file.existsSync(),
+        isTrue,
+        reason:
+            'Falta $_archivo. Generalo: REGEN_SOCIAL_PREVIEW=1 flutter test '
+            'test/marketing/social_preview_test.dart',
+      );
+      expect(file.lengthSync(), greaterThan(1000));
+    },
+    skip: Platform.environment['REGEN_SOCIAL_PREVIEW'] == '1',
+  );
 
   testWidgets(
     'regenera la miniatura',
