@@ -109,7 +109,21 @@ class _SchedulesScreenState extends ConsumerState<SchedulesScreen> {
       // letra porque no ve bien de lejos. Que scrollee todo junto no cambia
       // nada a escala normal —todo entra igual— y a escala grande se navega.
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 24),
+        // El `viewPadding` de abajo lo suma la pantalla y no el Scaffold.
+        //
+        // Desde Android 15 las apps que apuntan al SDK 35 dibujan de borde a
+        // borde por defecto: el contenido va DEBAJO de la barra de
+        // navegación, no arriba. El AppBar resuelve el margen de arriba
+        // solo; el de abajo, en el body, no lo resuelve nadie. Con los 24
+        // píxeles fijos que había antes, en un teléfono con botones
+        // —~48 dp de barra— el último renglón quedaba tapado.
+        //
+        // Y el último renglón de ESTA pantalla es la última salida del día.
+        // Alguien decidiendo si llega al último colectivo no puede estar
+        // mirando una hora cortada por la barra del sistema.
+        padding: EdgeInsets.only(
+          bottom: 24 + MediaQuery.viewPaddingOf(context).bottom,
+        ),
         children: [
           // La tarifa de ESTA línea, que no siempre es la de su red: el 904A
           // sale un 55% más que sus hermanos. Acá se puede dar el número

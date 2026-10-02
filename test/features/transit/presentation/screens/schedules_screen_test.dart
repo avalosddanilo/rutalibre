@@ -96,6 +96,60 @@ Future<void> _unmount(WidgetTester tester) =>
     tester.pumpWidget(const SizedBox.shrink());
 
 void main() {
+  testWidgets('la lista deja lugar para la barra de navegación del sistema', (
+    tester,
+  ) async {
+    // Desde Android 15, apuntando al SDK 35, la app dibuja de borde a borde:
+    // el contenido pasa POR DEBAJO de la barra de navegación. El AppBar
+    // resuelve el margen de arriba solo; el de abajo no lo resuelve nadie, y
+    // antes había 24 píxeles fijos.
+    //
+    // El último renglón de esta pantalla es la última salida del día. Que
+    // quede tapado por la barra es alguien mirando una hora cortada para
+    // decidir si llega al último colectivo.
+    //
+    // Se mide con `viewPadding` simulado porque es la única forma: a ojo,
+    // en un emulador con gestos (~24 dp), el error de 24 píxeles no se ve.
+    // En un teléfono con botones —48 dp— sí, y es el que no tenemos.
+    const barra = 48.0;
+    final repo = _MockRepo();
+    when(
+      () => repo.getSchedules(routeVariantId: 'rv1', dayType: DayType.weekday),
+    ).thenAnswer((_) async => const Right(_weekdaySchedules));
+
+    final container = _makeContainer(repo);
+    container.read(selectedLineProvider.notifier).select(_line);
+    container.read(selectedRouteVariantProvider.notifier).select(_variant);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(
+              viewPadding: EdgeInsets.only(bottom: barra),
+              padding: EdgeInsets.only(bottom: barra),
+            ),
+            child: SchedulesScreen(),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final lista = tester.widget<ListView>(find.byType(ListView));
+    final abajo = lista.padding!.resolve(TextDirection.ltr).bottom;
+    expect(
+      abajo,
+      greaterThanOrEqualTo(barra),
+      reason:
+          'la lista termina a $abajo px del borde y la barra del sistema mide '
+          '$barra: el último horario queda abajo de la barra',
+    );
+
+    await _unmount(tester);
+  });
+
   testWidgets('sin recorrido seleccionado muestra la guía para elegir uno', (
     tester,
   ) async {
