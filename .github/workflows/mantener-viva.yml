@@ -29,11 +29,24 @@ name: Mantener viva la base
 
 on:
   schedule:
-    # Todos los días a las 11:00 UTC (08:00 en Argentina). Diario y no
-    # semanal porque el margen es de ~7 días: si GitHub se saltea una
-    # corrida —el cron de Actions se atrasa o se pierde bajo carga, está
-    # documentado— quedan seis intentos antes de que importe.
-    - cron: '0 11 * * *'
+    # Cada 6 horas.
+    #
+    # Era una vez por día, y el 2026-10-04 llegó un segundo aviso de pausa
+    # con los cinco pings anteriores en verde. Puede ser retraso —esa
+    # ventana de 7 días todavía incluía los días en que el workflow fallaba
+    # por los secrets que faltaban— o puede ser que una consulta por día
+    # entre en lo que Supabase llama "low activity".
+    #
+    # NO SE SABE CUÁL DE LAS DOS, y conviene decirlo: la documentación de
+    # Supabase dice "we may pause applications on the Free Plan that exhibit
+    # low activity in a 7-day period" y no publica ningún número. Cuatro
+    # veces por día en vez de una es un seguro barato contra la segunda
+    # hipótesis, no un arreglo demostrado.
+    #
+    # Barato de verdad: son ~120 consultas al mes de unos pocos bytes, sobre
+    # una cuota de 5 GB. Y si GitHub se saltea alguna corrida —el cron de
+    # Actions se atrasa bajo carga, está documentado— sobran intentos.
+    - cron: '0 */6 * * *'
   # Para poder despertarla a mano el día que llegue un aviso de pausa.
   workflow_dispatch:
 

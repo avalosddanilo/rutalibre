@@ -210,6 +210,26 @@ En orden de probabilidad, con su respuesta:
    tanto". Eso depende de acordarse, y no funcionó. Si el workflow se pone
    rojo, la base puede estar pausada de verdad: mirar el dashboard.
 
+   ⚠️ **Y el ping tampoco está demostrado.** El 2026-10-04 llegó un SEGUNDO
+   aviso de pausa con los cinco pings anteriores en verde. Hay dos
+   explicaciones y no sabemos cuál:
+
+   * **Retraso.** Ese escaneo mira los 7 días previos, que todavía incluían
+     los días en que el workflow fallaba por secrets que faltaban.
+   * **Una consulta por día es "low activity".** La documentación de
+     Supabase dice textual "we may pause applications on the Free Plan that
+     exhibit low activity in a 7-day period" y **no publica ningún
+     umbral**. Nadie sabe cuánto es poco.
+
+   Se subió el ping a cada 6 horas como seguro contra la segunda, y queda
+   una prueba con fecha: **desde el 2026-10-07 la ventana de 7 días está
+   cubierta entera por pings verdes.** Si llega otro aviso después de esa
+   fecha, el ping no alcanza — y ahí la salida es el plan Pro o aceptar que
+   se pause entre lanzamientos.
+
+   **La solución de fondo no es técnica: son usuarios reales.** Con la app
+   en producción esto deja de existir.
+
 ## Qué sigue (después de la 1.0)
 
 La lista viva está en `ARCHITECTURE.md` → "Pendientes de la 1.1". Los tres
