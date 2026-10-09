@@ -3,9 +3,12 @@
 [![CI](https://github.com/avalosddanilo/rutalibre/actions/workflows/ci.yml/badge.svg)](https://github.com/avalosddanilo/rutalibre/actions/workflows/ci.yml)
 [![Licencia: AGPL v3](https://img.shields.io/badge/licencia-AGPL--3.0-blue.svg)](LICENSE)
 [![Datos: ODbL](https://img.shields.io/badge/datos-ODbL%201.0-green.svg)](DATOS.md)
+[![Google Play](https://img.shields.io/badge/Google%20Play-descargar-brightgreen.svg)](https://play.google.com/store/apps/details?id=com.rutalibre.rutalibre)
 
 App de transporte público y movilidad para el Gran Resistencia (Chaco) y
 Corrientes capital. Rápida, limpia y sin publicidad.
+
+**[Descargala gratis en Google Play](https://play.google.com/store/apps/details?id=com.rutalibre.rutalibre)**
 
 **Qué hace hoy**, con datos **reales** — 32 líneas, 133 recorridos y
 1474 paradas de OpenStreetMap y del portal de datos abiertos de Corrientes:

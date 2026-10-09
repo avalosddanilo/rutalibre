@@ -3,7 +3,7 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 Versionado según [SemVer](https://semver.org/lang/es/).
 
-## [1.0.0] — sin publicar
+## [1.0.0] — 2026-10-09
 
 Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
 **Corrientes capital**, con datos reales, sin publicidad y sin cuenta.
