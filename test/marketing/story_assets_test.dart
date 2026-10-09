@@ -89,6 +89,23 @@ const _stories = [
         'Usala cuando te tomes el cole: lo raro que veas, decímelo.',
     pie: 'Gracias, en serio. Sin ustedes esto no sale.',
   ),
+  // El día L. Las dos de arriba quedan viejas en ese momento: la de
+  // reclutar testers y la de "no te desanotes" dejan de tener sentido
+  // cuando la app ya está publicada, y el destacado "Testers" se borra.
+  //
+  // El pie dice "link en la bio" y no la URL: una story no tiene links
+  // tocables sin sticker, y una URL escrita hay que tipearla a mano.
+  _Story(
+    archivo: 's3-ya-salio.png',
+    titulo: 'Ya está en',
+    acento: 'Google Play',
+    cuerpo:
+        'Ruta Libre: colectivos del Gran Resistencia y Corrientes.\n\n'
+        'Qué línea tomar, dónde subir, dónde bajar, y cuántas paradas '
+        'faltan mientras viajás.\n\n'
+        'Gratis, sin publicidad, sin cuenta y anda sin señal.',
+    pie: 'Link en la bio. Si algo no anda, decímelo y lo arreglo.',
+  ),
 ];
 
 Widget _plate(_Story s) => ColoredBox(
