@@ -103,29 +103,102 @@ sonar dos veces, que armarla tarde —ya adentro de la zona— dispare igual,
 que sin tramo activo no se escuche el GPS (la app no sigue a nadie fuera de
 la guía) y que salir de la zona rearme el aviso.
 
-## Cómo probarlo cuando esté
+## Cómo probarlo — el paso a paso
 
-Lo que ya está armado y sirve para repetir la prueba:
+**Hace falta un EMULADOR, no un teléfono enchufado.** `adb emu geo fix` es un
+canal del emulador; contra un dispositivo físico falla sin decir por qué.
 
-```powershell
-# 1. Ubicación en el arranque del recorrido
+### 0 · Antes de empezar
+
+```bash
+flutter run --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+adb devices        # tiene que listar un emulator-5554
+```
+
+### 1 · Ponerte en el arranque del recorrido
+
+```bash
 adb emu geo fix -58.88943 -27.44430
+```
 
-# 2. En la app: destino "Centenario Shopping Mall" (a 148 m de la última
-#    parada del 904A). Tiene que dar un viaje de 5 paradas.
-# 3. Iniciar viaje, activar "Avisame para bajar".
-# 4. Apagar la pantalla del emulador.
-# 5. Reproducir el GPX del 904A a 5x.
+Longitud primero y latitud después, que es al revés de como lo dice todo el
+mundo. Ese punto es el arranque del 904A.
 
-# Verificar que el servicio esté vivo:
+### 2 · Armar el viaje en la app
+
+Destino **"Centenario Shopping Mall"** (a 148 m de la última parada del
+904A): tiene que dar un viaje de 5 paradas. Iniciá el viaje y activá
+**"Avisame para bajar"**.
+
+### 3 · Anotar las coordenadas de la parada de BAJADA
+
+Las necesita el script. La app ya te las da: tocá la parada de bajada en el
+mapa y abrí **"ver en OpenStreetMap"** — la URL que se abre trae la latitud
+y la longitud.
+
+Si no las conseguís, usá las del destino: la parada está unos cientos de
+metros antes, así que la alarma va a sonar un poco **antes** del cartel que
+imprime el script. Eso es esperable, no un error.
+
+### 4 · Verificar que el servicio esté vivo
+
+```bash
 adb shell dumpsys activity services com.rutalibre.rutalibre
 ```
 
-La alarma tiene que sonar **sin tocar nada**, con la pantalla apagada, cuando
-falten dos paradas.
+Tiene que aparecer `TripService`. Si no está, la alarma no va a sonar con la
+pantalla apagada y el resto de la prueba no significa nada.
 
-**Esta prueba es la que falta.** Mientras no se haga, el estado de arriba
-sigue diciendo "sin verificar" y la copy sigue sin prometer nada.
+### 5 · Apagar la pantalla
+
+```bash
+adb shell input keyevent 26
+```
+
+**Este es el paso que la prueba viene a hacer.** Con la pantalla prendida la
+alarma funcionaba incluso con el bug viejo.
+
+### 6 · Soltar el viaje simulado
+
+```bash
+dart run tools/simular_viaje.dart \
+  --desde -58.88943,-27.44430 \
+  --hasta <lng>,<lat> \
+  --pasos 60 --intervalo 2
+```
+
+El script imprime cuántos metros faltan en cada fix y avisa, una sola vez,
+cuándo cruza los 500 m: **ahí la alarma tiene que sonar.** Si suena mucho
+después de ese cartel, llegó tarde, y eso es exactamente el bug que esta
+prueba busca.
+
+Avisa solo si los pasos quedaron tan largos que el salto se come el umbral.
+Hacele caso: con saltos de 250 m no se puede distinguir "a tiempo" de
+"tarde".
+
+### 7 · Qué tiene que pasar
+
+Sin tocar nada, con la pantalla apagada: la pantalla se enciende sola, suena
+fuerte aunque el teléfono esté en silencio, y aparece "¡Preparate para
+bajar!".
+
+### Si no suena
+
+Lo primero que hay que descartar **no** es la alarma sino el recorrido:
+`rideProgress` mide contra los SEGMENTOS entre paradas del tramo y devuelve
+`null` si te saliste de la zona — y la línea recta entre dos puntos puede
+cortar por fuera del recorrido real. Si eso pasa, la condición nunca se
+evalúa y la alarma calla con razón.
+
+La solución es pasarle puntos intermedios sobre la calle por la que va el
+colectivo, que se repiten las veces que haga falta:
+
+```bash
+dart run tools/simular_viaje.dart --desde A --por B --por C --hasta D
+```
+
+Recién si con el recorrido bien seguido tampoco suena, el problema está en
+la alarma.
 
 ## Lo que esto NO cambia
 
