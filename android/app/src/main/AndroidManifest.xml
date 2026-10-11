@@ -23,6 +23,30 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Que Play NO esconda la app a los teléfonos sin GPS.
+
+         Android documenta que pedir ACCESS_FINE_LOCATION IMPLICA
+         <uses-feature android:name="android.hardware.location.gps"
+         android:required="true"/>, y ACCESS_COARSE_LOCATION implica
+         "...location.network". Google Play usa esas features implícitas para
+         FILTRAR el catálogo: un dispositivo sin GPS no ve la ficha y le
+         aparece "No se encontró el elemento". Afecta sobre todo a tablets
+         con WiFi.
+
+         Declararlas con required="false" apaga ese filtro. Es una
+         afirmación, no un truco: decimos que la app ANDA sin ubicación, y
+         anda — el buscador deja cambiar el origen en vez de exigir "Mi
+         ubicación", y `location_providers.dart` ya trata la ubicación
+         apagada y el permiso negado como estados normales con su mensaje,
+         no como errores fatales. Lo que no funciona sin GPS es la guía del
+         viaje y la alarma, que son parte de la app y no la app.
+
+         Lo que NO hay que hacer acá es poner required="true" "por las
+         dudas": eso sería pedirle a Play que esconda la app, que es
+         justamente el problema. -->
+    <uses-feature android:name="android.hardware.location" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
+    <uses-feature android:name="android.hardware.location.network" android:required="false"/>
     <!-- allowBackup="false": lo único que la app guarda en el teléfono es
          cache de datos PÚBLICOS del transporte más los favoritos, y todo eso
          se regenera solo. Subirlo a Drive gasta cuota de backup del usuario

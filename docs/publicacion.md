@@ -44,7 +44,7 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
 | Permisos | Verificados sobre el manifest **fusionado**: `INTERNET`, `ACCESS_COARSE_LOCATION`, `ACCESS_FINE_LOCATION` y —desde la alarma con pantalla apagada— `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_LOCATION`, `POST_NOTIFICATIONS` y `WAKE_LOCK`. Ningún plugin agrega otros |
 | Config de firma | `build.gradle.kts` lee `android/key.properties` (que está en `.gitignore`) |
 
-### Por qué esos tres permisos y no menos
+### Por qué esos siete permisos y no menos
 
 - **`INTERNET`**: sin esto no hay datos ni mapa. El template de Flutter solo lo
   declara en debug; el manifest de `main` lo declara explícito para que el
@@ -60,6 +60,13 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
   obligatorio del servicio anterior. Si el usuario la niega, el servicio corre
   igual y la alarma funciona; por eso no se pide con un diálogo.
 - **`WAKE_LOCK`**: encender la pantalla cuando la alarma suena.
+- **Y tres `<uses-feature ... required="false">`**, que no son permisos sino
+  lo contrario: evitan que Play esconda la app. Pedir
+  `ACCESS_FINE_LOCATION` **implica** `android.hardware.location.gps` como
+  *requerido*, y Play filtra el catálogo con eso: un dispositivo sin GPS no
+  ve la ficha y recibe "No se encontró el elemento". Declararlas en falso
+  apaga el filtro, y es verdad que la app anda sin ubicación — lo que no
+  anda es la guía del viaje, que es una parte y no el todo.
 - **No hay ubicación en segundo plano**, y no la va a haber:
   `ACCESS_BACKGROUND_LOCATION` **no está** en el manifest. El servicio en
   primer plano no es lo mismo: mantiene vivo lo que el usuario dejó andando
@@ -85,11 +92,96 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
 > un trámite nuevo que antes no existía**, y la versión no sale hasta que esté
 > aprobado. Contalo en el calendario.
 
+### Las respuestas del formulario, listas para pegar
+
+El formulario está en **Contenido de la app → Permisos de servicio en primer
+plano**, y aparece recién cuando subís un AAB que declare el permiso. Pide
+tres cosas por cada tipo; acá va el tipo **Ubicación**, que es el único que
+usa la app.
+
+**1 · Para qué se usa**
+
+> La app tiene una función llamada "Avisame para bajar": mientras el usuario
+> viaja en colectivo, suena una alarma dos paradas antes de la parada donde
+> tiene que bajarse, para que no se pase si se queda dormido. El usuario la
+> activa a mano con un interruptor al empezar el viaje, y mientras está
+> activa hay una notificación fija que muestra el viaje en curso. El servicio
+> se detiene solo cuando el viaje termina, y el usuario puede cancelarlo
+> desde la notificación en cualquier momento.
+
+**2 · Por qué no alcanza una alternativa**
+
+> La alarma necesita saber dónde está el colectivo con la pantalla apagada y
+> el teléfono en el bolsillo, que es exactamente como viaja la gente. Sin un
+> servicio en primer plano de tipo `location`, Android congela el proceso al
+> apagarse la pantalla y dejan de llegar las actualizaciones de ubicación, así
+> que la alarma nunca se entera de que llegó a la parada.
+>
+> Las alternativas no sirven para este caso: la API de geovallas tiene una
+> latencia de varios minutos, y un aviso que llega tarde manda al usuario a
+> bajarse a cinco cuadras de donde quería; `WorkManager` y `AlarmManager`
+> tienen un intervalo mínimo de quince minutos y no entregan ubicación
+> continua. La app **no** pide `ACCESS_BACKGROUND_LOCATION` ni la necesita:
+> sólo usa la ubicación mientras el usuario tiene un viaje empezado por él.
+
+En inglés, por si el revisor lo pide así:
+
+> Core feature: a "wake me up" alarm that rings two stops before the user's
+> alighting stop while they ride a bus, so they do not miss it if they fall
+> asleep. The user starts it explicitly with a switch, a persistent
+> notification shows the ongoing trip, and the service stops when the trip
+> ends or the user cancels it.
+>
+> It needs a location-type foreground service because the alarm must keep
+> receiving GPS with the screen off and the phone in a pocket. Without it,
+> Android freezes the process when the screen turns off and location updates
+> stop, so the alarm never detects arrival. Geofencing has multi-minute
+> latency, which defeats a two-stops-ahead warning; WorkManager and
+> AlarmManager have a fifteen-minute minimum interval and no continuous
+> location. The app does not request `ACCESS_BACKGROUND_LOCATION`: it uses
+> location only while a trip the user started is running.
+
+**3 · El video**
+
+Tiene que MOSTRAR la función, no explicarla. Sin narración, treinta a sesenta
+segundos, subido a YouTube como "no listado" y pegado el enlace.
+
+| # | Qué se ve |
+|---|---|
+| 1 | Buscás un destino y elegís un viaje |
+| 2 | Tocás el interruptor **"Avisame para bajar"** — que se vea el dedo activándolo |
+| 3 | Aparece la notificación fija del viaje. Bajá la cortina y mostrala |
+| 4 | **Apagás la pantalla** y se queda negra unos segundos |
+| 5 | La pantalla se enciende sola, suena la alarma, dice "¡Preparate para bajar!" |
+| 6 | Terminás el viaje y la notificación desaparece |
+
+El paso 4 es el que el revisor está buscando: es la prueba de que el servicio
+hace falta. Sin ese plano, el video no sirve.
+
+**Grabalo en el emulador, en la misma sesión en la que probás la alarma.** Son
+la misma tarea: no se puede filmar algo que todavía no sabés si funciona.
+
+```bash
+# mover la ubicación simulada (ojo: longitud primero, después latitud)
+adb emu geo fix -58.9868 -27.4512
+
+# apagar la pantalla, que es el paso 4
+adb shell input keyevent 26
+
+# grabar (corta solo a los 3 minutos)
+adb shell screenrecord /sdcard/demo.mp4
+adb pull /sdcard/demo.mp4
+```
+
+Para que la alarma se dispare hay que acercarse de a poco: repetí `geo fix`
+con coordenadas que vayan cayendo sobre la parada de bajada, no saltes de una
+punta a la otra.
+
 > El manifest declara además un bloque `<queries>` con `VIEW` sobre `https`,
 > para abrir el nodo de la parada en OpenStreetMap. **No es un permiso** y no
 > cambia nada de lo que hay que declarar en la ficha: `<queries>` solo dice qué
 > apps de otros puede VER la nuestra, que es lo que Android 11+ exige para
-> abrir un enlace. Los permisos siguen siendo tres.
+> abrir un enlace. Los permisos siguen siendo los siete de arriba.
 
 ---
 
