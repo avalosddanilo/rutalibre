@@ -351,7 +351,7 @@ String emitCorrientesSql(
       'Paradas: ${stops?.stops.length ?? 0}',
     )
     ..writeln('--')
-    ..writeln('-- REQUIERE la migración 0003 aplicada.')
+    ..writeln('-- REQUIERE las migraciones 0003 y 0013 aplicadas.')
     ..writeln('-- ${'=' * 68}')
     ..writeln()
     ..writeln('begin;')
@@ -459,7 +459,16 @@ String emitCorrientesSql(
           '        st_setsrid(st_point(${stop.point.lng.toStringAsFixed(6)}, '
           '${stop.point.lat.toStringAsFixed(6)}), 4326)::geography, true)',
         )
-        ..writeln('on conflict (source_ref) do update set')
+        // La condición del `where` tiene que estar: el índice único de
+        // la 0013 es PARCIAL (`where source_ref is not null`), y Postgres
+        // no puede usar un índice parcial como blanco de un `on conflict`
+        // si la sentencia no repite su condición — falla con 42P10. Pasó:
+        // el seed y la 0013 nacieron en el mismo commit y nunca se
+        // corrieron juntos hasta que se aplicaron en producción.
+        ..writeln(
+          'on conflict (source_ref) where source_ref is not null '
+          'do update set',
+        )
         ..writeln('    name = excluded.name,')
         ..writeln('    description = excluded.description,')
         ..writeln('    geom = excluded.geom,')
