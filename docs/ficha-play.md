@@ -67,8 +67,8 @@ Las paradas se ven de entrada, sin pedirte el GPS ni obligarte a elegir una
 línea. Tocás cualquiera y te dice qué colectivos pasan por ahí y a cuánto
 llegás caminando. Elegís una línea y ves su recorrido dibujado.
 
-1474 paradas y 133 recorridos del Gran Resistencia, y las 254 paradas de
-Corrientes capital con las líneas que paran en cada una.
+1474 paradas y 133 recorridos del Gran Resistencia, y 1357 paradas y 60
+recorridos de Corrientes capital.
 
 CUÁNTO SALE
 La tarifa de cada línea, siempre con la fecha desde la que rige y con la
@@ -94,16 +94,17 @@ tiene que pasar, citando la resolución.
 Preferimos decir "no sabemos" antes que inventar un horario. Un horario
 inventado manda a alguien a esperar un colectivo que no viene.
 
-Dentro de Corrientes capital todavía no se puede planificar un viaje: el
-portal municipal publica los recorridos pero no las paradas, y sin saber
-dónde para cada línea la respuesta sería adivinada. Está pedido.
+En Corrientes capital las paradas son las que publicó la Municipalidad en
+2022. Las medimos contra los recorridos de hoy y coinciden —la mitad cae a
+menos de 5 metros—, pero alguna pudo haber cambiado. Y más de un tercio
+todavía figura con su número de parada, no con la esquina.
 
 DE DÓNDE SALEN LOS DATOS
 Los recorridos y las paradas son de OpenStreetMap, mapeados por la comunidad,
-bajo licencia ODbL. Los recorridos de Corrientes salen del portal de datos
-abiertos de la Municipalidad de la Ciudad de Corrientes. Si encontrás una
-parada que ya no existe, la app te deja abrirla en OpenStreetMap para
-corregirla: el mapa es de todos.
+bajo licencia ODbL. Los recorridos y las paradas de Corrientes capital salen
+de los datos abiertos de la Municipalidad de la Ciudad de Corrientes. Si
+encontrás una parada que ya no existe, la app te deja abrirla en
+OpenStreetMap para corregirla: el mapa es de todos.
 
 TU PRIVACIDAD
 No hay cuentas ni registro. No hay publicidad ni rastreadores. No medimos qué
