@@ -22,7 +22,7 @@
 -- Fecha de extracción: 2026-09-21T03:59:02.427352Z
 -- Líneas: 10 | Recorridos: 60 | Paradas: 1357
 --
--- REQUIERE la migración 0003 aplicada.
+-- REQUIERE las migraciones 0003 y 0013 aplicadas.
 -- ====================================================================
 
 begin;
@@ -695,7 +695,7 @@ on conflict (line_id, coalesce(branch, ''), direction) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1', 'Parada 1', 'Parada 1 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779873, -27.443319), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -703,7 +703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:2', 'Avenida Libertad y Las Margaritas', 'Parada 2 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776328, -27.463186), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -711,7 +711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:3', 'Avenida Libertad y Los Tulipanes', 'Parada 3 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778184, -27.463692), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -719,7 +719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:4', 'Avenida Libertad y Doctor Alfredo Lanari', 'Parada 4 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780495, -27.464274), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -727,7 +727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:5', 'Avenida Libertad y Antonio Nariño', 'Parada 5 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782679, -27.464825), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -735,7 +735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:6', 'Avenida Libertad y UNNE', 'Parada 6 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783794, -27.465106), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -743,7 +743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:7', 'Raúl Scalabrini Ortiz y Avenida Libertad', 'Parada 7 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786043, -27.465640), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -751,7 +751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:8', 'Avenida Libertad y Lastra', 'Parada 8 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787867, -27.466106), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -759,7 +759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:9', 'Avenida Armenia y Jose Ingenieros', 'Parada 9 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791128, -27.466911), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -767,7 +767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:10', 'Avenida Armenia', 'Parada 10 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792763, -27.467328), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -775,7 +775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:11', 'Avenida Armenia y Ricardo Güiraldes', 'Parada 11 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796431, -27.468238), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -783,7 +783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:12', 'Parada 12', 'Parada 12 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781632, -27.443858), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -791,7 +791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:13', 'Avenida Armenia y El Sauce', 'Parada 13 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797557, -27.468533), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -799,7 +799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:14', 'Avenida Armenia y Lugones', 'Parada 14 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799067, -27.468906), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -807,7 +807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:15', '19 de Mayo y Avenida Pomar', 'Parada 15 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805327, -27.468527), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -815,7 +815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:16', 'Avenida Pomar y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 16 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806120, -27.471415), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -823,7 +823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:17', 'Avenida Presidente Doctor Raúl Alfonsín y Juan José Castelli', 'Parada 17 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808447, -27.472136), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -831,7 +831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:18', 'Avenida Presidente Doctor Raúl Alfonsín y Reconquista', 'Parada 18 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811027, -27.471523), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -839,7 +839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:19', 'Avenida Chacabuco y Gobernador José Gómez', 'Parada 19 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813077, -27.471979), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -847,7 +847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:20', 'Gobernador José Gómez y México', 'Parada 20 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815539, -27.471846), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -855,7 +855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:21', 'Gobernador José Gómez y Colombia', 'Parada 21 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816827, -27.471689), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -863,7 +863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:22', 'Las Violetas Norte y Sara Saenz Cavia', 'Parada 22 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780578, -27.446602), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -871,7 +871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:23', 'Gobernador José Gómez y Avenida Artigas', 'Parada 23 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818427, -27.471515), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -879,7 +879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:24', 'Las Violetas Norte y Sara Saenz Cavia', 'Parada 24 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779779, -27.448725), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -887,7 +887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:25', 'San Martín y Vélez Sarsfield', 'Parada 25 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820260, -27.471355), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -895,7 +895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:26', 'San Martín y Roca', 'Parada 26 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822613, -27.471139), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -903,7 +903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:27', 'San Martín y Brasil', 'Parada 27 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824613, -27.470895), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -911,7 +911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:28', 'San Martín y Paraguay', 'Parada 28 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827021, -27.470659), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -919,7 +919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:29', 'San Martín y Santa Fe', 'Parada 29 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830553, -27.470333), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -927,7 +927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:30', 'San Martín y Catamarca', 'Parada 30 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833146, -27.470113), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -935,7 +935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:31', 'San Martín y San Juan', 'Parada 31 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837448, -27.469657), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -943,7 +943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:32', 'La Rioja y Junín', 'Parada 32 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838051, -27.467766), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -951,7 +951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:33', 'La Rioja y 25 de Mayo', 'Parada 33 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837682, -27.463898), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -959,7 +959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:34', 'Las Violetas Norte y Las Gardenias', 'Parada 34 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779309, -27.449925), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -967,7 +967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:35', 'Fray José de la Quintana y Salta', 'Parada 35 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838963, -27.462772), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -975,7 +975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:36', 'Carlos Pellegrini y Salta', 'Parada 36 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839115, -27.465275), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -983,7 +983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:37', 'Hipólito Yrigoyen y Mendoza', 'Parada 37 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836178, -27.468757), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -991,7 +991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:38', 'Hipólito Yrigoyen y Catamarca', 'Parada 38 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832605, -27.469118), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -999,7 +999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:39', 'Hipólito Yrigoyen y Santa Fe', 'Parada 39 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830375, -27.469325), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1007,7 +1007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:40', 'Hipólito Yrigoyen y Uruguay', 'Parada 40 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825767, -27.469816), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1015,7 +1015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:41', 'Hipólito Yrigoyen y Roca', 'Parada 41 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822354, -27.470136), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1023,7 +1023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:42', 'Hipólito Yrigoyen y Vélez Sarsfield', 'Parada 42 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820199, -27.470353), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1031,7 +1031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:43', 'Las Violetas Norte y Las Gardenias', 'Parada 43 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778505, -27.452770), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1039,7 +1039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:44', 'Avenida Ayacucho y Colombia', 'Parada 44 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816455, -27.470725), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1047,7 +1047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:45', 'Las Violetas Norte y Las Gardenias', 'Parada 45 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777839, -27.454723), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1055,7 +1055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:46', 'Avenida Ayacucho y Estados Unidos', 'Parada 46 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813344, -27.471071), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1063,7 +1063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:47', 'Avenida Presidente Doctor Raúl Alfonsín y Reconquista', 'Parada 47 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811015, -27.471689), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1071,7 +1071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:48', 'Avenida Presidente Doctor Raúl Alfonsín y Juan José Castelli', 'Parada 48 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808441, -27.472283), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1079,7 +1079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:49', 'Avenida Pomar y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 49 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805904, -27.471902), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1087,7 +1087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:50', 'Avenida Pomar y 19 de Mayo', 'Parada 50 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805034, -27.469031), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1095,7 +1095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:51', 'Avenida Armenia y 24 de Mayo', 'Parada 51 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801673, -27.468934), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1103,7 +1103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:52', 'Calle Lapacho y Avenida Armenia', 'Parada 52 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798932, -27.468980), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1111,7 +1111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:53', 'Avenida Armenia y El Sauce', 'Parada 53 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797392, -27.468595), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1119,7 +1119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:54', 'Morse y Avenida Armenia', 'Parada 54 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795607, -27.468179), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1127,7 +1127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:55', 'Las Violetas Norte y Las Gardenias', 'Parada 55 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777143, -27.456560), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1135,7 +1135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:56', 'Avenida Armenia', 'Parada 56 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792724, -27.467435), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1143,7 +1143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:57', 'Avenida Armenia y Jose Ingenieros', 'Parada 57 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791086, -27.467038), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1151,7 +1151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:58', 'Avenida Libertad y Lastra', 'Parada 58 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787817, -27.466280), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1159,7 +1159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:59', 'Avenida Libertad y Raúl Scalabrini Ortiz', 'Parada 59 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785877, -27.465789), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1167,7 +1167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:60', 'Avenida Libertad y UNNE', 'Parada 60 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783744, -27.465238), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1175,7 +1175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:61', 'Avenida Libertad y Antonio Nariño', 'Parada 61 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782657, -27.464961), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1183,7 +1183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:62', 'Avenida Libertad y Doctor Alfredo Lanari', 'Parada 62 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780404, -27.464402), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1191,7 +1191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:63', 'Avenida Libertad y Los Tulipanes', 'Parada 63 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778095, -27.463830), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1199,7 +1199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:64', 'Avenida Libertad y Las Margaritas', 'Parada 64 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776325, -27.463369), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1207,7 +1207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:65', 'Las Violetas Norte y Las Gardenias', 'Parada 65 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776463, -27.458309), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1215,7 +1215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:66', 'Remedios de Escalada y Las Violetas Sur', 'Parada 66 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775200, -27.461442), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1223,7 +1223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:67', 'Las Violetas Norte y Las Gardenias', 'Parada 67 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776193, -27.458447), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1231,7 +1231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:68', 'Las Violetas Norte y Las Gardenias', 'Parada 68 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776853, -27.456669), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1239,7 +1239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:69', 'Las Violetas Norte y Las Gardenias', 'Parada 69 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777541, -27.454820), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1247,7 +1247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:70', 'Las Violetas Norte y Las Gardenias', 'Parada 70 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778090, -27.453130), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1255,7 +1255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:71', 'Las Violetas Norte y Las Gardenias', 'Parada 71 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779058, -27.450102), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1263,7 +1263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:72', 'Las Violetas Norte y Las Gardenias', 'Parada 72 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779462, -27.448955), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1271,7 +1271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:73', 'Las Violetas Norte y Sara Saenz Cavia', 'Parada 73 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780285, -27.446808), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1279,7 +1279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:74', 'Parada 74', 'Parada 74 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778561, -27.446189), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1287,7 +1287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:75', 'Parada 75', 'Parada 75 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778737, -27.445552), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1295,7 +1295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:76', 'Las Violetas Sur y Remedios de Escalada', 'Parada 76 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775423, -27.461311), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1303,7 +1303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:77', 'Parada 77', 'Parada 77 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779356, -27.444162), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1311,7 +1311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:78', 'Las Violetas Sur y Avenida Libertad', 'Parada 78 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774869, -27.462745), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1319,7 +1319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:79', 'Parada 79', 'Parada 79 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829590, -27.509923), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1327,7 +1327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:80', 'Parada 80', 'Parada 80 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811433, -27.504860), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1335,7 +1335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:81', 'Carlos Pellegrini y Brasil', 'Parada 81 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823475, -27.466483), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1343,7 +1343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:82', 'Carlos Pellegrini y Pasaje Artigas', 'Parada 82 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826903, -27.466183), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1351,7 +1351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:83', 'Santa Fe y Carlos Pellegrini', 'Parada 83 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830292, -27.466039), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1359,7 +1359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:84', 'Santa Fe y Junín', 'Parada 84 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830592, -27.468611), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1367,7 +1367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:85', 'Santa Fe y Belgrano', 'Parada 85 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831078, -27.473048), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1375,7 +1375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:86', 'Santa Fe y Rivadavia', 'Parada 86 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831307, -27.475139), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1383,7 +1383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:87', 'Avenida Maipú y Avenida 3 de Abril', 'Parada 87 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830764, -27.476851), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1391,7 +1391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:88', 'Avenida Maipú y Avenida Sarmiento', 'Parada 88 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830049, -27.477870), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1399,7 +1399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:89', 'Necochea y Avenida Maipú', 'Parada 89 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828799, -27.479446), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1407,7 +1407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:90', 'Dr. Ramón Carrillo y Avenida Maipú', 'Parada 90 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826354, -27.482535), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1415,7 +1415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:91', 'Avenida Maipú', 'Parada 91 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812694, -27.501949), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1423,7 +1423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:92', 'Avenida Maipú y Madariaga', 'Parada 92 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824219, -27.485221), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1431,7 +1431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:93', 'Avenida Maipú', 'Parada 93 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820494, -27.490053), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1439,7 +1439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:94', 'Avenida Maipú', 'Parada 94 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819330, -27.492206), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1447,7 +1447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:95', 'Avenida Maipú y Tampico', 'Parada 95 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818117, -27.494066), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1455,7 +1455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:96', 'Avenida Maipú y Reconquista', 'Parada 96 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817097, -27.495608), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1463,7 +1463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:97', 'Avenida Maipú', 'Parada 97 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815409, -27.498034), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1471,7 +1471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:98', 'Avenida Maipú', 'Parada 98 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814172, -27.499800), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1479,7 +1479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:99', 'Avenida Maipú', 'Parada 99 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812908, -27.502003), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1487,7 +1487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:100', 'Parada 100', 'Parada 100 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811644, -27.504950), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1495,7 +1495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:101', 'Avenida Maipú', 'Parada 101 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813987, -27.499771), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1503,7 +1503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:102', 'Parada 102', 'Parada 102 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810698, -27.507593), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1511,7 +1511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:103', 'Alta Gracia', 'Parada 103 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817578, -27.508508), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1519,7 +1519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:104', 'Alta Gracia', 'Parada 104 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820068, -27.508820), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1527,7 +1527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:105', 'Parada 105', 'Parada 105 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822108, -27.509034), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1535,7 +1535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:106', 'Parada 106', 'Parada 106 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823942, -27.509220), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1543,7 +1543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:107', 'Parada 107', 'Parada 107 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826208, -27.509479), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1551,7 +1551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:108', 'Parada 108', 'Parada 108 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829755, -27.509792), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1559,7 +1559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:109', 'Avenida Maipú', 'Parada 109 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815085, -27.498086), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1567,7 +1567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:110', 'Avenida Maipú y Tampico', 'Parada 110 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817900, -27.494008), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1575,7 +1575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:111', 'Avenida Maipú', 'Parada 111 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819231, -27.491994), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1583,7 +1583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:112', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 112 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820397, -27.489753), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1591,7 +1591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:113', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 113 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823108, -27.486370), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1599,7 +1599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:114', 'Parada 114', 'Parada 114 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826682, -27.509600), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1607,7 +1607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:115', 'Avenida Maipú y Madariaga', 'Parada 115 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824268, -27.484855), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1615,7 +1615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:116', 'Las Heras y Avenida Maipú', 'Parada 116 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826367, -27.482157), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1623,7 +1623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:117', 'Avenida Maipú y Necochea', 'Parada 117 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828412, -27.479530), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1631,7 +1631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:118', 'Avenida Maipú y Lavalle', 'Parada 118 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829799, -27.477823), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1639,7 +1639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:119', 'Avenida 3 de Abril y Santa Fe', 'Parada 119 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831124, -27.476224), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1647,7 +1647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:120', 'Catamarca y Rivadavia', 'Parada 120 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833784, -27.474782), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1655,7 +1655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:121', 'Catamarca y Belgrano', 'Parada 121 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833492, -27.472215), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1663,7 +1663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:122', 'Parada 122', 'Parada 122 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823937, -27.509319), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1671,7 +1671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:123', 'Avenida Gobernador Ruiz y Avenida Gobernador Juan Pujol', 'Parada 123 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821508, -27.466952), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1679,7 +1679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:124', 'Playa Miramar y Avenida Armenia', 'Parada 124 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817562, -27.467162), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1687,7 +1687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:125', 'Avenida Armenia y México', 'Parada 125 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814081, -27.467633), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1695,7 +1695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:126', 'Avenida Armenia y Pasaje Galarza', 'Parada 126 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810815, -27.467413), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1703,7 +1703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:127', 'Avenida Armenia y 11 de Mayo', 'Parada 127 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807262, -27.467304), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1711,7 +1711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:128', 'Avenida Armenia y 22 de Mayo', 'Parada 128 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802601, -27.468656), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1719,7 +1719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:129', 'Calle Lapacho y Avenida Armenia', 'Parada 129 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798956, -27.468991), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1727,7 +1727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:130', 'Parada 130', 'Parada 130 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822107, -27.509119), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1735,7 +1735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:131', 'Avenida Armenia y El Sauce', 'Parada 131 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797360, -27.468590), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1743,7 +1743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:132', 'Morse y Avenida Armenia', 'Parada 132 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795543, -27.468155), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1751,7 +1751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:133', 'Avenida Armenia', 'Parada 133 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792672, -27.467417), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1759,7 +1759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:134', 'Avenida Armenia y Monteagudo', 'Parada 134 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791019, -27.467024), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1767,7 +1767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:135', 'Avenida Libertad y Lastra', 'Parada 135 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787885, -27.466290), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1775,7 +1775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:136', 'Avenida Libertad y Raúl Scalabrini Ortiz', 'Parada 136 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785950, -27.465806), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1783,7 +1783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:137', 'Avenida Libertad y UNNE', 'Parada 137 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783791, -27.465254), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1791,7 +1791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:138', 'Avenida Libertad y Antonio Nariño', 'Parada 138 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782628, -27.464952), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1799,7 +1799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:139', 'Avenida Libertad y Doctor Alfredo Lanari', 'Parada 139 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780364, -27.464387), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1807,7 +1807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:140', 'Avenida Libertad y Las Orquideas', 'Parada 140 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777180, -27.463615), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1815,7 +1815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:141', 'Alta Gracia', 'Parada 141 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820054, -27.508892), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1823,7 +1823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:142', 'Avenida Libertad y Las Violetas Sur', 'Parada 142 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774891, -27.463037), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1831,7 +1831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:143', 'Avenida Libertad y Las Dalias Sur', 'Parada 143 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.773197, -27.462606), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1839,7 +1839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:144', 'Parada 144', 'Parada 144 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.764990, -27.459195), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1847,7 +1847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:145', 'Parada 145', 'Parada 145 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.757736, -27.453774), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1855,7 +1855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:146', 'Parada 146', 'Parada 146 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755357, -27.451966), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1863,7 +1863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:147', 'Parada 147', 'Parada 147 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.753329, -27.450484), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1871,7 +1871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:148', 'Parada 148', 'Parada 148 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.750394, -27.448635), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1879,7 +1879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:149', 'Parada 149', 'Parada 149 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.748302, -27.448913), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1887,7 +1887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:150', 'Parada 150', 'Parada 150 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.746215, -27.449221), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1895,7 +1895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:151', 'Parada 151', 'Parada 151 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.738972, -27.450315), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1903,7 +1903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:152', 'Parada 152', 'Parada 152 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.734142, -27.451156), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1911,7 +1911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:153', 'Parada 153', 'Parada 153 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.731458, -27.451529), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1919,7 +1919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:154', 'Parada 154', 'Parada 154 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.728861, -27.451815), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1927,7 +1927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:155', 'Parada 155', 'Parada 155 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.724396, -27.452639), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1935,7 +1935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:156', 'Parada 156', 'Parada 156 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.722219, -27.453265), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1943,7 +1943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:157', 'Parada 157', 'Parada 157 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.722208, -27.453100), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1951,7 +1951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:158', 'Parada 158', 'Parada 158 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.724371, -27.452539), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1959,7 +1959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:159', 'Parada 159', 'Parada 159 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.728793, -27.451715), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1967,7 +1967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:160', 'Parada 160', 'Parada 160 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.731383, -27.451422), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1975,7 +1975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:161', 'Parada 161', 'Parada 161 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.734080, -27.451071), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1983,7 +1983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:162', 'Parada 162', 'Parada 162 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.738895, -27.450228), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1991,7 +1991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:163', 'Parada 163', 'Parada 163 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.746149, -27.449129), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -1999,7 +1999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:164', 'Parada 164', 'Parada 164 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.748131, -27.448850), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2007,7 +2007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:165', 'Parada 165', 'Parada 165 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.750263, -27.448551), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2015,7 +2015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:166', 'Parada 166', 'Parada 166 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.753589, -27.450366), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2023,7 +2023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:167', 'Parada 167', 'Parada 167 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755198, -27.451643), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2031,7 +2031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:168', 'Parada 168', 'Parada 168 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.757891, -27.453584), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2039,7 +2039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:169', 'Parada 169', 'Parada 169 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.765052, -27.459008), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2047,7 +2047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:170', 'Las Dalias Sur y Avenida Libertad', 'Parada 170 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.773255, -27.462466), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2055,7 +2055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:171', 'Avenida Libertad y Las Azaleas', 'Parada 171 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775437, -27.462986), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2063,7 +2063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:172', 'Avenida Libertad y Las Orquideas', 'Parada 172 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777205, -27.463424), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2071,7 +2071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:173', 'Avenida Libertad y Doctor Alfredo Lanari', 'Parada 173 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780446, -27.464262), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2079,7 +2079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:174', 'Avenida Libertad y Antonio Nariño', 'Parada 174 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782705, -27.464832), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2087,7 +2087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:175', 'Avenida Libertad y UNNE', 'Parada 175 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783837, -27.465118), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2095,7 +2095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:176', 'Raúl Scalabrini Ortiz y Avenida Libertad', 'Parada 176 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785958, -27.465621), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2103,7 +2103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:177', 'Avenida Libertad y Lastra', 'Parada 177 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787818, -27.466092), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2111,7 +2111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:178', 'Avenida Armenia y Monteagudo', 'Parada 178 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791048, -27.466900), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2119,7 +2119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:179', 'Avenida Armenia', 'Parada 179 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792717, -27.467313), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2127,7 +2127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:180', 'Avenida Armenia y Ricardo Güiraldes', 'Parada 180 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796386, -27.468224), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2135,7 +2135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:181', 'Parada 181', 'Parada 181 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810492, -27.507465), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2143,7 +2143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:182', 'Avenida Armenia y El Sauce', 'Parada 182 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797524, -27.468523), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2151,7 +2151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:183', 'Avenida Armenia y Lugones', 'Parada 183 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799043, -27.468902), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2159,7 +2159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:184', 'Avenida Armenia y 22 de Mayo', 'Parada 184 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802671, -27.468451), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2167,7 +2167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:185', 'Avenida Armenia y 18 de Mayo', 'Parada 185 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806122, -27.467454), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2175,7 +2175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:186', 'Avenida Armenia y 11 de Mayo', 'Parada 186 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808148, -27.467075), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2183,7 +2183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:187', 'Avenida Armenia y Chacabuco', 'Parada 187 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810767, -27.467240), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2191,7 +2191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:188', 'Avenida Armenia y Estados Unidos', 'Parada 188 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813156, -27.467423), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2199,7 +2199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:189', 'Avenida Gobernador Ruiz y Cocomarola', 'Parada 189 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818414, -27.466761), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2207,7 +2207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:190', 'Avenida Gobernador Ruiz y Gobernador Antonio B. Gallino', 'Parada 190 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820810, -27.466630), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2215,7 +2215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:191', 'Parada 191', 'Parada 191 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718045, -27.493857), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2223,7 +2223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:192', 'Parada 192', 'Parada 192 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749115, -27.491470), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2231,7 +2231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:193', 'Parada 193', 'Parada 193 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.753053, -27.490793), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2239,7 +2239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:194', 'Parada 194', 'Parada 194 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.756835, -27.490121), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2247,7 +2247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:195', 'Parada 195', 'Parada 195 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.763286, -27.488064), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2255,7 +2255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:196', 'Parada 196', 'Parada 196 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.766223, -27.487111), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2263,7 +2263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:197', 'Parada 197', 'Parada 197 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.770149, -27.485946), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2271,7 +2271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:198', 'Parada 198', 'Parada 198 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774877, -27.485186), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2279,7 +2279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:199', 'Parada 199', 'Parada 199 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779374, -27.484502), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2287,7 +2287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:200', 'Avenida Independencia y Alejandro Dumas', 'Parada 200 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785182, -27.483929), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2295,7 +2295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:201', 'Parada 201', 'Parada 201 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.717958, -27.492857), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2303,7 +2303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:202', 'Pedro Araoz y Avenida Independencia', 'Parada 202 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792402, -27.483080), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2311,7 +2311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:203', 'Avenida Medrano y Avenida Independencia', 'Parada 203 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798573, -27.481279), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2319,7 +2319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:204', 'Las Piedras y Avenida Independencia', 'Parada 204 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800672, -27.480655), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2327,7 +2327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:205', 'Avenida Independencia y Pasaje Biran', 'Parada 205 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802373, -27.480216), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2335,7 +2335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:206', 'Avenida Independencia y Resoagli', 'Parada 206 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804369, -27.479621), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2343,7 +2343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:207', 'Avenida Independencia y Tacuari', 'Parada 207 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806225, -27.479301), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2351,7 +2351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:208', 'Juan José Castelli y Avenida Independencia', 'Parada 208 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809678, -27.478883), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2359,7 +2359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:209', 'Avenida Independencia y Saavedra', 'Parada 209 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812195, -27.478583), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2367,7 +2367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:210', 'Avenida Pedro Ferré y Avenida Chacabuco', 'Parada 210 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815150, -27.478202), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2375,7 +2375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:211', 'Parada 211', 'Parada 211 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718527, -27.491916), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2383,7 +2383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:212', 'Avenida Pedro Ferré y Chile', 'Parada 212 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817397, -27.477927), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2391,7 +2391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:213', 'Ituzango y Avenida Pedro Ferré', 'Parada 213 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820552, -27.477531), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2399,7 +2399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:214', 'Avenida Pedro Ferré y Perú', 'Parada 214 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822616, -27.477262), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2407,7 +2407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:215', 'Avenida Pedro Ferré y Brasil', 'Parada 215 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825189, -27.476959), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2415,7 +2415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:216', 'Avenida Pedro Ferré y Paraguay', 'Parada 216 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827624, -27.476667), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2423,7 +2423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:217', 'Avenida 3 de Abril y Catamarca', 'Parada 217 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834132, -27.475859), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2431,7 +2431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:218', 'Avenida 3 de Abril y Mendoza', 'Parada 218 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836578, -27.475506), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2439,7 +2439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:219', 'Parada 219', 'Parada 219 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718365, -27.490984), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2447,7 +2447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:221', 'Plácido Martínez y Córdoba', 'Parada 221 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833878, -27.462232), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2455,7 +2455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:222', '9 de Julio y Catamarca', 'Parada 222 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832673, -27.466820), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2463,7 +2463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:223', 'España y Avenida Pedro Ferré', 'Parada 223 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830032, -27.476729), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2471,7 +2471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:224', 'Parada 224', 'Parada 224 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718199, -27.490084), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2479,7 +2479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:225', 'Avenida Pedro Ferré y Gobernador Soto', 'Parada 225 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827349, -27.477052), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2487,7 +2487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:226', 'Avenida Pedro Ferré y Gobernador Robert', 'Parada 226 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824953, -27.477379), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2495,7 +2495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:227', 'Avenida Pedro Ferré y Gobernador Loza', 'Parada 227 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822374, -27.477688), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2503,7 +2503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:228', 'Avenida Pedro Ferré y Santa Rosa', 'Parada 228 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819553, -27.478042), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2511,7 +2511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:229', 'Avenida Pedro Ferré y Chile', 'Parada 229 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817083, -27.478363), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2519,7 +2519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:230', 'Avenida Independencia y Avenida Juan Ramón Vidal', 'Parada 230 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814484, -27.478651), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2527,7 +2527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:231', 'Avenida Independencia y Saavedra', 'Parada 231 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812237, -27.478942), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2535,7 +2535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:232', 'Avenida Independencia y Juan José Castelli', 'Parada 232 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809684, -27.479268), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2543,7 +2543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:233', 'Avenida Independencia y Güemes', 'Parada 233 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807393, -27.479551), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2551,7 +2551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:234', 'Avenida Independencia y Resoagli', 'Parada 234 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804299, -27.480028), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2559,7 +2559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:235', 'Parada 235', 'Parada 235 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.722400, -27.489540), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2567,7 +2567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:236', 'Avenida Independencia y Niño Jesús', 'Parada 236 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802018, -27.480685), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2575,7 +2575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:237', 'Avenida Independencia y Las Piedras', 'Parada 237 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800251, -27.481181), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2583,7 +2583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:238', 'Avenida Independencia y Avenida Medrano', 'Parada 238 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798176, -27.481783), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2591,7 +2591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:239', 'Avenida Independencia y Gascón', 'Parada 239 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795209, -27.482661), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2599,7 +2599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:240', 'Pedro Araoz y Avenida Independencia', 'Parada 240 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792418, -27.483485), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2607,7 +2607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:241', 'Avenida Independencia y Thames', 'Parada 241 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791087, -27.483772), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2615,7 +2615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:242', 'Avenida Independencia y Sánchez de Bustamante', 'Parada 242 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787898, -27.484069), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2623,7 +2623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:243', 'Avenida Independencia y Alejandro Dumas', 'Parada 243 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785141, -27.484276), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2631,7 +2631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:244', 'Parada 244', 'Parada 244 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779362, -27.484652), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2639,7 +2639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:245', 'Parada 245', 'Parada 245 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775171, -27.485296), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2647,7 +2647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:246', 'Parada 246', 'Parada 246 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.724485, -27.489722), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2655,7 +2655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:247', 'Parada 247', 'Parada 247 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.769443, -27.486268), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2663,7 +2663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:248', 'Parada 248', 'Parada 248 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.765206, -27.487617), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2671,7 +2671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:249', 'Parada 249', 'Parada 249 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.762473, -27.488471), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2679,7 +2679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:250', 'Parada 250', 'Parada 250 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755996, -27.490467), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2687,7 +2687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:251', 'Parada 251', 'Parada 251 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752215, -27.491112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2695,7 +2695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:252', 'Parada 252', 'Parada 252 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749429, -27.491565), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2703,7 +2703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:253', 'Parada 253', 'Parada 253 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740594, -27.492722), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2711,7 +2711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:254', 'Parada 254', 'Parada 254 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.737587, -27.492204), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2719,7 +2719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:255', 'Parada 255', 'Parada 255 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.730138, -27.490426), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2727,7 +2727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:256', 'Parada 256', 'Parada 256 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.724470, -27.489860), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2735,7 +2735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:257', 'Parada 257', 'Parada 257 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.730197, -27.490270), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2743,7 +2743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:258', 'Parada 258', 'Parada 258 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.721114, -27.489636), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2751,7 +2751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:259', 'Parada 259', 'Parada 259 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.720508, -27.490496), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2759,7 +2759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:260', 'Parada 260', 'Parada 260 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.720749, -27.491721), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2767,7 +2767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:261', 'Parada 261', 'Parada 261 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.720850, -27.492379), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2775,7 +2775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:262', 'Parada 262', 'Parada 262 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.719653, -27.492676), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2783,7 +2783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:263', 'Parada 263', 'Parada 263 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718836, -27.492791), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2791,7 +2791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:264', 'Parada 264', 'Parada 264 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.718997, -27.493644), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2799,7 +2799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:265', 'Parada 265', 'Parada 265 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.738726, -27.492300), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2807,7 +2807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:266', 'Parada 266', 'Parada 266 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.763452, -27.580619), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2815,7 +2815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:267', 'Parada 267', 'Parada 267 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.761026, -27.566734), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2823,7 +2823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:268', 'Parada 268', 'Parada 268 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809417, -27.511761), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2831,7 +2831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:269', 'Avenida Maipú', 'Parada 269 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807366, -27.513808), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2839,7 +2839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:270', 'Avenida Maipú', 'Parada 270 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806109, -27.514919), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2847,7 +2847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:271', 'Parada 271', 'Parada 271 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799962, -27.521856), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2855,7 +2855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:272', 'Parada 272', 'Parada 272 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796554, -27.525381), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2863,7 +2863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:273', 'Parada 273', 'Parada 273 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793417, -27.529376), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2871,7 +2871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:274', 'Parada 274', 'Parada 274 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791517, -27.530967), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2879,7 +2879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:275', 'Parada 275', 'Parada 275 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788836, -27.531814), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2887,7 +2887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:276', 'Parada 276', 'Parada 276 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785451, -27.532679), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2895,7 +2895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:277', 'Parada 277', 'Parada 277 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758932, -27.569897), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2903,7 +2903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:278', 'Parada 278', 'Parada 278 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.771426, -27.532018), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2911,7 +2911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:279', 'Parada 279', 'Parada 279 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767487, -27.530193), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2919,7 +2919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:280', 'Parada 280', 'Parada 280 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.762508, -27.530221), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2927,7 +2927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:281', 'Parada 281', 'Parada 281 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.760423, -27.532285), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2935,7 +2935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:282', 'Parada 282', 'Parada 282 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758949, -27.533876), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2943,7 +2943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:283', 'Parada 283', 'Parada 283 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755153, -27.538476), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2951,7 +2951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:284', 'Parada 284', 'Parada 284 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752370, -27.544475), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2959,7 +2959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:285', 'Parada 285', 'Parada 285 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749155, -27.559319), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2967,7 +2967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:286', 'Parada 286', 'Parada 286 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.744382, -27.565544), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2975,7 +2975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:287', 'Parada 287', 'Parada 287 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.743236, -27.567064), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2983,7 +2983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:288', 'Parada 288', 'Parada 288 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758960, -27.573754), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2991,7 +2991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:289', 'Parada 289', 'Parada 289 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.742178, -27.569930), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -2999,7 +2999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:290', 'Parada 290', 'Parada 290 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741647, -27.572039), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3007,7 +3007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:291', 'Parada 291', 'Parada 291 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741182, -27.574347), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3015,7 +3015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:292', 'Parada 292', 'Parada 292 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740862, -27.577329), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3023,7 +3023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:293', 'Parada 293', 'Parada 293 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740671, -27.580555), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3031,7 +3031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:294', 'Parada 294', 'Parada 294 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740783, -27.582460), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3039,7 +3039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:295', 'Parada 295', 'Parada 295 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.742940, -27.582108), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3047,7 +3047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:296', 'Parada 296', 'Parada 296 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.745588, -27.581757), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3055,7 +3055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:297', 'Parada 297', 'Parada 297 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749483, -27.581377), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3063,7 +3063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:298', 'Parada 298', 'Parada 298 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.751925, -27.581237), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3071,7 +3071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:299', 'Parada 299', 'Parada 299 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758947, -27.576859), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3079,7 +3079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:300', 'Parada 300', 'Parada 300 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752920, -27.581227), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3087,7 +3087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:301', 'Parada 301', 'Parada 301 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755467, -27.581373), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3095,7 +3095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:302', 'Parada 302', 'Parada 302 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.756602, -27.581399), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3103,7 +3103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:303', 'Parada 303', 'Parada 303 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758770, -27.581488), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3111,7 +3111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:304', 'Parada 304', 'Parada 304 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.759753, -27.581229), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3119,7 +3119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:305', 'Parada 305', 'Parada 305 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758945, -27.578892), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3127,7 +3127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:306', 'Parada 306', 'Parada 306 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758728, -27.581389), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3135,7 +3135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:307', 'Parada 307', 'Parada 307 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.756675, -27.581511), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3143,7 +3143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:308', 'Parada 308', 'Parada 308 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755495, -27.581483), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3151,7 +3151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:309', 'Parada 309', 'Parada 309 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752785, -27.581329), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3159,7 +3159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:310', 'Parada 310', 'Parada 310 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749619, -27.581477), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3167,7 +3167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:311', 'Parada 311', 'Parada 311 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.763691, -27.578543), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3175,7 +3175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:312', 'Parada 312', 'Parada 312 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.745729, -27.581892), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3183,7 +3183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:313', 'Parada 313', 'Parada 313 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.743743, -27.582085), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3191,7 +3191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:314', 'Parada 314', 'Parada 314 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.742953, -27.582199), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3199,7 +3199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:315', 'Parada 315', 'Parada 315 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741735, -27.582410), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3207,7 +3207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:316', 'Parada 316', 'Parada 316 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740764, -27.582571), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3215,7 +3215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:317', 'Parada 317', 'Parada 317 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740401, -27.581977), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3223,7 +3223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:318', 'Parada 318', 'Parada 318 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740440, -27.580927), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3231,7 +3231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:319', 'Parada 319', 'Parada 319 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740643, -27.577277), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3239,7 +3239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:320', 'Parada 320', 'Parada 320 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.740899, -27.574058), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3247,7 +3247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:321', 'Parada 321', 'Parada 321 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741975, -27.569700), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3255,7 +3255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:322', 'Parada 322', 'Parada 322 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.763943, -27.572567), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3263,7 +3263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:323', 'Parada 323', 'Parada 323 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.743343, -27.566473), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3271,7 +3271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:324', 'Parada 324', 'Parada 324 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.748926, -27.559171), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3279,7 +3279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:325', 'Parada 325', 'Parada 325 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752184, -27.544376), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3287,7 +3287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:326', 'Parada 326', 'Parada 326 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.754993, -27.538233), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3295,7 +3295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:327', 'Parada 327', 'Parada 327 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.758770, -27.533705), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3303,7 +3303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:328', 'Parada 328', 'Parada 328 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.760162, -27.532170), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3311,7 +3311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:329', 'Parada 329', 'Parada 329 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.762280, -27.530185), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3319,7 +3319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:330', 'Parada 330', 'Parada 330 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768094, -27.530238), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3327,7 +3327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:331', 'Parada 331', 'Parada 331 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.771292, -27.531755), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3335,7 +3335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:332', 'Parada 332', 'Parada 332 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783871, -27.532880), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3343,7 +3343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:333', 'Parada 333', 'Parada 333 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.763980, -27.571672), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3351,7 +3351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:334', 'Parada 334', 'Parada 334 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788815, -27.531589), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3359,7 +3359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:335', 'Parada 335', 'Parada 335 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793245, -27.529225), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3367,7 +3367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:336', 'Parada 336', 'Parada 336 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796269, -27.525226), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3375,7 +3375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:337', 'Avenida Maipú', 'Parada 337 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799722, -27.521740), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3383,7 +3383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:338', 'Parada 338', 'Parada 338 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803223, -27.517221), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3391,7 +3391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:339', 'Parada 339', 'Parada 339 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805963, -27.514759), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3399,7 +3399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:340', 'Parada 340', 'Parada 340 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807238, -27.513637), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3407,7 +3407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:341', 'Parada 341', 'Parada 341 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809298, -27.511619), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3415,7 +3415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:342', 'Parada 342', 'Parada 342 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.764296, -27.566278), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3423,7 +3423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:343', 'Parada 343', 'Parada 343 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810262, -27.509016), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3431,7 +3431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:344', 'Parada 344', 'Parada 344 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811970, -27.503719), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3439,7 +3439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:345', 'Avenida Maipú y Reconquista', 'Parada 345 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816390, -27.496212), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3447,7 +3447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:346', 'Parada 346', 'Parada 346 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.764251, -27.563675), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3455,7 +3455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:347', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 347 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822350, -27.487301), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3463,7 +3463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:348', 'España y Avenida Pedro Ferré', 'Parada 348 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830062, -27.476366), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3471,7 +3471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:349', 'España y Moreno', 'Parada 349 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829772, -27.473681), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3479,7 +3479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:350', 'España y Bolívar', 'Parada 350 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829532, -27.471489), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3487,7 +3487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:351', 'Parada 351', 'Parada 351 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.762316, -27.563826), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3495,7 +3495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:352', 'España e Hipólito Yrigoyen', 'Parada 352 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829238, -27.469193), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3503,7 +3503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:353', 'España y 9 de Julio', 'Parada 353 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828972, -27.466900), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3511,7 +3511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:354', 'Carlos Pellegrini y Santa Fe', 'Parada 354 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830447, -27.465840), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3519,7 +3519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:355', 'Salta e Hipólito Yrigoyen', 'Parada 355 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839322, -27.468222), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3527,7 +3527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:356', 'Parada 356', 'Parada 356 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.761459, -27.564256), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3535,7 +3535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:357', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 357 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822561, -27.487337), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3543,7 +3543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:358', 'Parada 358', 'Parada 358 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.761145, -27.565710), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3551,7 +3551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:359', 'Parada 359', 'Parada 359 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812143, -27.503895), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3559,7 +3559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:360', 'Parada 360', 'Parada 360 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810438, -27.509090), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3567,7 +3567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:361', 'Parada 361', 'Parada 361 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.746880, -27.581743), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3575,7 +3575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:362', 'Parada 362', 'Parada 362 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793233, -27.511975), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3583,7 +3583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:363', 'Parada 363', 'Parada 363 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801218, -27.510291), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3591,7 +3591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:364', 'Parada 364', 'Parada 364 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798429, -27.505926), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3599,7 +3599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:365', 'Parada 365', 'Parada 365 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793070, -27.510117), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3607,7 +3607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:366', 'Parada 366', 'Parada 366 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803654, -27.504284), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3615,7 +3615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:367', 'Parada 367', 'Parada 367 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804868, -27.504159), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3623,7 +3623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:368', 'Parada 368', 'Parada 368 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806147, -27.504078), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3631,7 +3631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:369', 'Parada 369', 'Parada 369 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807667, -27.503713), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3639,7 +3639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:370', 'Parada 370', 'Parada 370 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809401, -27.501824), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3647,7 +3647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:371', 'Parada 371', 'Parada 371 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810708, -27.500227), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3655,7 +3655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:372', 'Juan José Castelli', 'Parada 372 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812857, -27.497492), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3663,7 +3663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:373', 'Ex Vias General Urquiza y Juan José Paso', 'Parada 373 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814246, -27.495780), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3671,7 +3671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:374', 'Ex Vias General Urquiza y Saavedra', 'Parada 374 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815434, -27.494258), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3679,7 +3679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:375', 'Ex Vias General Urquiza y Reconquista', 'Parada 375 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815967, -27.493551), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3687,7 +3687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:376', 'Ex Vias General Urquiza y Cartagena', 'Parada 376 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817004, -27.492328), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3695,7 +3695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:377', 'Avenida Juan Ramón Vidal y Pitágoras', 'Parada 377 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816622, -27.489627), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3703,7 +3703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:378', 'Avenida Juan Ramón Vidal y Matheu', 'Parada 378 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816483, -27.488801), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3711,7 +3711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:379', 'Avenida Juan Ramón Vidal y García de Cossio', 'Parada 379 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815871, -27.485305), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3719,7 +3719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:380', 'Avenida Juan Ramón Vidal y Lamadrid', 'Parada 380 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815572, -27.484001), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3727,7 +3727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:381', 'Avenida Juan Ramón Vidal y Cabildo', 'Parada 381 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814971, -27.480516), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3735,7 +3735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:382', 'Avenida Artigas y Avenida Pedro Ferré', 'Parada 382 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819642, -27.477486), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3743,7 +3743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:383', 'Avenida Artigas y Rivadavia', 'Parada 383 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819465, -27.476259), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3751,7 +3751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:384', 'Avenida Artigas y Suiza', 'Parada 384 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819207, -27.474764), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3759,7 +3759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:385', 'Avenida Artigas y Estado De Israel', 'Parada 385 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818816, -27.472858), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3767,7 +3767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:386', 'Cocomarola e Ituzango', 'Parada 386 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818438, -27.469867), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3775,7 +3775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:387', 'Avenida Gobernador Juan Pujol y Torrent', 'Parada 387 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819576, -27.468870), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3783,7 +3783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:388', 'Avenida Gobernador Juan Pujol y Perú', 'Parada 388 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821361, -27.467324), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3791,7 +3791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:389', 'Carlos Pellegrini y Brasil', 'Parada 389 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823512, -27.466479), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3799,7 +3799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:390', 'Carlos Pellegrini y Pasaje Artigas', 'Parada 390 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826879, -27.466186), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3807,7 +3807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:391', 'Carlos Pellegrini y Santa Fe', 'Parada 391 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830418, -27.465838), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3815,7 +3815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:392', 'Carlos Pellegrini y Córdoba', 'Parada 392 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833915, -27.465540), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3823,7 +3823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:393', 'Carlos Pellegrini y Mendoza', 'Parada 393 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835594, -27.465384), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3831,7 +3831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:394', 'Carlos Pellegrini y La Rioja', 'Parada 394 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837607, -27.465195), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3839,7 +3839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:395', 'La Rioja y Junín', 'Parada 395 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838050, -27.467740), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3847,7 +3847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:396', '9 de Julio y Mendoza', 'Parada 396 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835594, -27.466597), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3855,7 +3855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:397', '9 de Julio y Santa Fe', 'Parada 397 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830152, -27.467002), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3863,7 +3863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:398', '9 de Julio y Jujuy', 'Parada 398 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827397, -27.467211), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3871,7 +3871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:399', '9 de Julio y Brasil', 'Parada 399 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824503, -27.467418), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3879,7 +3879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:400', 'Avenida Artigas y Bolívar', 'Parada 400 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819079, -27.472873), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3887,7 +3887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:401', 'Moreno y Avenida Artigas', 'Parada 401 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819485, -27.475015), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3895,7 +3895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:402', 'Avenida Artigas y Rivadavia', 'Parada 402 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819691, -27.476257), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3903,7 +3903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:403', 'Lavalle y Avenida Juan Ramón Vidal', 'Parada 403 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814986, -27.478981), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3911,7 +3911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:404', 'Avenida Juan Ramón Vidal y General Paz', 'Parada 404 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815279, -27.480450), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3919,7 +3919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:405', 'Parada 405', 'Parada 405 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798206, -27.509557), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3927,7 +3927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:406', 'Avenida Juan Ramón Vidal y Las Heras', 'Parada 406 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815755, -27.483180), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3935,7 +3935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:407', 'Avenida Juan Ramón Vidal y Cádiz', 'Parada 407 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816919, -27.489839), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3943,7 +3943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:408', 'Ex Vias General Urquiza y Tampico', 'Parada 408 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817062, -27.492411), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3951,7 +3951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:409', 'Ex Vias General Urquiza y Reconquista', 'Parada 409 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816059, -27.493632), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3959,7 +3959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:410', 'Ex Vias General Urquiza y Saavedra', 'Parada 410 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815560, -27.494338), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3967,7 +3967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:411', 'Ex Vias General Urquiza y Juan José Paso', 'Parada 411 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814259, -27.495918), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3975,7 +3975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:412', 'Juan José Castelli', 'Parada 412 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812931, -27.497604), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3983,7 +3983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:413', 'Parada 413', 'Parada 413 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810831, -27.500289), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3991,7 +3991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:414', 'Parada 414', 'Parada 414 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799057, -27.510609), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -3999,7 +3999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:415', 'Parada 415', 'Parada 415 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809478, -27.501962), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4007,7 +4007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:416', 'Parada 416', 'Parada 416 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807168, -27.504093), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4015,7 +4015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:417', 'Parada 417', 'Parada 417 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806165, -27.504181), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4023,7 +4023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:418', 'Parada 418', 'Parada 418 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804841, -27.504268), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4031,7 +4031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:419', 'Parada 419', 'Parada 419 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803628, -27.504387), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4039,7 +4039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:420', 'Parada 420', 'Parada 420 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802234, -27.504507), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4047,7 +4047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:421', 'Parada 421', 'Parada 421 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801264, -27.504579), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4055,7 +4055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:422', 'Parada 422', 'Parada 422 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800949, -27.505690), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4063,7 +4063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:423', 'Parada 423', 'Parada 423 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799632, -27.505910), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4071,7 +4071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:424', 'Parada 424', 'Parada 424 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798428, -27.506012), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4079,7 +4079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:425', 'Parada 425', 'Parada 425 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800166, -27.510451), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4087,7 +4087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:426', 'Parada 426', 'Parada 426 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793175, -27.509868), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4095,7 +4095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:427', 'Parada 427', 'Parada 427 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793396, -27.511963), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4103,7 +4103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:429', 'Avenida Cazadores Correntinos y Reconquista', 'Parada 429 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814705, -27.487044), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4111,7 +4111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:430', 'Avenida Cazadores Correntinos y Juan José Paso', 'Parada 430 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812307, -27.487301), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4119,7 +4119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:431', 'Avenida Cazadores Correntinos y Francia', 'Parada 431 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809870, -27.487062), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4127,7 +4127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:432', 'Doctor Wenceslao Domínguez y Avenida Cazadores Correntinos', 'Parada 432 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807712, -27.486911), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4135,7 +4135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:433', 'Larrea y Doctor Wenceslao Domínguez', 'Parada 433 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808229, -27.489351), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4143,7 +4143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:434', 'Pitágoras y Doctor Wenceslao Domínguez', 'Parada 434 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808106, -27.490625), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4151,7 +4151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:435', 'Pitágoras y Resoagli', 'Parada 435 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805749, -27.491040), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4159,7 +4159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:436', 'Pitágoras y Las Piedras', 'Parada 436 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804133, -27.491737), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4167,7 +4167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:437', 'Pitágoras y Río de Janeiro', 'Parada 437 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802910, -27.492892), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4175,7 +4175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:438', 'Pitágoras y Doctor Miguel Sussini', 'Parada 438 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800998, -27.492896), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4183,7 +4183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:440', 'Pitágoras y Avenida Medrano', 'Parada 440 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799704, -27.492784), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4191,7 +4191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:448', 'Parada 448', 'Parada 448 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798133, -27.507331), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4199,7 +4199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:449', 'Parada 449', 'Parada 449 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798021, -27.508329), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4207,7 +4207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:451', 'Parada 451', 'Parada 451 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795838, -27.508836), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4215,7 +4215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:452', 'Parada 452', 'Parada 452 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794497, -27.508897), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4223,7 +4223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:453', 'Parada 453', 'Parada 453 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792760, -27.509099), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4231,7 +4231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:461', 'Parada 461', 'Parada 461 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794200, -27.508664), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4239,7 +4239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:463', 'Doctor Miguel Sussini y Larrea', 'Parada 463 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801080, -27.491399), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4247,7 +4247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:464', 'Larrea y Las Piedras', 'Parada 464 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803167, -27.490826), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4255,7 +4255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:465', 'Larrea y Resoagli', 'Parada 465 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805519, -27.489741), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4263,7 +4263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:466', 'Doctor Wenceslao Domínguez y Presidente Nicolás Avellaneda', 'Parada 466 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807468, -27.486745), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4271,7 +4271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:467', 'Francia y Avenida Cazadores Correntinos', 'Parada 467 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809762, -27.486775), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4279,7 +4279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:468', 'Juan José Paso y Avenida Cazadores Correntinos', 'Parada 468 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812337, -27.487049), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4287,7 +4287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:469', 'Reconquista y Avenida Cazadores Correntinos', 'Parada 469 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814708, -27.486872), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4295,7 +4295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:470', 'Parada 470', 'Parada 470 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795575, -27.508521), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4303,7 +4303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:471', 'Avenida Cazadores Correntinos y Avenida Juan Ramón Vidal', 'Parada 471 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815879, -27.486791), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4311,7 +4311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:472', 'Pasaje Sarmiento y Avenida Chacabuco', 'Parada 472 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814503, -27.478085), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4319,7 +4319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:473', 'Avenida Chacabuco y Suiza', 'Parada 473 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813820, -27.475318), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4327,7 +4327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:474', 'Avenida Chacabuco y Estado De Israel', 'Parada 474 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813247, -27.473381), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4335,7 +4335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:477', 'Avenida Armenia y Estados Unidos', 'Parada 477 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813217, -27.467435), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4343,7 +4343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:478', 'Parada 478', 'Parada 478 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797724, -27.508358), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4351,7 +4351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:479', 'Avenida Gobernador Ruiz y Avenida Armenia', 'Parada 479 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816115, -27.467220), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4359,7 +4359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:480', 'Avenida Gobernador Ruiz y Cocomarola', 'Parada 480 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818470, -27.466759), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4367,7 +4367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:481', 'Avenida Gobernador Ruiz y Gobernador Antonio B. Gallino', 'Parada 481 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820873, -27.466627), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4375,7 +4375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:487', 'Juan Torres de Vera y Aragón y Mendoza', 'Parada 487 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834658, -27.461064), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4383,7 +4383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:488', 'Parada 488', 'Parada 488 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797769, -27.506457), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4391,7 +4391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:504', 'Parada 504', 'Parada 504 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799714, -27.505804), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4399,7 +4399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:513', 'Parada 513', 'Parada 513 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800781, -27.505694), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4407,7 +4407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:517', 'Avenida Gobernador Juan Pujol y 9 de Julio', 'Parada 517 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821668, -27.467373), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4415,7 +4415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:518', 'Avenida Gobernador Juan Pujol y Junín', 'Parada 518 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819901, -27.468941), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4423,7 +4423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:521', 'Avenida Chacabuco y Suiza', 'Parada 521 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814122, -27.475664), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4431,7 +4431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:522', 'Avenida Chacabuco y Avenida Pedro Ferré', 'Parada 522 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814727, -27.478058), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4439,7 +4439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:523', 'Avenida Cazadores Correntinos y Avenida Juan Ramón Vidal', 'Parada 523 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815964, -27.486948), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4447,7 +4447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:524', 'Parada 524', 'Parada 524 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789525, -27.543130), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4455,7 +4455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:525', 'Parada 525', 'Parada 525 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789980, -27.541723), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4463,7 +4463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:526', 'Parada 526', 'Parada 526 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790499, -27.537320), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4471,7 +4471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:527', 'Parada 527', 'Parada 527 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790630, -27.536143), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4479,7 +4479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:528', 'Parada 528', 'Parada 528 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790711, -27.535268), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4487,7 +4487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:529', 'Parada 529', 'Parada 529 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790870, -27.534004), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4495,7 +4495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:530', 'Parada 530', 'Parada 530 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791082, -27.532326), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4503,7 +4503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:531', 'Parada 531', 'Parada 531 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791187, -27.531276), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4511,7 +4511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:532', 'Parada 532', 'Parada 532 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791433, -27.530726), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4519,7 +4519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:533', 'Parada 533', 'Parada 533 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789387, -27.547311), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4527,7 +4527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:534', 'Parada 534', 'Parada 534 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793415, -27.523490), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4535,7 +4535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:535', 'Parada 535', 'Parada 535 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792316, -27.523315), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4543,7 +4543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:536', 'Parada 536', 'Parada 536 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791156, -27.523213), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4551,7 +4551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:537', 'Parada 537', 'Parada 537 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790898, -27.523019), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4559,7 +4559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:538', 'Parada 538', 'Parada 538 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792115, -27.523113), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4567,7 +4567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:539', 'Parada 539', 'Parada 539 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793249, -27.523235), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4575,7 +4575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:540', 'Parada 540', 'Parada 540 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794172, -27.523771), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4583,7 +4583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:541', 'Parada 541', 'Parada 541 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788194, -27.547173), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4591,7 +4591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:542', 'Parada 542', 'Parada 542 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794989, -27.524187), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4599,7 +4599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:543', 'Parada 543', 'Parada 543 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796430, -27.524967), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4607,7 +4607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:544', 'Parada 544', 'Parada 544 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791340, -27.531255), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4615,7 +4615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:545', 'Parada 545', 'Parada 545 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791258, -27.532466), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4623,7 +4623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:546', 'Parada 546', 'Parada 546 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791054, -27.534052), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4631,7 +4631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:547', 'Parada 547', 'Parada 547 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790917, -27.535155), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4639,7 +4639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:548', 'Parada 548', 'Parada 548 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790779, -27.536448), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4647,7 +4647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:549', 'Parada 549', 'Parada 549 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790643, -27.538196), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4655,7 +4655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:550', 'Parada 550', 'Parada 550 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787055, -27.547060), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4663,7 +4663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:551', 'Parada 551', 'Parada 551 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790162, -27.541773), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4671,7 +4671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:552', 'Parada 552', 'Parada 552 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790354, -27.544575), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4679,7 +4679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:553', 'Parada 553', 'Parada 553 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790758, -27.546999), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4687,7 +4687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:554', 'Parada 554', 'Parada 554 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785989, -27.546735), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4695,7 +4695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:555', 'Parada 555', 'Parada 555 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786120, -27.545637), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4703,7 +4703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:556', 'Parada 556', 'Parada 556 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786189, -27.544730), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4711,7 +4711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:557', 'Parada 557', 'Parada 557 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786277, -27.543803), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4719,7 +4719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:558', 'Parada 558', 'Parada 558 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786634, -27.542876), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4727,7 +4727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:559', 'Presidente Juan Domingo Perón y Sánchez de Bustamante', 'Parada 559 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789494, -27.489407), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4735,7 +4735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:560', 'Avenida Independencia y Gascón', 'Parada 560 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794757, -27.482368), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4743,7 +4743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:561', 'Presidente Juan Domingo Perón y Paul Groussac', 'Parada 561 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787620, -27.489683), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4751,7 +4751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:562', 'La Rioja y Rivadavia', 'Parada 562 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838741, -27.474335), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4759,7 +4759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:563', 'La Rioja y Bolívar', 'Parada 563 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838388, -27.470934), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4767,7 +4767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:564', 'Presidente Juan Domingo Perón y Alejandro Dumas', 'Parada 564 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785753, -27.490019), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4775,7 +4775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:565', 'Tucumán y Carlos Pellegrini', 'Parada 565 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841484, -27.465046), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4783,7 +4783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:566', '9 de Julio y Salta', 'Parada 566 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839173, -27.466294), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4791,7 +4791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:567', 'Presidente Juan Domingo Perón y Turin', 'Parada 567 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783705, -27.490288), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4799,7 +4799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:568', 'Presidente Juan Domingo Perón y Trento', 'Parada 568 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781269, -27.490618), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4807,7 +4807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:569', 'Parada 569', 'Parada 569 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781317, -27.486112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4815,7 +4815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:570', 'Trento y Coronel Artaza', 'Parada 570 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781879, -27.486219), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4823,7 +4823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:571', 'Nápoles y Trento', 'Parada 571 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781757, -27.487890), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4831,7 +4831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:572', 'Nápoles y Florencia', 'Parada 572 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782028, -27.489716), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4839,7 +4839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:573', 'Presidente Juan Domingo Perón y Turin', 'Parada 573 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783712, -27.490159), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4847,7 +4847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:574', 'Alejandro Dumas y Presidente Juan Domingo Perón', 'Parada 574 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786094, -27.489764), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4855,7 +4855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:575', 'Paul Groussac y Presidente Juan Domingo Perón', 'Parada 575 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787779, -27.489474), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4863,7 +4863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:577', 'Teniente Jorge Alberto Vazquez', 'Parada 577 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768594, -27.457336), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4871,7 +4871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:578', 'Parada 578', 'Parada 578 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767107, -27.457149), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4879,7 +4879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:579', 'Avenida Armenia y 18 de Mayo', 'Parada 579 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806079, -27.467468), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4887,7 +4887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:580', 'Avenida Armenia y 11 de Mayo', 'Parada 580 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808127, -27.467074), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4895,7 +4895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:581', 'Avenida Armenia y Chacabuco', 'Parada 581 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810850, -27.467244), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4903,7 +4903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:582', 'Parada 582', 'Parada 582 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.766477, -27.457922), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4911,7 +4911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:583', 'Parada 583', 'Parada 583 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768424, -27.458147), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4919,7 +4919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:584', 'Roca e Hipólito Yrigoyen', 'Parada 584 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822768, -27.469671), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4927,7 +4927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:585', 'Playa Miramar y Avenida Armenia', 'Parada 585 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817533, -27.467171), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4935,7 +4935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:586', 'Avenida Armenia y Colombia', 'Parada 586 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816128, -27.467417), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4943,7 +4943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:587', 'México y Avenida Armenia', 'Parada 587 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814125, -27.467632), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4951,7 +4951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:588', 'Pasaje Galarza y Avenida Armenia', 'Parada 588 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810863, -27.467416), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4959,7 +4959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:589', 'Avenida Armenia y Reconquista', 'Parada 589 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.809155, -27.467260), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4967,7 +4967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:590', 'Teniente Jorge Alberto Vazquez', 'Parada 590 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767807, -27.459601), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4975,7 +4975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:591', 'Avenida Armenia y 11 de Mayo', 'Parada 591 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807210, -27.467323), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4983,7 +4983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:592', 'Avenida Armenia y 22 de Mayo', 'Parada 592 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802631, -27.468647), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4991,7 +4991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:593', 'Parada 593', 'Parada 593 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768645, -27.461307), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -4999,7 +4999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:594', 'Avenida Libertad y Las Violetas Sur', 'Parada 594 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774856, -27.463012), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5007,7 +5007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:595', 'Parada 595', 'Parada 595 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768559, -27.461406), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5015,7 +5015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:596', 'Teniente Jorge Alberto Vazquez', 'Parada 596 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767627, -27.459563), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5023,7 +5023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:597', 'Parada 597', 'Parada 597 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768536, -27.458027), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5031,7 +5031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:598', 'Parada 598', 'Parada 598 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784290, -27.442974), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5039,7 +5039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:599', 'Parada 599', 'Parada 599 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786752, -27.455593), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5047,7 +5047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:600', 'Parada 600', 'Parada 600 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787188, -27.457637), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5055,7 +5055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:601', 'Parada 601', 'Parada 601 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785211, -27.458102), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5063,7 +5063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:602', 'Parada 602', 'Parada 602 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784049, -27.459281), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5071,7 +5071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:603', 'Avenida Eva Perón y Antonio Nariño', 'Parada 603 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784291, -27.461052), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5079,7 +5079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:604', 'Avenida Juan Ramón Fernández y Avenida Río Chico', 'Parada 604 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786823, -27.461554), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5087,7 +5087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:605', 'Remedios de Escalada y Avenida Juan Ramón Fernández', 'Parada 605 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788013, -27.463421), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5095,7 +5095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:606', 'Avenida Juan Ramón Fernández y Rolón', 'Parada 606 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789225, -27.465271), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5103,7 +5103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:607', 'Parada 607', 'Parada 607 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783891, -27.444182), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5111,7 +5111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:608', 'Cocomarola e Ingeniero Virasoro', 'Parada 608 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818492, -27.467849), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5119,7 +5119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:609', 'Las Margaritas', 'Parada 609 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782905, -27.446654), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5127,7 +5127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:610', 'Cocomarola y Avenida Gobernador Juan Pujol', 'Parada 610 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818721, -27.469342), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5135,7 +5135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:611', 'Las Margaritas y Las Margaritas Norte', 'Parada 611 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782195, -27.448317), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5143,7 +5143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:612', 'Las Margaritas y Las Margaritas Norte', 'Parada 612 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781650, -27.449597), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5151,7 +5151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:613', 'Avenida Chacabuco y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 613 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812594, -27.470993), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5159,7 +5159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:614', 'Avenida Chacabuco e Ingeniero Virasoro', 'Parada 614 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.812056, -27.468612), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5167,7 +5167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:615', 'Parada 615', 'Parada 615 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783488, -27.450710), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5175,7 +5175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:616', 'Avenida Juan Ramón Fernández y Rolón', 'Parada 616 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789038, -27.465378), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5183,7 +5183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:617', 'Remedios de Escalada y Avenida Juan Ramón Fernández', 'Parada 617 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787846, -27.463510), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5191,7 +5191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:618', 'Avenida Juan Ramón Fernández y Avenida Río Chico', 'Parada 618 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786668, -27.461680), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5199,7 +5199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:619', 'Avenida Eva Perón y Avenida Río Chico', 'Parada 619 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784861, -27.461099), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5207,7 +5207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:620', 'Parada 620', 'Parada 620 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784535, -27.459328), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5215,7 +5215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:621', 'Parada 621', 'Parada 621 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786779, -27.458839), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5223,7 +5223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:622', 'Parada 622', 'Parada 622 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787092, -27.457955), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5231,7 +5231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:623', 'Parada 623', 'Parada 623 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786691, -27.455818), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5239,7 +5239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:624', 'Parada 624', 'Parada 624 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784687, -27.451075), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5247,7 +5247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:625', 'Parada 625', 'Parada 625 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786248, -27.453507), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5255,7 +5255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:626', 'Parada 626', 'Parada 626 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785283, -27.452635), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5263,7 +5263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:627', 'Parada 627', 'Parada 627 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784644, -27.451171), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5271,7 +5271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:628', 'Parada 628', 'Parada 628 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783431, -27.450784), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5279,7 +5279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:629', 'Las Margaritas y Las Margaritas Norte', 'Parada 629 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781564, -27.449581), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5287,7 +5287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:630', 'Las Margaritas y Las Margaritas Norte', 'Parada 630 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782053, -27.448279), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5295,7 +5295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:631', 'Las Margaritas', 'Parada 631 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782631, -27.446843), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5303,7 +5303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:632', 'Parada 632', 'Parada 632 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783716, -27.444200), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5311,7 +5311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:633', 'Parada 633', 'Parada 633 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785144, -27.452267), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5319,7 +5319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:634', 'Parada 634', 'Parada 634 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786392, -27.453466), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5327,7 +5327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:635', 'José Ramón Vidal', 'Parada 635 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841515, -27.500436), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5335,7 +5335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:636', 'Avenida Juan De Garay y Zarate', 'Parada 636 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.846372, -27.492349), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5343,7 +5343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:637', 'Francisco Pizarro y Avenida Juan De Garay', 'Parada 637 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847346, -27.492179), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5351,7 +5351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:638', 'Parada 638', 'Parada 638 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849547, -27.491799), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5359,7 +5359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:639', 'Parada 639', 'Parada 639 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851434, -27.491241), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5367,7 +5367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:640', 'Parada 640', 'Parada 640 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851557, -27.489945), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5375,7 +5375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:641', 'Avenida Alberdi y Gunitsky', 'Parada 641 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851663, -27.488088), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5383,7 +5383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:642', 'Elías Abad y Vedia', 'Parada 642 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850554, -27.486705), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5391,7 +5391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:643', 'Elías Abad y Doctor Carlos Benitez', 'Parada 643 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850265, -27.485535), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5399,7 +5399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:644', 'Elías Abad y Garcilazo de la Vega', 'Parada 644 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849802, -27.483724), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5407,7 +5407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:645', 'Elías Abad y Perugorría', 'Parada 645 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849286, -27.482419), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5415,7 +5415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:646', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 646 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841516, -27.499498), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5423,7 +5423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:647', 'Elías Abad y Madariaga', 'Parada 647 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849040, -27.481331), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5431,7 +5431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:648', 'Lamadrid y Elías Abad', 'Parada 648 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848872, -27.480120), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5439,7 +5439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:649', 'Elías Abad y Las Heras', 'Parada 649 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848707, -27.478977), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5447,7 +5447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:650', 'Elías Abad y Necochea', 'Parada 650 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848552, -27.477790), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5455,7 +5455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:651', 'Elías Abad y General Paz', 'Parada 651 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848377, -27.476623), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5463,7 +5463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:652', 'Elías Abad y Lavalle', 'Parada 652 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848237, -27.475716), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5471,7 +5471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:653', 'Elías Abad y Avenida 3 de Abril', 'Parada 653 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848088, -27.474596), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5479,7 +5479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:654', 'San Luis y Avenida 3 de Abril', 'Parada 654 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843470, -27.474568), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5487,7 +5487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:655', 'Entre Ríos y Rivadavia', 'Parada 655 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844584, -27.473593), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5495,7 +5495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:656', 'Misiones y Rivadavia', 'Parada 656 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845954, -27.473450), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5503,7 +5503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:657', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 657 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841307, -27.497499), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5511,7 +5511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:658', 'Misiones y Moreno', 'Parada 658 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845840, -27.472348), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5519,7 +5519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:659', 'Misiones y Belgrano', 'Parada 659 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845763, -27.471440), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5527,7 +5527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:660', 'Misiones y San Martín', 'Parada 660 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845572, -27.468899), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5535,7 +5535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:661', 'Misiones e Hipólito Yrigoyen', 'Parada 661 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845505, -27.468121), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5543,7 +5543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:662', 'Hipólito Yrigoyen y San Luis', 'Parada 662 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843141, -27.468126), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5551,7 +5551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:663', 'Tucumán e Hipólito Yrigoyen', 'Parada 663 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841890, -27.468231), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5559,7 +5559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:664', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 664 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841234, -27.496825), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5567,7 +5567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:665', 'España y 9 de Julio', 'Parada 665 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829015, -27.466943), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5575,7 +5575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:666', 'Salta y San Martín', 'Parada 666 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839396, -27.469458), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5583,7 +5583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:667', 'San Martín y Buenos Aires', 'Parada 667 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840855, -27.469345), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5591,7 +5591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:668', 'San Martín y San Luis', 'Parada 668 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843271, -27.469144), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5599,7 +5599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:669', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 669 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841144, -27.495931), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5607,7 +5607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:670', 'San Martín y Misiones', 'Parada 670 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845447, -27.468960), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5615,7 +5615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:671', 'San Martín y Chaco', 'Parada 671 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.846791, -27.468996), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5623,7 +5623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:672', 'Belgrano y Chaco', 'Parada 672 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847188, -27.471138), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5631,7 +5631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:673', 'Chaco y Moreno', 'Parada 673 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847338, -27.472522), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5639,7 +5639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:674', 'Doctor Ramón Carrillo y Blas Benjamín de la Vega', 'Parada 674 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847087, -27.475239), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5647,7 +5647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:675', 'Blas Benjamín de la Vega y Lavalle', 'Parada 675 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847136, -27.475891), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5655,7 +5655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:676', 'Blas Benjamín de la Vega y General Paz', 'Parada 676 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847302, -27.476792), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5663,7 +5663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:677', 'Blas Benjamín de la Vega y Necochea', 'Parada 677 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847457, -27.477971), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5671,7 +5671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:678', 'Las Heras y Blas Benjamín de la Vega', 'Parada 678 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847648, -27.479127), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5679,7 +5679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:679', 'Lamadrid y Blas Benjamín de la Vega', 'Parada 679 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847796, -27.480317), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5687,7 +5687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:680', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 680 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840975, -27.494990), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5695,7 +5695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:681', 'Blas Benjamín de la Vega y Madariaga', 'Parada 681 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847947, -27.481464), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5703,7 +5703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:682', 'Blas Benjamín de la Vega y Perugorría', 'Parada 682 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848110, -27.482611), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5711,7 +5711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:683', 'Blas Benjamín de la Vega y Avenida Doctor Jorge Manuel Romero', 'Parada 683 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848257, -27.483506), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5719,7 +5719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:684', 'Elías Abad y Garcilazo de la Vega', 'Parada 684 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849985, -27.483700), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5727,7 +5727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:685', 'Doctor Carlos Benitez y Elías Abad', 'Parada 685 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850434, -27.485410), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5735,7 +5735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:686', 'Elías Abad y Vedia', 'Parada 686 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850707, -27.486697), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5743,7 +5743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:687', 'Avenida Alberdi y Gunitsky', 'Parada 687 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851811, -27.488355), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5751,7 +5751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:688', 'Parada 688', 'Parada 688 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851674, -27.490077), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5759,7 +5759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:689', 'Parada 689', 'Parada 689 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851590, -27.491272), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5767,7 +5767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:690', 'Parada 690', 'Parada 690 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849491, -27.491907), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5775,7 +5775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:691', 'Francisco Pizarro y Avenida Juan De Garay', 'Parada 691 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847618, -27.492236), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5783,7 +5783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:692', 'Avenida Juan De Garay y Zarate', 'Parada 692 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.846525, -27.492462), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5791,7 +5791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:693', 'Avenida Juan De Garay y Balboa', 'Parada 693 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844787, -27.492789), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5799,7 +5799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:694', 'Solís y Avenida Juan De Garay', 'Parada 694 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.842758, -27.493168), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5807,7 +5807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:695', 'Avenida Juan De Garay y José Ramón Vidal', 'Parada 695 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841085, -27.493450), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5815,7 +5815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:696', 'José Ramón Vidal y Sebastián Gaboto', 'Parada 696 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841205, -27.495004), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5823,7 +5823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:697', 'José Ramón Vidal y Sebastián Gaboto', 'Parada 697 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841288, -27.495915), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5831,7 +5831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:698', 'José Ramón Vidal y Sebastián Gaboto', 'Parada 698 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841395, -27.496841), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5839,7 +5839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:699', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 699 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841452, -27.497495), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5847,7 +5847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:700', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 700 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841608, -27.498607), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5855,7 +5855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:701', 'Solís y Avenida Juan De Garay', 'Parada 701 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.842732, -27.492995), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5863,7 +5863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:702', 'José Ramón Vidal y Pasaje Las Flores', 'Parada 702 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841644, -27.499481), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5871,7 +5871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:703', 'José Ramón Vidal', 'Parada 703 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841672, -27.500374), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5879,7 +5879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:704', 'Avenida Juan De Garay y Balboa', 'Parada 704 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844934, -27.492617), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5887,7 +5887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:705', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 705 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821751, -27.488380), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5895,7 +5895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:706', 'Bolívar y San Lorenzo', 'Parada 706 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832270, -27.471353), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5903,7 +5903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:707', 'Bolívar y Jujuy', 'Parada 707 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828457, -27.471766), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5911,7 +5911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:708', 'Bolívar y Uruguay', 'Parada 708 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825865, -27.472029), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5919,7 +5919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:709', 'Bolívar y Roca', 'Parada 709 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823480, -27.472238), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5927,7 +5927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:710', 'Roca e Hipólito Yrigoyen', 'Parada 710 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822942, -27.470523), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5935,7 +5935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:711', 'Roca y Junín', 'Parada 711 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822683, -27.468671), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5943,7 +5943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:712', 'Parada 712', 'Parada 712 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749943, -27.447935), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5951,7 +5951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:713', 'Parada 713', 'Parada 713 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.744814, -27.443992), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5959,7 +5959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:714', 'Parada 714', 'Parada 714 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.743391, -27.442952), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5967,7 +5967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:715', 'Parada 715', 'Parada 715 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741161, -27.441295), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5975,7 +5975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:716', 'Parada 716', 'Parada 716 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.735265, -27.436787), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5983,7 +5983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:717', 'Parada 717', 'Parada 717 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.725398, -27.429470), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5991,7 +5991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:718', 'Parada 718', 'Parada 718 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.719444, -27.427461), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -5999,7 +5999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:719', 'Parada 719', 'Parada 719 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.717825, -27.427035), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6007,7 +6007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:720', 'Parada 720', 'Parada 720 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.716601, -27.427842), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6015,7 +6015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:721', 'Parada 721', 'Parada 721 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.716446, -27.427802), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6023,7 +6023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:722', 'Parada 722', 'Parada 722 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.717884, -27.426819), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6031,7 +6031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:723', 'Parada 723', 'Parada 723 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.719487, -27.427279), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6039,7 +6039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:724', 'Parada 724', 'Parada 724 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.725476, -27.429236), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6047,7 +6047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:725', 'Parada 725', 'Parada 725 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.735359, -27.436537), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6055,7 +6055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:726', 'Parada 726', 'Parada 726 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.741377, -27.441143), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6063,7 +6063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:727', 'Parada 727', 'Parada 727 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.743527, -27.442750), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6071,7 +6071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:728', 'Parada 728', 'Parada 728 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.744854, -27.443737), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6079,7 +6079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:729', 'Parada 729', 'Parada 729 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.750768, -27.448148), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6087,7 +6087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:730', 'Parada 730', 'Parada 730 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791162, -27.503597), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6095,7 +6095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:731', 'Sánchez de Bustamante y Kepler', 'Parada 731 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790241, -27.495942), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6103,7 +6103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:732', 'San Fransisco de Asís y Ramos Mejía', 'Parada 732 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791192, -27.495108), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6111,7 +6111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:733', 'San Fransisco de Asís y Renacimiento', 'Parada 733 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792500, -27.494945), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6119,7 +6119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:734', 'San Fransisco de Asís y Paiubre', 'Parada 734 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793414, -27.494829), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6127,7 +6127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:735', 'Montecarlo y Pasaje Verona', 'Parada 735 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796002, -27.493057), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6135,7 +6135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:736', 'Montecarlo y Los Laureles', 'Parada 736 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795809, -27.491891), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6143,7 +6143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:737', 'Montecarlo y Ombú', 'Parada 737 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795646, -27.490714), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6151,7 +6151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:738', 'Corcega y Montecarlo', 'Parada 738 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795459, -27.489547), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6159,7 +6159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:739', 'Presidente Juan Domingo Perón y Montecarlo', 'Parada 739 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795521, -27.487924), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6167,7 +6167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:740', 'Parada 740', 'Parada 740 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792786, -27.503480), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6175,7 +6175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:741', 'Gascón y Lamadrid', 'Parada 741 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796411, -27.487000), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6183,7 +6183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:742', 'Gascón y Las Heras', 'Parada 742 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796478, -27.485846), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6191,7 +6191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:743', 'Gascón y Necochea', 'Parada 743 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796345, -27.484845), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6199,7 +6199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:744', 'Esmeralda y Lavalle', 'Parada 744 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796242, -27.483435), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6207,7 +6207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:745', 'Avenida Independencia y José Darragueira', 'Parada 745 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795779, -27.482098), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6215,7 +6215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:746', 'Parada 746', 'Parada 746 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792786, -27.502336), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6223,7 +6223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:747', 'Parada 747', 'Parada 747 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792706, -27.501148), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6231,7 +6231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:748', 'Parada 748', 'Parada 748 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791183, -27.500627), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6239,7 +6239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:749', 'Sánchez de Bustamante y Américo Vespucio', 'Parada 749 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790730, -27.499671), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6247,7 +6247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:750', 'Rio Juramento y Lavalle', 'Parada 750 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799695, -27.482846), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6255,7 +6255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:751', 'Necochea y Rio Juramento', 'Parada 751 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799821, -27.484169), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6263,7 +6263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:753', 'Las Heras y Avenida Medrano', 'Parada 753 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798820, -27.485510), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6271,7 +6271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:754', 'Las Heras y Gascón', 'Parada 754 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796712, -27.485781), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6279,7 +6279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:755', 'Gascón y Lamadrid', 'Parada 755 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796338, -27.486797), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6287,7 +6287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:756', 'Gascón y Presidente Juan Domingo Perón', 'Parada 756 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796406, -27.487769), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6295,7 +6295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:757', 'Presidente Juan Domingo Perón y Montecarlo', 'Parada 757 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795502, -27.488148), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6303,7 +6303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:758', 'Corcega y Montecarlo', 'Parada 758 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795669, -27.489327), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6311,7 +6311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:759', 'Sánchez de Bustamante y Ramón Cirilo Blanco', 'Parada 759 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790490, -27.498379), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6319,7 +6319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:760', 'Montecarlo y Ombú', 'Parada 760 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795873, -27.490491), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6327,7 +6327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:761', 'Montecarlo y Larrea', 'Parada 761 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796046, -27.491647), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6335,7 +6335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:762', 'Siracusa y Montecarlo', 'Parada 762 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796247, -27.492783), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6343,7 +6343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:763', 'San Fransisco de Asís y Montecarlo', 'Parada 763 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796407, -27.493899), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6351,7 +6351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:764', 'Pitágoras y Montecarlo', 'Parada 764 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796552, -27.494926), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6359,7 +6359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:765', 'Río de Janeiro y Paiubre', 'Parada 765 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793579, -27.496152), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6367,7 +6367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:766', 'Río de Janeiro y Ramos Mejía', 'Parada 766 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791812, -27.496525), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6375,7 +6375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:767', 'Palermo y Sánchez de Bustamante', 'Parada 767 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790497, -27.497301), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6383,7 +6383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:768', 'Ramón Cirilo Blanco y Sánchez de Bustamante', 'Parada 768 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790688, -27.498381), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6391,7 +6391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:769', 'Sánchez de Bustamante y Palermo', 'Parada 769 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790266, -27.497193), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6399,7 +6399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:770', 'Américo Vespucio y Sánchez de Bustamante', 'Parada 770 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790941, -27.499669), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6407,7 +6407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:771', 'Parada 771', 'Parada 771 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791011, -27.500492), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6415,7 +6415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:772', 'Parada 772', 'Parada 772 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792916, -27.501239), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6423,7 +6423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:773', 'Parada 773', 'Parada 773 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792994, -27.502358), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6431,7 +6431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:774', 'Parada 774', 'Parada 774 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792997, -27.503499), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6439,7 +6439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:775', 'Parada 775', 'Parada 775 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791241, -27.503706), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6447,7 +6447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:776', 'Quintana y Catamarca', 'Parada 776 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832489, -27.463204), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6455,7 +6455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:777', 'Catamarca y San Martín', 'Parada 777 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833236, -27.469880), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6463,7 +6463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:778', 'Parada 778', 'Parada 778 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.745963, -27.422442), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6471,7 +6471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:779', 'Parada 779', 'Parada 779 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.746289, -27.424598), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6479,7 +6479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:780', 'Parada 780', 'Parada 780 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.745132, -27.413850), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6487,7 +6487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:781', 'Parada 781', 'Parada 781 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.747831, -27.412090), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6495,7 +6495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:782', 'Parada 782', 'Parada 782 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.752259, -27.419000), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6503,7 +6503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:783', 'Avenida Gobernador Ruiz y Avenida Gobernador Juan Pujol', 'Parada 783 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821491, -27.466947), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6511,7 +6511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:784', 'Parada 784', 'Parada 784 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.746471, -27.424605), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6519,7 +6519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:785', 'Parada 785', 'Parada 785 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.750296, -27.447513), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6527,7 +6527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:786', 'Parada 786', 'Parada 786 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749453, -27.442927), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6535,7 +6535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:787', 'Parada 787', 'Parada 787 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.749226, -27.442658), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6543,7 +6543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:788', 'Parada 788', 'Parada 788 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.750383, -27.447556), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6551,7 +6551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:789', 'Teniente Jorge Alberto Vazquez', 'Parada 789 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768664, -27.457322), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6559,7 +6559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:790', 'Parada 790', 'Parada 790 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767110, -27.457093), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6567,7 +6567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:791', 'Parada 791', 'Parada 791 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.766297, -27.457931), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6575,7 +6575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:792', 'Parada 792', 'Parada 792 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768586, -27.458029), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6583,7 +6583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:793', 'Parada 793', 'Parada 793 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838309, -27.497798), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6591,7 +6591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:794', 'Parada 794', 'Parada 794 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830330, -27.503308), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6599,7 +6599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:795', 'Gobernador Manuel I. Lagraña y Gobernador José María Rolón', 'Parada 795 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825827, -27.461368), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6607,7 +6607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:796', 'Santa Fe y Plácido Martínez', 'Parada 796 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829964, -27.462589), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6615,7 +6615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:797', 'Santa Fe y Fray José de la Quintana', 'Parada 797 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830061, -27.463525), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6623,7 +6623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:798', 'Parada 798', 'Parada 798 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828757, -27.503494), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6631,7 +6631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:799', 'Salta y Junín', 'Parada 799 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839280, -27.467594), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6639,7 +6639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:800', 'Salta y Belgrano', 'Parada 800 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839548, -27.472011), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6647,7 +6647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:801', 'Salta y Rivadavia', 'Parada 801 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839680, -27.473974), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6655,7 +6655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:802', 'José Ramón Vidal y Doctor Ramón Carrillo', 'Parada 802 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837883, -27.476116), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6663,7 +6663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:803', 'José Ramón Vidal y Necochea', 'Parada 803 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838441, -27.479179), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6671,7 +6671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:804', 'José Ramón Vidal y Lamadrid', 'Parada 804 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838908, -27.481906), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6679,7 +6679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:805', 'Perugorría y José Ramón Vidal', 'Parada 805 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839259, -27.483792), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6687,7 +6687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:806', 'La Pampa y Avenida del IV Centenario', 'Parada 806 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838220, -27.486314), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6695,7 +6695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:807', 'Chubut y Avenida del IV Centenario', 'Parada 807 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838238, -27.487927), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6703,7 +6703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:808', 'Avenida del IV Centenario y Avenida Colón', 'Parada 808 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838252, -27.489333), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6711,7 +6711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:809', 'Cabeza De Vaca y El Dorado', 'Parada 809 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838280, -27.491295), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6719,7 +6719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:810', '17 De Octubre y Potosi', 'Parada 810 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838194, -27.493460), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6727,7 +6727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:811', 'Parada 811', 'Parada 811 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838271, -27.494984), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6735,7 +6735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:812', 'Parada 812', 'Parada 812 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838280, -27.496260), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6743,7 +6743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:813', 'Parada 813', 'Parada 813 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826338, -27.506213), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6751,7 +6751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:814', 'Parada 814', 'Parada 814 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826407, -27.507442), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6759,7 +6759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:815', 'Parada 815', 'Parada 815 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826447, -27.508311), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6767,7 +6767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:816', 'Parada 816', 'Parada 816 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826529, -27.509372), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6775,7 +6775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:817', 'Parada 817', 'Parada 817 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828492, -27.509684), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6783,7 +6783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:818', 'Parada 818', 'Parada 818 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835519, -27.498314), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6791,7 +6791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:819', 'Parada 819', 'Parada 819 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830912, -27.509949), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6799,7 +6799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:820', 'Parada 820', 'Parada 820 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828479, -27.509762), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6807,7 +6807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:821', 'Parada 821', 'Parada 821 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826449, -27.509340), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6815,7 +6815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:822', 'Parada 822', 'Parada 822 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826301, -27.508245), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6823,7 +6823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:823', 'Parada 823', 'Parada 823 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826225, -27.507443), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6831,7 +6831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:824', 'Avenida Paysandú', 'Parada 824 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826068, -27.505259), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6839,7 +6839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:825', 'Parada 825', 'Parada 825 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833137, -27.498378), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6847,7 +6847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:826', 'Parada 826', 'Parada 826 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831053, -27.498627), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6855,7 +6855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:827', 'Ciudad de Arequipa', 'Parada 827 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833890, -27.495944), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6863,7 +6863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:828', 'Parada 828', 'Parada 828 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835196, -27.495764), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6871,7 +6871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:829', 'Parada 829', 'Parada 829 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836028, -27.495641), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6879,7 +6879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:830', 'Parada 830', 'Parada 830 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837071, -27.495512), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6887,7 +6887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:831', 'Parada 831', 'Parada 831 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837988, -27.495396), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6895,7 +6895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:832', 'Parada 832', 'Parada 832 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831229, -27.500153), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6903,7 +6903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:833', 'Magallanes y Cosquín', 'Parada 833 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837991, -27.492824), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6911,7 +6911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:834', 'El Dorado y Avenida del IV Centenario', 'Parada 834 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838025, -27.492006), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6919,7 +6919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:835', 'Avenida Colón y Avenida del IV Centenario', 'Parada 835 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838022, -27.489237), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6927,7 +6927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:836', 'Chubut y Avenida del IV Centenario', 'Parada 836 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838015, -27.487931), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6935,7 +6935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:837', 'Avenida del IV Centenario y La Pampa', 'Parada 837 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838028, -27.486705), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6943,7 +6943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:838', 'Parada 838', 'Parada 838 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831391, -27.501324), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6951,7 +6951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:839', 'Sargento Juan Bautista Cabral', 'Parada 839 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822928, -27.459600), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6959,7 +6959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:840', 'Sargento Juan Bautista Cabral y Gobernador Antonio B. Gallino', 'Parada 840 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820494, -27.459770), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6967,7 +6967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:841', 'Sargento Juan Bautista Cabral y Vélez Sarsfield', 'Parada 841 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819192, -27.459882), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6975,7 +6975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:842', 'Vélez Sarsfield y Agustín Justo', 'Parada 842 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819417, -27.464249), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6983,7 +6983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:843', 'Vélez Sarsfield y Gobernador Felipe Cabral', 'Parada 843 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819474, -27.465440), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6991,7 +6991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:844', 'Parada 844', 'Parada 844 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833151, -27.502820), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -6999,7 +6999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:845', 'Vélez Sarsfield y Avenida Gobernador Ruiz', 'Parada 845 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819480, -27.466627), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7007,7 +7007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:846', 'Avenida Armenia y Avenida Chacabuco', 'Parada 846 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.811981, -27.467491), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7015,7 +7015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:847', 'Avenida Armenia y Reconquista', 'Parada 847 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808779, -27.467036), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7023,7 +7023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:848', 'Parada 848', 'Parada 848 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807860, -27.465346), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7031,7 +7031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:849', 'Parada 849', 'Parada 849 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807105, -27.465483), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7039,7 +7039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:850', 'Parada 850', 'Parada 850 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806471, -27.465697), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7047,7 +7047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:851', 'Parada 851', 'Parada 851 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805912, -27.465021), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7055,7 +7055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:852', 'Parada 852', 'Parada 852 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806727, -27.464435), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7063,7 +7063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:853', 'Parada 853', 'Parada 853 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834456, -27.502637), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7071,7 +7071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:854', 'Parada 854', 'Parada 854 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807472, -27.465508), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7079,7 +7079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:855', 'Avenida Armenia y 11 de Mayo', 'Parada 855 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808267, -27.466979), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7087,7 +7087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:856', 'Avenida Gobernador Ruiz y Avenida Armenia', 'Parada 856 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816062, -27.467229), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7095,7 +7095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:857', 'Santiago del Estero y Gobernador Felipe Cabral', 'Parada 857 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817929, -27.465524), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7103,7 +7103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:858', 'Catamarca y Junín', 'Parada 858 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832984, -27.467530), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7111,7 +7111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:859', 'Parada 859', 'Parada 859 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776200, -27.514391), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7119,7 +7119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:860', 'Parada 860', 'Parada 860 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783120, -27.514018), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7127,7 +7127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:861', 'Río de Janeiro y Turin', 'Parada 861 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784940, -27.497224), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7135,7 +7135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:862', 'Turin y Coronel Artaza', 'Parada 862 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785043, -27.499008), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7143,7 +7143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:863', 'Turin', 'Parada 863 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785248, -27.500166), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7151,7 +7151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:864', 'Turin', 'Parada 864 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785467, -27.501263), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7159,7 +7159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:865', 'Turin', 'Parada 865 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785732, -27.502674), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7167,7 +7167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:866', 'Turin y Suecia', 'Parada 866 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785748, -27.503946), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7175,7 +7175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:867', 'Parada 867', 'Parada 867 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784960, -27.510181), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7183,7 +7183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:868', 'Parada 868', 'Parada 868 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785062, -27.510845), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7191,7 +7191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:869', 'Parada 869', 'Parada 869 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784886, -27.511799), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7199,7 +7199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:870', 'Parada 870', 'Parada 870 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783469, -27.512581), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7207,7 +7207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:871', 'Parada 871', 'Parada 871 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783289, -27.513976), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7215,7 +7215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:872', 'Parada 872', 'Parada 872 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784657, -27.516236), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7223,7 +7223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:873', 'Parada 873', 'Parada 873 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781350, -27.518153), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7231,7 +7231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:874', 'Parada 874', 'Parada 874 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779157, -27.519218), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7239,7 +7239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:875', 'Parada 875', 'Parada 875 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778428, -27.518432), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7247,7 +7247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:876', 'Parada 876', 'Parada 876 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783493, -27.512411), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7255,7 +7255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:877', 'Parada 877', 'Parada 877 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777756, -27.517387), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7263,7 +7263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:878', 'Parada 878', 'Parada 878 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777114, -27.516337), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7271,7 +7271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:879', 'Parada 879', 'Parada 879 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776453, -27.515287), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7279,7 +7279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:880', 'Parada 880', 'Parada 880 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775772, -27.514181), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7287,7 +7287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:881', 'Parada 881', 'Parada 881 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784912, -27.510758), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7295,7 +7295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:882', 'Turin y Suecia', 'Parada 882 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785484, -27.505444), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7303,7 +7303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:883', 'Turin y Suecia', 'Parada 883 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785561, -27.504198), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7311,7 +7311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:884', 'Turin', 'Parada 884 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785553, -27.502852), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7319,7 +7319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:885', 'Turin', 'Parada 885 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785285, -27.501479), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7327,7 +7327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:886', 'Turin', 'Parada 886 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785097, -27.500407), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7335,7 +7335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:887', 'Turin y Coronel Artaza', 'Parada 887 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784797, -27.498612), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7343,7 +7343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:888', 'Río de Janeiro y Turin', 'Parada 888 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784806, -27.497409), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7351,7 +7351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:889', 'Kepler y Turin', 'Parada 889 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784669, -27.496659), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7359,7 +7359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:890', 'San Francisco De Asis y Turin', 'Parada 890 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784567, -27.495957), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7367,7 +7367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:891', 'Verona y Milán', 'Parada 891 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785545, -27.494889), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7375,7 +7375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:892', 'Milán y Los Laureles', 'Parada 892 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785373, -27.493490), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7383,7 +7383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:893', 'Milán y Cerdeña', 'Parada 893 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785084, -27.491878), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7391,7 +7391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:894', 'Parada 894', 'Parada 894 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779046, -27.519072), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7399,7 +7399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:895', 'Paiubre y Yugoslavia', 'Parada 895 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792647, -27.488393), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7407,7 +7407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:896', 'José Darragueira y Presidente Juan Domingo Perón', 'Parada 896 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797829, -27.487648), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7415,7 +7415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:897', 'Presidente Nicolás Avellaneda y Avenida Medrano', 'Parada 897 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799678, -27.487446), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7423,7 +7423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:898', 'Presidente Nicolás Avellaneda y Las Piedras', 'Parada 898 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801586, -27.487176), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7431,7 +7431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:899', 'Presidente Nicolás Avellaneda y Obispo Niella', 'Parada 899 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804024, -27.486812), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7439,7 +7439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:900', 'Presidente Nicolás Avellaneda y Pirovano', 'Parada 900 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806506, -27.486496), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7447,7 +7447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:901', 'Parada 901', 'Parada 901 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781065, -27.522688), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7455,7 +7455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:902', 'Tacuari y Lamadrid', 'Parada 902 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807096, -27.485603), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7463,7 +7463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:903', 'Tacuari y Lavalle', 'Parada 903 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806590, -27.481198), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7471,7 +7471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:904', 'Parada 904', 'Parada 904 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780395, -27.521615), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7479,7 +7479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:905', 'Parada 905', 'Parada 905 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779753, -27.520576), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7487,7 +7487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:906', 'Tucumán y Fray José de la Quintana', 'Parada 906 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841343, -27.462577), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7495,7 +7495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:907', 'Güemes y Pasaje Herrera', 'Parada 907 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807850, -27.480441), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7503,7 +7503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:908', 'Güemes y General Paz', 'Parada 908 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808093, -27.481889), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7511,7 +7511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:909', 'Güemes y Las Heras', 'Parada 909 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808247, -27.483964), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7519,7 +7519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:910', 'Güemes y Lamadrid', 'Parada 910 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808299, -27.485292), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7527,7 +7527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:911', 'Presidente Nicolás Avellaneda y Pirovano', 'Parada 911 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805942, -27.486716), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7535,7 +7535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:912', 'Presidente Nicolás Avellaneda y Obispo Niella', 'Parada 912 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804057, -27.487023), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7543,7 +7543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:913', 'Presidente Nicolás Avellaneda y Las Piedras', 'Parada 913 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801597, -27.487340), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7551,7 +7551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:914', 'Presidente Nicolás Avellaneda y Avenida Medrano', 'Parada 914 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799626, -27.487613), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7559,7 +7559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:915', 'Presidente Juan Domingo Perón y José Darragueira', 'Parada 915 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797846, -27.487823), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7567,7 +7567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:916', 'Presidente Juan Domingo Perón y Paiubre', 'Parada 916 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792389, -27.488656), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7575,7 +7575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:917', 'Presidente Juan Domingo Perón y Alejandro Dumas', 'Parada 917 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785839, -27.490010), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7583,7 +7583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:918', 'Milán y Cerdeña', 'Parada 918 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785244, -27.491596), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7591,7 +7591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:919', 'Los Laureles y Milán', 'Parada 919 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785535, -27.493372), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7599,7 +7599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:920', 'Milán y Verona', 'Parada 920 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785718, -27.494905), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7607,7 +7607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:921', 'San Francisco De Asis y Turin', 'Parada 921 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784806, -27.495889), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7615,7 +7615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:928', 'Plácido Martínez y Salta', 'Parada 928 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838516, -27.461518), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7623,7 +7623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:929', 'Avenida Doctor Jorge Manuel Romero y Juan Bautista Alberdi', 'Parada 929 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845843, -27.484443), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7631,7 +7631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:930', 'Avenida Juan De Garay y José Ramón Vidal', 'Parada 930 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841090, -27.493367), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7639,7 +7639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:931', '17 De Octubre y Pasaje Las Flores', 'Parada 931 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839847, -27.493270), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7647,7 +7647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:932', 'Avenida del IV Centenario y El Dorado', 'Parada 932 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838025, -27.491428), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7655,7 +7655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:933', 'Avenida Colón y José Ramón Vidal', 'Parada 933 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840231, -27.488742), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7663,7 +7663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:934', 'Avenida Colón y Ayolas', 'Parada 934 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.842315, -27.488469), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7671,7 +7671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:935', 'Hernandarias y Avenida Colón', 'Parada 935 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844764, -27.487935), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7679,7 +7679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:936', 'Blas Benjamín de la Vega y Avenida Doctor Jorge Manuel Romero', 'Parada 936 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848111, -27.483670), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7687,7 +7687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:937', 'Hernandarias y Río Negro', 'Parada 937 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844571, -27.486658), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7695,7 +7695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:938', 'Doctor José Miguel Guastavino y Avenida Doctor Jorge Manuel Romero', 'Parada 938 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844281, -27.484449), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7703,7 +7703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:939', 'Doctor José Miguel Guastavino y Madariaga', 'Parada 939 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844002, -27.482328), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7711,7 +7711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:940', 'Doctor José Miguel Guastavino y Las Heras', 'Parada 940 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843687, -27.479949), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7719,7 +7719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:941', 'Doctor José Miguel Guastavino y General Paz', 'Parada 941 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843357, -27.477585), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7727,7 +7727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:942', 'Doctor José Miguel Guastavino y Avenida 3 de Abril', 'Parada 942 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843031, -27.475274), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7735,7 +7735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:943', 'Buenos Aires y Avenida 3 de Abril', 'Parada 943 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841120, -27.474601), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7743,7 +7743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:944', 'Coronel Santiago Baibiene y Gobernador Evaristo López', 'Parada 944 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824861, -27.463008), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7751,7 +7751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:945', 'Gobernador Evaristo López y Gobernador José María Rolón', 'Parada 945 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824653, -27.461605), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7759,7 +7759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:946', 'Gobernador Evaristo López y Sargento Juan Bautista Cabral', 'Parada 946 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824593, -27.459719), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7767,7 +7767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:947', 'Vélez Sarsfield y Gobernador José María Rolón', 'Parada 947 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819279, -27.461451), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7775,7 +7775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:948', 'Vélez Sarsfield y Agustín Justo', 'Parada 948 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819375, -27.464247), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7783,7 +7783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:949', 'Agustín Justo y Gobernador Antonio B. Gallino', 'Parada 949 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820822, -27.464268), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7791,7 +7791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:950', 'Agustín Justo y Gobernador Juan Vicente Pampín', 'Parada 950 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822141, -27.464278), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7799,7 +7799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:951', 'Agustín Justo y Gobernador Miguel Gelabert', 'Parada 951 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823589, -27.464251), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7807,7 +7807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:952', 'Rivadavia y Tucumán', 'Parada 952 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.842028, -27.473871), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7815,7 +7815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:953', 'Entre Ríos y Rivadavia', 'Parada 953 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844593, -27.473630), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7823,7 +7823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:954', 'Avenida 3 de Abril y Juan Bautista Alberdi', 'Parada 954 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844570, -27.474889), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7831,7 +7831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:955', 'Juan Bautista Alberdi y General Paz', 'Parada 955 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844728, -27.477144), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7839,7 +7839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:956', 'Las Heras y Juan Bautista Alberdi', 'Parada 956 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845085, -27.479702), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7847,7 +7847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:957', 'Juan Bautista Alberdi y Madariaga', 'Parada 957 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845361, -27.481740), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7855,7 +7855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:958', '17 De Octubre y Potosi', 'Parada 958 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838321, -27.493312), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7863,7 +7863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:959', 'Avenida Colón y Pasaje Las Flores', 'Parada 959 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838541, -27.488986), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7871,7 +7871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:960', 'Buenos Aires e Hipólito Yrigoyen', 'Parada 960 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840598, -27.468543), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7879,7 +7879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:961', 'Buenos Aires y 9 de Julio', 'Parada 961 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840476, -27.466333), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7887,7 +7887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:964', 'Ciudad de Arequipa y Cosquín', 'Parada 964 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833620, -27.493353), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7895,7 +7895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:965', 'Cosquín', 'Parada 965 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826524, -27.494657), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7903,7 +7903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:966', 'Parada 966', 'Parada 966 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826177, -27.492746), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7911,7 +7911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:967', 'Avenida La Paz y Santa Cruz', 'Parada 967 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825776, -27.490705), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7919,7 +7919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:968', 'Santa Cruz y 2 de Abril', 'Parada 968 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826918, -27.490375), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7927,7 +7927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:969', 'Santa Cruz y Profesor Pedro Crespo', 'Parada 969 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829137, -27.490132), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7935,7 +7935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:970', 'Santa Cruz y Avenida José Manuel Estrada', 'Parada 970 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830636, -27.490002), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7943,7 +7943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:971', 'Río Negro y Ushuaia', 'Parada 971 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830736, -27.488679), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7951,7 +7951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:972', 'Avenida José Manuel Estrada y Viedma', 'Parada 972 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830688, -27.488015), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7959,7 +7959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:973', 'Teniente Cundom y Avenida José Manuel Estrada', 'Parada 973 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831365, -27.485502), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7967,7 +7967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:974', 'Teniente Cundom y Ciudad de Arequipa', 'Parada 974 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832656, -27.485904), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7975,7 +7975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:975', 'Cosquín', 'Parada 975 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831872, -27.493622), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7983,7 +7983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:976', 'Teniente Cundom y Avenida Teniente Ibáñez', 'Parada 976 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834042, -27.486280), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7991,7 +7991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:977', 'Doctor Vargas Gómez y Avenida Teniente Ibáñez', 'Parada 977 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835183, -27.485847), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -7999,7 +7999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:978', 'Avenida Teniente Ibáñez y Lisandro Segovia', 'Parada 978 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836264, -27.485494), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8007,7 +8007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:979', 'Pio XII y Perugorría', 'Parada 979 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837500, -27.484009), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8015,7 +8015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:980', 'Pio XII y Lamadrid', 'Parada 980 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837199, -27.481666), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8023,7 +8023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:981', 'Pio XII y Necochea', 'Parada 981 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836926, -27.479636), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8031,7 +8031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:982', 'Cosquín', 'Parada 982 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829899, -27.494028), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8039,7 +8039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:983', 'Santa Fe y Juan Torres de Vera y Aragón', 'Parada 983 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829904, -27.461302), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8047,7 +8047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:984', 'Gobernador José Manuel Pampín y Gobernador José María Rolón', 'Parada 984 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827189, -27.461511), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8055,7 +8055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:985', 'Gobernador José Manuel Pampín y Sargento Juan Bautista Cabral', 'Parada 985 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827179, -27.460321), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8063,7 +8063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:986', 'Sargento Juan Bautista Cabral y Gobernador Manuel I. Lagraña', 'Parada 986 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825602, -27.459423), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8071,7 +8071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:987', 'Cosquín', 'Parada 987 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826753, -27.494471), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8079,7 +8079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:988', 'Vélez Sarsfield y Coronel Santiago Baibiene', 'Parada 988 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819321, -27.462933), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8087,7 +8087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:989', 'Santiago del Estero y Agustín Justo', 'Parada 989 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817951, -27.464274), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8095,7 +8095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:990', 'Santiago del Estero y Coronel Santiago Baibiene', 'Parada 990 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817896, -27.463085), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8103,7 +8103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:991', 'Cosquín y Avenida Paysandú', 'Parada 991 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824928, -27.494711), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8111,7 +8111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:992', 'Santiago del Estero y Gobernador José María Rolón', 'Parada 992 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817852, -27.461833), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8119,7 +8119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:993', 'Avenida Paysandú', 'Parada 993 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825091, -27.496079), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8127,7 +8127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:994', 'Avenida Paysandú', 'Parada 994 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825319, -27.497346), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8135,7 +8135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:995', 'Avenida Teniente Ibáñez y Lisandro Segovia', 'Parada 995 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836582, -27.485586), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8143,7 +8143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:996', 'Avenida Teniente Ibáñez y Doctor Vargas Gómez', 'Parada 996 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835342, -27.485724), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8151,7 +8151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:997', 'Avenida Teniente Ibáñez y Gobernador General Juan Velazco', 'Parada 997 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834231, -27.485790), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8159,7 +8159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:998', 'Ciudad de Arequipa y Patagonia', 'Parada 998 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833183, -27.491289), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8167,7 +8167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:999', 'Ciudad de Arequipa y El Dorado', 'Parada 999 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833391, -27.492205), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8175,7 +8175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1000', 'Parada 1000', 'Parada 1000 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826999, -27.496991), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8183,7 +8183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1001', 'Parada 1001', 'Parada 1001 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826803, -27.495885), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8191,7 +8191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1002', 'Catamarca y 25 de Mayo', 'Parada 1002 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832713, -27.464900), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8199,7 +8199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1003', 'Alta Gracia', 'Parada 1003 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813254, -27.507965), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8207,7 +8207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1004', 'Parada 1004', 'Parada 1004 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826227, -27.506908), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8215,7 +8215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1005', 'Alta Gracia', 'Parada 1005 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815903, -27.508296), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8223,7 +8223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1006', 'Alta Gracia', 'Parada 1006 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813355, -27.508123), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8231,7 +8231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1007', 'Parada 1007', 'Parada 1007 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826174, -27.506508), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8239,7 +8239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1008', 'Parada 1008', 'Parada 1008 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826111, -27.505857), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8247,7 +8247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1009', 'Avenida Paysandú', 'Parada 1009 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825996, -27.503994), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8255,7 +8255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1010', 'Parada 1010', 'Parada 1010 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827904, -27.503527), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8263,7 +8263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1011', 'Parada 1011', 'Parada 1011 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828778, -27.503407), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8271,7 +8271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1012', 'Parada 1012', 'Parada 1012 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830374, -27.503203), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8279,7 +8279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1013', 'Parada 1013', 'Parada 1013 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831228, -27.503094), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8287,7 +8287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1014', 'Parada 1014', 'Parada 1014 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831214, -27.501457), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8295,7 +8295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1015', 'Alta Gracia', 'Parada 1015 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815911, -27.508446), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8303,7 +8303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1016', 'Parada 1016', 'Parada 1016 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830860, -27.498849), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8311,7 +8311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1017', 'Parada 1017', 'Parada 1017 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829901, -27.498799), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8319,7 +8319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1018', 'Parada 1018', 'Parada 1018 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828998, -27.498918), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8327,7 +8327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1019', 'Parada 1019', 'Parada 1019 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827703, -27.499085), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8335,7 +8335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1020', 'Avenida Paysandú', 'Parada 1020 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825503, -27.499002), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8343,7 +8343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1021', 'Avenida Paysandú', 'Parada 1021 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825619, -27.497388), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8351,7 +8351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1022', 'Parada 1022', 'Parada 1022 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827436, -27.497121), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8359,7 +8359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1023', 'Parada 1023', 'Parada 1023 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828637, -27.496908), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8367,7 +8367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1024', 'Alta Gracia', 'Parada 1024 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817566, -27.508645), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8375,7 +8375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1025', 'Parada 1025', 'Parada 1025 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829584, -27.496755), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8383,7 +8383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1026', 'Parada 1026', 'Parada 1026 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830507, -27.496598), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8391,7 +8391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1027', 'Parada 1027', 'Parada 1027 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832228, -27.496283), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8399,7 +8399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1028', 'Parada 1028', 'Parada 1028 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831630, -27.492567), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8407,7 +8407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1029', 'Avenida Patagonia y Avenida José Manuel Estrada', 'Parada 1029 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831262, -27.490931), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8415,7 +8415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1030', 'Santa Cruz y Chubut', 'Parada 1030 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830771, -27.489766), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8423,7 +8423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1031', 'El Chocón y Avenida José Manuel Estrada', 'Parada 1031 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830674, -27.486909), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8431,7 +8431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1032', 'Avenida José Manuel Estrada y Avenida Teniente Ibáñez', 'Parada 1032 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831000, -27.484975), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8439,7 +8439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1033', 'Avenida Sarmiento e Islas Orcadas', 'Parada 1033 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830758, -27.482924), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8447,7 +8447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1034', 'Avenida Sarmiento y Necochea', 'Parada 1034 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830456, -27.480025), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8455,7 +8455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1035', 'Avenida Sarmiento y General Paz', 'Parada 1035 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830273, -27.478464), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8463,7 +8463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1036', 'Salta y 9 de Julio', 'Parada 1036 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839091, -27.466164), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8471,7 +8471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1037', 'Gutenberg y Doctor Ramón Carrillo', 'Parada 1037 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831492, -27.476816), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8479,7 +8479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1038', 'Gutenberg y General Paz', 'Parada 1038 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831801, -27.479061), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8487,7 +8487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1039', 'Gutenberg y Las Heras', 'Parada 1039 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832114, -27.481369), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8495,7 +8495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1040', 'Gutenberg y Madariaga', 'Parada 1040 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832403, -27.483625), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8503,7 +8503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1041', 'Ciudad de Arequipa y Teniente Cundom', 'Parada 1041 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832540, -27.485745), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8511,7 +8511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1042', 'Ciudad de Arequipa y Viedma', 'Parada 1042 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832649, -27.487154), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8519,7 +8519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1043', 'Río Negro y Ciudad de Arequipa', 'Parada 1043 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832853, -27.488162), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8527,7 +8527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1044', 'Ciudad de Arequipa y Comodoro Rivadavia', 'Parada 1044 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833186, -27.490675), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8535,7 +8535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1045', 'Parada 1045', 'Parada 1045 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826253, -27.509479), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8543,7 +8543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1046', 'Cosquín', 'Parada 1046 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832304, -27.493715), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8551,7 +8551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1047', 'Cosquín', 'Parada 1047 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829079, -27.494151), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8559,7 +8559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1048', 'Cosquín', 'Parada 1048 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826902, -27.494447), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8567,7 +8567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1049', 'Parada 1049', 'Parada 1049 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826308, -27.492926), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8575,7 +8575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1050', 'Avenida Patagonia y Avenida Paysandú', 'Parada 1050 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824960, -27.492528), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8583,7 +8583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1051', 'Avenida Paysandú y Avenida Patagonia', 'Parada 1051 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824644, -27.493054), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8591,7 +8591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1052', 'Avenida Paysandú y Cosquín', 'Parada 1052 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824894, -27.494866), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8599,7 +8599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1053', 'Avenida Paysandú y Cosquín', 'Parada 1053 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825030, -27.495601), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8607,7 +8607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1054', 'Avenida Paysandú', 'Parada 1054 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825455, -27.497313), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8615,7 +8615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1055', 'Avenida Paysandú', 'Parada 1055 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825754, -27.499189), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8623,7 +8623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1056', 'Parada 1056', 'Parada 1056 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827701, -27.498940), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8631,7 +8631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1057', 'Parada 1057', 'Parada 1057 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828965, -27.498798), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8639,7 +8639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1058', 'Parada 1058', 'Parada 1058 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829883, -27.498727), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8647,7 +8647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1059', 'Parada 1059', 'Parada 1059 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830813, -27.498580), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8655,7 +8655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1060', 'Parada 1060', 'Parada 1060 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831534, -27.502978), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8663,7 +8663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1061', 'Parada 1061', 'Parada 1061 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827928, -27.503609), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8671,7 +8671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1062', 'Avenida Paysandú', 'Parada 1062 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826418, -27.503803), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8679,7 +8679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1063', 'Avenida Paysandú', 'Parada 1063 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826332, -27.505225), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8687,7 +8687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1064', 'Catamarca y Juan Torres de Vera y Aragón', 'Parada 1064 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832310, -27.461395), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8695,7 +8695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1066', 'Parada 1066', 'Parada 1066 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790663, -27.547400), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8703,7 +8703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1067', 'Parada 1067', 'Parada 1067 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795492, -27.527188), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8711,7 +8711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1068', 'Parada 1068', 'Parada 1068 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790837, -27.547367), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8719,7 +8719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1069', 'Parada 1069', 'Parada 1069 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787381, -27.505329), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8727,7 +8727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1070', 'Parada 1070', 'Parada 1070 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778690, -27.501740), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8735,7 +8735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1071', 'Parada 1071', 'Parada 1071 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775568, -27.500711), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8743,7 +8743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1072', 'Parada 1072', 'Parada 1072 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777046, -27.496339), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8751,7 +8751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1073', 'Parada 1073', 'Parada 1073 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777845, -27.494459), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8759,7 +8759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1074', 'Thames y Presidente Juan Domingo Perón', 'Parada 1074 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791755, -27.488611), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8767,7 +8767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1075', 'Turin y Suecia', 'Parada 1075 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785816, -27.505545), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8775,7 +8775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1076', 'Avenida Medrano y Lamadrid', 'Parada 1076 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799170, -27.486621), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8783,7 +8783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1077', 'Avenida Medrano y Las Heras', 'Parada 1077 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798984, -27.485576), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8791,7 +8791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1078', 'Avenida Medrano y Lavalle', 'Parada 1078 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798565, -27.483382), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8799,7 +8799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1079', 'Parada 1079', 'Parada 1079 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783904, -27.505784), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8807,7 +8807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1080', 'Parada 1080', 'Parada 1080 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781440, -27.506131), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8815,7 +8815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1081', 'Parada 1081', 'Parada 1081 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780262, -27.506313), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8823,7 +8823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1082', 'Parada 1082', 'Parada 1082 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779751, -27.504988), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8831,7 +8831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1083', 'Presidente Juan Domingo Perón', 'Parada 1083 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779687, -27.490629), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8839,7 +8839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1084', 'Parada 1084', 'Parada 1084 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778119, -27.494597), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8847,7 +8847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1085', 'Parada 1085', 'Parada 1085 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777311, -27.496332), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8855,7 +8855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1086', 'Parada 1086', 'Parada 1086 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775544, -27.500459), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8863,7 +8863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1087', 'Parada 1087', 'Parada 1087 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778706, -27.501649), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8871,7 +8871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1088', 'Parada 1088', 'Parada 1088 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779570, -27.503768), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8879,7 +8879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1089', 'Parada 1089', 'Parada 1089 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779653, -27.503470), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8887,7 +8887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1090', 'Parada 1090', 'Parada 1090 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779887, -27.504729), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8895,7 +8895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1091', 'Parada 1091', 'Parada 1091 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780141, -27.506112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8903,7 +8903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1092', 'Parada 1092', 'Parada 1092 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781166, -27.506054), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8911,7 +8911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1093', 'Cuba y Suecia', 'Parada 1093 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782736, -27.505823), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8919,7 +8919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1094', 'Parada 1094', 'Parada 1094 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783915, -27.505636), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8927,7 +8927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1095', 'Turin y Suecia', 'Parada 1095 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785471, -27.505423), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8935,7 +8935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1096', 'Parada 1096', 'Parada 1096 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787340, -27.505186), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8943,7 +8943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1097', 'Doctor Miguel Sussini y Hawai', 'Parada 1097 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801255, -27.490243), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8951,7 +8951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1098', 'Las Piedras y Hawai', 'Parada 1098 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802372, -27.489583), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8959,7 +8959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1099', 'Larrea y Doctor Wenceslao Domínguez', 'Parada 1099 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807880, -27.489399), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8967,7 +8967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1100', 'Pitágoras y Doctor Wenceslao Domínguez', 'Parada 1100 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808075, -27.490618), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8975,7 +8975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1101', 'San Martín y Santa Fe', 'Parada 1101 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830775, -27.470323), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8983,7 +8983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1102', 'Pitágoras y Resoagli', 'Parada 1102 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.805677, -27.491003), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8991,7 +8991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1103', 'Pitágoras y Las Piedras', 'Parada 1103 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804197, -27.491626), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -8999,7 +8999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1104', 'Pitágoras y Río de Janeiro', 'Parada 1104 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802918, -27.492728), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9007,7 +9007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1105', 'Pitágoras y Doctor Miguel Sussini', 'Parada 1105 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801130, -27.492817), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9015,7 +9015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1106', 'Pitágoras y Avenida Medrano', 'Parada 1106 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799622, -27.492717), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9023,7 +9023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1107', 'Parada 1107', 'Parada 1107 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791039, -27.522186), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9031,7 +9031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1108', 'Parada 1108', 'Parada 1108 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789070, -27.520716), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9039,7 +9039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1109', 'Parada 1109', 'Parada 1109 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788978, -27.521762), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9047,7 +9047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1110', 'Parada 1110', 'Parada 1110 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789729, -27.522908), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9055,7 +9055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1111', 'Parada 1111', 'Parada 1111 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790904, -27.523012), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9063,7 +9063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1112', 'Parada 1112', 'Parada 1112 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792122, -27.523112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9071,7 +9071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1113', 'Parada 1113', 'Parada 1113 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793261, -27.523230), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9079,7 +9079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1114', 'Parada 1114', 'Parada 1114 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794199, -27.523769), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9087,7 +9087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1115', 'Parada 1115', 'Parada 1115 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795002, -27.524160), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9095,7 +9095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1116', 'Parada 1116', 'Parada 1116 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796439, -27.524960), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9103,7 +9103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1117', 'Parada 1117', 'Parada 1117 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791123, -27.521211), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9111,7 +9111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1118', 'Parada 1118', 'Parada 1118 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791248, -27.520145), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9119,7 +9119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1119', 'Parada 1119', 'Parada 1119 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791351, -27.519112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9127,7 +9127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1120', 'Parada 1120', 'Parada 1120 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791486, -27.517875), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9135,7 +9135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1121', 'Parada 1121', 'Parada 1121 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789385, -27.517619), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9143,7 +9143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1122', 'Parada 1122', 'Parada 1122 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789301, -27.518712), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9151,7 +9151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1123', 'Parada 1123', 'Parada 1123 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793416, -27.523489), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9159,7 +9159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1124', 'Parada 1124', 'Parada 1124 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792329, -27.523309), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9167,7 +9167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1125', 'Parada 1125', 'Parada 1125 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791168, -27.523208), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9175,7 +9175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1126', 'Parada 1126', 'Parada 1126 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789196, -27.519743), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9183,7 +9183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1127', 'Avenida Armenia y 22 de Mayo', 'Parada 1127 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802719, -27.468457), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9191,7 +9191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1128', 'Carlos Pellegrini y Córdoba', 'Parada 1128 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833914, -27.465540), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9199,7 +9199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1129', 'Carlos Pellegrini y La Rioja', 'Parada 1129 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837607, -27.465195), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9207,7 +9207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1130', 'Juan Torres de Vera y Aragón y San Juan', 'Parada 1130 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836460, -27.461744), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9215,7 +9215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1131', 'Presidente Juan Domingo Perón y Sánchez de Bustamante', 'Parada 1131 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789494, -27.489407), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9223,7 +9223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1132', 'Presidente Juan Domingo Perón y Paul Groussac', 'Parada 1132 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787620, -27.489683), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9231,7 +9231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1133', 'Paul Groussac y Presidente Juan Domingo Perón', 'Parada 1133 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787777, -27.489471), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9239,7 +9239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1134', 'Alejandro Dumas y Presidente Juan Domingo Perón', 'Parada 1134 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786097, -27.489764), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9247,7 +9247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1135', 'Gascón y Presidente Juan Domingo Perón', 'Parada 1135 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796515, -27.487805), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9255,7 +9255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1136', 'Hipólito Yrigoyen y Salta', 'Parada 1136 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839376, -27.468461), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9263,7 +9263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1143', 'Plácido Martínez y Salta', 'Parada 1143 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838509, -27.461546), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9271,7 +9271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1146', 'Avenida Juan Ramón Vidal y Madariaga', 'Parada 1146 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816049, -27.484890), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9279,7 +9279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1147', 'Parada 1147', 'Parada 1147 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792797, -27.508910), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9287,7 +9287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1148', 'La Rioja y Pasaje Agustín González', 'Parada 1148 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838002, -27.467176), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9295,7 +9295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1149', 'Avenida Independencia y Milán', 'Parada 1149 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783312, -27.484524), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9303,7 +9303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1150', 'Presidente Juan Domingo Perón y Sánchez de Bustamante', 'Parada 1150 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789418, -27.489246), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9311,7 +9311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1151', 'Avenida Independencia y Manuel Acevedo', 'Parada 1151 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787451, -27.483734), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9319,7 +9319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1152', 'Larrea y Avenida Medrano', 'Parada 1152 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799904, -27.491335), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9327,7 +9327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1153', 'Parada 1153', 'Parada 1153 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823919, -27.509318), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9335,7 +9335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1154', 'Parada 1154', 'Parada 1154 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823934, -27.509218), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9343,7 +9343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1155', 'Parada 1155', 'Parada 1155 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822086, -27.509118), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9351,7 +9351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1156', 'Parada 1156', 'Parada 1156 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822090, -27.509030), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9359,7 +9359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1157', 'Alta Gracia', 'Parada 1157 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820044, -27.508892), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9367,7 +9367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1158', 'Alta Gracia', 'Parada 1158 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820061, -27.508819), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9375,7 +9375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1159', 'Alta Gracia', 'Parada 1159 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817553, -27.508642), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9383,7 +9383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1160', 'Alta Gracia', 'Parada 1160 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817559, -27.508506), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9391,7 +9391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1161', 'Alta Gracia', 'Parada 1161 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815904, -27.508444), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9399,7 +9399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1162', 'Alta Gracia', 'Parada 1162 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815894, -27.508297), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9407,7 +9407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1163', 'Parada 1163', 'Parada 1163 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790599, -27.517741), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9415,7 +9415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1164', 'Parada 1164', 'Parada 1164 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788821, -27.522815), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9423,7 +9423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1165', 'Parada 1165', 'Parada 1165 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796350, -27.525052), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9431,7 +9431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1166', 'Parada 1166', 'Parada 1166 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794923, -27.524325), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9439,7 +9439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1167', 'Parada 1167', 'Parada 1167 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794105, -27.523907), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9447,7 +9447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1168', 'Parada 1168', 'Parada 1168 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794106, -27.523910), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9455,7 +9455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1169', 'Parada 1169', 'Parada 1169 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794909, -27.524342), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9463,7 +9463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1170', 'Parada 1170', 'Parada 1170 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790555, -27.539185), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9471,7 +9471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1171', 'Parada 1171', 'Parada 1171 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790050, -27.543341), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9479,7 +9479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1172', 'Parada 1172', 'Parada 1172 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790574, -27.546113), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9487,7 +9487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1173', 'Parada 1173', 'Parada 1173 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787575, -27.531894), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9495,7 +9495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1174', 'Parada 1174', 'Parada 1174 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787771, -27.532068), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9503,7 +9503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1175', 'Avenida Gobernador Juan Pujol y Paraguay', 'Parada 1175 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825393, -27.464005), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9511,7 +9511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1176', 'Elías Abad y Garcilazo de la Vega', 'Parada 1176 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849899, -27.483739), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9519,7 +9519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1177', 'Elías Abad y Doctor Carlos Benitez', 'Parada 1177 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850434, -27.485371), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9527,7 +9527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1178', 'Elías Abad y Vedia', 'Parada 1178 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.850751, -27.486776), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9535,7 +9535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1179', 'Avenida Alberdi y Gunitsky', 'Parada 1179 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851777, -27.488258), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9543,7 +9543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1180', 'Parada 1180', 'Parada 1180 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.851673, -27.490167), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9551,7 +9551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1181', 'Parada 1181', 'Parada 1181 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849733, -27.491841), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9559,7 +9559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1182', 'Francisco Pizarro y Avenida Juan De Garay', 'Parada 1182 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847553, -27.492248), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9567,7 +9567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1183', 'Avenida Juan De Garay y Zarate', 'Parada 1183 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.846460, -27.492448), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9575,7 +9575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1184', 'Avenida Juan De Garay y Balboa', 'Parada 1184 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844813, -27.492780), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9583,7 +9583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1185', 'Avenida Juan De Garay y Solís', 'Parada 1185 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.842790, -27.493115), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9591,7 +9591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1186', 'Avenida Juan De Garay y José Ramón Vidal', 'Parada 1186 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841090, -27.493419), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9599,7 +9599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1187', 'Juan Torres de Vera y Aragón y Mendoza', 'Parada 1187 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834718, -27.461194), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9607,7 +9607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1188', 'Juan Torres de Vera y Aragón y Catamarca', 'Parada 1188 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832166, -27.461258), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9615,7 +9615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1189', 'Avenida Gobernador Juan Pujol y Plácido Martínez', 'Parada 1189 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.827438, -27.462727), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9623,7 +9623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1190', 'Parada 1190', 'Parada 1190 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831069, -27.500166), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9631,7 +9631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1191', 'Pio XII y Lavalle', 'Parada 1191 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836613, -27.477223), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9639,7 +9639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1192', 'Sargento Juan Bautista Cabral y Gobernador Juan Vicente Pampín', 'Parada 1192 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821763, -27.459680), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9647,7 +9647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1193', 'Gobernador José María Rolón y Vélez Sarsfield', 'Parada 1193 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819041, -27.461575), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9655,7 +9655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1194', 'Avenida Gobernador Juan Pujol y Santa Fe', 'Parada 1194 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829030, -27.461296), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9663,7 +9663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1195', 'Cosquín', 'Parada 1195 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832110, -27.493731), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9671,7 +9671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1196', 'Vélez Sarsfield y Gobernador Felipe Cabral', 'Parada 1196 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819392, -27.465409), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9679,7 +9679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1197', 'Ciudad de Arequipa y Santa Cruz', 'Parada 1197 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832914, -27.489289), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9687,7 +9687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1198', 'Parada 1198', 'Parada 1198 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.753446, -27.450032), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9695,7 +9695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1199', 'Parada 1199', 'Parada 1199 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.753329, -27.450484), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9703,7 +9703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1200', 'Parada 1200', 'Parada 1200 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755498, -27.451765), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9711,7 +9711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1201', 'Parada 1201', 'Parada 1201 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.755368, -27.451967), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9719,7 +9719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1202', 'Parada 1202', 'Parada 1202 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.757736, -27.453774), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9727,7 +9727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1203', 'Parada 1203', 'Parada 1203 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.764981, -27.459198), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9735,7 +9735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1204', 'Parada 1204', 'Parada 1204 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.765096, -27.459040), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9743,7 +9743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1205', 'Teniente Jorge Alberto Vazquez', 'Parada 1205 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767627, -27.459563), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9751,7 +9751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1206', 'Teniente Jorge Alberto Vazquez', 'Parada 1206 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.767807, -27.459601), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9759,7 +9759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1207', 'Cuba', 'Parada 1207 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782708, -27.505965), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9767,7 +9767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1208', 'Parada 1208', 'Parada 1208 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779511, -27.502143), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9775,7 +9775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1209', 'Parada 1209', 'Parada 1209 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779486, -27.501857), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9783,7 +9783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1210', 'Presidente Juan Domingo Perón y Trento', 'Parada 1210 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781354, -27.490446), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9791,7 +9791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1211', 'Turin y Presidente Juan Domingo Perón', 'Parada 1211 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783746, -27.490118), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9799,7 +9799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1212', 'Presidente Juan Domingo Perón y Sánchez de Bustamante', 'Parada 1212 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789384, -27.489224), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9807,7 +9807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1213', 'Avenida Medrano y Necochea', 'Parada 1213 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798765, -27.484287), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9815,7 +9815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1214', 'Avenida Independencia y Godoy Cruz', 'Parada 1214 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789914, -27.483984), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9823,7 +9823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1215', 'Parada 1215', 'Parada 1215 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792197, -27.500485), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9831,7 +9831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1216', 'Parada 1216', 'Parada 1216 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.792244, -27.500325), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9839,7 +9839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1217', 'San Fransisco de Asís y Montecarlo', 'Parada 1217 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.796100, -27.493989), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9847,7 +9847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1218', 'Río de Janeiro y Sánchez de Bustamante', 'Parada 1218 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.790448, -27.496799), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9855,7 +9855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1219', 'Parada 1219', 'Parada 1219 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777214, -27.515993), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9863,7 +9863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1220', 'Parada 1220', 'Parada 1220 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779101, -27.519504), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9871,7 +9871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1221', 'Parada 1221', 'Parada 1221 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781287, -27.518032), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9879,7 +9879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1222', 'Parada 1222', 'Parada 1222 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784450, -27.516448), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9887,7 +9887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1223', 'Parada 1223', 'Parada 1223 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782823, -27.513522), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9895,7 +9895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1224', 'Turin y Suecia', 'Parada 1224 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.785748, -27.505329), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9903,7 +9903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1227', 'Parada 1227', 'Parada 1227 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800185, -27.510590), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9911,7 +9911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1228', 'Parada 1228', 'Parada 1228 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799240, -27.510714), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9919,7 +9919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1229', 'Parada 1229', 'Parada 1229 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798173, -27.509812), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9927,7 +9927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1230', 'Parada 1230', 'Parada 1230 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801298, -27.504471), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9935,7 +9935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1231', 'Parada 1231', 'Parada 1231 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802255, -27.504384), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9943,7 +9943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1232', 'Avenida Juan Ramón Vidal y Cádiz', 'Parada 1232 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816750, -27.490259), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9951,7 +9951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1233', 'Avenida Juan Ramón Vidal y Avenida Cazadores Correntinos', 'Parada 1233 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816190, -27.487098), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9959,7 +9959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1234', 'Avenida Juan Ramón Vidal y Alberti', 'Parada 1234 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816513, -27.487494), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9967,7 +9967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1235', 'Avenida Juan Ramón Vidal y Andalucía', 'Parada 1235 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817208, -27.491121), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9975,7 +9975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1236', 'Alta Gracia', 'Parada 1236 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813187, -27.508071), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9983,7 +9983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1237', 'Parada 1237', 'Parada 1237 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768536, -27.461394), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9991,7 +9991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1238', 'Parada 1238', 'Parada 1238 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.768505, -27.461222), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -9999,7 +9999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1239', 'México y Avenida Armenia', 'Parada 1239 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.814215, -27.467465), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10007,7 +10007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1240', 'Alta Gracia y Avenida Maipú', 'Parada 1240 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813136, -27.507929), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10015,7 +10015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1241', 'Parada 1241', 'Parada 1241 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831205, -27.501066), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10023,7 +10023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1242', 'San Martín y Salta', 'Parada 1242 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839455, -27.469479), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10031,7 +10031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1249', 'Avenida Chacabuco y Almirante Brown', 'Parada 1249 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813691, -27.474150), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10039,7 +10039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1250', 'Avenida Presidente Doctor Raúl Alfonsín y Tacuari', 'Parada 1250 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804422, -27.473121), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10047,7 +10047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1251', 'Avenida Presidente Doctor Raúl Alfonsín y Los Tilos', 'Parada 1251 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801554, -27.473939), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10055,7 +10055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1252', 'Avenida Presidente Doctor Raúl Alfonsín y Rio Juramento', 'Parada 1252 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798525, -27.474833), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10063,7 +10063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1253', 'Avenida Presidente Doctor Raúl Alfonsín y Avenida Raúl Alfonsín', 'Parada 1253 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795938, -27.475364), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10071,7 +10071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1254', 'Avenida Presidente Doctor Raúl Alfonsín y Gascón', 'Parada 1254 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793581, -27.475791), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10079,7 +10079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1255', 'Avenida Presidente Doctor Raúl Alfonsín y Morelos', 'Parada 1255 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791069, -27.476211), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10087,7 +10087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1256', 'Avenida Federico Narciso Laprida y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1256 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788598, -27.476088), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10095,7 +10095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1257', 'Avenida Federico Narciso Laprida y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1257 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788439, -27.476102), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10103,7 +10103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1258', 'Avenida Federico Narciso Laprida y Olivos', 'Parada 1258 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788159, -27.474570), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10111,7 +10111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1259', 'Avenida Federico Narciso Laprida y Laplace', 'Parada 1259 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788225, -27.473778), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10119,7 +10119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1260', 'Gallardo y Avenida Federico Narciso Laprida', 'Parada 1260 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787964, -27.473181), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10127,7 +10127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1261', 'Avenida Federico Narciso Laprida y Heredia', 'Parada 1261 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787986, -27.472216), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10135,7 +10135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1262', 'Avenida Federico Narciso Laprida y De La Ferrere', 'Parada 1262 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787651, -27.471029), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10143,7 +10143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1263', 'Avenida Federico Narciso Laprida y De La Ferrere', 'Parada 1263 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787800, -27.470934), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10151,7 +10151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1264', 'Avenida Presidente Doctor Raúl Alfonsín y Descartes', 'Parada 1264 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786451, -27.477071), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10159,7 +10159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1265', 'Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1265 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782649, -27.478343), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10167,7 +10167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1266', 'Parada 1266', 'Parada 1266 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.782510, -27.483164), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10175,7 +10175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1267', 'Parada 1267', 'Parada 1267 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779571, -27.490343), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10183,7 +10183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1268', 'Parada 1268', 'Parada 1268 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777628, -27.494217), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10191,7 +10191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1269', 'Parada 1269', 'Parada 1269 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774920, -27.493634), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10199,7 +10199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1270', 'Parada 1270', 'Parada 1270 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.773065, -27.494151), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10207,7 +10207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1271', 'Parada 1271', 'Parada 1271 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.773268, -27.495378), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10215,7 +10215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1272', 'Parada 1272', 'Parada 1272 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.772346, -27.496330), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10223,7 +10223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1273', 'Parada 1273', 'Parada 1273 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.771064, -27.494256), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10231,7 +10231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1274', 'Parada 1274', 'Parada 1274 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.771746, -27.492824), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10239,7 +10239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1286', 'Avenida Presidente Doctor Raúl Alfonsín y Descartes', 'Parada 1286 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786503, -27.477243), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10247,7 +10247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1287', 'Avenida Presidente Doctor Raúl Alfonsín y Sánchez de Bustamante', 'Parada 1287 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788080, -27.476890), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10255,7 +10255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1288', 'Avenida Presidente Doctor Raúl Alfonsín y Pedro Araoz', 'Parada 1288 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791453, -27.476295), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10263,7 +10263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1289', 'Avenida Presidente Doctor Raúl Alfonsín y Gascón', 'Parada 1289 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793096, -27.476045), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10271,7 +10271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1290', 'Avenida Raúl Alfonsín y Fray Rodríguez', 'Parada 1290 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795739, -27.475555), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10279,7 +10279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1291', 'Avenida Presidente Doctor Raúl Alfonsín y Las Piedras', 'Parada 1291 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799212, -27.474777), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10287,7 +10287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1292', 'Avenida Presidente Doctor Raúl Alfonsín y Niño Jesús', 'Parada 1292 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.800589, -27.474372), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10295,7 +10295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1293', 'Avenida Presidente Doctor Raúl Alfonsín y Resoagli', 'Parada 1293 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803618, -27.473478), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10303,7 +10303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1294', 'Avenida Federico Narciso Laprida y De La Ferrere', 'Parada 1294 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787797, -27.470937), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10311,7 +10311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1295', 'Avenida Federico Narciso Laprida y De La Ferrere', 'Parada 1295 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787642, -27.471027), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10319,7 +10319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1296', 'Avenida Federico Narciso Laprida y Heredia', 'Parada 1296 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787983, -27.472221), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10327,7 +10327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1297', 'Gallardo y Avenida Federico Narciso Laprida', 'Parada 1297 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787969, -27.473184), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10335,7 +10335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1298', 'Avenida Federico Narciso Laprida y Laplace', 'Parada 1298 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788228, -27.473783), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10343,7 +10343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1299', 'Avenida Federico Narciso Laprida y Olivos', 'Parada 1299 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788156, -27.474575), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10351,7 +10351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1300', 'Avenida Federico Narciso Laprida y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1300 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788601, -27.476093), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10359,7 +10359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1301', 'Avenida Federico Narciso Laprida y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1301 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.788433, -27.476100), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10367,7 +10367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1302', '17 De Octubre y Pasaje Las Flores', 'Parada 1302 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839797, -27.493276), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10375,7 +10375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1303', 'Cosquín y Magallanes', 'Parada 1303 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.837827, -27.492989), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10383,7 +10383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1304', 'Cosquín y Ciudad de Arequipa', 'Parada 1304 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.833797, -27.493525), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10391,7 +10391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1305', 'Cosquín', 'Parada 1305 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831681, -27.493812), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10399,7 +10399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1306', 'Cosquín y Avenida Paysandú', 'Parada 1306 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824977, -27.494754), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10407,7 +10407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1307', 'Parada 1307', 'Parada 1307 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821492, -27.501108), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10415,7 +10415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1308', 'Parada 1308', 'Parada 1308 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817464, -27.499274), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10423,7 +10423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1309', 'Avenida Maipú', 'Parada 1309 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815428, -27.497735), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10431,7 +10431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1310', 'Avenida Maipú y Tampico', 'Parada 1310 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817924, -27.493959), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10439,7 +10439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1311', 'Avenida Maipú', 'Parada 1311 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820012, -27.490656), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10447,7 +10447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1312', 'Avenida Maipú y Calle 147', 'Parada 1312 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822194, -27.487511), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10455,7 +10455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1313', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 1313 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823136, -27.486331), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10463,7 +10463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1314', 'Avenida Maipú y Madariaga', 'Parada 1314 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824098, -27.485161), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10471,7 +10471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1315', 'Hawai y Doctor Wenceslao Domínguez', 'Parada 1315 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807883, -27.487963), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10479,7 +10479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1316', 'Avenida Medrano y Larrea', 'Parada 1316 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799567, -27.491251), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10487,7 +10487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1317', 'Avenida Medrano y Presidente Nicolás Avellaneda', 'Parada 1317 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799545, -27.488117), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10495,7 +10495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1318', 'Presidente Juan Domingo Perón y Fray Rodríguez', 'Parada 1318 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798482, -27.487781), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10503,7 +10503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1319', 'Presidente Juan Domingo Perón y Turin', 'Parada 1319 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.783695, -27.490288), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10511,7 +10511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1320', 'Presidente Juan Domingo Perón y Trento', 'Parada 1320 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781369, -27.490648), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10519,7 +10519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1321', 'Presidente Juan Domingo Perón y Montecarlo', 'Parada 1321 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795236, -27.488005), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10527,7 +10527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1322', 'José Darragueira y Presidente Juan Domingo Perón', 'Parada 1322 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.797788, -27.488038), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10535,7 +10535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1323', 'Corcega y Avenida Medrano', 'Parada 1323 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799731, -27.489180), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10543,7 +10543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1324', 'Avenida Medrano y Larrea', 'Parada 1324 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799727, -27.491193), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10551,7 +10551,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1325', 'Avenida Cazadores Correntinos y Calle 149', 'Parada 1325 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820752, -27.486191), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10559,7 +10559,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1326', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 1326 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.822482, -27.487382), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10567,7 +10567,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1327', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 1327 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821719, -27.488410), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10575,7 +10575,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1328', 'Avenida Maipú', 'Parada 1328 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819945, -27.491076), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10583,7 +10583,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1329', 'Avenida Maipú', 'Parada 1329 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820468, -27.490062), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10591,7 +10591,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1330', 'Avenida Maipú y Tampico', 'Parada 1330 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817976, -27.494317), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10599,7 +10599,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1331', 'Avenida Maipú y Reconquista', 'Parada 1331 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.816755, -27.496082), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10607,7 +10607,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1332', 'Avenida Maipú', 'Parada 1332 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815438, -27.497994), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10615,7 +10615,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1333', 'Parada 1333', 'Parada 1333 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817340, -27.499108), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10623,7 +10623,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1334', 'Parada 1334', 'Parada 1334 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818730, -27.499750), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10631,7 +10631,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1335', 'Parada 1335', 'Parada 1335 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823925, -27.499878), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10639,7 +10639,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1336', 'Avenida Paysandú', 'Parada 1336 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825440, -27.499359), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10647,7 +10647,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1337', '17 De Octubre y Potosi', 'Parada 1337 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838363, -27.493255), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10655,7 +10655,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1338', '17 De Octubre y José Ramón Vidal', 'Parada 1338 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840610, -27.493182), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10663,7 +10663,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1339', 'Avenida Maipú y Ex Vias General Urquiza', 'Parada 1339 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823003, -27.486402), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10671,7 +10671,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1344', 'Avenida Teniente Ibáñez y Gobernador Doctor Contte', 'Parada 1344 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823990, -27.482597), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10679,7 +10679,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1345', 'Santa Rosa y Las Heras', 'Parada 1345 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820573, -27.482486), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10687,7 +10687,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1346', 'Las Heras y Chile', 'Parada 1346 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.818063, -27.482800), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10695,7 +10695,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1347', 'Las Heras y Avenida Juan Ramón Vidal', 'Parada 1347 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815827, -27.483076), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10703,7 +10703,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1348', 'Avenida Juan Ramón Vidal y Madariaga', 'Parada 1348 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815978, -27.484947), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10711,7 +10711,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1349', 'Avenida Doctor Jorge Manuel Romero y Elías Abad', 'Parada 1349 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.849333, -27.482934), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10719,7 +10719,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1350', 'Avenida Doctor Jorge Manuel Romero y Blas Benjamín de la Vega', 'Parada 1350 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848081, -27.483691), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10727,7 +10727,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1351', 'Juan Bautista Alberdi y Avenida Doctor Jorge Manuel Romero', 'Parada 1351 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845608, -27.484321), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10735,7 +10735,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1352', 'Juan Bautista Alberdi y Perugorría', 'Parada 1352 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845439, -27.482986), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10743,7 +10743,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1353', 'Juan Bautista Alberdi y Lamadrid', 'Parada 1353 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845160, -27.480821), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10751,7 +10751,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1354', 'Necochea y Juan Bautista Alberdi', 'Parada 1354 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844827, -27.478354), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10759,7 +10759,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1355', 'Juan Bautista Alberdi y Lavalle', 'Parada 1355 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844547, -27.476243), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10767,7 +10767,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1360', 'Buenos Aires y Moreno', 'Parada 1360 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840942, -27.472752), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10775,7 +10775,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1361', 'Avenida Alberdi y Blas Benjamín de la Vega', 'Parada 1361 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.848795, -27.486735), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10783,7 +10783,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1362', 'Avenida Alberdi y Pizarro', 'Parada 1362 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.847212, -27.486112), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10791,7 +10791,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1363', 'Avenida Alberdi y Elcano', 'Parada 1363 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.845998, -27.485604), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10799,7 +10799,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1364', 'La Pampa y Hernandarias', 'Parada 1364 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844564, -27.485496), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10807,7 +10807,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1365', 'Avenida Teniente Ibáñez y Balboa', 'Parada 1365 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843402, -27.484851), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10815,7 +10815,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1366', 'Avenida Teniente Ibáñez y Héroes Civiles', 'Parada 1366 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840568, -27.485168), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10823,7 +10823,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1367', 'Avenida Teniente Ibáñez y Héroes Civiles', 'Parada 1367 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.840643, -27.485026), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10831,7 +10831,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1368', 'Avenida Teniente Ibáñez y José Ramón Vidal', 'Parada 1368 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839274, -27.485162), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10839,7 +10839,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1369', 'Lisandro Segovia y Avenida Teniente Ibáñez', 'Parada 1369 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.836506, -27.485657), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10847,7 +10847,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1370', 'Doctor Vargas Gómez y Avenida Teniente Ibáñez', 'Parada 1370 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.835176, -27.485834), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10855,7 +10855,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1371', 'Avenida Teniente Ibáñez y Teniente Cundom', 'Parada 1371 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.834516, -27.485834), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10863,7 +10863,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1372', 'Teniente Cundom y Ciudad de Arequipa', 'Parada 1372 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.832652, -27.485909), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10871,7 +10871,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1373', 'Avenida Teniente Ibáñez y Avenida José Manuel Estrada', 'Parada 1373 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831255, -27.484912), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10879,7 +10879,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1374', 'Avenida José Manuel Estrada y El Chocón', 'Parada 1374 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830940, -27.487262), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10887,7 +10887,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1375', 'El Chocón y Avenida José Manuel Estrada', 'Parada 1375 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830687, -27.486924), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10895,7 +10895,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1376', 'Avenida José Manuel Estrada y Viedma', 'Parada 1376 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830961, -27.487907), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10903,7 +10903,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1377', 'Avenida José Manuel Estrada y Chubut', 'Parada 1377 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830989, -27.489010), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10911,7 +10911,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1378', 'Río Negro y Ushuaia', 'Parada 1378 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830725, -27.488668), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10919,7 +10919,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1379', 'Santa Cruz y Chubut', 'Parada 1379 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.830776, -27.489765), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10927,7 +10927,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1380', 'Avenida Patagonia y Avenida José Manuel Estrada', 'Parada 1380 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.831107, -27.490830), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10935,7 +10935,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1381', 'Avenida Patagonia', 'Parada 1381 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.829856, -27.491719), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10943,7 +10943,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1382', 'Avenida Patagonia', 'Parada 1382 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.828036, -27.491861), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10951,7 +10951,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1383', 'Avenida Patagonia y Avenida La Paz', 'Parada 1383 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826460, -27.492265), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10959,7 +10959,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1384', 'Avenida La Paz y Santa Cruz', 'Parada 1384 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.826056, -27.490605), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10967,7 +10967,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1385', 'Avenida La Paz y Calle 179', 'Parada 1385 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825611, -27.488990), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10975,7 +10975,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1386', 'Río Negro y Avenida La Paz', 'Parada 1386 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825805, -27.488951), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10983,7 +10983,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1387', 'Parada 1387', 'Parada 1387 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.825178, -27.484713), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10991,7 +10991,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1388', 'Avenida Maipú y Madariaga', 'Parada 1388 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824952, -27.484503), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -10999,7 +10999,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1389', 'Avenida Teniente Ibáñez y Ex Vias General Urquiza', 'Parada 1389 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.824913, -27.482867), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11007,7 +11007,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1390', 'Las Heras y Ferreira', 'Parada 1390 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819240, -27.482656), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11015,7 +11015,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1391', 'Las Heras y Ferreira', 'Parada 1391 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.819219, -27.482524), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11023,7 +11023,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1392', 'Las Heras y Chile', 'Parada 1392 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817918, -27.482701), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11031,7 +11031,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1393', 'Las Heras y Chile', 'Parada 1393 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.817940, -27.482803), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11039,7 +11039,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1394', 'Las Heras y Avenida Juan Ramón Vidal', 'Parada 1394 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815800, -27.483079), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11047,7 +11047,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1395', 'Las Heras y Avenida Juan Ramón Vidal', 'Parada 1395 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815808, -27.482927), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11055,7 +11055,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1396', 'General Paz y Avenida Juan Ramón Vidal', 'Parada 1396 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.815094, -27.480903), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11063,7 +11063,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1397', 'Avenida Chacabuco y Almirante Brown', 'Parada 1397 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.813697, -27.474169), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11071,7 +11071,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1398', 'Avenida Presidente Doctor Raúl Alfonsín y Reconquista', 'Parada 1398 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810409, -27.471565), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11079,7 +11079,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1399', 'Avenida Presidente Doctor Raúl Alfonsín y Gobernador José Gómez', 'Parada 1399 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.810537, -27.471820), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11087,7 +11087,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1400', 'Avenida Presidente Doctor Raúl Alfonsín y Juan José Castelli', 'Parada 1400 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808533, -27.472311), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11095,7 +11095,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1401', 'Avenida Presidente Doctor Raúl Alfonsín y Juan José Castelli', 'Parada 1401 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.808433, -27.472087), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11103,7 +11103,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1402', 'Avenida Presidente Doctor Raúl Alfonsín y Tacuari', 'Parada 1402 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.804428, -27.473140), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11111,7 +11111,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1403', 'Avenida Presidente Doctor Raúl Alfonsín y Resoagli', 'Parada 1403 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803632, -27.473473), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11119,7 +11119,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1404', 'Avenida Presidente Doctor Raúl Alfonsín y Los Tilos', 'Parada 1404 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.801551, -27.473939), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11127,7 +11127,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1405', 'Avenida Presidente Doctor Raúl Alfonsín y Las Piedras', 'Parada 1405 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.799246, -27.474767), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11135,7 +11135,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1406', 'Avenida Presidente Doctor Raúl Alfonsín y Rio Juramento', 'Parada 1406 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.798496, -27.474831), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11143,7 +11143,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1407', 'Avenida Presidente Doctor Raúl Alfonsín y Avenida Raúl Alfonsín', 'Parada 1407 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.795938, -27.475358), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11151,7 +11151,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1408', 'Avenida Raúl Alfonsín y Avenida Presidente Doctor Raúl Alfonsín', 'Parada 1408 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.794538, -27.475755), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11159,7 +11159,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1409', 'Avenida Presidente Doctor Raúl Alfonsín y Gascón', 'Parada 1409 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793575, -27.475790), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11167,7 +11167,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1410', 'Avenida Presidente Doctor Raúl Alfonsín y Gascón', 'Parada 1410 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.793122, -27.476030), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11175,7 +11175,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1411', 'Avenida Presidente Doctor Raúl Alfonsín y Pedro Araoz', 'Parada 1411 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791433, -27.476302), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11183,7 +11183,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1412', 'Avenida Presidente Doctor Raúl Alfonsín y Morelos', 'Parada 1412 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.791067, -27.476203), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11191,7 +11191,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1413', 'Avenida Presidente Doctor Raúl Alfonsín y Gorriti', 'Parada 1413 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789684, -27.476572), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11199,7 +11199,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1414', 'Avenida Federico Narciso Laprida y Heredia', 'Parada 1414 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787804, -27.472144), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11207,7 +11207,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1415', 'Avenida Federico Narciso Laprida y De La Ferrere', 'Parada 1415 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787564, -27.470666), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11215,7 +11215,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1416', 'Avenida Federico Narciso Laprida y Marechal', 'Parada 1416 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787280, -27.468733), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11223,7 +11223,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1417', 'Avenida Federico Narciso Laprida y Dupuy', 'Parada 1417 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787051, -27.467344), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11231,7 +11231,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1418', 'Dupuy y Avenida Federico Narciso Laprida', 'Parada 1418 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787137, -27.466758), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11239,7 +11239,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1419', 'Avenida Libertad y Avenida Federico Narciso Laprida', 'Parada 1419 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.786539, -27.465965), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11247,7 +11247,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1420', 'Avenida Libertad y UNNE', 'Parada 1420 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784102, -27.465372), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11255,7 +11255,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1421', 'Avenida Libertad y UNNE', 'Parada 1421 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.784140, -27.465215), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11263,7 +11263,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1422', 'Avenida Libertad y Nazario Benavídez', 'Parada 1422 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781761, -27.464780), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11271,7 +11271,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1423', 'Nazario Benavídez y Avenida Libertad', 'Parada 1423 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.781698, -27.464584), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11279,7 +11279,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1424', 'Avenida Libertad y Los Tulipanes', 'Parada 1424 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778311, -27.463888), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11287,7 +11287,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1425', 'Avenida Libertad y Las Margaritas', 'Parada 1425 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776470, -27.463440), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11295,7 +11295,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1426', 'Avenida Libertad y Las Margaritas', 'Parada 1426 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776486, -27.463263), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11303,7 +11303,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1427', 'Las Violetas Sur y Avenida Libertad', 'Parada 1427 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.774880, -27.462690), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11311,7 +11311,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1428', 'Remedios de Escalada y Las Violetas Sur', 'Parada 1428 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775221, -27.461473), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11319,7 +11319,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1429', 'Las Violetas Sur y Las Violetas Norte', 'Parada 1429 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775494, -27.460731), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11327,7 +11327,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1430', 'Las Violetas Norte y Las Gardenias', 'Parada 1430 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.775888, -27.459368), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11335,7 +11335,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1431', 'Las Violetas Norte y Las Gardenias', 'Parada 1431 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776234, -27.458517), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11343,7 +11343,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1432', 'Las Violetas Norte y Las Gardenias', 'Parada 1432 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.776854, -27.456747), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11351,7 +11351,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1433', 'Las Violetas Norte y Las Gardenias', 'Parada 1433 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777561, -27.454883), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11359,7 +11359,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1434', 'Las Violetas Norte y Las Gardenias', 'Parada 1434 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.777712, -27.454653), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11367,7 +11367,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1435', 'Las Violetas Norte y Las Gardenias', 'Parada 1435 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778171, -27.453265), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11375,7 +11375,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1436', 'Las Violetas Norte y Las Gardenias', 'Parada 1436 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778393, -27.452810), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11383,7 +11383,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1437', 'Las Violetas Norte y Las Gardenias', 'Parada 1437 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.778551, -27.451586), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11391,7 +11391,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1438', 'Las Violetas Norte y Las Gardenias', 'Parada 1438 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.779287, -27.449944), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11399,7 +11399,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1439', 'Las Violetas Norte', 'Parada 1439 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780448, -27.446555), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11407,7 +11407,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1440', 'Las Violetas Norte', 'Parada 1440 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.780716, -27.446004), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11415,7 +11415,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1441', 'Buenos Aires y Avenida 3 de Abril', 'Parada 1441 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.841115, -27.474600), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11423,7 +11423,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1442', 'Doctor José Miguel Guastavino y Avenida 3 de Abril', 'Parada 1442 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843034, -27.475287), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11431,7 +11431,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1443', 'Doctor José Miguel Guastavino y General Paz', 'Parada 1443 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843340, -27.477576), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11439,7 +11439,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1444', 'Doctor José Miguel Guastavino y Las Heras', 'Parada 1444 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843680, -27.479936), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11447,7 +11447,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1445', 'Doctor José Miguel Guastavino y Madariaga', 'Parada 1445 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.843975, -27.482297), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11455,7 +11455,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1446', 'Doctor José Miguel Guastavino y Avenida Doctor Jorge Manuel Romero', 'Parada 1446 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.844282, -27.484464), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11463,7 +11463,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1447', 'Salta y San Martín', 'Parada 1447 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.839304, -27.469400), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11471,7 +11471,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1448', 'Moreno y La Rioja', 'Parada 1448 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838816, -27.473078), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11479,7 +11479,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1449', 'Gobernador José María Rolón y Gobernador Antonio B. Gallino', 'Parada 1449 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.820340, -27.461578), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11487,7 +11487,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1450', 'Gobernador José María Rolón y Gobernador Juan Vicente Pampín', 'Parada 1450 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.821537, -27.461544), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11495,7 +11495,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1451', 'Gobernador José María Rolón y Gobernador Gelabert', 'Parada 1451 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.823659, -27.461431), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11503,7 +11503,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1452', 'Avenida Presidente Doctor Raúl Alfonsín y Lastra', 'Parada 1452 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.789657, -27.476451), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11511,7 +11511,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1500', 'Parada 1500', 'Parada 1500 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.802702, -27.523608), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11519,7 +11519,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1501', 'Parada 1501', 'Parada 1501 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806445, -27.523482), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11527,7 +11527,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1502', 'Parada 1502', 'Parada 1502 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.807814, -27.525116), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11535,7 +11535,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1503', 'Parada 1503', 'Parada 1503 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.806236, -27.527530), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
@@ -11543,7 +11543,7 @@ on conflict (source_ref) do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1504', 'Parada 1504', 'Parada 1504 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.803003, -27.526401), 4326)::geography, true)
-on conflict (source_ref) do update set
+on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
     geom = excluded.geom,
