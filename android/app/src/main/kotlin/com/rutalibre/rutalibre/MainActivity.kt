@@ -1,7 +1,9 @@
 package com.rutalibre.rutalibre
 
+import android.Manifest
 import android.app.KeyguardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -30,6 +32,11 @@ class MainActivity : FlutterActivity() {
     // vea sobre el bloqueo, pero no prenden una pantalla apagada desde una
     // actividad pausada; esto sí.
     private var screenLock: PowerManager.WakeLock? = null
+
+    // Si hay un viaje sostenido por TripService. Hace falta para saber, al
+    // volver del diálogo de notificaciones, si todavía hay una notificación
+    // que mostrar o si el usuario ya desarmó la alarma mientras decidía.
+    private var tripHeld = false
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -110,6 +117,8 @@ class MainActivity : FlutterActivity() {
                     // apagada. Ver TripService.
                     try {
                         TripService.start(this@MainActivity)
+                        tripHeld = true
+                        askForTripNotification()
                         result.success(true)
                     } catch (_: Exception) {
                         // Contesta FALSE y no un error: el lado de Dart usa
@@ -119,6 +128,7 @@ class MainActivity : FlutterActivity() {
                     }
                 }
                 "releaseTrip" -> {
+                    tripHeld = false
                     try {
                         TripService.stop(this@MainActivity)
                     } catch (_: Exception) {
@@ -189,6 +199,53 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    /**
+     * Pide el permiso de notificaciones (Android 13+) en el momento en que el
+     * usuario arma la alarma, que es cuando se entiende para qué es.
+     *
+     * Sin ese permiso el servicio corre igual y la alarma suena, pero la
+     * notificación del viaje NO aparece en la cortina: queda escondida en el
+     * administrador de tareas del sistema. Eso contradice el trato de
+     * TripService —el usuario tiene que ver que algo suyo usa el GPS— y es
+     * justo lo que el revisor de Play busca en el video de la declaración.
+     *
+     * Se pide sin bloquear: el servicio ya arrancó antes de preguntar. Si el
+     * usuario dice que no dos veces, Android deja de mostrar el diálogo solo
+     * y esto pasa a no hacer nada.
+     */
+    private fun askForTripNotification() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        requestPermissions(
+            arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+            NOTIFICATION_REQUEST,
+        )
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
+        // super primero: FlutterActivity reparte el resultado a los plugins
+        // (geolocator pide la ubicación por acá mismo).
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != NOTIFICATION_REQUEST || !tripHeld) return
+        if (grantResults.firstOrNull() != PackageManager.PERMISSION_GRANTED) return
+        // La notificación que el servicio publicó sin permiso no reaparece
+        // sola: volver a arrancarlo la publica de nuevo con el mismo id, sin
+        // crear un segundo servicio.
+        try {
+            TripService.start(this)
+        } catch (_: Exception) {
+            // El servicio sigue corriendo; solo no se ve el cartelito.
+        }
+    }
+
     /** Soltar un wakelock que no está tomado TIRA, así que se pregunta. */
     private fun releaseScreenLock() {
         try {
@@ -208,5 +265,10 @@ class MainActivity : FlutterActivity() {
         chimePlayer = null
         releaseScreenLock()
         super.onDestroy()
+    }
+
+    private companion object {
+        /** Cualquier número que no usen los plugins para sus pedidos. */
+        const val NOTIFICATION_REQUEST = 4207
     }
 }
