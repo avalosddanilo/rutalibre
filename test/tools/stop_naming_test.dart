@@ -106,4 +106,36 @@ void main() {
       );
     });
   });
+
+  group('isUninformativeStopName', () {
+    test('los que no ubican: líneas, "parada" a secas y el de tipeo', () {
+      for (final name in [
+        'Línea 8',
+        'Línea 8 y 104',
+        'Lineas 5, 7',
+        'Parada de colectivo',
+        'Parada',
+        'Parada 106 y 108A',
+        'Parada 105 110',
+        'Varias linas',
+        'Varias líneas',
+        '  ',
+      ]) {
+        expect(isUninformativeStopName(name), isTrue, reason: name);
+      }
+    });
+
+    test('los que sí ubican se respetan, aunque digan "parada" o "línea"', () {
+      for (final name in [
+        'Ávalos y Rivadavia',
+        'Parada Chaco-Corrientes',
+        'Terminal de la línea 110',
+        'Terminal de colectivos',
+        'Hospital Perrando',
+        'Parada C01832',
+      ]) {
+        expect(isUninformativeStopName(name), isFalse, reason: name);
+      }
+    });
+  });
 }

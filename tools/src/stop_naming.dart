@@ -134,6 +134,38 @@ String? deriveStopName(
   return main.name;
 }
 
+/// True si el `name` que trae OSM no dice DÓNDE está la parada.
+///
+/// El nombre de una parada existe para ubicarla: "Ávalos y Rivadavia". Pero
+/// en OSM hay paradas que se llaman como lo que PASA por ahí ("Línea 8 y
+/// 104"), como lo que SON ("Parada de colectivo") o con un error de tipeo
+/// que además no ubica nada ("Varias linas", la parada del 904 en el centro
+/// de Corrientes). En la guía, "Bajás en Línea 8" no le sirve a nadie.
+///
+/// Estos se tratan como si no tuvieran nombre: se busca la esquina, y el
+/// nombre original queda en la descripción. Los que sí ubican aunque digan
+/// "parada" ("Parada Chaco-Corrientes", "Terminal de la línea 110") se
+/// respetan: la lista es de lo que seguro no sirve, no de lo que se ve feo.
+bool isUninformativeStopName(String name) {
+  final n = name
+      .trim()
+      .toLowerCase()
+      .replaceAll('í', 'i')
+      .replaceAll(RegExp(r'\s+'), ' ');
+  if (n.isEmpty) return true;
+  // Solo lo que es: "Parada", "Parada de colectivo(s)", "Parada de bus".
+  if (RegExp(r'^parada( de (colectivos?|bus|omnibus|micros?))?$').hasMatch(n)) {
+    return true;
+  }
+  // Las líneas que paran: "Línea 8", "Línea 8 y 104", "Lineas 5, 7",
+  // "Parada 106 y 108A", "Parada 105 110", "Varias líneas".
+  const codes = r'[0-9]+[a-z]?([ ,/-]+(y )?[0-9]+[a-z]?)*';
+  if (RegExp('^(parada )?lineas? $codes\$').hasMatch(n)) return true;
+  if (RegExp('^parada $codes\$').hasMatch(n)) return true;
+  if (RegExp(r'^varias l(i|e)n').hasMatch(n)) return true;
+  return false;
+}
+
 /// Une dos calles respetando la eufonía del castellano:
 /// "Italia **e** Yrigoyen", no "Italia y Yrigoyen".
 String joinStreetNames(String first, String second) {

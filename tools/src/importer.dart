@@ -241,20 +241,24 @@ ImportResult buildImport(OsmInput input) {
 
     String resolvedName;
     String? description;
-    if (name != null && name.isNotEmpty) {
+    if (name != null && name.isNotEmpty && !isUninformativeStopName(name)) {
       resolvedName = name;
       description = fallbackCode;
     } else {
+      // Sin nombre, o con uno que no ubica ("Línea 8", "Varias linas"):
+      // la esquina. El nombre de OSM no se tira; queda en la descripción,
+      // que es donde ya iba el código de la concesionaria.
+      final osmName = (name != null && name.isNotEmpty) ? name : null;
       final derived = streetIndex == null
           ? null
           : deriveStopName(point, streetIndex);
       if (derived != null) {
         resolvedName = derived;
-        description = fallbackCode;
+        description = osmName ?? fallbackCode;
         derivedNames++;
       } else {
-        resolvedName = fallbackCode ?? 'Parada sin nombre';
-        description = null;
+        resolvedName = osmName ?? fallbackCode ?? 'Parada sin nombre';
+        description = osmName != null ? fallbackCode : null;
       }
     }
 
@@ -269,8 +273,9 @@ ImportResult buildImport(OsmInput input) {
   }
   if (derivedNames > 0) {
     warnings.add(
-      '$derivedNames paradas sin nombre en OSM fueron bautizadas '
-      'con la esquina más cercana del callejero',
+      '$derivedNames paradas sin nombre en OSM (o con uno que no ubica, '
+      'como "Línea 8") fueron bautizadas con la esquina más cercana del '
+      'callejero',
     );
   }
   stops.sort((a, b) => a.osmNodeId.compareTo(b.osmNodeId));
