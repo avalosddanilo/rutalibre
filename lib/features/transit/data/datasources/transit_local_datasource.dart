@@ -98,7 +98,15 @@ final class SharedPrefsTransitLocalDataSource
   // y `getAllStops` no vuelven a la red si tienen datos—, así que sin subir la
   // versión el enlace para corregir la parada en OSM no aparecería nunca en un
   // teléfono que ya abrió la app.
-  static const _prefix = 'ruta_libre_cache_v5';
+  //
+  // v6: no cambió el formato, cambiaron los DATOS. El 12 de octubre entraron
+  // las 1357 paradas de Corrientes capital (seed de la Municipalidad), y la
+  // 1.1 dejó de dibujar la capa vieja de OSM que las suplía. Un teléfono con
+  // la cache de la 1.0 tenía el listado sin Corrientes y la cache solo se
+  // refresca cuando vence (7 días): el mapa de Corrientes quedaba vacío, con
+  // apenas las paradas del 904 y el 906. Subir la versión obliga a bajarlo
+  // de nuevo en el primer arranque de la 1.1.
+  static const _prefix = 'ruta_libre_cache_v6';
 
   static const _linesKey = '$_prefix/lines';
 
