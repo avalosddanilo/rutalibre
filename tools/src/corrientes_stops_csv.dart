@@ -143,6 +143,29 @@ const _sameStopMeters = 5.0;
 
 String _clean(String v) => v.trim().replaceAll("'", '').trim();
 
+/// Por qué una corrida de paradas NO se puede escribir, o `null` si se puede.
+///
+/// Un seed sin paradas no es "un seed con menos datos": reemplaza al
+/// versionado y se lleva las 2202 entradas de secuencia, que son lo que deja
+/// planificar en Corrientes. Pasó: el CI regeneró sin paradas, escribió
+/// `Paradas: 0` sin chistar y el diff borraba 24 000 líneas. Si la fuente
+/// vino vacía, no es un CSV (el archivo a veces devuelve una página de
+/// error con 200) o nada empareja con un recorrido, el importador tiene que
+/// fallar y no escribir.
+String? stopsFailure({
+  required int parsed,
+  required CorrientesStopsResult placed,
+}) {
+  if (parsed == 0) {
+    return 'la fuente de paradas no trajo ninguna parada legible';
+  }
+  if (placed.stops.isEmpty || placed.byVariant.isEmpty) {
+    return 'se leyeron $parsed paradas pero ninguna quedó ubicada en un '
+        'recorrido';
+  }
+  return null;
+}
+
 /// Empareja el código de ramal del CSV con un recorrido del seed.
 ///
 /// Los dos lados nombran los ramales distinto —el CSV dice `105-C-250VIV` y

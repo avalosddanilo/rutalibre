@@ -133,6 +133,34 @@ void main() {
     );
   });
 
+  group('sameSeedIgnoringDate', () {
+    const seed =
+        '-- Fecha de extracción: 2026-09-21T03:59:02.427352Z\n'
+        '-- Líneas: 10 | Recorridos: 60 | Paradas: 1357\n'
+        'begin;\n';
+
+    test('la fecha sola no cuenta como cambio', () {
+      expect(
+        sameSeedIgnoringDate(
+          seed,
+          seed.replaceFirst('2026-09-21T03:59:02.427352Z', '2026-10-13T00:00Z'),
+        ),
+        isTrue,
+      );
+    });
+
+    test('CRLF contra LF no cuenta como cambio', () {
+      expect(sameSeedIgnoringDate(seed.replaceAll('\n', '\r\n'), seed), isTrue);
+    });
+
+    test('cualquier otro cambio sí', () {
+      expect(
+        sameSeedIgnoringDate(seed, seed.replaceFirst('1357', '0')),
+        isFalse,
+      );
+    });
+  });
+
   group('importCorrientes — datos sucios', () {
     test('descarta (sin inventar) una fila sin sentido declarado', () {
       const sucio = '''

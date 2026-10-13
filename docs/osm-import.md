@@ -194,11 +194,8 @@ del lado correntino son micros interurbanos de larga distancia. Sus
 recorridos salen del portal municipal:
 
 ```bash
-# Solo recorridos
-dart run tools/corrientes_import.dart
-
 # Recorridos + PARADAS (baja el CSV archivado del Internet Archive)
-dart run tools/corrientes_import.dart --con-paradas
+dart run tools/corrientes_import.dart
 
 # Con un CSV de paradas local, y con el callejero crudo de Overpass
 dart run tools/corrientes_import.dart --paradas paradas.csv --calles osm_streets.json
@@ -206,6 +203,13 @@ dart run tools/corrientes_import.dart --paradas paradas.csv --calles osm_streets
 
 Genera `supabase/seed/seed_corrientes.sql`: **10 líneas, 60 recorridos y
 1357 paradas** en 2202 entradas de secuencia.
+
+Las paradas **ya no son opcionales** (antes hacía falta `--con-paradas`, que
+se sigue aceptando pero no cambia nada). Si la fuente viene vacía, no es un
+CSV o no se puede bajar, el importador **falla y no escribe**: un seed sin
+paradas borraría el planificador de Corrientes. Y si lo único que cambiaría
+es la fecha de extracción, deja el archivo como está, así que regenerar sin
+cambios da un diff limpio — que es lo que chequea `verificar-seed` en el CI.
 
 ### Las paradas
 

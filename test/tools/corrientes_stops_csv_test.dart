@@ -218,4 +218,52 @@ void main() {
       expect(result.stops, isEmpty);
     });
   });
+
+  // El caso que rompió `verificar-seed`: el importador escribió un seed con
+  // `Paradas: 0` y el diff borraba 24 000 líneas. Tiene que frenar antes.
+  group('stopsFailure', () {
+    const encabezado =
+        "gid,'tipo_recorrido','cantidad_paradas','linea_ramal','lng','lat'\n";
+    final variants = [_variant('9', 'A', 0, _avenidaRecta)];
+
+    String? fallaCon(String csv) {
+      final (crudas, _) = parseMunicipalStops(csv);
+      return stopsFailure(
+        parsed: crudas.length,
+        placed: placeStops(stops: crudas, variants: variants),
+      );
+    }
+
+    test('frena si la fuente vino vacía', () {
+      expect(fallaCon(''), isNotNull);
+      expect(fallaCon(encabezado), isNotNull);
+    });
+
+    test('frena si lo que llegó no es el CSV (página de error con 200)', () {
+      expect(
+        fallaCon('<!DOCTYPE html><html><body>Error</body></html>'),
+        isNotNull,
+      );
+    });
+
+    test('frena si se leyeron paradas pero ninguna entró en un recorrido', () {
+      final falla = fallaCon(
+        '$encabezado'
+        "1,'IDA',1,'9-Z','-58.83','-27.458'\n"
+        "2,'IDA',2,'9-Z','-58.83','-27.455'\n",
+      );
+      expect(falla, contains('2 paradas'));
+    });
+
+    test('deja pasar una corrida con paradas ubicadas', () {
+      expect(
+        fallaCon(
+          '$encabezado'
+          "1,'IDA',1,'9-A','-58.83','-27.458'\n"
+          "2,'IDA',2,'9-A','-58.83','-27.455'\n",
+        ),
+        isNull,
+      );
+    });
+  });
 }

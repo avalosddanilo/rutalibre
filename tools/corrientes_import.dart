@@ -5,17 +5,24 @@
 ///   dart run tools/corrientes_import.dart --csv ruta/al/recorridosurbanos.csv
 ///   dart run tools/corrientes_import.dart --paradas ruta/al/paradas.csv
 ///
-/// Con `--paradas` también carga las PARADAS del municipio y las ordena
-/// sobre cada recorrido, que es lo que hace que el planificador funcione en
-/// Corrientes. De dónde sale ese CSV y por qué se puede usar:
+/// Carga también las PARADAS del municipio y las ordena sobre cada
+/// recorrido, que es lo que hace que el planificador funcione en Corrientes.
+/// Por defecto las baja de la copia del Internet Archive; `--paradas` usa un
+/// CSV local. De dónde sale ese CSV y por qué se puede usar:
 /// `docs/corrientes-paradas-archivadas.md`.
+///
+/// Las paradas NO son opcionales: si la fuente viene vacía o no se puede
+/// bajar, el importador falla y no escribe nada. Un seed sin paradas borra
+/// el planificador de Corrientes entero (ver `stopsFailure`).
 ///
 /// `--calles` apunta a la respuesta de Overpass con el callejero (la que
 /// deja `corrientes_stops_import.dart --cache`): sin eso las paradas se
 /// llaman "Parada 1234", que es verdadero pero inútil.
 ///
 /// No toca la base: emite `supabase/seed/seed_corrientes.sql` para poder
-/// revisarlo en el diff antes de aplicarlo.
+/// revisarlo en el diff antes de aplicarlo. Si lo único que cambiaría es la
+/// fecha de extracción, deja el archivo como está: así regenerar sin cambios
+/// da un diff limpio.
 library;
 
 import 'dart:convert';
@@ -40,9 +47,6 @@ const _stopsUrl =
     'bd941d41-8906-4494-9e31-135d4c309de2/resource/'
     'a8d8893c-4e50-497f-85e8-4e57de960e2c/download/paradas-colectivos.csv';
 
-/// Cuántas paradas se quedaron sin esquina, para el resumen final.
-int Function()? _sinEsquina;
-
 Future<void> main(List<String> args) async {
   final localCsv = _flag(args, '--csv');
   final outputPath = _flag(args, '--out') ?? _outputPath;
@@ -58,54 +62,58 @@ Future<void> main(List<String> args) async {
 
   final result = importCorrientes(csv);
 
-  // Paradas: opcionales, porque el recorrido solo ya sirve para dibujar el
-  // mapa. Sin ellas el planificador no funciona, pero la app tampoco miente.
-  CorrientesStopsResult? stops;
-  String? stopsUrl;
+  // Paradas: siempre. Antes eran opt-in (`--con-paradas`) y el CI, que
+  // corría sin el flag, regeneraba un seed sin ellas. `--con-paradas` se
+  // sigue aceptando para no romper a quien lo tenga anotado, pero ya no
+  // cambia nada.
+  final String stopsUrl;
+  final String paradasCsv;
   final paradasArg = _flag(args, '--paradas');
   final callesArg = _flag(args, '--calles');
-  if (paradasArg != null || args.contains('--con-paradas')) {
-    final String paradasCsv;
-    if (paradasArg != null) {
-      stdout.writeln('Leyendo paradas de $paradasArg');
-      paradasCsv = File(paradasArg).readAsStringSync();
-      stopsUrl = paradasArg;
-    } else {
-      stdout.writeln('Bajando las paradas del archivo…');
-      paradasCsv = await _download(_stopsUrl);
-      stopsUrl = _stopsUrl;
-    }
-    final (crudas, avisos) = parseMunicipalStops(paradasCsv);
-    stops = placeStops(stops: crudas, variants: result.variants);
-    for (final a in avisos) {
-      stdout.writeln('  aviso: $a');
-    }
+  if (paradasArg != null) {
+    stdout.writeln('Leyendo paradas de $paradasArg');
+    paradasCsv = File(paradasArg).readAsStringSync();
+    stopsUrl = paradasArg;
+  } else {
+    stdout.writeln('Bajando las paradas del archivo…');
+    paradasCsv = await _download(_stopsUrl);
+    stopsUrl = _stopsUrl;
+  }
+  final (crudas, avisos) = parseMunicipalStops(paradasCsv);
+  final stops = placeStops(stops: crudas, variants: result.variants);
+  for (final a in avisos) {
+    stdout.writeln('  aviso: $a');
+  }
+  final falla = stopsFailure(parsed: crudas.length, placed: stops);
+  if (falla != null) {
+    stderr
+      ..writeln('')
+      ..writeln('ERROR: $falla.')
+      ..writeln('  Fuente: $stopsUrl')
+      ..writeln('  No se escribió $outputPath: un seed sin paradas borraría')
+      ..writeln('  el planificador de Corrientes.');
+    exit(1);
   }
 
   // El callejero, para bautizar cada parada con su esquina. Es el mismo
   // índice que usan los dos importadores de OSM.
-  String Function(GeoPoint)? nombrar;
-  if (stops != null) {
-    // Con `--calles` usa la respuesta cruda de Overpass (mejor geometría);
-    // sin eso, el asset de alturas que ya viaja en el repo. Nunca inventa:
-    // si el callejero no alcanza, la parada se queda con su código.
-    final json =
-        jsonDecode(
-              File(callesArg ?? 'assets/addresses.json').readAsStringSync(),
-            )
-            as Map<String, dynamic>;
-    final index = StreetIndex(
-      callesArg != null
-          ? streetsFromOverpass(json)
-          : streetsFromAddressAsset(json),
-    );
-    var sinEsquina = 0;
-    nombrar = (p) {
-      final derivado = deriveStopName(p, index);
-      if (derivado == null) sinEsquina++;
-      return derivado ?? '';
-    };
-    _sinEsquina = () => sinEsquina;
+  //
+  // Con `--calles` usa la respuesta cruda de Overpass (mejor geometría); sin
+  // eso, el asset de alturas que ya viaja en el repo. Nunca inventa: si el
+  // callejero no alcanza, la parada se queda con su código.
+  final json =
+      jsonDecode(File(callesArg ?? 'assets/addresses.json').readAsStringSync())
+          as Map<String, dynamic>;
+  final index = StreetIndex(
+    callesArg != null
+        ? streetsFromOverpass(json)
+        : streetsFromAddressAsset(json),
+  );
+  var sinEsquina = 0;
+  String nombrar(GeoPoint p) {
+    final derivado = deriveStopName(p, index);
+    if (derivado == null) sinEsquina++;
+    return derivado ?? '';
   }
 
   final sql = emitCorrientesSql(
@@ -116,25 +124,25 @@ Future<void> main(List<String> args) async {
     stopsSourceUrl: stopsUrl,
     stopName: nombrar,
   );
-  File(outputPath).writeAsStringSync(sql);
+  final output = File(outputPath);
+  final sinCambios =
+      output.existsSync() &&
+      sameSeedIgnoringDate(output.readAsStringSync(), sql);
+  if (!sinCambios) output.writeAsStringSync(sql);
 
-  final enRecorridos = stops?.byVariant.values.fold(0, (n, v) => n + v.length);
-  final sinEsquina = _sinEsquina?.call();
+  final enRecorridos = stops.byVariant.values.fold(0, (n, v) => n + v.length);
   stdout
     ..writeln('')
     ..writeln('Líneas:     ${result.lines.length}')
     ..writeln('Recorridos: ${result.variants.length}')
     ..writeln(
-      'Paradas:    ${stops?.stops.length ?? 0}'
-      '${enRecorridos == null ? "" : " ($enRecorridos en secuencias)"}',
+      'Paradas:    ${stops.stops.length} ($enRecorridos en secuencias)',
     );
-  if (sinEsquina != null && sinEsquina > 0) {
+  if (sinEsquina > 0) {
     stdout.writeln('            $sinEsquina sin esquina derivada');
   }
-  if (stops != null) {
-    for (final w in stops.warnings) {
-      stdout.writeln('  · $w');
-    }
+  for (final w in stops.warnings) {
+    stdout.writeln('  · $w');
   }
 
   if (result.skipped.isNotEmpty) {
@@ -152,7 +160,11 @@ Future<void> main(List<String> args) async {
 
   stdout
     ..writeln('')
-    ..writeln('Escrito: $outputPath')
+    ..writeln(
+      sinCambios
+          ? 'Sin cambios: $outputPath ya coincide (salvo la fecha).'
+          : 'Escrito: $outputPath',
+    )
     ..writeln('Aplicalo DESPUÉS de la migración 0003.');
 }
 
