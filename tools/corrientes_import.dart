@@ -15,9 +15,10 @@
 /// bajar, el importador falla y no escribe nada. Un seed sin paradas borra
 /// el planificador de Corrientes entero (ver `stopsFailure`).
 ///
-/// `--calles` apunta a la respuesta de Overpass con el callejero (la que
-/// deja `corrientes_stops_import.dart --cache`): sin eso las paradas se
-/// llaman "Parada 1234", que es verdadero pero inútil.
+/// El callejero, para bautizar las paradas con su esquina, se baja de
+/// Overpass. `--calles ARCHIVO` usa una respuesta de Overpass ya bajada, y
+/// `--calles-asset` el asset de alturas, sin red (con ese, cerca de 500
+/// paradas quedan "Parada 1234", que es verdadero pero inútil).
 ///
 /// No toca la base: emite `supabase/seed/seed_corrientes.sql` para poder
 /// revisarlo en el diff antes de aplicarlo. Si lo único que cambiaría es la
@@ -31,6 +32,7 @@ import 'dart:io';
 import 'src/corrientes_import.dart';
 import 'src/corrientes_stops_csv.dart';
 import 'src/geometry.dart';
+import 'src/overpass.dart';
 import 'src/stop_naming.dart';
 
 const _sourceUrl =
@@ -38,6 +40,19 @@ const _sourceUrl =
     'resource/b60f67ef-bf0e-459e-98ff-2cde25c486dc/download/recorridosurbanos.csv';
 
 const _outputPath = 'supabase/seed/seed_corrientes.sql';
+
+/// Corrientes capital y alrededores: (sur, oeste, norte, este).
+const _streetsBbox = '-27.60,-58.88,-27.40,-58.68';
+
+/// El mismo filtro de calles que el importador del Gran Resistencia.
+const _streetsQuery =
+    '''
+[out:json][timeout:180];
+way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street)\$"]["name"]($_streetsBbox);
+out body;
+>;
+out skel qt;
+''';
 
 /// El recurso de paradas que el municipio retiró del portal, recuperado del
 /// Internet Archive. Ver `docs/corrientes-paradas-archivadas.md`.
@@ -98,17 +113,30 @@ Future<void> main(List<String> args) async {
   // El callejero, para bautizar cada parada con su esquina. Es el mismo
   // índice que usan los dos importadores de OSM.
   //
-  // Con `--calles` usa la respuesta cruda de Overpass (mejor geometría); sin
-  // eso, el asset de alturas que ya viaja en el repo. Nunca inventa: si el
-  // callejero no alcanza, la parada se queda con su código.
-  final json =
-      jsonDecode(File(callesArg ?? 'assets/addresses.json').readAsStringSync())
-          as Map<String, dynamic>;
-  final index = StreetIndex(
-    callesArg != null
-        ? streetsFromOverpass(json)
-        : streetsFromAddressAsset(json),
-  );
+  // Por defecto se baja de Overpass, como en el importador del Gran
+  // Resistencia: con el asset de alturas —que era el default— 496 de las
+  // 1357 paradas quedaban "Parada 1234", porque esas alturas son portales y
+  // no el eje de la calle. `--calles ARCHIVO` usa una respuesta de Overpass
+  // ya bajada, y `--calles-asset` el asset, para trabajar sin red. Nunca
+  // inventa: si el callejero no alcanza, la parada se queda con su código.
+  final List<NamedStreet> streets;
+  if (args.contains('--calles-asset')) {
+    stdout.writeln('Callejero: assets/addresses.json (sin red)');
+    streets = streetsFromAddressAsset(
+      jsonDecode(File('assets/addresses.json').readAsStringSync())
+          as Map<String, dynamic>,
+    );
+  } else if (callesArg != null) {
+    stdout.writeln('Callejero: $callesArg');
+    streets = streetsFromOverpass(
+      jsonDecode(File(callesArg).readAsStringSync()) as Map<String, dynamic>,
+    );
+  } else {
+    streets = streetsFromOverpass(
+      await loadOverpass(label: 'callejero', query: _streetsQuery),
+    );
+  }
+  final index = StreetIndex(streets);
   var sinEsquina = 0;
   String nombrar(GeoPoint p) {
     final derivado = deriveStopName(p, index);
