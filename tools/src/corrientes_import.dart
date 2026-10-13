@@ -300,6 +300,22 @@ int compareLineCodes(String a, String b) {
   return a.compareTo(b);
 }
 
+/// Si dos seeds dicen lo mismo salvo la fecha de extracción.
+///
+/// La fecha cambia en cada corrida, así que sin esto regenerar nunca da un
+/// diff limpio y el chequeo del CI (`verificar-seed`) no puede pasar aunque
+/// los datos sean idénticos. Ignora también `\r\n` contra `\n`: en Windows
+/// el checkout trae CRLF y el importador escribe LF.
+bool sameSeedIgnoringDate(String a, String b) {
+  String normalize(String sql) => sql
+      .replaceAll('\r\n', '\n')
+      .replaceFirst(
+        RegExp(r'^-- Fecha de extracción: .*$', multiLine: true),
+        '',
+      );
+  return normalize(a) == normalize(b);
+}
+
 /// Genera el SQL de carga: idempotente y en una transacción.
 ///
 /// Estrategia de reimportación: primero se DESACTIVAN todos los recorridos
