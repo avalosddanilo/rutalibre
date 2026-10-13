@@ -67,7 +67,7 @@ Las paradas se ven de entrada, sin pedirte el GPS ni obligarte a elegir una
 línea. Tocás cualquiera y te dice qué colectivos pasan por ahí y a cuánto
 llegás caminando. Elegís una línea y ves su recorrido dibujado.
 
-1474 paradas y 133 recorridos del Gran Resistencia, y 1357 paradas y 60
+1474 paradas y 73 recorridos del Gran Resistencia, y 1357 paradas y 60
 recorridos de Corrientes capital.
 
 CUÁNTO SALE

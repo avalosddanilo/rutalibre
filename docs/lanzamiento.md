@@ -147,19 +147,74 @@ así cuando la prensa mire, ya hay gente usándola y opinando.
 
 ### El mensaje a los medios (mail o DM)
 
-> Hola, soy Danilo Avalos, de Resistencia. Acabo de publicar **Ruta Libre**,
-> una aplicación gratuita y sin publicidad para el transporte público del
-> Gran Resistencia y Corrientes: mapa de las 1400+ paradas, "¿cómo llego?"
-> con transbordos, guía paso a paso con contador de paradas en vivo, alarma
-> para no quedarse dormido en el colectivo, y buscador por dirección con
-> altura ("9 de Julio 1260"). La hice solo, con datos abiertos de
-> OpenStreetMap y del municipio de Corrientes.
+Dos versiones, porque la noticia no es la misma de cada lado del puente. Para
+los medios del Chaco, la noticia es la app. Para los de Corrientes, es que
+**desde el 12 de octubre funciona allá**: hasta esa fecha el planificador no
+contestaba viajes dentro de Corrientes capital (ver el commit `57de872`).
+
+**Antes de mandar cualquiera de las dos**, la frase del puente ("arma el viaje
+de un barrio de Resistencia a uno de Corrientes") tiene que estar probada en
+la app de verdad, con un viaje real. Si no da, se saca la frase: un
+periodista lo va a probar.
+
+#### Para medios del Chaco
+
+**Asunto**: App gratuita para moverse en colectivo por Resistencia y Corrientes, hecha en Barranqueras
+
+> Hola, soy Danilo Avalos, tengo 20 años y soy de Barranqueras. Publiqué
+> **Ruta Libre**, una aplicación gratuita y sin publicidad que te dice qué
+> colectivo tomar en el Gran Resistencia y en Corrientes capital: en qué
+> esquina subir, en cuál bajar, y con un transbordo si hace falta — también
+> para cruzar el puente.
 >
-> Les escribo porque creo que a sus lectores/oyentes les sirve, y porque
-> hay un tema de fondo: los horarios de los colectivos no los publica
-> ninguna fuente oficial, y con datos abiertos la app podría dar mucho más.
-> Si les interesa nota, tengo video del funcionamiento y estoy disponible.
+> Tiene más de 2800 paradas de 32 líneas, se busca por dirección con altura
+> ("9 de Julio 1260"), funciona sin señal, y tiene una alarma para no
+> quedarte dormido en el colectivo, que hice porque me pasó.
+>
+> La hice solo, con datos abiertos: OpenStreetMap, que mapea la comunidad, y
+> los datos que publica la Municipalidad de Corrientes.
+>
+> Hay un tema de fondo que creo que les puede interesar: los horarios de los
+> colectivos del Gran Resistencia no los publica ninguna fuente abierta. Con
+> esos datos la app podría dar mucho más.
+>
+> Si les sirve para una nota, tengo video del funcionamiento y estoy
+> disponible. [enlace de Play]
+
+#### Para medios de Corrientes
+
+**Asunto**: Desde esta semana, una app gratuita te dice qué colectivo tomar en Corrientes
+
+> Hola, soy Danilo Avalos, de Barranqueras. Publiqué **Ruta Libre**, una
+> aplicación gratuita y sin publicidad para moverse en colectivo, y desde
+> esta semana funciona también dentro de Corrientes capital: le decís a
+> dónde vas y te dice qué línea tomar, en qué parada subir y en cuál bajar,
+> con las 1357 paradas que publicó la Municipalidad.
+>
+> También sirve para cruzar: arma el viaje de un barrio de Resistencia a uno
+> de Corrientes, con el 904 y un transbordo.
+>
+> Es gratis, sin publicidad, sin cuenta, funciona sin señal, y tiene una
+> alarma para no quedarte dormido en el colectivo.
+>
+> Los datos son abiertos: los recorridos y las paradas de Corrientes salen
+> de los datos de la Municipalidad, y el resto de OpenStreetMap.
+>
+> Si les interesa para una nota, tengo video y estoy disponible.
 > [enlace de Play]
+
+#### Por qué estas palabras y no otras
+
+- **"Que publicó la Municipalidad"**, no "que conseguí": el dato es de
+  ellos, y nombrarlos bien es la mitad de la relación que hace falta para
+  pedirles los horarios después.
+- **Sin "en vivo" ni "en tiempo real"** en ningún lado. La versión anterior
+  decía "contador de paradas en vivo": se refería a tu posición, pero un
+  periodista lo lee como colectivos en vivo, y eso la app no lo hace.
+- **Sin "la primera" ni "la única".** No está verificado, y es lo primero
+  que se discute en los comentarios de una nota.
+- **La edad va en el de Chaco y no en el de Corrientes**: allá la historia
+  es la del pibe de acá; en Corrientes, la de que ahora funciona allá.
 
 ## Qué decir cuando te llamen (y qué no)
 
