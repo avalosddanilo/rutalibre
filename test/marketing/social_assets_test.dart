@@ -123,7 +123,7 @@ class _Slide {
 ///
 /// El orden no es caprichoso: `c1` es la tesis (lo único que no se puede
 /// copiar), `c2` presenta el producto, y `c3` y `c4` son las dos historias
-/// que `docs/lanzamiento.md` manda contar primero — la alarma y las alturas.
+/// que `privado/lanzamiento.md` manda contar primero — la alarma y las alturas.
 const _carruseles = <String, List<_Slide>>{
   // C1 · Va primero: es lo único que ninguna otra app de transporte puede
   // copiar, porque para copiarlo tendría que dejar de mentir.
@@ -189,7 +189,7 @@ const _carruseles = <String, List<_Slide>>{
   ],
 
   // C3 · La alarma. Es la función preferida del que la hizo y la que tiene
-  // historia humana atrás — ver el pitch de `docs/lanzamiento.md`.
+  // historia humana atrás — ver el pitch de `privado/lanzamiento.md`.
   'c3': [
     _Slide('¿Alguna vez te quedaste dormido en el colectivo?'),
     _Slide('Y te despertaste en la terminal.'),
