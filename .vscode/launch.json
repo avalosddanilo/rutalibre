@@ -1,0 +1,15 @@
+{
+  // F5 y el botón "Run" de VS Code corren la app CON las claves de Supabase.
+  // Sin esto arrancan con `flutter run` pelado y la app muestra "Faltan las
+  // claves de Supabase". env.json está gitignoreado: ver el README.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Ruta Libre",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "toolArgs": ["--dart-define-from-file=env.json"]
+    }
+  ]
+}
