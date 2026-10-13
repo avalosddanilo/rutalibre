@@ -16,7 +16,6 @@ import '../../../../app/widgets/staggered_in.dart';
 import '../../../../core/providers/clock_provider.dart';
 import '../../../weather/presentation/widgets/rain_chip.dart';
 import '../../domain/entities/nearby_stop.dart';
-import '../../domain/entities/reference_stop.dart';
 import '../../domain/entities/route_variant.dart';
 import '../../domain/entities/stop.dart';
 import '../../domain/entities/trip_plan.dart';
@@ -33,7 +32,6 @@ import '../utils/marker_declutter.dart';
 import '../utils/route_segment.dart';
 import '../utils/trip_guidance.dart';
 import '../utils/trip_share_text.dart';
-import '../widgets/corrientes_stop_sheet.dart';
 import '../widgets/line_badge.dart';
 import '../widgets/line_sheet.dart';
 import '../widgets/nearby_stops_sheet.dart';
@@ -851,9 +849,6 @@ class _MapScreenState extends ConsumerState<MapScreen>
                       ),
                     ],
                   ),
-                // Abajo de todo lo demás: es el contexto sobre el que se
-                // dibujan las respuestas.
-                const _CorrientesStopMarkers(),
                 _AllStopMarkers(
                   drawnElsewhere: [
                     ...routeStops,
@@ -2271,94 +2266,6 @@ class _MapActions extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Las paradas de Corrientes capital.
-///
-/// Se dibujan **huecas**, distintas de las paradas del Gran Resistencia, y
-/// no es decoración: de estas no sabemos el recorrido ni el orden, así que
-/// tocarlas abre una hoja más corta y no ofrece "¿cómo llego acá?". Si se
-/// vieran iguales, la diferencia de comportamiento se leería como un bug.
-///
-/// **Solo a partir de [_minZoom].** Es lo que evita que las 254 sumen trabajo
-/// cuando se mira la ciudad entera —donde además serían un manchón— y lo que
-/// mantiene esta capa gratis en el arranque, que es sobre el Gran Resistencia.
-class _CorrientesStopMarkers extends ConsumerStatefulWidget {
-  const _CorrientesStopMarkers();
-
-  /// Por debajo de esto son puntitos amontonados que no ayudan a nadie.
-  static const _minZoom = 14.5;
-  static const _dotSize = 11.0;
-
-  @override
-  ConsumerState<_CorrientesStopMarkers> createState() =>
-      _CorrientesStopMarkersState();
-}
-
-class _CorrientesStopMarkersState
-    extends ConsumerState<_CorrientesStopMarkers> {
-  /// Los puntos ya construidos, una sola vez.
-  ///
-  /// `MapCamera.of(context)` hace que esta capa se redibuje en CADA CUADRO
-  /// mientras se arrastra el mapa. Sin esto, cada cuadro recorría las 254
-  /// paradas construyendo un `LatLng` nuevo por cada una para preguntarle al
-  /// viewport si entra — 254 objetos por cuadro, tirados al terminar. Es el
-  /// mismo error que `_AllStopMarkers` documenta y evita.
-  List<(ReferenceStop, LatLng)>? _points;
-
-  @override
-  Widget build(BuildContext context) {
-    final camera = MapCamera.of(context);
-    if (camera.zoom < _CorrientesStopMarkers._minZoom) {
-      return const SizedBox.shrink();
-    }
-
-    final stops = ref.watch(corrientesStopsProvider).value ?? const [];
-    if (stops.isEmpty) return const SizedBox.shrink();
-
-    final points = _points ??= [
-      for (final stop in stops)
-        if (isDrawableLatLng(stop.lat, stop.lng))
-          (stop, LatLng(stop.lat, stop.lng)),
-    ];
-
-    final bounds = camera.visibleBounds;
-    final scheme = Theme.of(context).colorScheme;
-
-    return MarkerLayer(
-      markers: [
-        for (final (stop, point) in points)
-          // Lo único que SÍ hay que rehacer por cuadro: el recorte al
-          // viewport, que trabaja sobre puntos ya construidos.
-          if (bounds.contains(point))
-            Marker(
-              point: point,
-              width: _tapTarget,
-              height: _tapTarget,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => CorrientesStopSheet.show(context, stop),
-                child: Tooltip(
-                  message: '${stop.name} · ${stop.lines.join(", ")}',
-                  child: Center(
-                    child: Container(
-                      width: _CorrientesStopMarkers._dotSize,
-                      height: _CorrientesStopMarkers._dotSize,
-                      decoration: BoxDecoration(
-                        // Hueca: el relleno es el color del mapa, el borde
-                        // es lo que se ve.
-                        color: scheme.surface,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: nearbyMarkerColor, width: 2),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-      ],
     );
   }
 }
