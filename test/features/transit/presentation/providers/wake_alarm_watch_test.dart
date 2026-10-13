@@ -118,7 +118,7 @@ void main() {
     return c;
   }
 
-  /// Manda un fix y deja correr el event loop — que es TODO lo que hay.
+  /// Manda un fix y deja correr el event loop — que es **todo** lo que hay.
   /// Ni un `pump`: si esto alcanza, el teléfono dormido alcanza.
   Future<void> fix(UserPosition position) async {
     // Dejar asentar cualquier reconstrucción pendiente ANTES de emitir: el
