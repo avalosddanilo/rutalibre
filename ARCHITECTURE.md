@@ -252,6 +252,9 @@ flutter pub get
 #                                        (transbordo caminando entre
 #                                         paradas cercanas: conecta el 904
 #                                         con las urbanas de Corrientes)
+#    supabase/migrations/0016_service_alerts.sql
+#                                        (avisos de paros y desvíos: ver
+#                                         docs/avisos.md)
 #    supabase/seed/seed_gran_resistencia.sql       (datos REALES, ~815 KB)
 #    supabase/seed/seed_corrientes.sql             (Corrientes capital)
 #    supabase/seed/seed_horarios.sql               (DESPUÉS de los recorridos)

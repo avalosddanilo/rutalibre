@@ -36,6 +36,7 @@ import '../widgets/line_badge.dart';
 import '../widgets/line_sheet.dart';
 import '../widgets/nearby_stops_sheet.dart';
 import '../widgets/place_search_sheet.dart';
+import '../widgets/service_alert_notice.dart';
 import '../widgets/stop_details_sheet.dart';
 import '../widgets/stop_pin.dart';
 import '../widgets/trip_guidance_panel.dart';
@@ -2055,6 +2056,9 @@ class _TopBar extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: _TilesDownNotice(),
             ),
+            // Un paro o un desvío cargado a mano (migración 0016). Sin
+            // avisos vigentes, o sin conexión, no ocupa lugar.
+            const ServiceAlertNotice(),
             // El cartel del recorrido entra y sale animado: aparece al elegir
             // una línea y desaparece al soltarla, y sin transición el resto de
             // la barra pega un salto vertical.
