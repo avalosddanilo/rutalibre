@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rutalibre/core/errors/exceptions.dart';
 import 'package:rutalibre/features/transit/data/datasources/transit_local_datasource.dart';
 import 'package:rutalibre/features/transit/data/models/stop_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +54,7 @@ void main() {
     // Es un dato de adorno y de decisión: romper una pantalla por él sería
     // desproporcionado.
     SharedPreferences.setMockInitialValues({
-      'ruta_libre_cache_v5/synced_at': 'no es una fecha',
+      'ruta_libre_cache_v6/synced_at': 'no es una fecha',
     });
     final dirty = await SharedPreferences.getInstance();
 
@@ -59,5 +62,25 @@ void main() {
       await SharedPrefsTransitLocalDataSource(dirty).lastSyncedAt(),
       isNull,
     );
+  });
+
+  test('la cache de la 1.0 (v5) no se lee: se vuelve a bajar todo', () async {
+    // El listado de la 1.0 no tiene las paradas de Corrientes capital, y
+    // solo vence a los 7 días. Si la 1.1 lo leyera, el mapa de Corrientes
+    // quedaría vacío hasta entonces. Ver el comentario de `_prefix`.
+    SharedPreferences.setMockInitialValues({
+      'ruta_libre_cache_v5/stops/all': jsonEncode([
+        {'id': 's1', 'name': 'Ameghino y French', 'lat': -27.45, 'lng': -58.98},
+      ]),
+      'ruta_libre_cache_v5/synced_at': _momento.toIso8601String(),
+    });
+    final conCacheVieja = await SharedPreferences.getInstance();
+    final local = SharedPrefsTransitLocalDataSource(conCacheVieja);
+
+    await expectLater(
+      local.getCachedAllStops(),
+      throwsA(isA<CacheException>()),
+    );
+    expect(await local.lastSyncedAt(), isNull);
   });
 }
