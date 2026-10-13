@@ -14,9 +14,10 @@
          plano (eso es ACCESS_BACKGROUND_LOCATION, que NO pedimos): solo
          mantiene vivo lo que el usuario dejó andando.
 
-         POST_NOTIFICATIONS: la notificación fija del viaje. Si el usuario la
-         niega, el servicio corre igual y la alarma funciona; solo no se ve
-         el cartelito. Por eso no se pide con un diálogo.
+         POST_NOTIFICATIONS: la notificación fija del viaje. Se pide al armar
+         la alarma (MainActivity.askForTripNotification): sin el permiso, en
+         Android 13+ la notificación no aparece en la cortina. Si el usuario
+         la niega, el servicio corre igual y la alarma funciona.
 
          WAKE_LOCK: encender la pantalla cuando la alarma suena. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>

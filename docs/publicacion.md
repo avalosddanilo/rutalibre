@@ -57,8 +57,10 @@ El plan de esos 14 días —los mails, el video, los grupos, la prensa— está 
   plano, Android congela el proceso al apagarse la pantalla y el GPS deja de
   llegar. Ver `TripService.kt`.
 - **`POST_NOTIFICATIONS`**: la notificación fija del viaje, que es el precio
-  obligatorio del servicio anterior. Si el usuario la niega, el servicio corre
-  igual y la alarma funciona; por eso no se pide con un diálogo.
+  obligatorio del servicio anterior. Se pide con el diálogo del sistema
+  cuando el usuario arma la alarma, no al abrir la app: sin el permiso, en
+  Android 13+ la notificación no aparece en la cortina. Si el usuario la
+  niega, el servicio corre igual y la alarma funciona.
 - **`WAKE_LOCK`**: encender la pantalla cuando la alarma suena.
 - **Y tres `<uses-feature ... required="false">`**, que no son permisos sino
   lo contrario: evitan que Play esconda la app. Pedir
@@ -105,9 +107,10 @@ usa la app.
 > viaja en colectivo, suena una alarma dos paradas antes de la parada donde
 > tiene que bajarse, para que no se pase si se queda dormido. El usuario la
 > activa a mano con un interruptor al empezar el viaje, y mientras está
-> activa hay una notificación fija que muestra el viaje en curso. El servicio
-> se detiene solo cuando el viaje termina, y el usuario puede cancelarlo
-> desde la notificación en cualquier momento.
+> activa hay una notificación fija que muestra el viaje en curso; tocarla
+> vuelve al viaje. El servicio se detiene solo cuando el viaje termina, y el
+> usuario puede detenerlo en cualquier momento apagando el mismo interruptor
+> o terminando el viaje.
 
 **2 · Por qué no alcanza una alternativa**
 
@@ -129,8 +132,8 @@ En inglés, por si el revisor lo pide así:
 > Core feature: a "wake me up" alarm that rings two stops before the user's
 > alighting stop while they ride a bus, so they do not miss it if they fall
 > asleep. The user starts it explicitly with a switch, a persistent
-> notification shows the ongoing trip, and the service stops when the trip
-> ends or the user cancels it.
+> notification shows the ongoing trip (tapping it returns to the trip), and
+> the service stops when the trip ends or the user turns the switch off.
 >
 > It needs a location-type foreground service because the alarm must keep
 > receiving GPS with the screen off and the phone in a pocket. Without it,
