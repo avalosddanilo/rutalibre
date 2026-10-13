@@ -129,4 +129,68 @@ void main() {
       expect(formatted(600, 600), '1,2 km');
     });
   });
+
+  group('transbordo caminando (plan_trip_v2, migración 0015)', () {
+    // El segundo tramo sube en OTRA parada: la 102 deja en una parada de
+    // la Municipalidad y el 904 para en una de OSM, a 46 m.
+    Map<String, dynamic> segundo() => {
+      ..._leg(lineCode: '904', branch: 'A'),
+      'board_stop': {
+        'id': 's9',
+        'name': 'Avenida Chacabuco y Pje. Sarmiento',
+        'description': null,
+        'lat': -27.4801,
+        'lng': -58.8055,
+      },
+    };
+
+    Map<String, dynamic> viaje({Object? transferWalk = 46}) => {
+      'leg_count': 2,
+      'walk_to_board_m': 150,
+      'walk_from_alight_m': 100,
+      'transfer_walk_m': ?transferWalk,
+      'walk_total_m': 296,
+      'legs': [_leg(), segundo()],
+    };
+
+    test('lee los metros del transbordo y los suma a la caminata', () {
+      final plan = TripPlanModel.fromJson(viaje());
+      expect(plan.transferWalkMeters, 46);
+      expect(plan.walkTotalMeters, 296);
+      expect(plan.transferIsWalk, isTrue);
+      expect(plan.transferStop?.id, 's2', reason: 'donde te bajás del primero');
+      expect(plan.legs[1].boardStop.id, 's9', reason: 'donde tomás el segundo');
+    });
+
+    test('sin el campo —plan_trip viejo o un viaje guardado— vale 0', () {
+      final plan = TripPlanModel.fromJson(viaje(transferWalk: null));
+      expect(plan.transferWalkMeters, 0);
+    });
+
+    test('en la misma parada no es un transbordo caminando', () {
+      final plan = TripPlanModel.fromJson({
+        'leg_count': 2,
+        'walk_to_board_m': 150,
+        'walk_from_alight_m': 100,
+        'legs': [
+          _leg(),
+          {
+            ..._leg(lineCode: '110', branch: null),
+            'board_stop': _leg()['alight_stop'],
+          },
+        ],
+      });
+      expect(plan.transferIsWalk, isFalse);
+      expect(plan.transferWalkMeters, 0);
+    });
+
+    test('ida y vuelta por JSON no pierde los metros del transbordo', () {
+      // El viaje en curso se guarda con planToJson (ActiveTripStore): si se
+      // perdieran, la guía reabierta dejaría de mostrar la caminata.
+      final plan = TripPlanModel.fromJson(viaje());
+      final again = TripPlanModel.fromJson(TripPlanModel.planToJson(plan));
+      expect(again.transferWalkMeters, 46);
+      expect(again, plan);
+    });
+  });
 }

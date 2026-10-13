@@ -63,15 +63,21 @@ final class WalkStep extends GuidanceStep {
 
 /// Subirse al colectivo.
 final class BoardStep extends GuidanceStep {
-  const BoardStep(this.leg);
+  const BoardStep(this.leg, {this.isTransfer = false});
 
   final TripLeg leg;
+
+  /// True si es el segundo colectivo de un transbordo caminando: hay que
+  /// avisar que se paga otro boleto, igual que en [TransferStep].
+  final bool isTransfer;
 
   @override
   String get title => 'Tomá la ${leg.displayCode}';
 
   @override
-  String get detail => 'En ${leg.boardStop.name}';
+  String get detail => isTransfer
+      ? 'En ${leg.boardStop.name} · pagás otro boleto'
+      : 'En ${leg.boardStop.name}';
 
   @override
   double get focusLat => leg.boardStop.lat;
@@ -101,7 +107,11 @@ final class RideStep extends GuidanceStep {
   double get focusLng => leg.alightStop.lng;
 }
 
-/// Bajarse, para hacer el transbordo.
+/// Bajarse, para hacer el transbordo EN LA MISMA PARADA.
+///
+/// Si el segundo colectivo se toma en otra parada, no hay [TransferStep]:
+/// el viaje sigue con una [WalkStep] hasta esa parada y una [BoardStep],
+/// los mismos pasos que al principio del viaje. Ver [guidanceSteps].
 final class TransferStep extends GuidanceStep {
   const TransferStep({required this.at, required this.next});
 
@@ -173,7 +183,28 @@ List<GuidanceStep> guidanceSteps({
     if (i == 0) steps.add(BoardStep(leg));
     steps.add(RideStep(leg));
     if (i < plan.legs.length - 1) {
-      steps.add(TransferStep(at: leg, next: plan.legs[i + 1]));
+      final next = plan.legs[i + 1];
+      if (next.boardStop.id == leg.alightStop.id) {
+        steps.add(TransferStep(at: leg, next: next));
+      } else {
+        // Transbordo caminando (plan_trip_v2): el siguiente colectivo para
+        // en OTRA parada. Acá sí se separan, porque hay un trayecto en el
+        // medio: caminar hasta esa parada y ahí esperar, como al principio
+        // del viaje. Un "bajate y tomá la X" a secas mandaría a esperar en
+        // la esquina equivocada.
+        if (plan.transferWalkMeters >= _skipWalkMeters) {
+          steps.add(
+            WalkStep(
+              meters: plan.transferWalkMeters,
+              toName: next.boardStop.name,
+              focusLat: next.boardStop.lat,
+              focusLng: next.boardStop.lng,
+              isFinal: false,
+            ),
+          );
+        }
+        steps.add(BoardStep(next, isTransfer: true));
+      }
     }
   }
 

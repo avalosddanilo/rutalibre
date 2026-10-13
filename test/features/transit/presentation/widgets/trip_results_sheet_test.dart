@@ -183,4 +183,100 @@ void main() {
       expect(find.textContaining('confirmá con el chofer'), findsOneWidget);
     });
   });
+
+  group('transbordo caminando (plan_trip_v2)', () {
+    // Desde un barrio de Corrientes a Resistencia: la 102 deja en una
+    // parada de la Municipalidad y el 904 para en otra, de OpenStreetMap.
+    const query = (
+      originLat: -27.48385,
+      originLng: -58.79109,
+      destLat: -27.462627,
+      destLng: -58.985006,
+    );
+
+    TripLeg leg(String code, Stop board, Stop alight, int stops) => TripLeg(
+      lineId: 'l$code',
+      lineCode: code,
+      lineName: 'Línea $code',
+      colorHex: '#7B1FA2',
+      networkCode: 'n',
+      networkName: 'N',
+      routeVariantId: 'rv$code',
+      variantName: 'Ida',
+      branch: null,
+      direction: RouteDirection.outbound,
+      boardStop: board,
+      alightStop: alight,
+      stopCount: stops,
+    );
+
+    const araoz = Stop(
+      id: 'm1',
+      name: 'Pedro Araoz y Avenida Independencia',
+      lat: -27.48308,
+      lng: -58.792402,
+    );
+    const ferre = Stop(
+      id: 'm2',
+      name: 'Avenida Pedro Ferré y Avenida Chacabuco',
+      lat: -27.4800,
+      lng: -58.8050,
+    );
+    const chacabuco = Stop(
+      id: 'o1',
+      name: 'Avenida Chacabuco y Pje. Sarmiento',
+      lat: -27.4801,
+      lng: -58.8055,
+    );
+    const lasHeras = Stop(
+      id: 'o2',
+      name: 'Avenida Las Heras y Franklin',
+      lat: -27.4627,
+      lng: -58.9850,
+    );
+
+    testWidgets('dice que hay que caminar y a qué parada, no "la misma"', (
+      tester,
+    ) async {
+      final plan = TripPlan(
+        legs: [
+          leg('102', araoz, ferre, 9),
+          leg('904A', chacabuco, lasHeras, 51),
+        ],
+        walkToBoardMeters: 151,
+        walkFromAlightMeters: 100,
+        transferWalkMeters: 46,
+      );
+      final c = ProviderContainer(
+        retry: (retryCount, error) => null,
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          tripPlansProvider(query).overrideWith((ref) async => [plan]),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.read(tripSearchProvider.notifier)
+        ..startFrom((lat: query.originLat, lng: query.originLng))
+        ..setDestination((lat: query.destLat, lng: query.destLng));
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: c,
+          child: const MaterialApp(
+            home: Scaffold(body: TripResultsSheet(query: query)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('misma parada'), findsNothing);
+      expect(
+        find.textContaining(
+          'Caminás 46 m y te cambiás a la 904A en '
+          'Avenida Chacabuco y Pje. Sarmiento',
+        ),
+        findsOneWidget,
+      );
+    });
+  });
 }
