@@ -23,10 +23,10 @@ usan para el resto.
 | 7 | **Prueba cerrada**: subir el AAB y anotar 15-20 testers | día 0 | §7 |
 | 8 | Esperar 14 días con 12+ testers sin desanotarse | días 1-14 | §7 |
 | 9 | Pedir acceso a producción, subir el AAB, revisión | día 15 | §7 |
-| 10 | Publicar y difundir | al aprobar | `lanzamiento.md` |
+| 10 | Publicar y difundir | al aprobar | `privado/lanzamiento.md` |
 
 El plan de esos 14 días —los mails, el video, los grupos, la prensa— está en
-[`lanzamiento.md`](lanzamiento.md). Las emergencias, en
+`privado/lanzamiento.md`. Las emergencias, en
 [`operaciones.md`](operaciones.md).
 
 ---
@@ -372,7 +372,7 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
 3. Mandarles el enlace de aceptación. **Anotarse no es instalar**: cada
    persona tiene que (a) aceptar la invitación, (b) instalar desde Play y
    (c) **quedarse anotada las dos semanas**. El mensaje de WhatsApp para
-   pedirlo está en [`lanzamiento.md`](lanzamiento.md).
+   pedirlo está en `privado/lanzamiento.md`.
 4. A los dos días, verificar en Play Console cuántos hay anotados de verdad.
    Si son menos de 15, reclutar más ahí mismo.
 5. Durante los 14 días: mirar **Calidad → Android vitals** (cierres y ANR) y
@@ -390,7 +390,7 @@ pagando ni pidiéndolo amablemente, así que arranca el día 0.
   `version:` en `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`).
 - **Guardá el keystore.** Otra vez: sin él no hay actualizaciones nunca más.
 - Contestá todas las reseñas, las malas primero. El resto del primer mes
-  está en [`lanzamiento.md`](lanzamiento.md).
+  está en `privado/lanzamiento.md`.
 
 ---
 
