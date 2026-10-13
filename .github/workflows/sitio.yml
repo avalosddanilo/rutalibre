@@ -1,0 +1,71 @@
+# Publica las páginas web de las líneas en GitHub Pages.
+#
+# QUÉ ES. Una página por línea ("Línea 102 de Corrientes: recorrido y
+# paradas") y un índice, generadas con `tools/web_lineas.dart` a partir de
+# los mismos datos que usa la app. Están para que quien busque el recorrido
+# en Google lo encuentre, y de ahí llegue a la app.
+#
+# CUÁNDO CORRE. Una vez por semana, para que las páginas sigan a los datos
+# sin que nadie se acuerde, cuando cambia el generador, y a mano.
+#
+# LAS CLAVES son los mismos secrets que usa `mantener-viva.yml`: la anon key,
+# pública por diseño. El generador solo lee.
+#
+# PARA QUE ANDE LA PRIMERA VEZ, una sola vez:
+#   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
+name: Sitio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - tools/web_lineas.dart
+      - tools/src/web_lineas.dart
+      - .github/workflows/sitio.yml
+  schedule:
+    # Lunes 06:17 UTC (03:17 en Argentina): fuera de hora y no en punto, que
+    # es cuando se amontonan los cron de todo GitHub.
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Una publicación a la vez, y la que está en curso termina.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Generar el sitio
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: >
+          dart run tools/web_lineas.dart
+          --base "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/sitio
+
+  publicar:
+    needs: generar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
