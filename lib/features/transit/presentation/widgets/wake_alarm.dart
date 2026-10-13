@@ -157,7 +157,7 @@ final wakeAlarmGearProvider = Provider<WakeAlarmGear>(
 /// Vive en un provider y no en el renglón del contador porque cambiar de
 /// paso (o de tramo, en un transbordo) reconstruye el renglón, y una alarma
 /// que se desarma sola al tocar "Siguiente" es una alarma en la que no se
-/// puede confiar. Queda armada TODO el viaje: en un transbordo hay que
+/// puede confiar. Queda armada **todo** el viaje: en un transbordo hay que
 /// bajarse dos veces, y las dos veces cuentan.
 final class WakeAlarmNotifier extends Notifier<bool> {
   @override
