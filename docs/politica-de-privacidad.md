@@ -1,6 +1,6 @@
 # Política de privacidad de Ruta Libre
 
-**Última actualización: 6 de agosto de 2026**
+**Última actualización: 13 de octubre de 2026**
 
 ## Lo corto
 
@@ -31,8 +31,15 @@ enciende el GPS—, y si no hay ninguna, simplemente no muestra ese dato.
 Durante un **viaje iniciado** (la guía paso a paso), la app sí sigue tu
 posición **mientras la guía está abierta**: es lo que le permite decirte
 cuántas paradas faltan para bajarte. El seguimiento **se corta solo** al
-terminar o cerrar la guía, y nunca corre en segundo plano: con la app cerrada
-no hay seguimiento posible.
+terminar o cerrar la guía.
+
+**Con la alarma "Avisame para bajar" prendida**, la app sigue recibiendo tu
+posición **aunque apagues la pantalla**: es la única forma de que la alarma
+sepa que llegaste mientras el teléfono está en el bolsillo. Mientras eso pasa
+hay **una notificación fija a la vista** ("Viaje en curso"), y se corta sola
+cuando apagás la alarma o terminás el viaje. Lo prendés vos, a mano, en cada
+viaje: nunca arranca solo. Fuera de eso, con la app cerrada no hay seguimiento
+posible.
 
 Podés usar el mapa, ver los recorridos, las paradas, los horarios y buscar
 líneas **sin dar el permiso de ubicación**.
@@ -116,9 +123,14 @@ OpenStreetMap y de tu navegador.
 |---|---|---|
 | `INTERNET` | Descargar los datos del transporte y el mapa | No |
 | `ACCESS_COARSE_LOCATION` y `ACCESS_FINE_LOCATION` | "Cerca mío", "¿cómo llego?", la distancia caminando y el aviso de lluvia | **Sí.** Todo lo demás funciona igual |
+| `FOREGROUND_SERVICE` y `FOREGROUND_SERVICE_LOCATION` | Que la alarma "Avisame para bajar" funcione con la pantalla apagada (ver "Tu ubicación") | **Sí.** La alarma funciona con la pantalla prendida |
+| `POST_NOTIFICATIONS` | La notificación fija "Viaje en curso" mientras la alarma está prendida. Se pide recién al prenderla | **Sí.** La alarma suena igual; solo no ves la notificación |
+| `WAKE_LOCK` | Prender la pantalla cuando suena la alarma | No se pide: Android lo da sin preguntar |
 
-No pedimos ubicación en segundo plano: la app **no puede** saber dónde estás
-cuando no la estás usando.
+**No pedimos ubicación en segundo plano** (`ACCESS_BACKGROUND_LOCATION`). La
+única vez que la app usa tu ubicación con la pantalla apagada es con la alarma
+que prendiste vos, y con la notificación a la vista todo ese tiempo. Fuera de
+eso, la app **no puede** saber dónde estás cuando no la estás usando.
 
 ## Menores
 
