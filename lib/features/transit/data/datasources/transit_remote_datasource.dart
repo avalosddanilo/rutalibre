@@ -140,24 +140,49 @@ final class SupabaseTransitRemoteDataSource implements TransitRemoteDataSource {
     required double destLng,
     required int maxWalkMeters,
     required int maxResults,
-  }) => _guard(
-    // RPC (migración 0004): el cruce de `route_stops` consigo mismo para
-    // encontrar directos y transbordos se resuelve en Postgres. Traerse
-    // las 3030 filas de secuencia al teléfono para cruzarlas acá sería
-    // pagar la red y la batería por lo mismo.
-    () => _client.rpc<dynamic>(
-      'plan_trip',
-      params: {
-        'origin_lat': originLat,
-        'origin_lng': originLng,
-        'dest_lat': destLat,
-        'dest_lng': destLng,
-        'max_walk_m': maxWalkMeters,
-        'max_results': maxResults,
+  }) {
+    final params = {
+      'origin_lat': originLat,
+      'origin_lng': originLng,
+      'dest_lat': destLat,
+      'dest_lng': destLng,
+      'max_walk_m': maxWalkMeters,
+      'max_results': maxResults,
+    };
+    return _guard(
+      // RPC (migración 0004): el cruce de `route_stops` consigo mismo para
+      // encontrar directos y transbordos se resuelve en Postgres. Traerse
+      // las 3030 filas de secuencia al teléfono para cruzarlas acá sería
+      // pagar la red y la batería por lo mismo.
+      //
+      // `plan_trip_v2` (0015) suma el transbordo caminando entre paradas
+      // cercanas, que es lo que conecta el 904 con las urbanas de
+      // Corrientes. Si el servidor todavía no tiene esa migración, PostgREST
+      // contesta PGRST202 ("no existe la función") y se cae a `plan_trip`,
+      // que da lo mismo de antes: la app nueva no puede depender de que la
+      // base se haya actualizado el mismo día.
+      () async {
+        try {
+          return await _client.rpc<dynamic>(
+            'plan_trip_v2',
+            params: {...params, 'max_transfer_m': maxTransferMeters},
+          );
+        } on PostgrestException catch (e) {
+          if (e.code != 'PGRST202') rethrow;
+          return await _client.rpc<dynamic>('plan_trip', params: params);
+        }
       },
-    ),
-    TripPlanModel.fromJson,
-  );
+      TripPlanModel.fromJson,
+    );
+  }
+
+  /// Cuánto se puede caminar en un transbordo, en línea recta.
+  ///
+  /// 250 m cubre las 20 paradas del 904 del lado correntino, cada una con
+  /// una parada municipal cerca (la mediana está a 22 m). Es el mismo valor
+  /// por defecto de `plan_trip_v2`; se manda igual para que cambiarlo sea
+  /// tocar la app y no la base.
+  static const maxTransferMeters = 250;
 
   @override
   Future<List<ScheduleModel>> getSchedules({

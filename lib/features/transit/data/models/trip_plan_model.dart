@@ -84,6 +84,7 @@ final class TripPlanModel extends TripPlan {
     required super.legs,
     required super.walkToBoardMeters,
     required super.walkFromAlightMeters,
+    super.transferWalkMeters,
   });
 
   factory TripPlanModel.fromJson(Map<String, dynamic> json) => TripPlanModel(
@@ -94,6 +95,9 @@ final class TripPlanModel extends TripPlan {
     // Los RPCs devuelven los números como `num`: puede llegar int.
     walkToBoardMeters: (json['walk_to_board_m'] as num).toDouble(),
     walkFromAlightMeters: (json['walk_from_alight_m'] as num).toDouble(),
+    // Opcional: lo trae `plan_trip_v2` (0015). Falta en `plan_trip` —el
+    // servidor sin la migración— y en los viajes guardados por la 1.1.
+    transferWalkMeters: (json['transfer_walk_m'] as num?)?.toDouble() ?? 0,
   );
 
   /// Espejo de [TripPlanModel.fromJson]. Ver [TripLegModel.legToJson].
@@ -101,6 +105,7 @@ final class TripPlanModel extends TripPlan {
     'leg_count': plan.legs.length,
     'walk_to_board_m': plan.walkToBoardMeters,
     'walk_from_alight_m': plan.walkFromAlightMeters,
+    'transfer_walk_m': plan.transferWalkMeters,
     'legs': [for (final leg in plan.legs) TripLegModel.legToJson(leg)],
   };
 }

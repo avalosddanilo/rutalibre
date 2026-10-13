@@ -1705,9 +1705,10 @@ class _TripLayers extends ConsumerWidget {
         ..add(Polyline(points: points, strokeWidth: 4.5, color: legColors[i]));
     }
 
-    // Las caminatas, punteadas: de donde estás hasta donde subís, y de donde
-    // bajás hasta el destino. Es lo que cierra el camino — sin esto el
-    // trazado empieza y termina en el aire, a cuadras de los dos extremos.
+    // Las caminatas, punteadas: de donde estás hasta donde subís, de donde
+    // bajás hasta el destino y, en un transbordo caminando, de una parada a
+    // la otra. Es lo que cierra el camino — sin esto el trazado empieza y
+    // termina en el aire, a cuadras de los dos extremos.
     final walks = <Polyline>[];
     final search = ref.watch(tripSearchProvider);
     if (search is TripRoute && plan.legs.isNotEmpty) {
@@ -1716,6 +1717,14 @@ class _TripLayers extends ConsumerWidget {
           LatLng(search.origin.lat, search.origin.lng),
           LatLng(plan.legs.first.boardStop.lat, plan.legs.first.boardStop.lng),
         ),
+        if (plan.transferIsWalk)
+          (
+            LatLng(
+              plan.legs.first.alightStop.lat,
+              plan.legs.first.alightStop.lng,
+            ),
+            LatLng(plan.legs[1].boardStop.lat, plan.legs[1].boardStop.lng),
+          ),
         (
           LatLng(plan.legs.last.alightStop.lat, plan.legs.last.alightStop.lng),
           LatLng(search.destination.lat, search.destination.lng),
@@ -1748,9 +1757,11 @@ class _TripLayers extends ConsumerWidget {
           markers: [
             for (var i = 0; i < plan.legs.length; i++) ...[
               // La subida del primer tramo y las bajadas de todos. La subida
-              // de un segundo tramo NO se dibuja: es la misma parada donde
-              // bajaste del primero, y dos pines encimados no dicen nada.
-              if (i == 0)
+              // de un segundo tramo solo se dibuja si es OTRA parada
+              // (transbordo caminando): si es la misma donde bajaste del
+              // primero, dos pines encimados no dicen nada.
+              if (i == 0 ||
+                  plan.legs[i].boardStop.id != plan.legs[i - 1].alightStop.id)
                 _pinMarker(
                   point: LatLng(
                     plan.legs[i].boardStop.lat,
@@ -1789,8 +1800,13 @@ class _TripLayers extends ConsumerWidget {
                 ),
                 tooltip: i == plan.legs.length - 1
                     ? 'Bajás en ${plan.legs[i].alightStop.name}'
-                    : 'Te cambiás a la ${plan.legs[i + 1].displayCode} en '
-                          '${plan.legs[i].alightStop.name}',
+                    : plan.legs[i + 1].boardStop.id ==
+                          plan.legs[i].alightStop.id
+                    ? 'Te cambiás a la ${plan.legs[i + 1].displayCode} en '
+                          '${plan.legs[i].alightStop.name}'
+                    : 'Bajás en ${plan.legs[i].alightStop.name} y caminás '
+                          'hasta la parada de la '
+                          '${plan.legs[i + 1].displayCode}',
                 onTap: () => StopDetailsSheet.show(
                   context,
                   ref,

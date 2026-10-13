@@ -32,10 +32,12 @@ TripPlan _plan({
   required List<TripLeg> legs,
   double walkToBoard = 350,
   double walkFromAlight = 200,
+  double transferWalk = 0,
 }) => TripPlan(
   legs: legs,
   walkToBoardMeters: walkToBoard,
   walkFromAlightMeters: walkFromAlight,
+  transferWalkMeters: transferWalk,
 );
 
 List<GuidanceStep> _steps(TripPlan plan) => guidanceSteps(
@@ -126,6 +128,57 @@ void main() {
 
     test('hay un paso de viajar por cada tramo', () {
       expect(steps.whereType<RideStep>(), hasLength(2));
+    });
+  });
+
+  group('con transbordo caminando hasta otra parada', () {
+    // El caso del 904 en Corrientes: bajás de la 102 en una parada de la
+    // Municipalidad y el 904 para en otra, de OpenStreetMap, a una cuadra.
+    TripPlan plan({double transferWalk = 120}) => _plan(
+      legs: [
+        _leg(code: '102', alight: 'Avenida Pedro Ferré y Avenida Chacabuco'),
+        _leg(
+          code: '904A',
+          board: 'Avenida Chacabuco y Pje. Sarmiento',
+          alight: 'Avenida Las Heras y Franklin',
+        ),
+      ],
+      transferWalk: transferWalk,
+    );
+
+    test('NO dice "bajate y tomá la X": no es la misma parada', () {
+      expect(_steps(plan()).whereType<TransferStep>(), isEmpty);
+    });
+
+    test('camina hasta la otra parada y ahí toma el siguiente', () {
+      final steps = _steps(plan());
+      expect(steps.map((s) => s.runtimeType.toString()), [
+        'WalkStep',
+        'BoardStep',
+        'RideStep',
+        'WalkStep',
+        'BoardStep',
+        'RideStep',
+        'WalkStep',
+        'ArrivalStep',
+      ]);
+      expect(steps[3].title, 'Caminá hasta Avenida Chacabuco y Pje. Sarmiento');
+      expect(steps[4].title, 'Tomá la 904A');
+    });
+
+    test('avisa que se paga otro boleto, como en el transbordo de siempre', () {
+      final second = _steps(plan()).whereType<BoardStep>().last;
+      expect(second.detail, contains('otro boleto'));
+      expect(
+        _steps(plan()).whereType<BoardStep>().first.detail,
+        isNot(contains('otro boleto')),
+      );
+    });
+
+    test('una caminata de menos de 50 m no es un paso', () {
+      final steps = _steps(plan(transferWalk: 20));
+      expect(steps.whereType<WalkStep>(), hasLength(2));
+      expect(steps.whereType<BoardStep>(), hasLength(2));
     });
   });
 

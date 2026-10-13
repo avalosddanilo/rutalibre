@@ -472,7 +472,11 @@ class _TripTile extends ConsumerWidget {
             _TripSummary(plan: plan),
             const SizedBox(height: 10),
             for (var i = 0; i < plan.legs.length; i++)
-              _LegSteps(leg: plan.legs[i], isFirst: i == 0),
+              _LegSteps(
+                leg: plan.legs[i],
+                previous: i == 0 ? null : plan.legs[i - 1],
+                transferWalkMeters: plan.transferWalkMeters,
+              ),
             const SizedBox(height: 2),
             _Step(
               icon: Icons.flag,
@@ -490,10 +494,22 @@ class _TripTile extends ConsumerWidget {
 
 /// Los pasos de un tramo: dónde subirse, cuánto viajar, dónde bajarse.
 class _LegSteps extends StatelessWidget {
-  const _LegSteps({required this.leg, required this.isFirst});
+  const _LegSteps({
+    required this.leg,
+    required this.previous,
+    required this.transferWalkMeters,
+  });
 
   final TripLeg leg;
-  final bool isFirst;
+
+  /// El tramo anterior, o null si este es el primero.
+  final TripLeg? previous;
+
+  /// Metros a pie entre [previous] y este tramo (ver
+  /// `TripPlan.transferWalkMeters`). Solo cuenta si las paradas difieren.
+  final double transferWalkMeters;
+
+  bool get isFirst => previous == null;
 
   @override
   Widget build(BuildContext context) {
@@ -506,9 +522,16 @@ class _LegSteps extends StatelessWidget {
               ? Icons.directions_walk
               : Icons.transfer_within_a_station,
           color: Theme.of(context).colorScheme.outline,
-          text: isFirst
-              ? 'Tomás la ${leg.displayCode} en ${leg.boardStop.name}'
-              : 'Te cambiás a la ${leg.displayCode} en la misma parada',
+          text: switch (previous) {
+            null => 'Tomás la ${leg.displayCode} en ${leg.boardStop.name}',
+            final prev when prev.alightStop.id == leg.boardStop.id =>
+              'Te cambiás a la ${leg.displayCode} en la misma parada',
+            // Transbordo caminando: es OTRA parada, y decir "la misma"
+            // mandaría a esperar a la esquina equivocada.
+            _ =>
+              'Caminás ${_meters(transferWalkMeters)} y te cambiás a la '
+                  '${leg.displayCode} en ${leg.boardStop.name}',
+          },
         ),
         _Step(
           icon: Icons.directions_bus,

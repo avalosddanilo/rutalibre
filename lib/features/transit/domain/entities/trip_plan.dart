@@ -96,6 +96,7 @@ class TripPlan extends Equatable {
     required this.legs,
     required this.walkToBoardMeters,
     required this.walkFromAlightMeters,
+    this.transferWalkMeters = 0,
   });
 
   /// Uno (directo) o dos (con transbordo), en orden de viaje.
@@ -112,15 +113,34 @@ class TripPlan extends Equatable {
   /// Metros a pie desde la última parada hasta el destino.
   final double walkFromAlightMeters;
 
+  /// Metros a pie en el transbordo: de donde te bajás del primer colectivo
+  /// a donde tomás el segundo. 0 en los directos y en los transbordos en la
+  /// misma parada.
+  ///
+  /// Existe desde `plan_trip_v2` (migración 0015). Antes el transbordo era
+  /// siempre en la misma parada, y es lo que sigue pasando cuando este
+  /// número es 0: las paradas del 904 y las urbanas de Corrientes, por
+  /// ejemplo, están en las mismas esquinas pero son paradas distintas.
+  final double transferWalkMeters;
+
   bool get isDirect => legs.length <= 1;
 
-  /// Dónde se hace el transbordo, o null si el viaje es directo.
+  /// Dónde te bajás para hacer el transbordo, o null si el viaje es directo.
   ///
-  /// El transbordo es SIEMPRE en la misma parada (bajada del primer tramo =
-  /// subida del segundo), así que no hay caminata en el medio.
+  /// Si [transferIsWalk], el segundo colectivo se toma en OTRA parada
+  /// (`legs[1].boardStop`), a [transferWalkMeters] de esta.
   Stop? get transferStop => isDirect ? null : legs.first.alightStop;
 
-  double get walkTotalMeters => walkToBoardMeters + walkFromAlightMeters;
+  /// True si el transbordo pide caminar hasta otra parada.
+  ///
+  /// Se decide por las paradas y no por los metros: dos paradas distintas
+  /// pegadas (2 m) siguen siendo dos lugares donde esperar, y mandar a
+  /// alguien a "la misma parada" sería mandarlo a la equivocada.
+  bool get transferIsWalk =>
+      !isDirect && legs[1].boardStop.id != legs.first.alightStop.id;
+
+  double get walkTotalMeters =>
+      walkToBoardMeters + transferWalkMeters + walkFromAlightMeters;
 
   /// Paradas arriba de un colectivo, sumando los tramos.
   int get totalStopCount => legs.fold(0, (sum, leg) => sum + leg.stopCount);
@@ -129,7 +149,12 @@ class TripPlan extends Equatable {
   String get formattedWalk => _formatMeters(walkTotalMeters);
 
   @override
-  List<Object?> get props => [legs, walkToBoardMeters, walkFromAlightMeters];
+  List<Object?> get props => [
+    legs,
+    walkToBoardMeters,
+    walkFromAlightMeters,
+    transferWalkMeters,
+  ];
 }
 
 String _formatMeters(double meters) {
