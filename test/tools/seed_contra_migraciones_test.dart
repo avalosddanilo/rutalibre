@@ -31,8 +31,15 @@ String _norm(String s) => s
     .replaceAll(' )', ')')
     .trim();
 
-String _sinComentarios(String sql) =>
-    sql.split('\n').map((l) => l.replaceFirst(RegExp(r'--.*$'), '')).join('\n');
+/// Los `--` comentarios afuera. Primero se normalizan los saltos de línea:
+/// en Windows git hace checkout con `\r\n`, y como `.` no matchea `\r`, el
+/// `--.*$` no encontraba el final de ninguna línea y los comentarios
+/// quedaban adentro (un `on conflict` comentado contaba como real).
+String _sinComentarios(String sql) => sql
+    .replaceAll('\r\n', '\n')
+    .split('\n')
+    .map((l) => l.replaceFirst(RegExp(r'--.*$'), ''))
+    .join('\n');
 
 /// Lo que hay entre el paréntesis que abre en [desde] y el que lo cierra,
 /// respetando paréntesis anidados (`coalesce(branch, '')`).
@@ -153,6 +160,13 @@ Set<Clave> _blancosDelSeed(File f) {
 
 void main() {
   final claves = _clavesDeLasMigraciones();
+
+  test('los comentarios se sacan también con saltos de línea de Windows', () {
+    expect(
+      _sinComentarios('select 1; -- uno\r\n-- dos\r\nselect 2;\r\n'),
+      'select 1; \n\nselect 2;\n',
+    );
+  });
 
   test('el índice de source_ref es parcial (el caso que originó esto)', () {
     expect(
