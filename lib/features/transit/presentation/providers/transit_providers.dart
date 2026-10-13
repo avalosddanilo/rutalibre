@@ -457,11 +457,13 @@ final addressesProvider = FutureProvider<List<StreetAddresses>>((ref) async {
   return result.fold((failure) => throw failure, (addresses) => addresses);
 });
 
-/// Las paradas de Corrientes capital, que no entran al planificador.
+/// Las paradas de Corrientes capital del asset de OpenStreetMap, para la
+/// sugerencia de "última milla" de los viajes que cruzan el puente.
 ///
-/// Ver `ReferenceStop` para por qué son una clase aparte. `keepAlive` por lo
-/// mismo que los lugares: se parsean una vez y se dibujan en cada cuadro del
-/// mapa mientras se mira Corrientes.
+/// Ya NO se dibujan en el mapa: desde que la Municipalidad publicó las 1357
+/// paradas con sus recorridos (seed de Corrientes), esas llegan con las del
+/// Gran Resistencia y entran al planificador. Dibujar también estas duplicaba
+/// cada esquina. Ver `ReferenceStop` para por qué son una clase aparte.
 final corrientesStopsProvider = FutureProvider<List<ReferenceStop>>((
   ref,
 ) async {
