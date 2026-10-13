@@ -5,6 +5,7 @@
 /// importador sin volver a castigarlo.
 library;
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -50,6 +51,9 @@ Future<Map<String, dynamic>> loadOverpass({
   throw StateError('No se pudo descargar $label de Overpass: $lastError');
 }
 
+/// Un poco más que el `timeout:270` que piden las consultas.
+const _responseTimeout = Duration(seconds: 300);
+
 Future<String> _post(String endpoint, String query) async {
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 30);
   try {
@@ -65,8 +69,15 @@ Future<String> _post(String endpoint, String query) async {
     );
     request.write('data=${Uri.encodeQueryComponent(query)}');
 
-    final response = await request.close();
-    final body = await response.transform(utf8.decoder).join();
+    // Sin tope, un servidor saturado que acepta la conexión y no contesta
+    // deja el importador esperando para siempre, sin pasar al otro
+    // endpoint. Las consultas piden `timeout:270` del lado de Overpass:
+    // pasado eso, no va a contestar.
+    final response = await request.close().timeout(_responseTimeout);
+    final body = await response
+        .transform(utf8.decoder)
+        .join()
+        .timeout(_responseTimeout);
     if (response.statusCode != 200) {
       throw HttpException('HTTP ${response.statusCode}');
     }
