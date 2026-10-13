@@ -21,6 +21,7 @@ import '../../domain/entities/stop.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../../domain/usecases/get_nearby_stops.dart';
 import '../providers/location_providers.dart';
+import '../providers/service_alerts_providers.dart';
 import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../utils/color_hex.dart';
@@ -110,6 +111,9 @@ class _MapScreenState extends ConsumerState<MapScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       ref.invalidate(savedTripProvider);
+      // Por lo mismo, los avisos de paro y desvío: el de ayer no puede
+      // seguir arriba del mapa porque la app quedó abierta toda la noche.
+      ref.invalidate(serviceAlertsProvider);
     }
   }
 
