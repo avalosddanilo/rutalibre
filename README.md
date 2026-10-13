@@ -68,7 +68,7 @@ flutter pub get
 #    {"SUPABASE_URL": "https://<proyecto>.supabase.co", "SUPABASE_ANON_KEY": "<anon key>"}
 
 # 3. Base de datos (Supabase → SQL Editor, EN ORDEN):
-#    supabase/migrations/0001..0012  ← ver la lista completa en ARCHITECTURE.md
+#    supabase/migrations/0001..0015  ← ver la lista completa en ARCHITECTURE.md
 #    supabase/seed/seed_gran_resistencia.sql  ← los datos reales (~890 KB)
 #    supabase/seed/seed_corrientes.sql        ← Corrientes capital
 #    supabase/seed/seed_horarios.sql          ← DESPUÉS de los recorridos

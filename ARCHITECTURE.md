@@ -244,6 +244,14 @@ flutter pub get
 #    supabase/migrations/0012_904_cruza_el_rio.sql
 #                                        (el 904 solo de una orilla a la
 #                                         otra + repone el search_path)
+#    supabase/migrations/0013_stops_source_ref.sql
+#                                        (ANTES del seed de Corrientes)
+#    supabase/migrations/0014_spatial_ref_sys_grants.sql
+#                                        (saca la escritura de anon)
+#    supabase/migrations/0015_plan_trip_v2_transbordo_caminando.sql
+#                                        (transbordo caminando entre
+#                                         paradas cercanas: conecta el 904
+#                                         con las urbanas de Corrientes)
 #    supabase/seed/seed_gran_resistencia.sql       (datos REALES, ~815 KB)
 #    supabase/seed/seed_corrientes.sql             (Corrientes capital)
 #    supabase/seed/seed_horarios.sql               (DESPUÉS de los recorridos)
