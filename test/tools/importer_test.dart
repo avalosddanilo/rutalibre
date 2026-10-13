@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../tools/src/geometry.dart';
 import '../../tools/src/importer.dart';
 import '../../tools/src/sql_emitter.dart';
+import '../../tools/src/stop_naming.dart';
 
 /// Nodos de una grilla chica: 0.001° ≈ 111 m, suficiente para separar
 /// paradas distintas sin que el colapsado de plataformas las una.
@@ -343,6 +344,65 @@ void main() {
         ]),
       );
       expect(result.stops.single.name, 'Parada sin nombre');
+    });
+
+    test('un nombre que no ubica ("Línea 8") cede ante la esquina', () {
+      // "Bajás en Línea 8" no le sirve a nadie. El nombre de OSM no se
+      // pierde: queda en la descripción.
+      final result = buildImport(
+        OsmInput(
+          relations: [
+            _relation(
+              id: 1,
+              ref: '110',
+              name: '110 Ida A - B',
+              stops: [(3, 'stop')],
+            ),
+          ],
+          wayNodes: const {
+            1: [1, 2, 3, 4],
+          },
+          nodePoints: _nodes(),
+          nodeTags: const {
+            3: {'name': 'Línea 8'},
+          },
+          streets: const [
+            NamedStreet(
+              name: 'Ameghino',
+              points: [(lat: -27.45, lng: -58.99), (lat: -27.45, lng: -58.96)],
+            ),
+            NamedStreet(
+              name: 'French',
+              points: [
+                (lat: -27.46, lng: -58.9772),
+                (lat: -27.44, lng: -58.9772),
+              ],
+            ),
+          ],
+        ),
+      );
+      expect(result.stops.single.name, 'Ameghino y French');
+      expect(result.stops.single.description, 'Línea 8');
+    });
+
+    test('sin esquina a mano, el nombre que no ubica es mejor que nada', () {
+      final result = buildImport(
+        _input(
+          [
+            _relation(
+              id: 1,
+              ref: '110',
+              name: '110 Ida A - B',
+              stops: [(3, 'stop')],
+            ),
+          ],
+          tags: {
+            3: {'name': 'Varias linas', 'ref': 'C9'},
+          },
+        ),
+      );
+      expect(result.stops.single.name, 'Varias linas');
+      expect(result.stops.single.description, 'Parada C9');
     });
 
     test('sin nombre pero con ref usa el ref', () {
