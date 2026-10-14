@@ -1,13 +1,16 @@
 # La alarma con la pantalla apagada
 
-**Estado: arreglado en el código, SIN verificar en un teléfono.**
+**Estado: arreglado y verificado en emulador.** Con la pantalla apagada, la
+alarma sonó sola y la pantalla se encendió, siguiendo el paso a paso de acá
+abajo (octubre de 2026, antes de la 1.1). Desde la 1.2 el interruptor lo
+dice: "suena fuerte aunque el teléfono esté en silencio o con la pantalla
+apagada".
 
 La decisión ya no vive en un widget (ver *El arreglo*, más abajo) y hay siete
 tests que la disparan **sin dibujar un solo cuadro**, que es la condición que
-el teléfono dormido impone. Pero un test no es un teléfono: hasta que no se
-repita la prueba del emulador de acá abajo y la alarma suene sola, **esto no
-se anuncia en ningún lado**. La copy del interruptor sigue diciendo
-"Necesita la app abierta" a propósito.
+el teléfono dormido impone.
+
+Lo que sigue es la historia: cómo falló la primera vez y por qué.
 
 Probado el **2026-09-21** en un emulador Android (targetSdk 36) con el
 recorrido del 904A reproducido por GPX.
@@ -200,10 +203,13 @@ dart run tools/simular_viaje.dart --desde A --por B --por C --hasta D
 Recién si con el recorrido bien seguido tampoco suena, el problema está en
 la alarma.
 
-## Lo que esto NO cambia
+## La copy
 
-**La copy pública sigue diciendo "necesita la app abierta", y está bien.**
-Nunca se tocó, justamente porque la regla del proyecto es que no se anuncia
-lo que no está verificado. Hoy esa frase es verdad. Los ocho lugares a
-actualizar, para cuando de verdad funcione, están listados en
-`privado/marketing/README.md`.
+Hasta la 1.1 la app decía "Necesita la app abierta", a propósito: la regla
+del proyecto es que no se anuncia lo que no está verificado. Con la prueba
+del emulador en ✅, la 1.2 lo cambia en el interruptor y en la ficha de Play
+(`docs/ficha-play.md`). Los textos de redes viven en
+`privado/marketing/README.md`, que lista dónde está cada uno.
+
+Si algún día la alarma deja de sonar con la pantalla apagada, la frase se
+saca primero y se arregla después: se lee justo antes de dormirse.

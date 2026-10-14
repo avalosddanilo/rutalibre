@@ -3,6 +3,46 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 Versionado según [SemVer](https://semver.org/lang/es/).
 
+## [1.2.0] — sin publicar
+
+### Cómo llego
+
+- **Transbordo caminando.** Si para cambiar de colectivo hay que bajarse y
+  caminar hasta otra parada (hasta 250 m), el planificador lo arma y dice
+  cuánto: "Caminás 46 m y te cambiás a la 904A en …". Es lo que conecta el 904
+  con las líneas urbanas de Corrientes. Medido sobre 300 viajes al azar:
+  resuelve 58 que antes daban "no hay", y no pierde ninguno. En el mapa, la
+  caminata entre las dos paradas va punteada. Necesita la migración 0015
+  (`plan_trip_v2`); sin ella, la app usa el planificador de antes.
+
+### Avisos
+
+- **Paros y desvíos arriba del mapa.** Un cartel corto que se toca para ver
+  el detalle y se cierra con la X. Se cargan a mano desde Supabase
+  (`docs/avisos.md`) y vencen solos. Sin conexión no se muestran: un aviso
+  viejo, de memoria, es peor que ninguno. Necesita la migración 0016.
+
+### Alarma
+
+- **El interruptor dice que suena con la pantalla apagada**, ahora que la
+  prueba del emulador lo verificó (`docs/alarma-pantalla-apagada.md`). Hasta
+  acá decía "Necesita la app abierta".
+
+### Datos
+
+- **Paradas de Corrientes con nombre de esquina**: 1349 de 1357, sacadas del
+  callejero de OpenStreetMap.
+- **Gran Resistencia**: las paradas cargadas en OSM con nombres que no ubican
+  ("Parada de colectivo", "Línea 8 y 104") pasan a nombrarse por su esquina.
+
+## [1.1.0] — 2026-10-13
+
+- La notificación del viaje no aparecía en Android 13 o más nuevo: ahora se
+  pide el permiso al armar la alarma.
+- Las paradas de Corrientes capital se dibujaban dos veces en el mapa.
+- La app vuelve a bajar las paradas al actualizarse, para que aparezcan las
+  de Corrientes.
+
 ## [1.0.0] — 2026-10-09
 
 Primera versión. Transporte público del **Gran Resistencia** (Chaco) y
