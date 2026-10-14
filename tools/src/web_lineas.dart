@@ -352,7 +352,7 @@ String _footer(WebData data, String? networkCode) {
 <footer>
 <p>$sources Datos al ${_esc(data.updatedOn)}.</p>
 <p>No mostramos horarios: no se publican en ninguna fuente abierta. Si en la calle ves algo distinto, confiá en lo que ves.</p>
-<p><a href="https://instagram.com/rutalibre.app">@rutalibre.app</a></p>
+<p><a href="https://instagram.com/rutalibre.app">@rutalibre.app</a> · © 2026 Danilo Avalos · <a href="https://github.com/avalosddanilo/rutalibre">código abierto</a></p>
 </footer>''';
 }
 

@@ -1,0 +1,25 @@
+Ruta Libre
+Copyright (C) 2026 Danilo Avalos <avalosdanilonicolas@gmail.com>
+
+Este programa es software libre: podés redistribuirlo y/o modificarlo bajo
+los términos de la Licencia Pública General Affero de GNU, publicada por la
+Free Software Foundation, versión 3. El texto completo está en LICENSE.
+
+Para usarlo bajo otros términos, ver LICENCIA-COMERCIAL.md.
+
+Los datos (recorridos, paradas y calles) no están cubiertos por este aviso:
+son de sus fuentes y tienen su propia licencia. Ver DATOS.md.
+
+----------------------------------------------------------------------------
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
