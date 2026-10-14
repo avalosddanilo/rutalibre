@@ -215,6 +215,7 @@ ImportResult buildImport(OsmInput input) {
     ..addAll(_remapStopSequences(variants, merge));
 
   _resolveDirections(variants, warnings);
+  _fixCopiedReturnNames(variants, warnings);
   _disambiguateNames(variants);
 
   // --- Líneas ---
@@ -584,6 +585,44 @@ void _resolveDirections(List<ImportedVariant> variants, List<String> warnings) {
         '${free == 0 ? 'ida' : 'vuelta'} por descarte',
       );
     }
+  }
+}
+
+/// Da vuelta el "A → B" de una vuelta que copió el nombre de su ida.
+///
+/// Pasa de verdad: en OSM la vuelta del 904A, del 206 y del Tirol dicen el
+/// mismo "desde → hasta" que su ida, aunque sus paradas van al revés (la
+/// vuelta del 904A arranca en Av. Libertad, en Corrientes, y termina en la
+/// Terminal de Resistencia). En el detalle del viaje la app mostraba
+/// "Vuelta: Terminal de Ómnibus Resistencia → Campus Corrientes" a alguien
+/// que iba de Corrientes a Resistencia.
+///
+/// Solo se toca el caso inequívoco: una vuelta cuyo "A → B" es IGUAL al de
+/// una ida de la misma línea. Una vuelta con nombre propio se respeta.
+void _fixCopiedReturnNames(
+  List<ImportedVariant> variants,
+  List<String> warnings,
+) {
+  final outbound = <String>{
+    for (final v in variants)
+      if (v.direction == 0)
+        '${v.networkCode}/${v.lineCode}/${_withoutDirectionPrefix(v.name)}',
+  };
+  for (final variant in variants) {
+    if (variant.direction != 1) continue;
+    final trip = _withoutDirectionPrefix(variant.name);
+    if (!outbound.contains(
+      '${variant.networkCode}/${variant.lineCode}/$trip',
+    )) {
+      continue;
+    }
+    final ends = trip.split(' → ');
+    if (ends.length != 2) continue;
+    variant.name = 'Vuelta: ${ends[1].trim()} → ${ends[0].trim()}';
+    warnings.add(
+      'relation ${variant.osmRelationId} (${variant.lineCode}): la vuelta '
+      'repetía el nombre de la ida ("$trip"); se dio vuelta',
+    );
   }
 }
 

@@ -14,6 +14,14 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   resuelve 58 que antes daban "no hay", y no pierde ninguno. En el mapa, la
   caminata entre las dos paradas va punteada. Necesita la migración 0015
   (`plan_trip_v2`); sin ella, la app usa el planificador de antes.
+- **Los viajes se ordenan por lo que tardan**, no por lo que se camina
+  (migración 0017, en el servidor: vale también para la 1.2 ya instalada).
+  Del centro de Corrientes a la Terminal de Resistencia, la primera opción
+  mandaba a tomar la 101 para el lado contrario y volver en el 904A: 89
+  paradas. Ahora es el 904B y la 110, 46. Y nunca más dos 904 seguidos, que
+  era cruzar el río y volver.
+- La vuelta del 904A, del 206 y del Tirol decían el mismo "desde → hasta"
+  que su ida. Ahora dicen hacia dónde van.
 
 ### Avisos
 
