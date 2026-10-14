@@ -13,6 +13,13 @@
 //   --base URL       dónde va a vivir el sitio (para el sitemap)
 //   --out DIR        dónde escribirlo
 //   --guardar ARCH   además, guarda los datos bajados para usar con --desde
+//   --sin-og         no generar las imágenes para compartir
+//
+// Las imágenes para compartir (la tarjeta que aparece al pegar el link en
+// WhatsApp) las saca un Chrome sin pantalla: el de la variable CHROME, o el
+// primero de google-chrome, chromium o chromium-browser que encuentre. En
+// GitHub Actions viene instalado. Sin Chrome, las páginas usan la imagen
+// genérica y el sitio sale igual.
 import 'dart:convert';
 import 'dart:io';
 
@@ -46,9 +53,20 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
 
-  final files = renderSite(data, baseUrl: base);
   final dir = Directory(out);
   if (dir.existsSync()) dir.deleteSync(recursive: true);
+  dir.createSync(recursive: true);
+
+  for (final MapEntry(key: path, value: source) in webAssets.entries) {
+    File('$out/$path').parent.createSync(recursive: true);
+    File(source).copySync('$out/$path');
+  }
+
+  final og = args.contains('--sin-og')
+      ? <String>{}
+      : await _shareImages(data, out);
+
+  final files = renderSite(data, baseUrl: base, ogImages: og);
   for (final MapEntry(key: path, value: content) in files.entries) {
     File('$out/$path')
       ..parent.createSync(recursive: true)
@@ -56,8 +74,70 @@ Future<void> main(List<String> args) async {
   }
   stdout.writeln(
     '${data.lines.length} líneas, ${files.length} archivos en $out/ '
-    '(datos al ${data.updatedOn}).',
+    '(datos al ${data.updatedOn}), ${og.length} imágenes para compartir.',
   );
+}
+
+/// Saca las imágenes para compartir con un Chrome sin pantalla. Devuelve las
+/// que salieron: una que falla no frena el sitio, esa página usa la genérica.
+Future<Set<String>> _shareImages(WebData data, String out) async {
+  final chrome = await _findChrome();
+  if (chrome == null) {
+    stdout.writeln(
+      'Sin Chrome: las páginas usan la imagen genérica para compartir.',
+    );
+    return {};
+  }
+  final tmp = Directory.systemTemp.createTempSync('rutalibre-og-');
+  try {
+    File('assets/fonts/Inter-Variable.ttf').copySync('${tmp.path}/inter.ttf');
+    File('tools/web_assets/logo-192.png').copySync('${tmp.path}/logo.png');
+    final made = <String>{};
+    var n = 0;
+    for (final MapEntry(key: png, value: html) in renderOgTemplates(
+      data,
+    ).entries) {
+      final page = File('${tmp.path}/p${n++}.html')..writeAsStringSync(html);
+      final target = File('$out/$png')..parent.createSync(recursive: true);
+      final result = await Process.run(chrome, [
+        '--headless=new',
+        '--no-sandbox',
+        '--disable-gpu',
+        '--hide-scrollbars',
+        '--window-size=1200,630',
+        '--virtual-time-budget=2000',
+        '--screenshot=${target.absolute.path}',
+        page.uri.toString(),
+      ]);
+      if (result.exitCode == 0 && target.existsSync()) {
+        made.add(png);
+      } else {
+        stderr.writeln('No salió $png: ${result.stderr}');
+      }
+    }
+    return made;
+  } finally {
+    tmp.deleteSync(recursive: true);
+  }
+}
+
+Future<String?> _findChrome() async {
+  final candidates = [
+    ?Platform.environment['CHROME'],
+    'google-chrome',
+    'google-chrome-stable',
+    'chromium',
+    'chromium-browser',
+  ];
+  for (final candidate in candidates) {
+    try {
+      final result = await Process.run(candidate, ['--version']);
+      if (result.exitCode == 0) return candidate;
+    } on ProcessException {
+      // No está: el siguiente.
+    }
+  }
+  return null;
 }
 
 Future<WebData> _fetch() async {
