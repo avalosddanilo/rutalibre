@@ -211,7 +211,16 @@ String _linePage(WebLine line, WebData data, String baseUrl, String ogImage) {
   final panels = StringBuffer();
   for (final (i, variant) in line.variants.indexed) {
     final sense = variant.direction == 1 ? 'Vuelta' : 'Ida';
-    final label = _variantLabel(variant.name);
+    // Hay recorridos que en OSM se llaman solo "Ida" o "Vuelta": sin esto
+    // la pestaña decía "Ida Ida".
+    final rawLabel = _variantLabel(variant.name);
+    final label =
+        RegExp(
+          r'^\s*(ida|vuelta)?\s*$',
+          caseSensitive: false,
+        ).hasMatch(rawLabel)
+        ? ''
+        : rawLabel;
     tabs.writeln(
       '<button class="tab" type="button" data-i="$i" aria-pressed="${i == 0}">'
       '<span class="sentido">$sense</span> ${_esc(_text(_tabLabel(label)))}'

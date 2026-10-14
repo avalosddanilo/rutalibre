@@ -209,6 +209,38 @@ void main() {
     expect(page, contains('<span class="sentido">Vuelta</span> →'));
   });
 
+  test('un recorrido que se llama solo "Ida" no dice "Ida Ida"', () {
+    final data = _data();
+    final line = data.lines.first;
+    final page = renderSite(
+      WebData(
+        updatedOn: data.updatedOn,
+        lines: [
+          WebLine(
+            networkCode: line.networkCode,
+            networkName: line.networkName,
+            code: line.code,
+            name: line.name,
+            colorHex: line.colorHex,
+            variants: [
+              for (final name in ['Ida', 'Vuelta: Centro → Laguna Brava'])
+                WebVariant(
+                  name: name,
+                  branch: null,
+                  direction: name == 'Ida' ? 0 : 1,
+                  stops: line.variants.first.stops,
+                  geometry: line.variants.first.geometry,
+                ),
+            ],
+          ),
+        ],
+      ),
+      baseUrl: base,
+    )['corrientes/linea-102.html']!;
+    expect(page, isNot(contains('Ida</span> Ida')));
+    expect(page, contains('<span class="sentido">Ida</span> </button>'));
+  });
+
   test('los archivos fijos del sitio existen en el repo', () {
     for (final source in webAssets.values) {
       expect(File(source).existsSync(), isTrue, reason: source);
