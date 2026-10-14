@@ -42,7 +42,8 @@ Gratis, sin publicidad, sin cuenta, y funciona sin señal.
 CÓMO LLEGO
 Decís a dónde vas y te dice qué colectivo tomar, en qué esquina subir y en
 cuál bajar. Con viajes directos y con un transbordo, porque sin transbordos la
-respuesta sería "no hay" 6 de cada 10 veces. El origen sale del GPS o lo
+respuesta sería "no hay" 6 de cada 10 veces. Y si para cambiar hay que
+caminar hasta otra parada, te dice cuánto. El origen sale del GPS o lo
 escribís vos, así que también podés planificar el viaje desde tu casa la noche
 anterior.
 
@@ -52,9 +53,9 @@ paso por pantalla, grande, para leerlo parado en la vereda.
 
 PARA NO QUEDARTE DORMIDO
 La hice porque me quedé dormido y me desperté en la terminal. La alarma
-"avisame para bajar": la pantalla no se apaga y, dos paradas antes de la tuya,
-suena el tono de alarma del teléfono —aunque esté en silencio— y vibra hasta
-que la apagues. Para el que viaja cansado, que somos todos.
+"avisame para bajar": dos paradas antes de la tuya, suena el tono de alarma
+del teléfono —aunque esté en silencio y con la pantalla apagada, en el
+bolsillo— y vibra hasta que la apagues. Para el que viaja cansado, que somos todos.
 
 BUSCÁ POR LUGAR, POR CALLE O POR DIRECCIÓN
 El hospital, la escuela, el shopping, la plaza. Y tu casa: escribís la calle
@@ -76,6 +77,7 @@ fuente al lado. Un precio sin fecha es peor que no tener precio.
 
 EL RESTO
 - Paradas cerca tuyo, con la distancia real en metros
+- Avisos de paros y desvíos arriba del mapa
 - Cartel para el chofer: el número de la línea a toda pantalla y brillo, para
   parar el colectivo de noche
 - El viaje sobrevive a cerrar la app: al reabrir te ofrece retomarlo
@@ -96,8 +98,8 @@ inventado manda a alguien a esperar un colectivo que no viene.
 
 En Corrientes capital las paradas son las que publicó la Municipalidad en
 2022. Las medimos contra los recorridos de hoy y coinciden —la mitad cae a
-menos de 5 metros—, pero alguna pudo haber cambiado. Y más de un tercio
-todavía figura con su número de parada, no con la esquina.
+menos de 5 metros—, pero alguna pudo haber cambiado. Casi todas figuran con su
+esquina; unas pocas, todavía con su número de parada.
 
 DE DÓNDE SALEN LOS DATOS
 Los recorridos y las paradas son de OpenStreetMap, mapeados por la comunidad,
@@ -118,15 +120,15 @@ Hecha en Resistencia, Chaco.
 ## Novedades de esta versión (máx. 500)
 
 ```
-Primera versión.
+Transbordo caminando: si para cambiar de colectivo hay que caminar hasta otra
+parada, ahora la app te lo arma y te dice cuánto. Así se conecta el 904 con
+las líneas de Corrientes, y aparecen viajes que antes daban "no hay".
 
-Mapa con las paradas visibles de entrada, buscador por lugar, calle y
-dirección con altura ("9 de Julio 1260"), "¿cómo llego?" con transbordos, guía
-paso a paso con contador de paradas en vivo y alarma para no quedarte
-dormido. Tarifas con fecha y fuente. Horarios del 904A y frecuencia regulada
-del 904.
+Avisos de paros y desvíos arriba del mapa.
 
-Sin publicidad, sin cuenta y funciona sin señal.
+La alarma para bajar suena también con la pantalla apagada.
+
+Las paradas de Corrientes ahora tienen el nombre de su esquina.
 ```
 
 ---
