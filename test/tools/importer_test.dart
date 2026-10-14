@@ -253,6 +253,57 @@ void main() {
       expect(byId[1]!.direction, 1);
       expect(byId[2]!.direction, 0);
     });
+
+    test('una vuelta que copió el nombre de la ida se da vuelta', () {
+      // Lo que pasaba con el 904A, el 206 y el Tirol en OSM: la vuelta va al
+      // revés, pero dice el mismo "desde → hasta" que la ida.
+      final result = buildImport(
+        _input([
+          _relation(
+            id: 1,
+            ref: '206',
+            name: '206 Ida Resistencia - Barranqueras',
+          ),
+          _relation(
+            id: 2,
+            ref: '206',
+            name: '206 Vuelta Resistencia - Barranqueras',
+          ),
+        ]),
+      );
+
+      final byId = {for (final v in result.variants) v.osmRelationId: v};
+      expect(byId[1]!.name, 'Ida: Resistencia → Barranqueras');
+      expect(byId[2]!.name, 'Vuelta: Barranqueras → Resistencia');
+      expect(
+        result.warnings.where((w) => w.contains('se dio vuelta')),
+        hasLength(1),
+      );
+    });
+
+    test('una vuelta con nombre propio no se toca', () {
+      final result = buildImport(
+        _input([
+          _relation(
+            id: 1,
+            ref: '206',
+            name: '206 Ida Resistencia - Barranqueras',
+          ),
+          _relation(
+            id: 2,
+            ref: '206',
+            name: '206 Vuelta Barranqueras - Resistencia',
+          ),
+        ]),
+      );
+
+      final byId = {for (final v in result.variants) v.osmRelationId: v};
+      expect(byId[2]!.name, 'Vuelta: Barranqueras → Resistencia');
+      expect(
+        result.warnings.where((w) => w.contains('se dio vuelta')),
+        isEmpty,
+      );
+    });
   });
 
   group('paradas', () {

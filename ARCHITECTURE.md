@@ -255,6 +255,9 @@ flutter pub get
 #    supabase/migrations/0016_service_alerts.sql
 #                                        (avisos de paros y desvíos: ver
 #                                         docs/avisos.md)
+#    supabase/migrations/0017_plan_trip_v2_por_tiempo.sql
+#                                        (los viajes se ordenan por lo que
+#                                         tardan; tres vueltas renombradas)
 #    supabase/seed/seed_gran_resistencia.sql       (datos REALES, ~815 KB)
 #    supabase/seed/seed_corrientes.sql             (Corrientes capital)
 #    supabase/seed/seed_horarios.sql               (DESPUÉS de los recorridos)
