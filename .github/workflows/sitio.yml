@@ -11,6 +11,10 @@
 # LAS CLAVES son los mismos secrets que usa `mantener-viva.yml`: la anon key,
 # pública por diseño. El generador solo lee.
 #
+# LAS IMÁGENES PARA COMPARTIR (la tarjeta de WhatsApp de cada línea) las saca
+# el Chrome que ya trae el runner de GitHub. Si un día no está, el sitio sale
+# igual, con la imagen genérica.
+#
 # PARA QUE ANDE LA PRIMERA VEZ, una sola vez:
 #   Settings -> Pages -> Build and deployment -> Source: GitHub Actions
 name: Sitio
@@ -21,6 +25,7 @@ on:
     paths:
       - tools/web_lineas.dart
       - tools/src/web_lineas.dart
+      - tools/web_assets/**
       - .github/workflows/sitio.yml
   schedule:
     # Lunes 06:17 UTC (03:17 en Argentina): fuera de hora y no en punto, que
