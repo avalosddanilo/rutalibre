@@ -20,7 +20,8 @@ Un municipio, una empresa de transporte o un proveedor que quiera una
 versión propia **sin** la obligación de publicar su código puede comprar
 una licencia comercial, bajo términos distintos a la AGPL.
 
-Eso es posible porque el copyright es de una sola persona. Contacto:
+Eso es posible porque el copyright es de una sola persona, Danilo Avalos
+(ver `COPYRIGHT`). Contacto:
 **avalosdanilonicolas@gmail.com**
 
 ## Por eso los aportes necesitan una línea extra

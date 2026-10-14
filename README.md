@@ -135,6 +135,8 @@ flutter test
 
 ## Licencia
 
+**Copyright © 2026 Danilo Avalos.** Ver [`COPYRIGHT`](COPYRIGHT).
+
 **Código: [AGPL-3.0](LICENSE).** Se puede usar, estudiar, modificar y
 redistribuir. La contrapartida: una versión modificada que se distribuya o se
 ofrezca por red también tiene que publicar su fuente. Para una licencia
