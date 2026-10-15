@@ -50,7 +50,14 @@ void main() {
       final gr = fareFor(networkCode: 'gran-resistencia', lineCode: '3')!;
       expect(gr.formattedAmount, r'$1.885');
       expect(gr.formattedValidity, 'vigente desde enero de 2026');
-      expect(gr.source, 'Diario Chaco');
+      expect(gr.source, 'Gobierno del Chaco');
+    });
+
+    test('Corrientes capital, con la fuente oficial', () {
+      final ctes = fareFor(networkCode: 'corrientes-capital', lineCode: '101')!;
+      expect(ctes.formattedAmount, r'$1.890');
+      expect(ctes.formattedValidity, 'vigente desde noviembre de 2025');
+      expect(ctes.source, 'Municipalidad de Corrientes');
     });
 
     test('el 904A cobra distinto que su red y GANA la excepción', () {
@@ -69,10 +76,6 @@ void main() {
     });
 
     test('sin tarifa conocida devuelve null, NO un precio inventado', () {
-      expect(
-        fareFor(networkCode: 'corrientes-capital', lineCode: '101'),
-        isNull,
-      );
       expect(fareFor(networkCode: 'interurbano-chaco', lineCode: '1'), isNull);
     });
 
@@ -96,10 +99,14 @@ void main() {
   test('TODA tarifa conocida tiene fecha y fuente', () {
     // La regla del archivo: no se puede mostrar un precio anónimo o sin
     // fecha. Esto lo verifica sobre los datos reales, no sobre el tipo.
-    for (final red in ['gran-resistencia', 'interurbano-chaco-corrientes']) {
+    for (final red in [
+      'gran-resistencia',
+      'interurbano-chaco-corrientes',
+      'corrientes-capital',
+    ]) {
       final fare = networkFareFor(red)!;
       expect(fare.source, isNotEmpty);
-      expect(fare.validFrom.year, greaterThanOrEqualTo(2026));
+      expect(fare.validFrom.year, greaterThanOrEqualTo(2025));
       expect(fare.formattedValidity, contains('vigente desde'));
     }
   });
