@@ -5,6 +5,16 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 ## [1.3.0] — sin publicar
 
+### Cómo llego
+
+- **El planificador cuenta los metros del colectivo, no solo las paradas**
+  (migración 0018, en el servidor: vale también para la 1.2 ya instalada).
+  Antes, un minuto por parada; en el puente, donde hay casi 10 km entre una
+  parada y otra, el 904 parecía más rápido de lo que es. Ahora es medio
+  minuto por parada más los metros a 27 km/h. Medido sobre 300 viajes al
+  azar: cambia la primera opción en 35, con 130 m menos de colectivo y 38 m
+  menos de caminata en promedio.
+
 ### Diagnóstico
 
 - **"Enviar diagnóstico", sin rastreadores.** Tocando "Ruta Libre" arriba del
