@@ -19,8 +19,8 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 - **Los lugares también se encuentran por como les dice la gente.** "utn"
   encuentra la facultad (antes salía la calle Gutnisky), "unne" los campus
-  (antes, bibliotecas), "facultad" las facultades (antes, bibliotecas y la
-  calle Facundo) y "terminal" las dos terminales de ómnibus primero. Los
+  (antes, bibliotecas), "facultad" la UTN y los campus (antes, bibliotecas y
+  la calle Facundo) y "terminal" las dos terminales de ómnibus primero. Los
   apodos están en `place_aliases.dart`, y un test verifica que cada uno
   apunte a un lugar que existe en los datos.
 
