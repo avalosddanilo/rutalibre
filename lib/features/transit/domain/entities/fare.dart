@@ -77,7 +77,14 @@ final _networkFares = <String, Fare>{
   'gran-resistencia': Fare(
     amount: 1885,
     validFrom: _enero2026,
-    source: 'Diario Chaco',
+    source: 'Gobierno del Chaco',
+  ),
+  // Ordenanza 7658, desde el lunes 3/11/2025. La publicó la Municipalidad:
+  // es la única tarifa de las cuatro redes con fuente oficial y no de prensa.
+  'corrientes-capital': Fare(
+    amount: 1890,
+    validFrom: _noviembre2025,
+    source: 'Municipalidad de Corrientes',
   ),
   'interurbano-chaco-corrientes': Fare(
     amount: 1890,
@@ -106,16 +113,16 @@ final _lineFares = <String, Fare>{
 // Con nombre para no repetir el literal en cada entrada. `final` y no
 // `const` porque `DateTime` no tiene constructor const — que es también la
 // razón por la que las tablas de arriba tampoco pueden serlo.
+final _noviembre2025 = DateTime(2025, 11);
 final _enero2026 = DateTime(2026, 1);
 final _marzo2026 = DateTime(2026, 3);
 
 /// La tarifa de una línea, o null si no la sabemos.
 ///
-/// **Null es una respuesta válida y frecuente**: de las cuatro redes solo dos
-/// tienen tarifa confirmada. Para Corrientes capital y el interurbano del
-/// Chaco no hay dato, y la pantalla no muestra nada — inventar un precio
-/// "aproximado" sería exactamente el error que este archivo existe para
-/// evitar.
+/// **Null es una respuesta válida**: de las cuatro redes, el interurbano del
+/// Chaco no tiene tarifa confirmada, y la pantalla no muestra nada — inventar
+/// un precio "aproximado" sería exactamente el error que este archivo existe
+/// para evitar.
 Fare? fareFor({required String networkCode, required String lineCode}) =>
     _lineFares['$networkCode/$lineCode'] ?? _networkFares[networkCode];
 

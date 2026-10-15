@@ -15,6 +15,13 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   azar: cambia la primera opción en 35, con 130 m menos de colectivo y 38 m
   menos de caminata en promedio.
 
+### Tarifas
+
+- **Corrientes capital muestra su boleto: $1.890**, vigente desde noviembre
+  de 2025 (Ordenanza 7658, publicado por la Municipalidad). Hasta acá decía
+  que no lo sabíamos. La de Gran Resistencia ahora cita la fuente oficial,
+  el Gobierno del Chaco.
+
 ### Recorridos
 
 - **Cada recorrido dice hacia dónde va.** La lista de una línea decía
