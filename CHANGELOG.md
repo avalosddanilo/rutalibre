@@ -19,10 +19,10 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 - **Los lugares también se encuentran por como les dice la gente.** "utn"
   encuentra la facultad (antes salía la calle Gutnisky), "unne" los campus
-  (antes, bibliotecas), y "terminal" las dos terminales de ómnibus primero.
-  "La terminal" o "el llano" andan igual que sin el artículo. Los apodos
-  están en `place_aliases.dart`, y un test verifica que cada uno apunte a
-  un lugar que existe en los datos.
+  (antes, bibliotecas), "facultad" las facultades (antes, bibliotecas y la
+  calle Facundo) y "terminal" las dos terminales de ómnibus primero. Los
+  apodos están en `place_aliases.dart`, y un test verifica que cada uno
+  apunte a un lugar que existe en los datos.
 
 ### Diagnóstico
 

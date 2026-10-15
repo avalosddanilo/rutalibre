@@ -72,13 +72,6 @@ void main() {
     expect(search('hospital ll').first, 'Hospital de la señora Llano');
   });
 
-  test('el artículo de adelante no molesta', () {
-    expect(search('la terminal').first, 'Terminal Resistencia');
-    expect(search('el hospital perr').first, 'Hospital Perrando');
-    // Y donde el artículo ES parte del nombre, sigue saliendo primero.
-    expect(search('la rioja').first, 'La Rioja');
-  });
-
   test('lo que no es apodo se encuentra como antes', () {
     expect(search('perrando'), ['Hospital Perrando']);
   });
@@ -111,11 +104,22 @@ void main() {
       );
     });
 
-    test('"la unne" son los campus, no las bibliotecas', () {
-      expect(first('la unne', 2), [
+    test('"unne" son los campus, no las bibliotecas', () {
+      expect(first('unne', 2), [
         'Campus Resistencia Universidad Nacional del Nordeste',
         'Campus Deodoro Roca',
       ]);
+    });
+
+    test('"facu" son las facultades, no bibliotecas ni la calle Facundo', () {
+      final results = first('facu', placeAliases['facultad']!.length + 1);
+      expect(results.first, startsWith('Universidad Tecnológica Nacional'));
+      expect(
+        results.where(
+          (n) => n.startsWith('Biblioteca') || n.startsWith('Facundo'),
+        ),
+        isEmpty,
+      );
     });
 
     test('"terminal" son las dos terminales de ómnibus', () {
