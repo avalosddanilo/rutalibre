@@ -3,6 +3,21 @@
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/).
 Versionado según [SemVer](https://semver.org/lang/es/).
 
+## [1.3.0] — sin publicar
+
+### Diagnóstico
+
+- **"Enviar diagnóstico", sin rastreadores.** Tocando "Ruta Libre" arriba del
+  mapa se abre una hoja con la versión, la web, la política de privacidad y
+  el botón para mandarnos el registro de la app. El registro guarda en el
+  teléfono los últimos 200 eventos: alarma armada o desarmada, servicio de
+  viaje iniciado o rechazado por Android, pantalla prendida, alarma sonó,
+  permisos de ubicación y errores. **Nunca la ubicación**: cualquier número
+  con pinta de coordenada se borra antes de guardarse, y hay tests que lo
+  prueban. Sale del teléfono solo si la persona lo comparte, y se borra con
+  "Borrar registro". Sirve para entender un "no me sonó la alarma" sin
+  Crashlytics ni nada parecido.
+
 ## [1.2.0] — 2026-10-14
 
 ### Cómo llego

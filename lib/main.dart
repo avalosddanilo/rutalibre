@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'dart:ui';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
 import 'core/config/env.dart';
+import 'core/diagnostics/diagnostics_log.dart';
 import 'core/errors/failures.dart';
 import 'core/providers/shared_preferences_provider.dart';
 
@@ -50,12 +53,27 @@ Future<void> main() async {
     return;
   }
 
+  // Los errores que se escapan quedan en el registro de diagnóstico (sin
+  // ubicación: ver DiagnosticsLog). Se siguen mostrando en la consola como
+  // siempre; esto solo agrega una copia que la persona puede mandar.
+  final diagnostics = DiagnosticsLog(prefs)..record('app_abierta');
+  final previous = FlutterError.onError;
+  FlutterError.onError = (details) {
+    diagnostics.recordError(details.exception, details.stack);
+    previous?.call(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    diagnostics.recordError(error, stack);
+    return false;
+  };
+
   runApp(
     ProviderScope(
       overrides: [
         // La única instancia async del grafo se resuelve acá una vez;
         // el resto de los providers son síncronos y puros.
         sharedPreferencesProvider.overrideWithValue(prefs),
+        diagnosticsLogProvider.overrideWithValue(diagnostics),
       ],
       // Los Failure son VALORES deterministas del dominio (el repositorio ya
       // decidió qué significan): reintentarlos solo regala ~38 s de spinner

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart'
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../../core/diagnostics/diagnostics_log.dart';
 import '../../../../core/providers/clock_provider.dart';
 
 /// Errores de geolocalización. NO son `Failure`s del dominio a propósito:
@@ -47,24 +48,32 @@ typedef LocationFix = ({UserPosition position, bool approximate});
 /// Envuelve geolocator: el baile completo de permisos vive acá y en ningún
 /// otro lado, y la UI puede mockear este servicio en tests sin plugins.
 class LocationService {
-  const LocationService();
+  const LocationService({this.log});
+
+  /// Dónde anotar cómo terminó el baile de permisos. Solo el resultado
+  /// ("denegado", "servicio apagado"), nunca la posición.
+  final DiagnosticsLog? log;
 
   /// Un fix con más error que esto no sirve para un radio de ~500 m.
   static const _accuracyThresholdMeters = 400.0;
 
   Future<LocationFix> currentPosition() async {
     if (!await Geolocator.isLocationServiceEnabled()) {
+      log?.record('ubicacion', 'GPS apagado');
       throw const LocationServiceDisabled();
     }
 
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
+      log?.record('permiso_ubicacion', 'pedido: ${permission.name}');
     }
     if (permission == LocationPermission.deniedForever) {
+      log?.record('permiso_ubicacion', 'denegado para siempre');
       throw const LocationPermissionDeniedForever();
     }
     if (permission == LocationPermission.denied) {
+      log?.record('permiso_ubicacion', 'denegado');
       throw const LocationPermissionDenied();
     }
 
@@ -165,7 +174,7 @@ class LocationService {
 }
 
 final locationServiceProvider = Provider<LocationService>(
-  (ref) => const LocationService(),
+  (ref) => LocationService(log: ref.watch(diagnosticsLogProvider)),
 );
 
 /// Query activa del modo "cerca mío" (null = modo apagado).

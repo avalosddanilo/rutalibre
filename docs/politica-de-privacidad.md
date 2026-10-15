@@ -1,6 +1,6 @@
 # Política de privacidad de Ruta Libre
 
-**Última actualización: 13 de octubre de 2026**
+**Última actualización: 15 de octubre de 2026**
 
 ## Lo corto
 
@@ -71,8 +71,14 @@ copia de seguridad automática de Android.
 | **Pronóstico de lluvia** | No pedirlo de nuevo cada vez que abrís la app | Las próximas horas de pronóstico y **una coordenada tuya redondeada a ~1 km**, con la hora en que se guardó. Se descarta solo a las pocas horas |
 | **Tus favoritos** | Que no tengas que rebuscar la línea o la parada de todos los días | Qué líneas y qué paradas marcaste con la estrella, con el nombre y la ubicación de esas paradas |
 | **Tus últimos destinos** | Que no escribas de nuevo el lugar al que vas siempre | **Los últimos 8 lugares** que elegiste como destino, con su nombre y ubicación. Al noveno, el más viejo se borra solo |
+| **Registro de diagnóstico** | Saber por qué falló algo (la alarma que no sonó, un permiso que no se dio) si nos escribís | **Los últimos 200 eventos de la app** con su hora: "alarma armada", "servicio de viaje iniciado", "permiso de ubicación denegado", "error: …". **Nunca tu ubicación**: la app borra de cada evento cualquier número con pinta de coordenada antes de guardarlo |
 
-**Los últimos dos son datos tuyos, no del transporte**: qué colectivo tomás y a
+El **registro de diagnóstico** sale del teléfono **solo si vos lo mandás**:
+tocando la marca "Ruta Libre" arriba del mapa → **"Enviar diagnóstico"**, que
+abre el menú de compartir para que elijas con qué app (mail, WhatsApp…) y
+veas el texto antes de mandarlo. Ahí mismo está **"Borrar registro"**.
+
+**Los favoritos y los últimos destinos son datos tuyos, no del transporte**: qué colectivo tomás y a
 dónde vas dicen algo sobre vos. Por eso están acá, dichos con todas las letras.
 Lo importante es que **nunca salen del teléfono**: no hay a quién mandárselos
 porque no hay cuenta ni servidor de usuarios.
@@ -82,6 +88,8 @@ porque no hay cuenta ni servidor de usuarios.
 - Los últimos destinos tienen un botón **"Borrar"** dentro de la app, en la
   pantalla de "¿A dónde vas?".
 - Los favoritos se quitan tocando la estrella de nuevo.
+- El registro de diagnóstico, con **"Borrar registro"** en la hoja que se abre
+  tocando "Ruta Libre" arriba del mapa.
 - Todo junto, de una: desinstalando la app, o desde *Ajustes → Aplicaciones →
   Ruta Libre → Almacenamiento → Borrar datos*.
 
@@ -92,6 +100,8 @@ porque no hay cuenta ni servidor de usuarios.
   sirva para identificarte.**
 - **No hay publicidad ni rastreadores de terceros.**
 - No hay analítica: no medimos qué pantallas mirás ni cuánto usás la app.
+- No hay reporte automático de errores: el registro de diagnóstico no se manda
+  solo, nunca.
 - No se accede a tus contactos, fotos, archivos, micrófono ni cámara.
 - No hay ningún perfil tuyo en ningún lado: lo que la app guarda no se cruza
   con nada ni se le manda a nadie.
