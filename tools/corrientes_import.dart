@@ -29,6 +29,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
+import 'src/corrientes_correcciones.dart';
 import 'src/corrientes_import.dart';
 import 'src/corrientes_stops_csv.dart';
 import 'src/geometry.dart';
@@ -40,6 +41,8 @@ const _sourceUrl =
     'resource/b60f67ef-bf0e-459e-98ff-2cde25c486dc/download/recorridosurbanos.csv';
 
 const _outputPath = 'supabase/seed/seed_corrientes.sql';
+
+const _correccionesPath = 'tools/data/corrientes_correcciones.json';
 
 /// Corrientes capital y alrededores: (sur, oeste, norte, este).
 const _streetsBbox = '-27.60,-58.88,-27.40,-58.68';
@@ -75,7 +78,13 @@ Future<void> main(List<String> args) async {
     csv = await _download(_sourceUrl);
   }
 
-  final result = importCorrientes(csv);
+  // Los recorridos que cambiaron y el portal todavía no publicó: ver
+  // tools/src/corrientes_correcciones.dart.
+  final correcciones = parseCorrections(
+    jsonDecode(File(_correccionesPath).readAsStringSync())
+        as Map<String, dynamic>,
+  );
+  final result = applyRouteCorrections(importCorrientes(csv), correcciones);
 
   // Paradas: siempre. Antes eran opt-in (`--con-paradas`) y el CI, que
   // corría sin el flag, regeneraba un seed sin ellas. `--con-paradas` se
@@ -95,7 +104,11 @@ Future<void> main(List<String> args) async {
     stopsUrl = _stopsUrl;
   }
   final (crudas, avisos) = parseMunicipalStops(paradasCsv);
-  final stops = placeStops(stops: crudas, variants: result.variants);
+  final stops = applyStopCorrections(
+    placeStops(stops: crudas, variants: result.variants),
+    all: crudas,
+    corrections: correcciones,
+  );
   for (final a in avisos) {
     stdout.writeln('  aviso: $a');
   }

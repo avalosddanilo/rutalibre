@@ -20,7 +20,7 @@
 -- reproyecta a WGS84 en el importador (ver gauss_kruger.dart).
 --
 -- Fecha de extracción: 2026-10-13T12:46:35.702463Z
--- Líneas: 10 | Recorridos: 60 | Paradas: 1357
+-- Líneas: 10 | Recorridos: 60 | Paradas: 1355
 --
 -- REQUIERE las migraciones 0003 y 0013 aplicadas.
 -- ====================================================================
@@ -240,7 +240,7 @@ insert into public.route_variants (line_id, name, branch, direction, geom, is_ac
 values ((select l.id from public.lines l join public.networks n on n.id = l.network_id
          where n.code = 'corrientes-capital' and l.code = '102'),
         'Ida: 17 de Agosto ↔ Puerto', 'A', 0,
-        st_geomfromtext('LINESTRING(-58.789574 -27.489308, -58.784876 -27.490126, -58.781250 -27.490607, -58.781125 -27.490454, -58.781063 -27.489701, -58.782905 -27.489451, -58.783057 -27.490276, -58.784893 -27.490030, -58.789462 -27.489244, -58.792514 -27.488463, -58.793851 -27.488186, -58.795359 -27.487986, -58.795186 -27.486809, -58.795468 -27.486375, -58.795403 -27.484734, -58.795587 -27.483300, -58.795242 -27.482317, -58.804510 -27.479634, -58.806309 -27.479356, -58.838741 -27.475322, -58.838859 -27.475245, -58.838862 -27.475038, -58.837501 -27.461817, -58.837750 -27.461566, -58.837971 -27.461540)', 4326), true)
+        st_geomfromtext('LINESTRING(-58.781076 -27.489731, -58.781149 -27.490464, -58.781101 -27.490581, -58.784915 -27.490064, -58.789629 -27.489285, -58.792497 -27.488527, -58.794039 -27.488231, -58.799411 -27.487565, -58.798329 -27.481417, -58.805023 -27.479532, -58.819738 -27.477712, -58.819306 -27.474939, -58.818642 -27.471561, -58.819222 -27.471569, -58.825603 -27.470880, -58.838302 -27.469659, -58.837496 -27.461859, -58.837524 -27.461766, -58.837689 -27.461752)', 4326), true)
 on conflict (line_id, coalesce(branch, ''), direction) do update set
     name = excluded.name,
     geom = excluded.geom,
@@ -249,7 +249,7 @@ insert into public.route_variants (line_id, name, branch, direction, geom, is_ac
 values ((select l.id from public.lines l join public.networks n on n.id = l.network_id
          where n.code = 'corrientes-capital' and l.code = '102'),
         'Vuelta: Puerto ↔ 17 de Agosto', 'A', 1,
-        st_geomfromtext('LINESTRING(-58.837971 -27.461540, -58.838503 -27.461584, -58.838716 -27.461666, -58.841166 -27.461465, -58.841255 -27.461568, -58.841590 -27.466104, -58.830433 -27.466953, -58.830374 -27.466999, -58.830601 -27.469165, -58.830529 -27.469235, -58.818999 -27.470384, -58.818526 -27.470501, -58.819793 -27.477623, -58.819796 -27.477821, -58.819645 -27.478026, -58.805203 -27.479817, -58.803426 -27.480266, -58.791713 -27.483640, -58.789814 -27.483943, -58.783900 -27.484394, -58.783440 -27.484480, -58.782742 -27.484778, -58.782165 -27.485293, -58.781860 -27.485832, -58.781873 -27.486340, -58.781574 -27.487094, -58.782161 -27.490375, -58.784859 -27.490041, -58.789316 -27.489308, -58.789531 -27.489197, -58.789424 -27.488392, -58.789580 -27.489308)', 4326), true)
+        st_geomfromtext('LINESTRING(-58.837689 -27.461752, -58.841246 -27.461419, -58.841566 -27.466083, -58.830355 -27.466964, -58.830615 -27.469255, -58.818511 -27.470432, -58.819388 -27.474932, -58.819866 -27.477986, -58.805082 -27.479836, -58.800536 -27.481106, -58.800819 -27.482728, -58.800612 -27.482775, -58.801436 -27.487360, -58.794137 -27.488285, -58.792497 -27.488596, -58.789637 -27.489351, -58.784824 -27.490148, -58.783055 -27.490378, -58.782904 -27.489476, -58.781076 -27.489731)', 4326), true)
 on conflict (line_id, coalesce(branch, ''), direction) do update set
     name = excluded.name,
     geom = excluded.geom,
@@ -537,7 +537,7 @@ insert into public.route_variants (line_id, name, branch, direction, geom, is_ac
 values ((select l.id from public.lines l join public.networks n on n.id = l.network_id
          where n.code = 'corrientes-capital' and l.code = '106'),
         'Ida: B° Pirayui ↔ Puerto', 'A', 0,
-        st_geomfromtext('LINESTRING(-58.787592 -27.504507, -58.787549 -27.505299, -58.780058 -27.506295, -58.779416 -27.502860, -58.779547 -27.502094, -58.779507 -27.501991, -58.775520 -27.500676, -58.775134 -27.500455, -58.781098 -27.486330, -58.781269 -27.486032, -58.781606 -27.485722, -58.781852 -27.485060, -58.781900 -27.484741, -58.781785 -27.484305, -58.781861 -27.484069, -58.782022 -27.483943, -58.782455 -27.483899, -58.782721 -27.484087, -58.782786 -27.484414, -58.781902 -27.485745, -58.781848 -27.485989, -58.781897 -27.486335, -58.780891 -27.488702, -58.781219 -27.490524, -58.784953 -27.490010, -58.789513 -27.489253, -58.792336 -27.488491, -58.793782 -27.488214, -58.799243 -27.487513, -58.799337 -27.487384, -58.798339 -27.481728, -58.798372 -27.481468, -58.798474 -27.481355, -58.804237 -27.479689, -58.806446 -27.479322, -58.833911 -27.475916, -58.833996 -27.475753, -58.833751 -27.473322, -58.832366 -27.461199, -58.832412 -27.461112, -58.834813 -27.461048, -58.837049 -27.461775, -58.837655 -27.461713, -58.837760 -27.461571, -58.837967 -27.461536)', 4326), true)
+        st_geomfromtext('LINESTRING(-58.787553 -27.504566, -58.787557 -27.505315, -58.780132 -27.506344, -58.779472 -27.502746, -58.779637 -27.502122, -58.779595 -27.502026, -58.775402 -27.500617, -58.781466 -27.486272, -58.781887 -27.484966, -58.781810 -27.484272, -58.781939 -27.484041, -58.782137 -27.483931, -58.782370 -27.483917, -58.782923 -27.484187, -58.783212 -27.484222, -58.790236 -27.483732, -58.791913 -27.483404, -58.802272 -27.480366, -58.804864 -27.479695, -58.833886 -27.476050, -58.833936 -27.475952, -58.833823 -27.474668, -58.832293 -27.461166, -58.834755 -27.461108, -58.836934 -27.461814, -58.837689 -27.461752)', 4326), true)
 on conflict (line_id, coalesce(branch, ''), direction) do update set
     name = excluded.name,
     geom = excluded.geom,
@@ -546,7 +546,7 @@ insert into public.route_variants (line_id, name, branch, direction, geom, is_ac
 values ((select l.id from public.lines l join public.networks n on n.id = l.network_id
          where n.code = 'corrientes-capital' and l.code = '106'),
         'Vuelta: Puerto ↔ B° Pirayui', 'A', 1,
-        st_geomfromtext('LINESTRING(-58.837973 -27.461534, -58.838495 -27.461573, -58.838707 -27.461661, -58.841164 -27.461459, -58.841261 -27.461566, -58.841594 -27.466096, -58.830335 -27.466976, -58.831364 -27.476223, -58.831350 -27.476494, -58.831237 -27.476550, -58.805253 -27.479794, -58.804237 -27.480023, -58.791201 -27.483762, -58.790149 -27.483908, -58.783863 -27.484389, -58.783038 -27.484620, -58.782391 -27.485032, -58.781904 -27.485734, -58.781846 -27.485979, -58.781901 -27.486334, -58.781106 -27.488253, -58.780764 -27.488507, -58.775642 -27.500592, -58.775657 -27.500687, -58.779551 -27.501986, -58.779587 -27.502148, -58.779464 -27.502797, -58.780094 -27.506227, -58.787527 -27.505210, -58.787539 -27.504496)', 4326), true)
+        st_geomfromtext('LINESTRING(-58.837689 -27.461752, -58.841246 -27.461419, -58.841566 -27.466083, -58.830355 -27.466964, -58.831417 -27.476449, -58.804862 -27.479752, -58.791338 -27.483633, -58.789726 -27.483852, -58.783525 -27.484268, -58.782825 -27.484425, -58.781940 -27.485721, -58.781853 -27.486380, -58.781089 -27.488276, -58.781193 -27.488057, -58.781741 -27.487980, -58.782168 -27.490487, -58.780847 -27.490733, -58.779931 -27.490454, -58.775596 -27.500692, -58.779595 -27.502026, -58.779637 -27.502122, -58.779472 -27.502746, -58.780119 -27.506279, -58.787568 -27.505248, -58.787553 -27.504566)', 4326), true)
 on conflict (line_id, coalesce(branch, ''), direction) do update set
     name = excluded.name,
     geom = excluded.geom,
@@ -688,7 +688,7 @@ on conflict (line_id, coalesce(branch, ''), direction) do update set
     is_active = true;
 
 -- ------------------------------------------------------------
--- 3. Paradas (1357)
+-- 3. Paradas (1355)
 --    Identidad: `source_ref` = ctes:<gid> del dataset
 --    municipal. NO son nodos de OSM (ver migración 0013).
 -- ------------------------------------------------------------
@@ -8925,14 +8925,6 @@ on conflict (source_ref) where source_ref is not null do update set
     geom = excluded.geom,
     is_active = true;
 insert into public.stops (source_ref, name, description, geom, is_active)
-values ('ctes:1095', 'Cuba y Turín', 'Parada 1095 · Municipalidad de Corrientes',
-        st_setsrid(st_point(-58.785471, -27.505423), 4326)::geography, true)
-on conflict (source_ref) where source_ref is not null do update set
-    name = excluded.name,
-    description = excluded.description,
-    geom = excluded.geom,
-    is_active = true;
-insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1096', 'Cuba y Milán', 'Parada 1096 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.787340, -27.505186), 4326)::geography, true)
 on conflict (source_ref) where source_ref is not null do update set
@@ -9287,14 +9279,6 @@ on conflict (source_ref) where source_ref is not null do update set
 insert into public.stops (source_ref, name, description, geom, is_active)
 values ('ctes:1148', 'La Rioja y Pasaje Agustín González', 'Parada 1148 · Municipalidad de Corrientes',
         st_setsrid(st_point(-58.838002, -27.467176), 4326)::geography, true)
-on conflict (source_ref) where source_ref is not null do update set
-    name = excluded.name,
-    description = excluded.description,
-    geom = excluded.geom,
-    is_active = true;
-insert into public.stops (source_ref, name, description, geom, is_active)
-values ('ctes:1149', 'Avenida Independencia y Milán', 'Parada 1149 · Municipalidad de Corrientes',
-        st_setsrid(st_point(-58.783312, -27.484524), 4326)::geography, true)
 on conflict (source_ref) where source_ref is not null do update set
     name = excluded.name,
     description = excluded.description,
@@ -11550,7 +11534,7 @@ on conflict (source_ref) where source_ref is not null do update set
     is_active = true;
 
 -- ------------------------------------------------------------
--- 4. Secuencia de paradas por recorrido (2202)
+-- 4. Secuencia de paradas por recorrido (2210)
 --    El orden NO sale del archivo: cada parada se proyecta
 --    sobre el trazado y se ordena por cuánto se avanzó.
 -- ------------------------------------------------------------
@@ -13191,193 +13175,247 @@ values ((select rv.id from public.route_variants rv join public.lines l on l.id 
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:559'), 1);
+        (select id from public.stops where source_ref = 'ctes:1210'), 1);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:561'), 2);
+        (select id from public.stops where source_ref = 'ctes:573'), 2);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:564'), 3);
+        (select id from public.stops where source_ref = 'ctes:574'), 3);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:567'), 4);
+        (select id from public.stops where source_ref = 'ctes:575'), 4);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:568'), 5);
+        (select id from public.stops where source_ref = 'ctes:1150'), 5);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:560'), 6);
+        (select id from public.stops where source_ref = 'ctes:1074'), 6);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:203'), 7);
+        (select id from public.stops where source_ref = 'ctes:895'), 7);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:204'), 8);
+        (select id from public.stops where source_ref = 'ctes:1321'), 8);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:205'), 9);
+        (select id from public.stops where source_ref = 'ctes:896'), 9);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:206'), 10);
+        (select id from public.stops where source_ref = 'ctes:1076'), 10);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:207'), 11);
+        (select id from public.stops where source_ref = 'ctes:1077'), 11);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:208'), 12);
+        (select id from public.stops where source_ref = 'ctes:1213'), 12);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:209'), 13);
+        (select id from public.stops where source_ref = 'ctes:1078'), 13);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:210'), 14);
+        (select id from public.stops where source_ref = 'ctes:203'), 14);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:212'), 15);
+        (select id from public.stops where source_ref = 'ctes:204'), 15);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:213'), 16);
+        (select id from public.stops where source_ref = 'ctes:205'), 16);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:214'), 17);
+        (select id from public.stops where source_ref = 'ctes:206'), 17);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:215'), 18);
+        (select id from public.stops where source_ref = 'ctes:207'), 18);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:216'), 19);
+        (select id from public.stops where source_ref = 'ctes:208'), 19);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:119'), 20);
+        (select id from public.stops where source_ref = 'ctes:209'), 20);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:217'), 21);
+        (select id from public.stops where source_ref = 'ctes:210'), 21);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:218'), 22);
+        (select id from public.stops where source_ref = 'ctes:212'), 22);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:562'), 23);
+        (select id from public.stops where source_ref = 'ctes:382'), 23);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:563'), 24);
+        (select id from public.stops where source_ref = 'ctes:383'), 24);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1148'), 25);
+        (select id from public.stops where source_ref = 'ctes:384'), 25);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:33'), 26);
+        (select id from public.stops where source_ref = 'ctes:385'), 26);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:23'), 27);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:25'), 28);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:26'), 29);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:27'), 30);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:28'), 31);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:29'), 32);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:30'), 33);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:31'), 34);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '102' and rv.branch is not distinct from 'A'
+           and rv.direction = 0),
+        (select id from public.stops where source_ref = 'ctes:33'), 35);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:928'), 1);
+        (select id from public.stops where source_ref = 'ctes:906'), 1);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:906'), 2);
+        (select id from public.stops where source_ref = 'ctes:565'), 2);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:565'), 3);
+        (select id from public.stops where source_ref = 'ctes:566'), 3);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:566'), 4);
+        (select id from public.stops where source_ref = 'ctes:396'), 4);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:396'), 5);
+        (select id from public.stops where source_ref = 'ctes:222'), 5);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:222'), 6);
+        (select id from public.stops where source_ref = 'ctes:397'), 6);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
@@ -13425,139 +13463,121 @@ values ((select rv.id from public.route_variants rv join public.lines l on l.id 
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:228'), 14);
+        (select id from public.stops where source_ref = 'ctes:402'), 14);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:229'), 15);
+        (select id from public.stops where source_ref = 'ctes:228'), 15);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:230'), 16);
+        (select id from public.stops where source_ref = 'ctes:229'), 16);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:231'), 17);
+        (select id from public.stops where source_ref = 'ctes:230'), 17);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:232'), 18);
+        (select id from public.stops where source_ref = 'ctes:231'), 18);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:233'), 19);
+        (select id from public.stops where source_ref = 'ctes:232'), 19);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:234'), 20);
+        (select id from public.stops where source_ref = 'ctes:233'), 20);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:236'), 21);
+        (select id from public.stops where source_ref = 'ctes:234'), 21);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:237'), 22);
+        (select id from public.stops where source_ref = 'ctes:236'), 22);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:238'), 23);
+        (select id from public.stops where source_ref = 'ctes:913'), 23);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:239'), 24);
+        (select id from public.stops where source_ref = 'ctes:914'), 24);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:240'), 25);
+        (select id from public.stops where source_ref = 'ctes:1318'), 25);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1214'), 26);
+        (select id from public.stops where source_ref = 'ctes:915'), 26);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:242'), 27);
+        (select id from public.stops where source_ref = 'ctes:1135'), 27);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:243'), 28);
+        (select id from public.stops where source_ref = 'ctes:757'), 28);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1149'), 29);
+        (select id from public.stops where source_ref = 'ctes:916'), 29);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:570'), 30);
+        (select id from public.stops where source_ref = 'ctes:559'), 30);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:571'), 31);
+        (select id from public.stops where source_ref = 'ctes:561'), 31);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:572'), 32);
+        (select id from public.stops where source_ref = 'ctes:564'), 32);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '102' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:573'), 33);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '102' and rv.branch is not distinct from 'A'
-           and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:574'), 34);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '102' and rv.branch is not distinct from 'A'
-           and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:575'), 35);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '102' and rv.branch is not distinct from 'A'
-           and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1150'), 36);
+        (select id from public.stops where source_ref = 'ctes:567'), 33);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
@@ -20073,241 +20093,223 @@ values ((select rv.id from public.route_variants rv join public.lines l on l.id 
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1210'), 14);
+        (select id from public.stops where source_ref = 'ctes:1267'), 14);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1211'), 15);
+        (select id from public.stops where source_ref = 'ctes:569'), 15);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1134'), 16);
+        (select id from public.stops where source_ref = 'ctes:200'), 16);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1133'), 17);
+        (select id from public.stops where source_ref = 'ctes:1151'), 17);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1212'), 18);
+        (select id from public.stops where source_ref = 'ctes:202'), 18);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1074'), 19);
+        (select id from public.stops where source_ref = 'ctes:560'), 19);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:739'), 20);
+        (select id from public.stops where source_ref = 'ctes:745'), 20);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:896'), 21);
+        (select id from public.stops where source_ref = 'ctes:203'), 21);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1076'), 22);
+        (select id from public.stops where source_ref = 'ctes:204'), 22);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1077'), 23);
+        (select id from public.stops where source_ref = 'ctes:205'), 23);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1213'), 24);
+        (select id from public.stops where source_ref = 'ctes:206'), 24);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1078'), 25);
+        (select id from public.stops where source_ref = 'ctes:207'), 25);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:203'), 26);
+        (select id from public.stops where source_ref = 'ctes:208'), 26);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:204'), 27);
+        (select id from public.stops where source_ref = 'ctes:209'), 27);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:205'), 28);
+        (select id from public.stops where source_ref = 'ctes:210'), 28);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:206'), 29);
+        (select id from public.stops where source_ref = 'ctes:212'), 29);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:207'), 30);
+        (select id from public.stops where source_ref = 'ctes:213'), 30);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:208'), 31);
+        (select id from public.stops where source_ref = 'ctes:214'), 31);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:209'), 32);
+        (select id from public.stops where source_ref = 'ctes:215'), 32);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:210'), 33);
+        (select id from public.stops where source_ref = 'ctes:216'), 33);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:212'), 34);
+        (select id from public.stops where source_ref = 'ctes:348'), 34);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:213'), 35);
+        (select id from public.stops where source_ref = 'ctes:119'), 35);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:214'), 36);
+        (select id from public.stops where source_ref = 'ctes:217'), 36);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:215'), 37);
+        (select id from public.stops where source_ref = 'ctes:120'), 37);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:216'), 38);
+        (select id from public.stops where source_ref = 'ctes:121'), 38);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:119'), 39);
+        (select id from public.stops where source_ref = 'ctes:777'), 39);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:120'), 40);
+        (select id from public.stops where source_ref = 'ctes:858'), 40);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:121'), 41);
+        (select id from public.stops where source_ref = 'ctes:1002'), 41);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:777'), 42);
+        (select id from public.stops where source_ref = 'ctes:776'), 42);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:858'), 43);
+        (select id from public.stops where source_ref = 'ctes:1064'), 43);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1002'), 44);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '106' and rv.branch is not distinct from 'A'
-           and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:776'), 45);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '106' and rv.branch is not distinct from 'A'
-           and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:1064'), 46);
-insert into public.route_stops (route_variant_id, stop_id, stop_order)
-values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
-         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
-           and l.code = '106' and rv.branch is not distinct from 'A'
-           and rv.direction = 0),
-        (select id from public.stops where source_ref = 'ctes:487'), 47);
+        (select id from public.stops where source_ref = 'ctes:487'), 44);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:928'), 1);
+        (select id from public.stops where source_ref = 'ctes:906'), 1);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:906'), 2);
+        (select id from public.stops where source_ref = 'ctes:565'), 2);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:565'), 3);
+        (select id from public.stops where source_ref = 'ctes:566'), 3);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:566'), 4);
+        (select id from public.stops where source_ref = 'ctes:396'), 4);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:396'), 5);
+        (select id from public.stops where source_ref = 'ctes:222'), 5);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:222'), 6);
+        (select id from public.stops where source_ref = 'ctes:397'), 6);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
@@ -20319,217 +20321,247 @@ values ((select rv.id from public.route_variants rv join public.lines l on l.id 
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:85'), 8);
+        (select id from public.stops where source_ref = 'ctes:1101'), 8);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:86'), 9);
+        (select id from public.stops where source_ref = 'ctes:85'), 9);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:223'), 10);
+        (select id from public.stops where source_ref = 'ctes:86'), 10);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:225'), 11);
+        (select id from public.stops where source_ref = 'ctes:223'), 11);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:226'), 12);
+        (select id from public.stops where source_ref = 'ctes:225'), 12);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:227'), 13);
+        (select id from public.stops where source_ref = 'ctes:226'), 13);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:228'), 14);
+        (select id from public.stops where source_ref = 'ctes:227'), 14);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:229'), 15);
+        (select id from public.stops where source_ref = 'ctes:228'), 15);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:230'), 16);
+        (select id from public.stops where source_ref = 'ctes:229'), 16);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:231'), 17);
+        (select id from public.stops where source_ref = 'ctes:230'), 17);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:232'), 18);
+        (select id from public.stops where source_ref = 'ctes:231'), 18);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:233'), 19);
+        (select id from public.stops where source_ref = 'ctes:232'), 19);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:234'), 20);
+        (select id from public.stops where source_ref = 'ctes:233'), 20);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:236'), 21);
+        (select id from public.stops where source_ref = 'ctes:234'), 21);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:237'), 22);
+        (select id from public.stops where source_ref = 'ctes:236'), 22);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:238'), 23);
+        (select id from public.stops where source_ref = 'ctes:237'), 23);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:239'), 24);
+        (select id from public.stops where source_ref = 'ctes:238'), 24);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:240'), 25);
+        (select id from public.stops where source_ref = 'ctes:239'), 25);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1214'), 26);
+        (select id from public.stops where source_ref = 'ctes:240'), 26);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:242'), 27);
+        (select id from public.stops where source_ref = 'ctes:241'), 27);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:243'), 28);
+        (select id from public.stops where source_ref = 'ctes:1214'), 28);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:570'), 29);
+        (select id from public.stops where source_ref = 'ctes:242'), 29);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1083'), 30);
+        (select id from public.stops where source_ref = 'ctes:243'), 30);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1084'), 31);
+        (select id from public.stops where source_ref = 'ctes:570'), 31);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1085'), 32);
+        (select id from public.stops where source_ref = 'ctes:571'), 32);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1086'), 33);
+        (select id from public.stops where source_ref = 'ctes:572'), 33);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1087'), 34);
+        (select id from public.stops where source_ref = 'ctes:568'), 34);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1209'), 35);
+        (select id from public.stops where source_ref = 'ctes:1083'), 35);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1089'), 36);
+        (select id from public.stops where source_ref = 'ctes:1084'), 36);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1090'), 37);
+        (select id from public.stops where source_ref = 'ctes:1085'), 37);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1091'), 38);
+        (select id from public.stops where source_ref = 'ctes:1086'), 38);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1092'), 39);
+        (select id from public.stops where source_ref = 'ctes:1087'), 39);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1093'), 40);
+        (select id from public.stops where source_ref = 'ctes:1209'), 40);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1094'), 41);
+        (select id from public.stops where source_ref = 'ctes:1089'), 41);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1095'), 42);
+        (select id from public.stops where source_ref = 'ctes:1090'), 42);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
            and l.code = '106' and rv.branch is not distinct from 'A'
            and rv.direction = 1),
-        (select id from public.stops where source_ref = 'ctes:1096'), 43);
+        (select id from public.stops where source_ref = 'ctes:1091'), 43);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '106' and rv.branch is not distinct from 'A'
+           and rv.direction = 1),
+        (select id from public.stops where source_ref = 'ctes:1092'), 44);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '106' and rv.branch is not distinct from 'A'
+           and rv.direction = 1),
+        (select id from public.stops where source_ref = 'ctes:1093'), 45);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '106' and rv.branch is not distinct from 'A'
+           and rv.direction = 1),
+        (select id from public.stops where source_ref = 'ctes:1094'), 46);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '106' and rv.branch is not distinct from 'A'
+           and rv.direction = 1),
+        (select id from public.stops where source_ref = 'ctes:882'), 47);
+insert into public.route_stops (route_variant_id, stop_id, stop_order)
+values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
+         join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'
+           and l.code = '106' and rv.branch is not distinct from 'A'
+           and rv.direction = 1),
+        (select id from public.stops where source_ref = 'ctes:1096'), 48);
 insert into public.route_stops (route_variant_id, stop_id, stop_order)
 values ((select rv.id from public.route_variants rv join public.lines l on l.id = rv.line_id
          join public.networks n on n.id = l.network_id where n.code = 'corrientes-capital'

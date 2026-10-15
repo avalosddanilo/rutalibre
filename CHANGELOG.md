@@ -15,6 +15,18 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   azar: cambia la primera opción en 35, con 130 m menos de colectivo y 38 m
   menos de caminata en promedio.
 
+### Datos
+
+- **La 102A y la 106A de Corrientes, con el recorrido que tienen desde
+  agosto** (migración 0019, en el servidor: vale también para la 1.2 ya
+  instalada). Cambiaron el 12/8/2026 y el portal de datos abiertos de la
+  Municipalidad nunca se actualizó, así que la app mostraba recorridos que
+  ya no existen. Los trazados nuevos salen de las calles que publicaron El
+  Litoral y ERSA, ruteadas sobre OpenStreetMap y revisadas calle por calle
+  por alguien que conoce la zona. Viven en
+  `tools/data/corrientes_correcciones.json`, y el importador los aplica
+  encima del portal: regenerar el seed no los pierde.
+
 ### Tarifas
 
 - **Corrientes capital muestra su boleto: $1.890**, vigente desde noviembre
