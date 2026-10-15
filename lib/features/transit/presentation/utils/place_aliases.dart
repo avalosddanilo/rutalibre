@@ -31,6 +31,21 @@ const placeAliases = <String, List<String>>{
     'Rectorado UNNE',
   ],
   'ucp': ['Universidad de la Cuenca del Plata'],
+  // Sin esto salían primero las bibliotecas y, con "facu", la calle
+  // Facundo. Las facultades de la UNNE en Resistencia (Humanidades,
+  // Ingeniería, Arquitectura, Económicas) no están mapeadas una por una:
+  // están dentro del campus. Humanidades y Sociales figuran en OSM en el
+  // campus Sargento Cabral de Corrientes; hasta confirmarlo, no se empujan.
+  'facultad': [
+    'Universidad Tecnológica Nacional - Facultad Regional Resistencia',
+    'Campus Resistencia Universidad Nacional del Nordeste',
+    'Facultad de Medicina',
+    'Facultad de Derecho y Ciencias Sociales y Políticas',
+    'Facultad de Ciencias Exactas, Naturales y Agrimensura',
+    'Facultad de Odontología',
+    'Facultad de Ciencias Veterinarias',
+    'Facultad de Ciencias Agrarias',
+  ],
   'terminal': [
     'Estación Terminal de Omnibus',
     'Terminal de  Ómnibus Corrientes Capital',

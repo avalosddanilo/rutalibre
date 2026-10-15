@@ -77,31 +77,19 @@ enum _MatchQuality {
   contains,
 }
 
-/// "la terminal", "el llano": el artículo no ayuda a buscar.
-final _article = RegExp(r'^(el|la|los|las) (.+)$');
-
-_MatchQuality? _bestQuality(String name, String query, String bare) {
-  final full = _quality(name, query);
-  if (bare == query) return full;
-  final withoutArticle = _quality(name, bare);
-  if (full == null) return withoutArticle;
-  if (withoutArticle == null) return full;
-  return full.index <= withoutArticle.index ? full : withoutArticle;
-}
-
 /// Los lugares que nombra un apodo, con su orden: el apodo entero, o su
 /// comienzo desde la tercera letra ("ter" ya es "terminal"). El comienzo
 /// tiene que tener las mismas palabras: "hospital" solo no es "hospital
 /// llano", pero "hospital ll" sí.
-Map<String, int> _aliasRanks(String bare, Map<String, List<String>> aliases) {
-  final words = bare.split(' ').length;
+Map<String, int> _aliasRanks(String query, Map<String, List<String>> aliases) {
+  final words = query.split(' ').length;
   final ranks = <String, int>{};
   for (final MapEntry(key: alias, value: names) in aliases.entries) {
     final startsLike =
-        bare.length >= 3 &&
-        alias.startsWith(bare) &&
+        query.length >= 3 &&
+        alias.startsWith(query) &&
         alias.split(' ').length == words;
-    if (alias == bare || startsLike) {
+    if (alias == query || startsLike) {
       for (final name in names) {
         ranks.putIfAbsent(name, () => ranks.length);
       }
@@ -141,15 +129,14 @@ List<Destination> searchDestinations({
 }) {
   final normalized = normalizeForSearch(query);
   if (normalized.isEmpty) return const [];
-  final bare = _article.firstMatch(normalized)?.group(2) ?? normalized;
-  final aliasRanks = _aliasRanks(bare, aliases);
+  final aliasRanks = _aliasRanks(normalized, aliases);
 
   // El tercer campo ordena dentro de cada calidad: el largo del nombre, o
   // el lugar en la lista del apodo.
   final scored = <(_MatchQuality, bool isStop, int order, Destination)>[];
 
   void consider(Destination destination, {required bool isStop}) {
-    final quality = _bestQuality(destination.name, normalized, bare);
+    final quality = _quality(destination.name, normalized);
     if (quality == null) return;
     scored.add((quality, isStop, destination.name.length, destination));
   }
