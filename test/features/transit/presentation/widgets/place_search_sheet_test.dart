@@ -387,4 +387,136 @@ void main() {
       contains('French y Güemes'),
     );
   });
+
+  group('Casa y Trabajo o facu', () {
+    Future<ProviderContainer> openDestination(
+      WidgetTester tester, {
+      List<Place> places = const [],
+    }) async {
+      final c = container(places: places);
+      c.read(tripSearchProvider.notifier).startFrom(_gpsPoint);
+      await pumpSheet(
+        tester,
+        c,
+        (context) =>
+            PlaceSearchSheet.showDestination(context, origin: _gpsPoint),
+      );
+      return c;
+    }
+
+    testWidgets('sin guardar, el botón lleva a elegir el lugar y lo guarda '
+        'sin armar el viaje', (tester) async {
+      final c = await openDestination(tester);
+
+      await tester.tap(find.text('Casa'));
+      await tester.pumpAndSettle();
+      expect(find.text('¿Dónde queda tu casa?'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextField), 'french');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('French y Güemes'));
+      await tester.pumpAndSettle();
+
+      expect(
+        c.read(pinnedPlacesProvider)[PinnedSlot.casa]?.name,
+        'French y Güemes',
+      );
+      // Guardar no es viajar: la hoja vuelve a preguntar a dónde vas.
+      expect(find.text('¿A dónde vas?'), findsOneWidget);
+      expect(c.read(tripSearchProvider), isA<TripPickingDestination>());
+    });
+
+    testWidgets('guardado, un toque arma el viaje', (tester) async {
+      final c = await openDestination(tester);
+      await c
+          .read(pinnedPlacesProvider.notifier)
+          .set(PinnedSlot.trabajo, savedPlaceOf(_stops[1]));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Trabajo o facu'));
+      await tester.pumpAndSettle();
+
+      final state = c.read(tripSearchProvider);
+      expect(state, isA<TripRoute>());
+      expect((state as TripRoute).destination, (lat: -27.4601, lng: -58.9721));
+    });
+
+    testWidgets('eligiendo origen, sale desde ahí', (tester) async {
+      final c = container();
+      await c
+          .read(pinnedPlacesProvider.notifier)
+          .set(PinnedSlot.casa, savedPlaceOf(_stops[0]));
+      await pumpSheet(tester, c, PlaceSearchSheet.showOrigin);
+
+      await tester.tap(find.text('Casa'));
+      await tester.pumpAndSettle();
+
+      final state = c.read(tripSearchProvider);
+      expect(state, isA<TripPickingDestination>());
+      expect(
+        (state as TripPickingDestination).originName,
+        'Ameghino y Sáenz Peña',
+      );
+    });
+
+    testWidgets('una calle sin altura no se guarda, y dice por qué', (
+      tester,
+    ) async {
+      final c = await openDestination(
+        tester,
+        places: const [
+          Place(
+            name: 'Ameghino (Resistencia)',
+            lat: -27.45,
+            lng: -58.98,
+            kind: PlaceKind.calle,
+          ),
+        ],
+      );
+
+      await tester.tap(find.text('Casa'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'ameghino');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Ameghino (Resistencia)'));
+      await tester.pumpAndSettle();
+
+      expect(c.read(pinnedPlacesProvider), isEmpty);
+      expect(find.textContaining('"Ameghino 850"'), findsOneWidget);
+      // Sigue eligiendo: la hoja no se cerró ni cambió de modo.
+      expect(find.text('¿Dónde queda tu casa?'), findsOneWidget);
+    });
+
+    testWidgets('mantenerlo apretado lo quita', (tester) async {
+      final c = await openDestination(tester);
+      await c
+          .read(pinnedPlacesProvider.notifier)
+          .set(PinnedSlot.casa, savedPlaceOf(_stops[0]));
+      await tester.pumpAndSettle();
+
+      await tester.longPress(find.text('Casa'));
+      await tester.pumpAndSettle();
+      expect(find.text('Ameghino y Sáenz Peña'), findsWidgets);
+      await tester.tap(find.text('Quitar'));
+      await tester.pumpAndSettle();
+
+      expect(c.read(pinnedPlacesProvider), isEmpty);
+      // Y no se armó ningún viaje por el camino.
+      expect(c.read(tripSearchProvider), isA<TripPickingDestination>());
+    });
+
+    testWidgets('en un teléfono angosto y con letra al 200%, no se rompe', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 640);
+      tester.view.devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = 2;
+      addTearDown(tester.view.reset);
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+      await openDestination(tester);
+      expect(find.text('Casa'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+  });
 }

@@ -101,6 +101,14 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
   /// True mientras se espera el GPS del atajo "usar mi ubicación".
   bool _locating = false;
 
+  /// Cuál de los botones fijos ("Casa", "Trabajo o facu") se está eligiendo.
+  /// Mientras no es null, tocar un resultado lo GUARDA ahí en vez de armar el
+  /// viaje.
+  PinnedSlot? _assigning;
+
+  /// Por qué no se pudo guardar lo que se tocó (una calle sin altura).
+  String? _assignNote;
+
   /// Tope de resultados. Buscar "avenida" matchea cientos de esquinas y
   /// ninguna lista de cientos se lee: quien no encuentra lo suyo en los
   /// primeros, escribe una letra más.
@@ -142,26 +150,51 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
                 child: Row(
                   children: [
-                    Icon(_pickingOrigin ? Icons.trip_origin : Icons.flag),
+                    Icon(
+                      _assigning != null
+                          ? _pinnedIcon(_assigning!)
+                          : _pickingOrigin
+                          ? Icons.trip_origin
+                          : Icons.flag,
+                    ),
                     const SizedBox(width: 12),
                     // Expanded: al 200% de texto el título no entra al lado
                     // del ícono y desbordaba. Prefiere partirse en dos
                     // renglones antes que romperse.
                     Expanded(
                       child: Text(
-                        _pickingOrigin ? '¿De dónde salís?' : '¿A dónde vas?',
+                        _assigning != null
+                            ? '¿Dónde queda ${_assigning!.what}?'
+                            : _pickingOrigin
+                            ? '¿De dónde salís?'
+                            : '¿A dónde vas?',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
+                    if (_assigning != null)
+                      TextButton(
+                        onPressed: () => setState(() {
+                          _assigning = null;
+                          _assignNote = null;
+                        }),
+                        child: const Text('Cancelar'),
+                      ),
                   ],
                 ),
               ),
-              if (widget.notice != null) _Notice(text: widget.notice!),
+              if (_assigning != null)
+                const _Notice(
+                  text:
+                      'Buscalo y tocalo para guardarlo. Queda solo en tu '
+                      'teléfono, y lo cambiás manteniendo apretado el botón.',
+                )
+              else if (widget.notice != null)
+                _Notice(text: widget.notice!),
               // Eligiendo destino, DE DÓNDE se sale va a la vista y se puede
               // cambiar. Es lo único que vuelve planificable un viaje que uno
               // no está empezando en este momento — desde el sillón, la noche
               // anterior— y la salida para el teléfono que no da el GPS.
-              if (!_pickingOrigin && search is! TripIdle)
+              if (!_pickingOrigin && search is! TripIdle && _assigning == null)
                 _OriginRow(
                   label: _originLabel(search),
                   onChange: _changeOrigin,
@@ -172,9 +205,14 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
                   controller: _controller,
                   autofocus: true,
                   textInputAction: TextInputAction.search,
-                  onChanged: (value) => setState(() => _query = value),
+                  onChanged: (value) => setState(() {
+                    _query = value;
+                    _assignNote = null;
+                  }),
                   decoration: InputDecoration(
-                    hintText: 'Calle, esquina o lugar',
+                    hintText: _assigning != null
+                        ? 'Calle y altura, esquina o lugar'
+                        : 'Calle, esquina o lugar',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _query.isEmpty
                         ? null
@@ -196,7 +234,8 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
               // Eligiendo origen, el GPS va PRIMERO: sigue siendo la respuesta
               // correcta la mayoría de las veces, y quien llegó acá porque
               // falló necesita poder reintentarlo sin salir.
-              if (_pickingOrigin)
+              if (_assignNote != null) _Notice(text: _assignNote!),
+              if (_pickingOrigin && _assigning == null)
                 ListTile(
                   leading: _locating
                       ? const SizedBox(
@@ -243,7 +282,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
               // desde las paradas cercanas, así que la esquina de al lado
               // contesta lo mismo que el patio exacto, y un segundo modo de
               // "tocá el mapa" pediría otro banner y otro estado.
-              if (!_pickingOrigin) ...[
+              if (!_pickingOrigin && _assigning == null) ...[
                 const Divider(height: 1),
                 ListTile(
                   leading: const Icon(Icons.touch_app),
@@ -417,16 +456,25 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
   Widget _buildShortcuts() {
     final favorites = ref.watch(favoriteStopsProvider);
     final recents = ref.watch(recentDestinationsProvider);
+    // Eligiendo qué guardar en "Casa", los botones no van: tocarlos ahí no
+    // tendría un sentido claro.
+    final pinned = _assigning == null ? _pinnedRow() : null;
 
     if (favorites.isEmpty && recents.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-        child: Text(
-          'Escribí una calle o una esquina. Por ejemplo: "Ameghino", '
-          '"25 de Mayo y French".',
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ?pinned,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+            child: Text(
+              'Escribí una calle o una esquina. Por ejemplo: "Ameghino", '
+              '"25 de Mayo y French".',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
       );
     }
 
@@ -434,6 +482,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
     // recientes son una deducción nuestra, y una deducción no le gana a algo
     // que la persona dijo.
     final rows = <Widget>[
+      ?pinned,
       if (favorites.isNotEmpty)
         ..._section(title: 'Guardadas', icon: Icons.star, places: favorites),
       if (recents.isNotEmpty)
@@ -456,6 +505,94 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
       padding: const EdgeInsets.only(bottom: 8),
       children: rows,
     );
+  }
+
+  /// "Casa" y "Trabajo o facu", arriba de todo: el viaje de todos los días
+  /// a un toque. Sin guardar, el botón lleva a elegir el lugar; guardado,
+  /// arma el viaje (o pone el origen). Mantenerlo apretado lo cambia.
+  Widget _pinnedRow() {
+    final pinned = ref.watch(pinnedPlacesProvider);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+      child: Row(
+        children: [
+          for (final slot in PinnedSlot.values) ...[
+            if (slot.index > 0) const SizedBox(width: 8),
+            Expanded(
+              child: Tooltip(
+                message: pinned[slot]?.name ?? 'Elegir ${slot.what}',
+                child: FilledButton.tonalIcon(
+                  onPressed: () => switch (pinned[slot]) {
+                    final place? => _chooseSaved(place),
+                    null => _startAssigning(slot),
+                  },
+                  onLongPress: () => _editPinned(slot, pinned[slot]),
+                  icon: Icon(
+                    pinned[slot] == null ? Icons.add : _pinnedIcon(slot),
+                  ),
+                  label: Text(
+                    slot.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _startAssigning(PinnedSlot slot) {
+    _controller.clear();
+    setState(() {
+      _query = '';
+      _assigning = slot;
+      _assignNote = null;
+    });
+  }
+
+  void _assign(SavedPlace place) {
+    final slot = _assigning;
+    if (slot == null) return;
+    ref.read(pinnedPlacesProvider.notifier).set(slot, place);
+    _controller.clear();
+    setState(() {
+      _query = '';
+      _assigning = null;
+      _assignNote = null;
+    });
+  }
+
+  /// Mantener apretado: cambiar o quitar. Sin guardar, es lo mismo que
+  /// tocarlo.
+  Future<void> _editPinned(PinnedSlot slot, SavedPlace? place) async {
+    if (place == null) return _startAssigning(slot);
+    final action = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(slot.label),
+        content: Text(place.name),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop('quitar'),
+            child: const Text('Quitar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop('cambiar'),
+            child: const Text('Cambiar'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    switch (action) {
+      case 'quitar':
+        await ref.read(pinnedPlacesProvider.notifier).clear(slot);
+      case 'cambiar':
+        _startAssigning(slot);
+    }
   }
 
   List<Widget> _section({
@@ -507,6 +644,27 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
   /// se llama "últimos destinos" y llenarla con lugares donde uno ESTUVO
   /// parado la volvería otra cosa.
   void _choose(Destination match) {
+    if (_assigning != null) {
+      // Una calle entera no es un lugar: "Casa" en la mitad de la calle
+      // armaría todos los viajes a diez cuadras de la puerta.
+      if (match case PlaceDestination(
+        :final place,
+      ) when place.kind == PlaceKind.calle) {
+        setState(
+          () => _assignNote =
+              'Para guardar una calle, poné la altura: por ejemplo, '
+              '"${place.name.split(' (').first} 850".',
+        );
+        return;
+      }
+      _assign((
+        id: match.savedId,
+        name: match.name,
+        lat: match.lat,
+        lng: match.lng,
+      ));
+      return;
+    }
     if (_pickingOrigin) {
       // Como origen, la calle se toma tal cual: el planificador arranca desde
       // las paradas CERCANAS al punto, así que la mitad de la calle contesta
@@ -545,6 +703,7 @@ class _PlaceSearchSheetState extends ConsumerState<PlaceSearchSheet> {
   /// tocar el primero de la lista no debería reordenar nada, y si lo hiciera,
   /// la lista se movería sola bajo el dedo cada vez que se usa.
   void _chooseSaved(SavedPlace place) {
+    if (_assigning != null) return _assign(place);
     if (_pickingOrigin) {
       _setOrigin((lat: place.lat, lng: place.lng), name: place.name);
       return;
@@ -680,6 +839,11 @@ class _Notice extends StatelessWidget {
     );
   }
 }
+
+IconData _pinnedIcon(PinnedSlot slot) => switch (slot) {
+  PinnedSlot.casa => Icons.home_outlined,
+  PinnedSlot.trabajo => Icons.work_outline,
+};
 
 String _formatMeters(double meters) {
   if (meters < 1000) return '${meters.round()} m';

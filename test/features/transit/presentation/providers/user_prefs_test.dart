@@ -153,4 +153,29 @@ void main() {
       expect(container().read(recentDestinationsProvider), isEmpty);
     });
   });
+
+  group('Casa y Trabajo o facu', () {
+    test('se guardan, sobreviven a cerrar la app y se quitan', () async {
+      final casa = savedPlaceOf(_stop('c', 'French y Güemes'));
+      await container()
+          .read(pinnedPlacesProvider.notifier)
+          .set(PinnedSlot.casa, casa);
+
+      // Otra "apertura": un contenedor nuevo lee lo guardado.
+      final again = container();
+      expect(again.read(pinnedPlacesProvider), {PinnedSlot.casa: casa});
+
+      await again.read(pinnedPlacesProvider.notifier).clear(PinnedSlot.casa);
+      expect(container().read(pinnedPlacesProvider), isEmpty);
+    });
+
+    test('uno no pisa al otro', () async {
+      final c = container();
+      final notifier = c.read(pinnedPlacesProvider.notifier);
+      await notifier.set(PinnedSlot.casa, savedPlaceOf(_stop('c')));
+      await notifier.set(PinnedSlot.trabajo, savedPlaceOf(_stop('t')));
+      expect(c.read(pinnedPlacesProvider)[PinnedSlot.casa]?.id, 'c');
+      expect(c.read(pinnedPlacesProvider)[PinnedSlot.trabajo]?.id, 't');
+    });
+  });
 }
