@@ -18,6 +18,25 @@ typedef SavedPlace = ({String id, String name, double lat, double lng});
 SavedPlace savedPlaceOf(Stop stop) =>
     (id: stop.id, name: stop.name, lat: stop.lat, lng: stop.lng);
 
+/// Los dos lugares fijos, a un toque arriba del buscador.
+///
+/// Dos y no "los que quieras": el que toma el colectivo todos los días va
+/// de la casa al trabajo o a la facu y vuelve. Una lista de lugares con
+/// nombre es otra cosa para administrar; para todo lo demás están las
+/// paradas guardadas y los últimos destinos.
+enum PinnedSlot {
+  casa(label: 'Casa', what: 'tu casa'),
+  trabajo(label: 'Trabajo o facu', what: 'tu trabajo o tu facu');
+
+  const PinnedSlot({required this.label, required this.what});
+
+  /// Lo que dice el botón.
+  final String label;
+
+  /// Cómo se nombra en una pregunta: "¿Dónde queda tu casa?".
+  final String what;
+}
+
 /// Lo que el usuario marcó y por dónde anduvo, en el teléfono.
 ///
 /// **No pasa por el dominio ni por un repositorio.** Es la misma categoría
@@ -38,6 +57,8 @@ class UserPrefsStore {
   static const _favoriteLinesKey = 'ruta_libre_fav_lines_v1';
   static const _favoriteStopsKey = 'ruta_libre_fav_stops_v1';
   static const _recentDestinationsKey = 'ruta_libre_recent_dest_v1';
+  static String _pinnedKey(PinnedSlot slot) =>
+      'ruta_libre_pinned_${slot.name}_v1';
 
   /// Cuántos destinos recientes se recuerdan.
   ///
@@ -80,6 +101,20 @@ class UserPrefsStore {
 
   Future<void> saveRecentDestinations(List<SavedPlace> places) =>
       _writePlaces(_recentDestinationsKey, places);
+
+  // -------------------------------------------------------------------------
+  // Casa y trabajo o facu
+  // -------------------------------------------------------------------------
+
+  Map<PinnedSlot, SavedPlace> pinnedPlaces() => {
+    for (final slot in PinnedSlot.values)
+      slot: ?_readPlaces(_pinnedKey(slot)).firstOrNull,
+  };
+
+  Future<void> savePinnedPlace(PinnedSlot slot, SavedPlace? place) =>
+      place == null
+      ? _prefs.remove(_pinnedKey(slot))
+      : _writePlaces(_pinnedKey(slot), [place]);
 
   List<SavedPlace> _readPlaces(String key) {
     final raw = _prefs.getString(key);
@@ -205,4 +240,30 @@ class RecentDestinationsNotifier extends Notifier<List<SavedPlace>> {
 final recentDestinationsProvider =
     NotifierProvider<RecentDestinationsNotifier, List<SavedPlace>>(
       RecentDestinationsNotifier.new,
+    );
+
+/// "Casa" y "Trabajo o facu": el lugar que la persona eligió para cada uno.
+///
+/// Es un dato sensible —dónde vive alguien— y por eso vive solo en el
+/// teléfono, como el resto de este archivo, y se dice en la política de
+/// privacidad.
+class PinnedPlacesNotifier extends Notifier<Map<PinnedSlot, SavedPlace>> {
+  @override
+  Map<PinnedSlot, SavedPlace> build() =>
+      ref.watch(userPrefsStoreProvider).pinnedPlaces();
+
+  Future<void> set(PinnedSlot slot, SavedPlace place) async {
+    state = {...state, slot: place};
+    await ref.read(userPrefsStoreProvider).savePinnedPlace(slot, place);
+  }
+
+  Future<void> clear(PinnedSlot slot) async {
+    state = {...state}..remove(slot);
+    await ref.read(userPrefsStoreProvider).savePinnedPlace(slot, null);
+  }
+}
+
+final pinnedPlacesProvider =
+    NotifierProvider<PinnedPlacesNotifier, Map<PinnedSlot, SavedPlace>>(
+      PinnedPlacesNotifier.new,
     );

@@ -17,6 +17,11 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Buscador
 
+- **"Casa" y "Trabajo o facu" a un toque**, arriba del buscador. La primera
+  vez el botón pide buscar el lugar (calle y altura, esquina o lugar) y lo
+  guarda; después, un toque arma el viaje. Eligiendo de dónde salís, sale
+  desde ahí. Manteniéndolo apretado se cambia o se quita. Se guarda solo en
+  el teléfono, y la política de privacidad lo dice.
 - **Los lugares también se encuentran por como les dice la gente.** "utn"
   encuentra la facultad (antes salía la calle Gutnisky), "unne" los campus
   (antes, bibliotecas), "facultad" la UTN y los campus (antes, bibliotecas y
