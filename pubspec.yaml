@@ -59,6 +59,10 @@ dependencies:
   # para la 1.1). El TONO de la alarma no usa plugin: es un canal nativo
   # propio de veinte líneas (ver MainActivity.kt y wake_alarm.dart).
   wakelock_plus: ^1.2.8
+  # La versión en la hoja "Acerca de" y en el diagnóstico que se manda:
+  # sin ella, un "no me sonó" no dice de qué versión es. Ya venía en el
+  # proyecto por share_plus; esto solo la vuelve directa.
+  package_info_plus: ^10.2.1
 
 dev_dependencies:
   flutter_test:

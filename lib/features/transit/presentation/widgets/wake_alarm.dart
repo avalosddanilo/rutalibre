@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../../../core/diagnostics/diagnostics_log.dart';
 import '../providers/trip_providers.dart';
 import '../providers/wake_alarm_watch.dart';
 
@@ -69,7 +70,11 @@ abstract interface class WakeAlarmGear {
 /// Lo mismo vale para el servicio: donde no hay canal, [holdTrip] devuelve
 /// false y cae al wakelock, que es exactamente como funcionaba la 1.0.
 final class DeviceWakeAlarmGear implements WakeAlarmGear {
-  const DeviceWakeAlarmGear();
+  const DeviceWakeAlarmGear({this.log});
+
+  /// Dónde anotar qué pasó con el servicio y la alarma. Es lo primero que
+  /// hace falta ver cuando alguien dice "no me sonó".
+  final DiagnosticsLog? log;
 
   static const _channel = MethodChannel('rutalibre/alarm');
 
@@ -78,17 +83,21 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
     var servicio = false;
     try {
       servicio = await _channel.invokeMethod<bool>('holdTrip') ?? false;
-    } on Object {
+      log?.record('servicio_viaje', servicio ? 'iniciado' : 'rechazado');
+    } on Object catch (e) {
       // iOS no tiene el canal, y un Android puede rechazar el servicio.
       servicio = false;
+      log?.record('servicio_viaje', 'falló: ${e.runtimeType}');
     }
     if (!servicio) {
       // La red de la 1.0: sin servicio, la única forma de que el GPS siga
       // llegando es que la pantalla no se apague. Peor, pero funciona.
       try {
         await WakelockPlus.enable();
-      } on Object {
+        log?.record('pantalla_prendida', 'wakelock en lugar del servicio');
+      } on Object catch (e) {
         // Y sin wakelock, la alarma sirve mientras la app esté adelante.
+        log?.record('pantalla_prendida', 'falló: ${e.runtimeType}');
       }
     }
     return servicio;
@@ -99,6 +108,7 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
     // Los dos, siempre y sin preguntar cuál se usó: el estado de "qué agarré"
     // se puede perder (la actividad se recrea al rotar) y lo que NO se puede
     // es dejar el servicio corriendo o la pantalla clavada prendida.
+    log?.record('servicio_viaje', 'liberado');
     try {
       await _channel.invokeMethod<void>('releaseTrip');
     } on Object {
@@ -113,18 +123,22 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
 
   @override
   Future<void> wakeScreen() async {
+    log?.record('alarma_prende_pantalla');
     try {
       await _channel.invokeMethod<void>('wakeScreen');
-    } on Object {
+    } on Object catch (e) {
+      log?.record('alarma_prende_pantalla', 'falló: ${e.runtimeType}');
       // Sin pantalla encendida quedan el tono y la vibración.
     }
   }
 
   @override
   Future<void> ring() async {
+    log?.record('alarma_suena');
     try {
       await _channel.invokeMethod<void>('ring');
-    } on Object {
+    } on Object catch (e) {
+      log?.record('alarma_suena', 'falló: ${e.runtimeType}');
       // Queda la vibración de la pantalla de alarma, que no pasa por acá.
     }
   }
@@ -149,7 +163,7 @@ final class DeviceWakeAlarmGear implements WakeAlarmGear {
 }
 
 final wakeAlarmGearProvider = Provider<WakeAlarmGear>(
-  (ref) => const DeviceWakeAlarmGear(),
+  (ref) => DeviceWakeAlarmGear(log: ref.watch(diagnosticsLogProvider)),
 );
 
 /// Armada o no. La alarma "avisame para bajar" de un viaje guiado.
@@ -174,6 +188,9 @@ final class WakeAlarmNotifier extends Notifier<bool> {
   Future<void> setArmed(bool armed) async {
     if (state == armed) return;
     state = armed;
+    ref
+        .read(diagnosticsLogProvider)
+        .record(armed ? 'alarma_armada' : 'alarma_desarmada');
     final gear = ref.read(wakeAlarmGearProvider);
     armed ? await gear.holdTrip() : await gear.releaseTrip();
   }

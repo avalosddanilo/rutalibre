@@ -33,6 +33,7 @@ import '../utils/marker_declutter.dart';
 import '../utils/route_segment.dart';
 import '../utils/trip_guidance.dart';
 import '../utils/trip_share_text.dart';
+import '../widgets/about_sheet.dart';
 import '../widgets/line_badge.dart';
 import '../widgets/line_sheet.dart';
 import '../widgets/nearby_stops_sheet.dart';
@@ -1988,31 +1989,43 @@ class _TopBar extends StatelessWidget {
               maxScaleFactor: 1.3,
               child: Row(
                 children: [
-                  FloatingPanel(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // La marca, no un ícono de catálogo: es la misma que
-                        // el ícono de la app, dibujada por el mismo painter.
-                        // Sobre el panel claro la carrocería va en el negro de
-                        // marca; sobre el oscuro, en blanco — en negro sobre
-                        // negro quedaban solo los faros flotando, dos puntos
-                        // azules que no se leían como nada.
-                        BrandMark(
-                          size: 20,
-                          bodyColor:
-                              Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Brand.black,
-                          accentColor: Brand.accent,
+                  // Tocar la marca abre "Acerca de": versión, web,
+                  // privacidad y el diagnóstico para cuando algo falla.
+                  Semantics(
+                    button: true,
+                    label: 'Acerca de Ruta Libre',
+                    excludeSemantics: true,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => AboutSheet.show(context),
+                      child: FloatingPanel(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // La marca, no un ícono de catálogo: es la misma que
+                            // el ícono de la app, dibujada por el mismo painter.
+                            // Sobre el panel claro la carrocería va en el negro de
+                            // marca; sobre el oscuro, en blanco — en negro sobre
+                            // negro quedaban solo los faros flotando, dos puntos
+                            // azules que no se leían como nada.
+                            BrandMark(
+                              size: 20,
+                              bodyColor:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Brand.black,
+                              accentColor: Brand.accent,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Ruta Libre',
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Ruta Libre',
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 8),

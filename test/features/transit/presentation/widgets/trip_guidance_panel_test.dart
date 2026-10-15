@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:rutalibre/core/diagnostics/diagnostics_log.dart';
 import 'package:rutalibre/core/providers/clock_provider.dart';
 import 'package:rutalibre/core/providers/shared_preferences_provider.dart';
 import 'package:rutalibre/features/transit/domain/entities/route_variant.dart';
@@ -471,6 +472,9 @@ final class _ScriptedLocationService implements LocationService {
   _ScriptedLocationService(this._stream);
 
   final Stream<({double lat, double lng})> Function() _stream;
+
+  @override
+  DiagnosticsLog? get log => null;
 
   @override
   Stream<({double lat, double lng})> positionStream() => _stream();
