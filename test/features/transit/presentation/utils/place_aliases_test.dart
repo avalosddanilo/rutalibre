@@ -111,16 +111,19 @@ void main() {
       ]);
     });
 
-    test('"facu" son las facultades, no bibliotecas ni la calle Facundo', () {
-      final results = first('facu', placeAliases['facultad']!.length + 1);
-      expect(results.first, startsWith('Universidad Tecnológica Nacional'));
-      expect(
-        results.where(
-          (n) => n.startsWith('Biblioteca') || n.startsWith('Facundo'),
-        ),
-        isEmpty,
-      );
-    });
+    test(
+      '"facu" son la UTN y los campus, no bibliotecas ni la calle Facundo',
+      () {
+        final results = first('facu', placeAliases['facultad']!.length + 1);
+        expect(results.first, startsWith('Universidad Tecnológica Nacional'));
+        expect(
+          results.where(
+            (n) => n.startsWith('Biblioteca') || n.startsWith('Facundo'),
+          ),
+          isEmpty,
+        );
+      },
+    );
 
     test('"terminal" son las dos terminales de ómnibus', () {
       expect(first('terminal', 2), [
