@@ -250,8 +250,15 @@ void main() {
     await tester.tap(find.text(displayText('Vial ↔ Monte Alto')));
     await tester.pumpAndSettle();
 
-    expect(find.text('Ramal A · Ida'), findsOneWidget);
-    expect(find.text('Ramal A · Vuelta'), findsOneWidget);
+    // Hacia dónde va cada uno, no "Ramal A · Ida": un amigo que vio eso
+    // preguntó cómo se leía. Y sin "Ramal A", que en una línea de un solo
+    // ramal no distingue nada.
+    expect(find.textContaining('¿Para dónde vas?'), findsOneWidget);
+    expect(find.text('Hacia Monte Alto'), findsOneWidget);
+    expect(find.text('Desde Vial'), findsOneWidget);
+    expect(find.text('Hacia Vial'), findsOneWidget);
+    expect(find.textContaining('Ramal'), findsNothing);
+    expect(find.textContaining('Ida'), findsNothing);
     expect(container.read(selectedLineProvider)?.code, '3');
   });
 

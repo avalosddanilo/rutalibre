@@ -33,6 +33,7 @@ import '../utils/marker_declutter.dart';
 import '../utils/route_segment.dart';
 import '../utils/trip_guidance.dart';
 import '../utils/trip_share_text.dart';
+import '../utils/variant_text.dart';
 import '../widgets/about_sheet.dart';
 import '../widgets/line_badge.dart';
 import '../widgets/line_sheet.dart';
@@ -513,7 +514,8 @@ class _MapScreenState extends ConsumerState<MapScreen>
       final codes = trip.legs.map((leg) => leg.displayCode).join(' → ');
       return trip.isDirect ? 'Viaje: $codes' : 'Viaje con transbordo: $codes';
     }
-    return variant?.name;
+    if (variant == null) return null;
+    return describeVariant(variant.name, variant.direction).title;
   }
 
   @override

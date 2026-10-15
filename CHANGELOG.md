@@ -15,6 +15,16 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   azar: cambia la primera opción en 35, con 130 m menos de colectivo y 38 m
   menos de caminata en promedio.
 
+### Recorridos
+
+- **Cada recorrido dice hacia dónde va.** La lista de una línea decía
+  "Ramal A · Ida" y abajo "Ida: Barrio 17 de Octubre → Hipermercado
+  Libertad"; alguien que la vio preguntó cómo se leía. Ahora dice "Hacia
+  Hipermercado Libertad" y abajo "Desde Barrio 17 de Octubre · Ramal A", con
+  "¿Para dónde vas? Tocá uno para verlo en el mapa." arriba. El ramal solo
+  aparece si la línea tiene más de uno. Lo mismo en las líneas de una
+  parada, en los pasos del viaje y en el cartel de arriba del mapa.
+
 ### Buscador
 
 - **"Casa" y "Trabajo o facu" a un toque**, arriba del buscador. La primera
