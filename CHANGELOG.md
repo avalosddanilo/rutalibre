@@ -15,6 +15,15 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   azar: cambia la primera opción en 35, con 130 m menos de colectivo y 38 m
   menos de caminata en promedio.
 
+### Buscador
+
+- **Los lugares también se encuentran por como les dice la gente.** "utn"
+  encuentra la facultad (antes salía la calle Gutnisky), "unne" los campus
+  (antes, bibliotecas), y "terminal" las dos terminales de ómnibus primero.
+  "La terminal" o "el llano" andan igual que sin el artículo. Los apodos
+  están en `place_aliases.dart`, y un test verifica que cada uno apunte a
+  un lugar que existe en los datos.
+
 ### Diagnóstico
 
 - **"Enviar diagnóstico", sin rastreadores.** Tocando "Ruta Libre" arriba del
