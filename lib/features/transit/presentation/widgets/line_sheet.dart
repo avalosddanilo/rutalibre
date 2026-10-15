@@ -12,6 +12,7 @@ import '../screens/schedules_screen.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
 import '../utils/search_text.dart';
+import '../utils/variant_text.dart';
 import 'line_badge.dart';
 
 /// Panel inferior del mapa: buscador + listado de líneas, y el detalle de
@@ -610,27 +611,54 @@ class _LineDetail extends ConsumerWidget {
             ),
           ),
           data: (variants) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // La pregunta que la lista contesta, dicha antes de la lista:
+              // sin esto, cuatro renglones parecidos no dicen qué hacer.
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                child: Text(
+                  '¿Para dónde vas? Tocá uno para verlo en el mapa.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
               for (final variant in variants)
-                ListTile(
-                  selected: variant.id == selectedVariant?.id,
-                  leading: Icon(
-                    variant.direction.isOutbound
-                        ? Icons.arrow_forward
-                        : Icons.arrow_back,
-                  ),
-                  title: Text(variant.shortLabel),
-                  subtitle: Text(
-                    displayText(variant.name),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: variant.id == selectedVariant?.id
-                      ? const Icon(Icons.check_circle)
-                      : null,
-                  onTap: () => ref
-                      .read(selectedRouteVariantProvider.notifier)
-                      .select(variant),
+                Builder(
+                  builder: (context) {
+                    final text = describeVariant(
+                      variant.name,
+                      variant.direction,
+                    );
+                    final detail = text.detail(
+                      extra: branchLabel(
+                        variant.branch,
+                        lineHasBranches:
+                            variants.map((v) => v.branch).toSet().length > 1,
+                      ),
+                    );
+                    return ListTile(
+                      selected: variant.id == selectedVariant?.id,
+                      leading: const Icon(Icons.directions_bus_outlined),
+                      title: Text(
+                        text.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: detail == null
+                          ? null
+                          : Text(
+                              detail,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                      trailing: variant.id == selectedVariant?.id
+                          ? const Icon(Icons.check_circle)
+                          : null,
+                      onTap: () => ref
+                          .read(selectedRouteVariantProvider.notifier)
+                          .select(variant),
+                    );
+                  },
                 ),
               if (selectedVariant != null)
                 Padding(

@@ -12,6 +12,7 @@ import '../providers/trip_providers.dart';
 import '../providers/user_prefs_providers.dart';
 import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
+import '../utils/variant_text.dart';
 import 'line_badge.dart';
 import 'osm_stop_link.dart';
 import 'place_search_sheet.dart';
@@ -362,21 +363,21 @@ class StopDetailsSheet extends ConsumerWidget {
                               colorHex: route.colorHex,
                               size: 36,
                             ),
+                            // En la parada la pregunta es "¿este va para
+                            // donde voy?": eso va arriba. El nombre de la
+                            // línea, que es de las dos puntas, abajo.
                             title: Text(
-                              displayText(route.lineName),
-                              maxLines: 1,
+                              describeVariant(
+                                route.variantName,
+                                route.direction,
+                              ).title,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             subtitle: Text(
-                              route.variantName,
+                              displayText(route.lineName),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Icon(
-                              route.direction.isOutbound
-                                  ? Icons.arrow_forward
-                                  : Icons.arrow_back,
-                              size: 18,
                             ),
                           ),
                         ),

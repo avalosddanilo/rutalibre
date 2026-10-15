@@ -10,10 +10,10 @@ import '../../domain/entities/walk_estimate.dart';
 import '../providers/transit_providers.dart';
 import '../providers/trip_providers.dart';
 import '../utils/color_hex.dart';
-import '../utils/display_text.dart';
 import '../utils/failure_message.dart';
 import '../utils/last_mile.dart';
 import '../utils/trip_share_text.dart';
+import '../utils/variant_text.dart';
 import 'line_badge.dart';
 
 /// Las formas de llegar del origen al destino, de la mejor a la peor.
@@ -539,7 +539,8 @@ class _LegSteps extends StatelessWidget {
           text: leg.stopCount == 1
               ? 'Viajás 1 parada'
               : 'Viajás ${leg.stopCount} paradas',
-          subtitle: displayText(leg.variantName),
+          // "Hacia Hipermercado Libertad": cuál de las dos puntas tomar.
+          subtitle: describeVariant(leg.variantName, leg.direction).title,
         ),
         _Step(
           icon: Icons.logout,
