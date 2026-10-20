@@ -12,7 +12,9 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   (~5 MB, datos de OpenStreetMap). Antes se bajaban de los servidores de
   OSM tile por tile: sin señal el mapa quedaba gris, cada vistazo gastaba
   datos, y esos servidores no permiten que una app dependa de ellos. De
-  noche tiene su propia paleta oscura en vez de los colores invertidos. Si
+  noche tiene su propia paleta oscura en vez de los colores invertidos.
+  Los colores son propios: verdes y agua apagados para que el color de cada
+  línea sea lo que más se ve, y calles con borde para leerlas al sol. Si
   el archivo no se pudiera leer, vuelve al mapa por red de siempre.
 
 ### Cómo llego

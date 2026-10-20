@@ -38,6 +38,23 @@ Hasta la 1.2 el mapa se bajaba de `tile.openstreetmap.org`, de a pedacitos
   hospitales, escuelas y plazas sí aparecen. Lo que importa en el mapa son las
   paradas, que dibuja la app.
 
+## Los colores
+
+Son los de Protomaps con colores propios encima (`propios` en
+`tools/mapa/estilo.mjs`). El criterio, en orden:
+
+1. **Que las líneas manden.** Verdes, agua y edificios apagados: el color de
+   cada línea tiene que ser lo que más se ve. Con los verdes originales, la
+   plaza 25 de Mayo le competía al recorrido que pasa por al lado.
+2. **Que las calles se lean al sol**, en la parada: bordes de calle marcados
+   y nombres oscuros.
+3. **Que uno se ubique.** Avenidas blancas; rutas y puente en crema.
+4. **Que se vea Ruta Libre.** El oscuro usa el negro de la marca (`#161616`).
+
+Para cambiar un color, se toca `propios` y se regenera (ver abajo). Mirarlo
+siempre con una línea de color claro encima (la 9, `#AFB42B`): es la que
+primero se pierde.
+
 ## Cómo funciona en la app
 
 - `lib/features/transit/data/map/bundled_map.dart` lee el archivo de los
@@ -86,7 +103,8 @@ Protomaps tiene que coincidir; ver su documentación).
   [ODbL](https://www.openstreetmap.org/copyright). La app muestra
   "© OpenStreetMap contributors" sobre el mapa, siempre entero.
 - **Los estilos** salen de
-  [protomaps/basemaps](https://github.com/protomaps/basemaps) (BSD-3).
+  [protomaps/basemaps](https://github.com/protomaps/basemaps) (BSD-3), con
+  colores propios.
 - **El paquete** `flutter_map_vector_tiles` es BSD-3.
 
 ## Corregir el mapa
