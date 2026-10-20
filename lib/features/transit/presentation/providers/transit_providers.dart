@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/diagnostics/diagnostics_log.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../core/providers/clock_provider.dart';
@@ -16,6 +17,7 @@ import '../../data/datasources/corrientes_stops_datasource.dart';
 import '../../data/datasources/places_asset_datasource.dart';
 import '../../data/datasources/transit_local_datasource.dart';
 import '../../data/datasources/transit_remote_datasource.dart';
+import '../../data/map/bundled_map.dart';
 import '../../data/repositories/places_repository_impl.dart';
 import '../../data/repositories/transit_repository_impl.dart';
 import '../../domain/entities/bus_line.dart';
@@ -432,6 +434,25 @@ final placesRepositoryProvider = Provider<PlacesRepository>(
 final tileProviderFactoryProvider = Provider<TileProvider Function()>(
   (ref) => NetworkTileProvider.new,
 );
+
+/// El mapa base que viaja en la app (ver `bundled_map.dart`).
+///
+/// `null` si no se pudo leer: ahí el mapa vuelve a los tiles de OSM por red,
+/// como antes de la 1.3. No debería pasar —son assets—, pero un mapa gris
+/// por un archivo roto sería peor que el de siempre.
+///
+/// Los tests de la pantalla lo sobreescriben con `null`: dibujar vectores
+/// levanta isolates, y lo que prueban esos tests es lo de encima del mapa.
+final bundledMapProvider = FutureProvider<BundledMap?>((ref) async {
+  try {
+    final map = await loadBundledMap();
+    ref.onDispose(map.dispose);
+    return map;
+  } catch (e, stack) {
+    ref.read(diagnosticsLogProvider).recordError(e, stack);
+    return null;
+  }
+});
 
 /// Los lugares y las calles, leídos del asset.
 ///

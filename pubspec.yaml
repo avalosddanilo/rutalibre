@@ -63,6 +63,9 @@ dependencies:
   # sin ella, un "no me sonó" no dice de qué versión es. Ya venía en el
   # proyecto por share_plus; esto solo la vuelve directa.
   package_info_plus: ^10.2.1
+  # Dibuja el mapa base que viaja en la app (PMTiles + estilo MapLibre) como
+  # una capa más de flutter_map. Ver lib/features/transit/data/map/.
+  flutter_map_vector_tiles: ^2.9.1
 
 dev_dependencies:
   flutter_test:
@@ -104,6 +107,10 @@ flutter:
     # de la app, y por eso va aparte: se carga solo cuando alguien escribe
     # una altura ("9 de Julio 1260") — quien nunca lo hace, nunca lo paga.
     - assets/addresses.json
+    # El mapa base: las calles de las dos ciudades (~5 MB) y sus estilos claro
+    # y oscuro. Viaja en la app para que el mapa ande sin señal y no dependa
+    # de los servidores de OSM. Ver docs/mapa.md para cómo se regenera.
+    - assets/map/
 
   fonts:
     # Inter, en su versión VARIABLE: un solo archivo con todos los pesos.

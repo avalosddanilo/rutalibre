@@ -118,7 +118,7 @@ teléfono:
 | Servicio | Para qué | Qué recibe |
 |---|---|---|
 | **Supabase** | La base con líneas, recorridos, paradas y horarios | Las consultas de la app. Sin identidad asociada |
-| **OpenStreetMap** | Las imágenes del mapa | Qué porciones de mapa mirás |
+| **OpenStreetMap** | Solo si el mapa que viaja en la app no se puede leer (no debería pasar): ahí las imágenes del mapa se bajan de sus servidores | Qué porciones de mapa mirás |
 | **Open-Meteo** | El pronóstico de lluvia | Una coordenada redondeada a ~1 km, no tu posición exacta |
 
 Cuando tocás **compartir un viaje**, la app le pasa la acción al menú de
@@ -134,7 +134,7 @@ OpenStreetMap y de tu navegador.
 
 | Permiso | Para qué | ¿Se puede usar la app sin darlo? |
 |---|---|---|
-| `INTERNET` | Descargar los datos del transporte y el mapa | No |
+| `INTERNET` | Descargar los datos del transporte (el mapa viaja en la app) | No |
 | `ACCESS_COARSE_LOCATION` y `ACCESS_FINE_LOCATION` | "Cerca mío", "¿cómo llego?", la distancia caminando y el aviso de lluvia | **Sí.** Todo lo demás funciona igual |
 | `FOREGROUND_SERVICE` y `FOREGROUND_SERVICE_LOCATION` | Que la alarma "Avisame para bajar" funcione con la pantalla apagada (ver "Tu ubicación") | **Sí.** La alarma funciona con la pantalla prendida |
 | `POST_NOTIFICATIONS` | La notificación fija "Viaje en curso" mientras la alarma está prendida. Se pide recién al prenderla | **Sí.** La alarma suena igual; solo no ves la notificación |
@@ -176,6 +176,7 @@ avisa en la ficha de Google Play.
 
 Los datos de recorridos y paradas provienen de
 [OpenStreetMap](https://www.openstreetmap.org/copyright), bajo licencia
-**ODbL**. Los recorridos de Corrientes capital provienen del portal de datos
+**ODbL**. El mapa base también es de OpenStreetMap, preparado con
+[Protomaps](https://protomaps.com/). Los recorridos de Corrientes capital provienen del portal de datos
 abiertos de la Municipalidad de la Ciudad de Corrientes. El pronóstico es de
 [Open-Meteo](https://open-meteo.com/).

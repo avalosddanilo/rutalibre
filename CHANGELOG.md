@@ -5,6 +5,16 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 ## [1.3.0] — sin publicar
 
+### Mapa
+
+- **El mapa viaja en la app y anda sin señal.** Las calles de Gran
+  Resistencia y Corrientes, hasta el último pasaje, van adentro de la app
+  (~5 MB, datos de OpenStreetMap). Antes se bajaban de los servidores de
+  OSM tile por tile: sin señal el mapa quedaba gris, cada vistazo gastaba
+  datos, y esos servidores no permiten que una app dependa de ellos. De
+  noche tiene su propia paleta oscura en vez de los colores invertidos. Si
+  el archivo no se pudiera leer, vuelve al mapa por red de siempre.
+
 ### Cómo llego
 
 - **El planificador cuenta los metros del colectivo, no solo las paradas**

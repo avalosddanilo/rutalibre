@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_vector_tiles/flutter_map_vector_tiles.dart' as vt;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:share_plus/share_plus.dart';
@@ -78,6 +79,12 @@ class MapScreen extends ConsumerStatefulWidget {
 
   /// Plaza 25 de Mayo, Resistencia.
   static const resistenciaCenter = LatLng(-27.4519, -58.9865);
+
+  /// Lo que cubre el mapa base (`docs/mapa.md`): el bbox con que se extrajo.
+  static final coveredArea = LatLngBounds(
+    const LatLng(-27.62, -59.15),
+    const LatLng(-27.27, -58.64),
+  );
 
   @override
   ConsumerState<MapScreen> createState() => _MapScreenState();
@@ -737,6 +744,8 @@ class _MapScreenState extends ConsumerState<MapScreen>
         selectedLine == null &&
         nearbyQuery == null;
 
+    final dark = Theme.of(context).brightness == Brightness.dark;
+
     return PopScope(
       canPop: nothingToUndo,
       onPopInvokedWithResult: (didPop, _) {
@@ -752,6 +761,13 @@ class _MapScreenState extends ConsumerState<MapScreen>
                 initialZoom: 13,
                 minZoom: 9,
                 maxZoom: 18,
+                // El mapa que viaja en la app cubre las dos ciudades y sus
+                // alrededores (todos los recorridos, con margen): más allá
+                // no hay calles que mostrar, y arrastrar hasta un lienzo
+                // vacío parece un mapa roto.
+                cameraConstraint: CameraConstraint.containCenter(
+                  bounds: MapScreen.coveredArea,
+                ),
                 // **SIN ROTACIÓN.** El default de flutter_map es
                 // `InteractiveFlag.all`, que la incluye: dos dedos apoyados con
                 // un poco de ángulo giran el mapa sin que nadie lo pida, y
@@ -811,35 +827,51 @@ class _MapScreenState extends ConsumerState<MapScreen>
                 },
               ),
               children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  // Requerido por la política de tiles de OSM.
-                  userAgentPackageName: 'com.rutalibre.rutalibre',
-                  // Inyectable para que la pantalla se pueda testear sin red.
-                  tileProvider: ref.watch(tileProviderFactoryProvider)(),
-                  // En modo oscuro, el mapa también. Los tiles de OSM vienen
-                  // siempre claros, y un panel negro sobre un mapa blanco
-                  // encandila de noche — que es justo cuándo uno está en la
-                  // parada con el brillo bajo. Se invierten los MISMOS tiles
-                  // con una matriz de color:
-                  // cambiar de proveedor a uno "oscuro" traería otra licencia y
-                  // otros límites de uso.
-                  tileBuilder: (context, tileWidget, tile) {
-                    // De paso que pasa por acá cada tile, se reporta si llegó
-                    // o no: es lo que decide el cartel de "el mapa no carga"
-                    // (ver `tile_health_provider.dart`). Se difiere al
-                    // próximo cuadro porque esto corre DENTRO del build, y
-                    // tocar un provider ahí es un error de Riverpod.
-                    if (tile.loadFinishedAt != null && !tile.loadError) {
-                      _reportTiles(loaded: true);
-                    }
-                    return Theme.of(context).brightness == Brightness.dark
-                        ? darkModeTileBuilder(context, tileWidget, tile)
-                        : tileWidget;
-                  },
-                  errorTileCallback: (tile, error, stackTrace) =>
-                      _reportTiles(loaded: false),
-                ),
+                switch (ref.watch(bundledMapProvider)) {
+                  // El mapa propio, que viaja en la app: anda sin señal, no
+                  // gasta datos, y de noche tiene su propia paleta oscura en
+                  // vez de los tiles invertidos.
+                  AsyncData(value: final map?) => vt.VectorTileLayer(
+                    theme: dark ? map.dark.theme : map.light.theme,
+                    tileProviders: dark
+                        ? map.dark.providers
+                        : map.light.providers,
+                  ),
+                  // Lo que tarda en leerse el asset. Montar OSM en ese rato
+                  // sería bajar tiles para tirarlos.
+                  AsyncLoading() => const SizedBox.shrink(),
+                  // No se pudo leer: los tiles de OSM por red, como antes.
+                  _ => TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    // Requerido por la política de tiles de OSM.
+                    userAgentPackageName: 'com.rutalibre.rutalibre',
+                    // Inyectable para que la pantalla se pueda testear sin red.
+                    tileProvider: ref.watch(tileProviderFactoryProvider)(),
+                    // En modo oscuro, el mapa también. Los tiles de OSM vienen
+                    // siempre claros, y un panel negro sobre un mapa blanco
+                    // encandila de noche — que es justo cuándo uno está en la
+                    // parada con el brillo bajo. Se invierten los MISMOS tiles
+                    // con una matriz de color:
+                    // cambiar de proveedor a uno "oscuro" traería otra licencia y
+                    // otros límites de uso.
+                    tileBuilder: (context, tileWidget, tile) {
+                      // De paso que pasa por acá cada tile, se reporta si llegó
+                      // o no: es lo que decide el cartel de "el mapa no carga"
+                      // (ver `tile_health_provider.dart`). Se difiere al
+                      // próximo cuadro porque esto corre DENTRO del build, y
+                      // tocar un provider ahí es un error de Riverpod.
+                      if (tile.loadFinishedAt != null && !tile.loadError) {
+                        _reportTiles(loaded: true);
+                      }
+                      return Theme.of(context).brightness == Brightness.dark
+                          ? darkModeTileBuilder(context, tileWidget, tile)
+                          : tileWidget;
+                    },
+                    errorTileCallback: (tile, error, stackTrace) =>
+                        _reportTiles(loaded: false),
+                  ),
+                },
                 if (routePoints.isNotEmpty)
                   PolylineLayer(
                     polylines: [

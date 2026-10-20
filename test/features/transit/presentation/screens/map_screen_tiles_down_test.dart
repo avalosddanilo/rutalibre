@@ -91,6 +91,8 @@ void main() {
         allStopsProvider.overrideWith((ref) async => _stops),
         placesProvider.overrideWith((ref) async => const <Place>[]),
         corrientesStopsProvider.overrideWith((ref) async => const []),
+        // Con los tiles de OSM de siempre: el mapa propio levanta isolates.
+        bundledMapProvider.overrideWith((ref) async => null),
         tileProviderFactoryProvider.overrideWithValue(() => tiles),
         rainForecastProvider.overrideWith(
           (ref, point) async => const RainForecast(hours: []),
