@@ -333,3 +333,35 @@ from mejor;
 verdad no se resuelve con un solo transbordo (era el 13% en la medición
 original). Lo que sería una alarma es que `directo` baje de golpe entre dos
 imports: significa que se perdieron asignaciones parada↔recorrido.
+
+## Sin conexión (en construcción)
+
+`lib/features/transit/data/planner/offline_trip_planner.dart` es
+`plan_trip_v2` (tal como quedó en la 0018) traducido a Dart, y devuelve el
+**mismo JSON**: la app lo lee con el mismo `TripPlanModel.fromJson`. La red
+sale de `get_planner_network()` (migración 0021): todos los recorridos con
+su secuencia de paradas y los metros de cada una. Las paradas y las líneas
+son las que el teléfono ya guarda.
+
+**Medido el 2026-10-20 contra el SQL, sobre 300 viajes al azar:** los mismos
+192 resueltos, la misma cantidad de opciones en los 300, la misma primera
+opción en 280 y, en los otros 20, un empate (dos viajes a menos de medio
+minuto, y cada uno elige uno). Opción por opción, los mismos tiempos en los
+300. El más lento tarda menos de 100 ms.
+
+Las distancias se miden sobre el elipsoide, como PostGIS: con haversine
+diferían un 0,3 % y eso alcanzaba para que un transbordo de 250 m justos
+entrara en un lado y no en el otro.
+
+**Si se cambia una regla del planificador, en la base o en la app**, se
+vuelve a comparar:
+
+```bash
+psql -d rl -At -f tools/sql/exportar_red.sql   > red.json
+psql -d rl -At -f tools/sql/exportar_casos.sql > casos.json
+dart run tools/comparar_planificador.dart red.json casos.json
+```
+
+**Lo que falta para que la app lo use:** bajar `get_planner_network()` y
+guardarlo en el teléfono, y usar este planificador cuando el servidor no
+contesta, diciendo que el viaje se calculó sin conexión.
