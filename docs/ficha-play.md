@@ -122,6 +122,8 @@ Hecha en Resistencia, Chaco.
 La 1.3. Las de la 1.2 están en el CHANGELOG.
 
 ```
+Sin señal, igual te arma el viaje con los recorridos guardados en el teléfono.
+
 Casa y Trabajo o facu: guardalos una vez y armá el viaje de todos los días con un toque.
 
 Cada recorrido dice hacia dónde va: «Hacia Hipermercado Libertad» en vez de «Ramal A · Ida».
