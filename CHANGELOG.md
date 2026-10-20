@@ -43,6 +43,11 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   "¿Para dónde vas? Tocá uno para verlo en el mapa." arriba. El ramal solo
   aparece si la línea tiene más de uno. Lo mismo en las líneas de una
   parada, en los pasos del viaje y en el cartel de arriba del mapa.
+- **El 904B, el 904C, Colonia Benítez, la 101 y la 106D también dicen
+  hacia dónde van** (migración 0020, en el servidor). Sus nombres no tenían
+  destino y quedaban en "Ida/Vuelta". El sentido salió de dónde están la
+  primera y la última parada, no del nombre: la "Ida" del 904B va de
+  Corrientes a Resistencia, al revés que la del 904A.
 
 ### Buscador
 

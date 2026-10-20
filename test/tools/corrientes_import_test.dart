@@ -189,4 +189,14 @@ void main() {
       );
     });
   });
+
+  test('al nombre de la 106D le falta el guion: se agrega, y dice hacia dónde '
+      'va', () {
+    const csv = '''
+"gid","the_geom","linea","linea_descrip","nombre","ramal","nro_para"
+7,"LINESTRING (5614867.5 6962661.9, 5619867.5 6962661.9)","106","106 D - IDA","B° 500 VIV. B° PIRAYUI","106 D",
+''';
+    final v = importCorrientes(csv).variants.single;
+    expect(v.name, 'Ida: B° 500 VIV. ↔ B° Pirayui');
+  });
 }

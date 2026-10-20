@@ -281,6 +281,31 @@ void main() {
       );
     });
 
+    test('los recorridos sin destino en OSM toman el nombre corregido, por '
+        'relation', () {
+      // "Chaco - Corrientes directo" no dice hacia dónde va; la app lo
+      // mostraba como "Ida/Vuelta". La ida del 904B va de Corrientes a
+      // Resistencia: el nombre sale de las paradas, no del sentido.
+      final result = buildImport(
+        _input([
+          _relation(
+            id: 14442058,
+            ref: '904B',
+            name: 'Chaco - Corrientes directo',
+          ),
+        ]),
+      );
+      expect(
+        result.variants.single.name,
+        'Ida: Corrientes → Resistencia, directo',
+      );
+      // Las relations corregidas que ya no vinieron se avisan, no se callan.
+      expect(
+        result.warnings.where((w) => w.contains('_variantNameOverrides')),
+        isNotEmpty,
+      );
+    });
+
     test('una vuelta con nombre propio no se toca', () {
       final result = buildImport(
         _input([

@@ -87,6 +87,14 @@ class CorrientesImportResult {
 /// deliberada respecto del campo original, y queda documentada acá.
 const _lineCodeOverrides = <String, String>{'00': 'Aerobus'};
 
+/// Nombres del portal a los que les falta el guion entre las dos puntas:
+/// sin él, el recorrido no dice hacia dónde va ("Ida: B° 500 VIV. B°
+/// Pirayui"). Es la misma corrección mínima que [_lineCodeOverrides]: se
+/// agrega el separador, no se reescribe nada.
+const _nombreFixes = <String, String>{
+  'B° 500 VIV. B° PIRAYUI': 'B° 500 VIV. - B° PIRAYUI',
+};
+
 /// Convierte el CSV crudo en el modelo listo para emitir.
 CorrientesImportResult importCorrientes(String csvContent) {
   final table = CsvTable.parse(csvContent)
@@ -102,7 +110,8 @@ CorrientesImportResult importCorrientes(String csvContent) {
     final lineCode = _lineCodeOverrides[rawLine] ?? rawLine;
     final ramal = table.value(row, 'ramal');
     final descrip = table.value(row, 'linea_descrip');
-    final nombre = table.value(row, 'nombre');
+    final nombreCrudo = table.value(row, 'nombre');
+    final nombre = _nombreFixes[nombreCrudo] ?? nombreCrudo;
 
     if (lineCode.isEmpty) {
       skipped.add('fila sin línea — "$nombre"');

@@ -216,6 +216,7 @@ ImportResult buildImport(OsmInput input) {
 
   _resolveDirections(variants, warnings);
   _fixCopiedReturnNames(variants, warnings);
+  _applyNameOverrides(variants, warnings);
   _disambiguateNames(variants);
 
   // --- Líneas ---
@@ -599,6 +600,55 @@ void _resolveDirections(List<ImportedVariant> variants, List<String> warnings) {
 ///
 /// Solo se toca el caso inequívoco: una vuelta cuyo "A → B" es IGUAL al de
 /// una ida de la misma línea. Una vuelta con nombre propio se respeta.
+/// Recorridos cuyo nombre en OSM no dice hacia dónde van, con el que sí.
+///
+/// "Chaco - Corrientes directo", "Colonia Benítez" o solo "Ida": la app los
+/// muestra como "Hacia …", y sin destino tenía que caer en "Ida/Vuelta",
+/// que es justo lo que la gente no entiende. El sentido NO se supone del
+/// nombre: sale de dónde están la primera y la última parada de cada
+/// recorrido (relevado el 2026-10-20). Así apareció que la "Ida" del 904B
+/// va de Corrientes a Resistencia, al revés que la del 904A.
+///
+/// La clave es la relation de OSM. Si un día la relation cambia de nombre
+/// en OSM a uno que ya dice el destino, conviene borrar la entrada.
+const _variantNameOverrides = <int, String>{
+  // 904B: primera parada en Corrientes (Terminal de la línea 110), última
+  // en Resistencia (Alberdi y Cervantes). La vuelta, al revés.
+  14442058: 'Ida: Corrientes → Resistencia, directo',
+  14442057: 'Vuelta: Resistencia → Corrientes, directo',
+  // 904C: la ida sale de Resistencia y termina en Corrientes.
+  14447122: 'Ida: Resistencia → Corrientes, por Barranqueras',
+  14447121: 'Vuelta: Corrientes → Resistencia, por Barranqueras',
+  // Colonia Benítez: la ida sale de Moreno y Santa María de Oro.
+  14449326: 'Ida: Resistencia → Colonia Benítez',
+  14449325: 'Vuelta: Colonia Benítez → Resistencia',
+  // 101: la ida sale de Barranqueras (Gaboto y Capitán Solari) y termina en
+  // Misionero Klein y Falucho; la vuelta ya se llama "Barrio Santa Inés →
+  // Barranqueras".
+  7948963: 'Ida: Barranqueras → Barrio Santa Inés',
+};
+
+void _applyNameOverrides(
+  List<ImportedVariant> variants,
+  List<String> warnings,
+) {
+  final found = <int>{};
+  for (final variant in variants) {
+    final name = _variantNameOverrides[variant.osmRelationId];
+    if (name == null) continue;
+    found.add(variant.osmRelationId);
+    variant.name = name;
+  }
+  for (final id in _variantNameOverrides.keys) {
+    if (!found.contains(id)) {
+      warnings.add(
+        'relation $id: tiene nombre corregido en el importador pero ya no '
+        'está en OSM; revisar _variantNameOverrides',
+      );
+    }
+  }
+}
+
 void _fixCopiedReturnNames(
   List<ImportedVariant> variants,
   List<String> warnings,

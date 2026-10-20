@@ -39,6 +39,13 @@ void main() {
         'Hacia Puerto Tirol',
         'Desde Resistencia',
       ),
+      // El 904B después de la 0020: la "Ida" va de Corrientes a Resistencia.
+      (
+        'Ida: Corrientes → Resistencia, directo',
+        _ida,
+        'Hacia Resistencia, directo',
+        'Desde Corrientes',
+      ),
       // Corrientes: doble flecha, y a veces una parada en el medio.
       (
         'Vuelta: Puerto ↔ Riachuelo ↔ Cremonte',

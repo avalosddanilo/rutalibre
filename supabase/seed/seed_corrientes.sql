@@ -92,7 +92,7 @@ on conflict (network_id, code) do update set
     is_active = true;
 insert into public.lines (network_id, code, name, destinations, color_hex, sort_order, is_active)
 values ((select id from public.networks where code = 'corrientes-capital'),
-        '106', 'B° 500 VIV. ↔ Centro y 3 ramales más', array['B° 500 VIV. ↔ Centro', 'B° 500 VIV. B° Pirayui', 'B° Pirayui ↔ Puerto', 'B° Nuevo ↔ Puerto']::text[],
+        '106', 'B° 500 VIV. ↔ Centro y 3 ramales más', array['B° 500 VIV. ↔ Centro', 'B° 500 VIV. ↔ B° Pirayui', 'B° Pirayui ↔ Puerto', 'B° Nuevo ↔ Puerto']::text[],
         '#F9A825', 6, true)
 on conflict (network_id, code) do update set
     name = excluded.name,
@@ -527,7 +527,7 @@ on conflict (line_id, coalesce(branch, ''), direction) do update set
 insert into public.route_variants (line_id, name, branch, direction, geom, is_active)
 values ((select l.id from public.lines l join public.networks n on n.id = l.network_id
          where n.code = 'corrientes-capital' and l.code = '106'),
-        'Ida: B° 500 VIV. B° Pirayui', 'D', 0,
+        'Ida: B° 500 VIV. ↔ B° Pirayui', 'D', 0,
         st_geomfromtext('LINESTRING(-58.775691 -27.514016, -58.775750 -27.513976, -58.775814 -27.514061, -58.781238 -27.522946, -58.779009 -27.519399, -58.779014 -27.519240, -58.784419 -27.516530, -58.784526 -27.516326, -58.784467 -27.516102, -58.782563 -27.512953, -58.784596 -27.511896, -58.784735 -27.511758, -58.784800 -27.511549, -58.784907 -27.510859, -58.784869 -27.510498, -58.784071 -27.505750)', 4326), true)
 on conflict (line_id, coalesce(branch, ''), direction) do update set
     name = excluded.name,
