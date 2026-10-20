@@ -334,7 +334,7 @@ verdad no se resuelve con un solo transbordo (era el 13% en la medición
 original). Lo que sería una alarma es que `directo` baje de golpe entre dos
 imports: significa que se perdieron asignaciones parada↔recorrido.
 
-## Sin conexión (en construcción)
+## Sin conexión
 
 `lib/features/transit/data/planner/offline_trip_planner.dart` es
 `plan_trip_v2` (tal como quedó en la 0018) traducido a Dart, y devuelve el
@@ -362,6 +362,13 @@ psql -d rl -At -f tools/sql/exportar_casos.sql > casos.json
 dart run tools/comparar_planificador.dart red.json casos.json
 ```
 
-**Lo que falta para que la app lo use:** bajar `get_planner_network()` y
-guardarlo en el teléfono, y usar este planificador cuando el servidor no
-contesta, diciendo que el viaje se calculó sin conexión.
+**Cómo lo usa la app.** Después de cada viaje planificado con señal, si la
+red guardada tiene más de tres días, se baja otra vez (`get_planner_network`)
+y se guarda con `SharedPreferencesAsync`, aparte de la cache de siempre: son
+~370 KB y no se cargan al abrir la app. Si el servidor no contesta, el
+repositorio arma la red con lo guardado (más las líneas y paradas de la
+cache) y calcula en otro isolate. Los viajes vuelven marcados como
+`calculatedOffline` y la hoja de resultados lo dice, porque sin conexión
+tampoco llegan los avisos de paros y desvíos. Si no hay red guardada, o
+con ella no sale ningún viaje, se muestra el error de siempre: "no hay
+viaje" sin señal sería una respuesta que no podemos dar.

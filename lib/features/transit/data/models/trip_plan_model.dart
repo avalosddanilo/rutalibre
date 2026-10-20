@@ -85,9 +85,15 @@ final class TripPlanModel extends TripPlan {
     required super.walkToBoardMeters,
     required super.walkFromAlightMeters,
     super.transferWalkMeters,
+    super.calculatedOffline,
   });
 
-  factory TripPlanModel.fromJson(Map<String, dynamic> json) => TripPlanModel(
+  /// [calculatedOffline]: el JSON lo armó el planificador del teléfono
+  /// (`offline_trip_planner.dart`), que devuelve la misma forma.
+  factory TripPlanModel.fromJson(
+    Map<String, dynamic> json, {
+    bool calculatedOffline = false,
+  }) => TripPlanModel(
     legs: [
       for (final leg in json['legs'] as List)
         TripLegModel.fromJson(leg as Map<String, dynamic>),
@@ -98,6 +104,7 @@ final class TripPlanModel extends TripPlan {
     // Opcional: lo trae `plan_trip_v2` (0015). Falta en `plan_trip` —el
     // servidor sin la migración— y en los viajes guardados por la 1.1.
     transferWalkMeters: (json['transfer_walk_m'] as num?)?.toDouble() ?? 0,
+    calculatedOffline: calculatedOffline,
   );
 
   /// Espejo de [TripPlanModel.fromJson]. Ver [TripLegModel.legToJson].

@@ -97,6 +97,7 @@ class TripPlan extends Equatable {
     required this.walkToBoardMeters,
     required this.walkFromAlightMeters,
     this.transferWalkMeters = 0,
+    this.calculatedOffline = false,
   });
 
   /// Uno (directo) o dos (con transbordo), en orden de viaje.
@@ -122,6 +123,11 @@ class TripPlan extends Equatable {
   /// número es 0: las paradas del 904 y las urbanas de Corrientes, por
   /// ejemplo, están en las mismas esquinas pero son paradas distintas.
   final double transferWalkMeters;
+
+  /// True si el servidor no contestó y el viaje lo calculó el teléfono con
+  /// los datos que tenía guardados. Se dice en pantalla: sin conexión
+  /// tampoco llegan los avisos de paros y desvíos.
+  final bool calculatedOffline;
 
   bool get isDirect => legs.length <= 1;
 
@@ -154,6 +160,7 @@ class TripPlan extends Equatable {
     walkToBoardMeters,
     walkFromAlightMeters,
     transferWalkMeters,
+    calculatedOffline,
   ];
 }
 

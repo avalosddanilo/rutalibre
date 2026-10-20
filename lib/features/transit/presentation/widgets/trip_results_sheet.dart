@@ -225,6 +225,50 @@ class _NoTripsNotice extends StatelessWidget {
   );
 }
 
+/// El viaje lo calculó el teléfono porque el servidor no contestó.
+///
+/// Se dice porque cambia lo que el viaje sabe: son los recorridos guardados
+/// en el teléfono, y sin conexión no llegan los avisos de paros y desvíos.
+class _OfflineNotice extends StatelessWidget {
+  const _OfflineNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: scheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              Icon(
+                Icons.cloud_off_outlined,
+                size: 18,
+                color: scheme.onSecondaryContainer,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Sin conexión: lo calculamos con los recorridos guardados en '
+                  'tu teléfono. No vas a ver avisos de paros ni desvíos.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSecondaryContainer,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// "Ningún colectivo te deja cerca, pero este te acerca" + el último tramo.
 class _ApproachTrip extends ConsumerWidget {
   const _ApproachTrip({required this.plan, required this.query});
@@ -376,13 +420,19 @@ class _TripList extends ConsumerWidget {
         if (index == 0) {
           return Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-            child: Text(
-              directCount == 0
-                  ? 'Sin línea directa: todas necesitan un transbordo'
-                  : directCount == 1
-                  ? '1 línea te lleva directo'
-                  : '$directCount líneas te llevan directo',
-              style: Theme.of(context).textTheme.labelMedium,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (plans.first.calculatedOffline) const _OfflineNotice(),
+                Text(
+                  directCount == 0
+                      ? 'Sin línea directa: todas necesitan un transbordo'
+                      : directCount == 1
+                      ? '1 línea te lleva directo'
+                      : '$directCount líneas te llevan directo',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ],
             ),
           );
         }

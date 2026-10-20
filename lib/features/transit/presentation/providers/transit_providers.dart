@@ -14,6 +14,7 @@ import '../../../../core/providers/shared_preferences_provider.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../data/datasources/corrientes_stops_datasource.dart';
 import '../../data/datasources/places_asset_datasource.dart';
+import '../../data/datasources/planner_network_store.dart';
 import '../../data/datasources/transit_local_datasource.dart';
 import '../../data/datasources/transit_remote_datasource.dart';
 import '../../data/repositories/places_repository_impl.dart';
@@ -75,7 +76,14 @@ final transitRepositoryProvider = Provider<TransitRepository>(
     localDataSource: ref.watch(transitLocalDataSourceProvider),
     // El mismo reloj que el resto de la app: decide si la cache está vieja.
     now: ref.watch(clockProvider),
+    plannerStore: ref.watch(plannerNetworkStoreProvider),
   ),
+);
+
+/// Dónde se guarda la red para planificar sin conexión. Los tests la
+/// sobreescriben: ahí no hay plataforma para `SharedPreferencesAsync`.
+final plannerNetworkStoreProvider = Provider<PlannerNetworkStore?>(
+  (ref) => AsyncPrefsPlannerNetworkStore(),
 );
 
 // ---------------------------------------------------------------------------

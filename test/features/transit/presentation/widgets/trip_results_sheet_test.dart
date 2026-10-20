@@ -278,5 +278,56 @@ void main() {
         findsOneWidget,
       );
     });
+
+    Future<void> pumpPlan(WidgetTester tester, TripPlan plan) async {
+      final c = ProviderContainer(
+        retry: (retryCount, error) => null,
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          tripPlansProvider(query).overrideWith((ref) async => [plan]),
+        ],
+      );
+      addTearDown(c.dispose);
+      c.read(tripSearchProvider.notifier)
+        ..startFrom((lat: query.originLat, lng: query.originLng))
+        ..setDestination((lat: query.destLat, lng: query.destLng));
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: c,
+          child: const MaterialApp(
+            home: Scaffold(body: TripResultsSheet(query: query)),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('calculado sin conexión, lo dice y avisa que no hay avisos', (
+      tester,
+    ) async {
+      await pumpPlan(
+        tester,
+        TripPlan(
+          legs: [leg('102', araoz, ferre, 9)],
+          walkToBoardMeters: 151,
+          walkFromAlightMeters: 100,
+          calculatedOffline: true,
+        ),
+      );
+      expect(find.textContaining('Sin conexión'), findsOneWidget);
+      expect(find.textContaining('paros ni desvíos'), findsOneWidget);
+    });
+
+    testWidgets('con conexión, no hay cartel', (tester) async {
+      await pumpPlan(
+        tester,
+        TripPlan(
+          legs: [leg('102', araoz, ferre, 9)],
+          walkToBoardMeters: 151,
+          walkFromAlightMeters: 100,
+        ),
+      );
+      expect(find.textContaining('Sin conexión'), findsNothing);
+    });
   });
 }

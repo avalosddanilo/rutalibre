@@ -34,6 +34,10 @@ abstract interface class TransitRemoteDataSource {
 
   Future<List<RouteAtStopModel>> getRoutesForStop(String stopId);
 
+  /// La red entera para planificar sin conexión (`get_planner_network`,
+  /// migración 0021), o null si el servidor todavía no la tiene.
+  Future<Map<String, dynamic>?> getPlannerNetwork();
+
   Future<List<TripPlanModel>> planTrip({
     required double originLat,
     required double originLng,
@@ -174,6 +178,22 @@ final class SupabaseTransitRemoteDataSource implements TransitRemoteDataSource {
       },
       TripPlanModel.fromJson,
     );
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getPlannerNetwork() async {
+    try {
+      final data = await _client.rpc<dynamic>('get_planner_network');
+      return data is Map<String, dynamic> ? data : null;
+    } on PostgrestException catch (e) {
+      // Sin la 0021 en el servidor: no hay modo sin conexión, y nada más.
+      if (e.code == 'PGRST202') return null;
+      throw ServerException(e.message, statusCode: int.tryParse(e.code ?? ''));
+    } on SocketException {
+      throw const NetworkException('Sin conexión con el servidor');
+    } on TimeoutException {
+      throw const NetworkException('La consulta al servidor excedió el tiempo');
+    }
   }
 
   /// Cuánto se puede caminar en un transbordo, en línea recta.

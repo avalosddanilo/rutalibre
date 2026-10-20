@@ -7,6 +7,12 @@ Versionado según [SemVer](https://semver.org/lang/es/).
 
 ### Cómo llego
 
+- **Sin señal, igual arma el viaje.** Con conexión, la app deja guardada la
+  red entera (se renueva cada tres días); si después el servidor no
+  contesta, calcula el viaje en el teléfono con el mismo método, y lo dice:
+  "Sin conexión: lo calculamos con los recorridos guardados". Comparado
+  contra el servidor sobre 300 viajes al azar, da los mismos tiempos en
+  los 300. Necesita la migración 0021; sin ella, la app sigue como antes.
 - **El planificador cuenta los metros del colectivo, no solo las paradas**
   (migración 0018, en el servidor: vale también para la 1.2 ya instalada).
   Antes, un minuto por parada; en el puente, donde hay casi 10 km entre una

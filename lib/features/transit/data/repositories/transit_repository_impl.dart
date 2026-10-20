@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:isolate';
+
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
@@ -10,18 +13,22 @@ import '../../domain/entities/schedule.dart';
 import '../../domain/entities/stop.dart';
 import '../../domain/entities/trip_plan.dart';
 import '../../domain/repositories/transit_repository.dart';
+import '../datasources/planner_network_store.dart';
 import '../datasources/transit_local_datasource.dart';
 import '../datasources/transit_remote_datasource.dart';
 import '../models/bus_line_model.dart';
 import '../models/route_variant_model.dart';
 import '../models/schedule_model.dart';
 import '../models/stop_model.dart';
+import '../models/trip_plan_model.dart';
+import '../planner/offline_trip_planner.dart';
 
 final class TransitRepositoryImpl implements TransitRepository {
   const TransitRepositoryImpl({
     required TransitRemoteDataSource remoteDataSource,
     required TransitLocalDataSource localDataSource,
     DateTime Function()? now,
+    this._plannerStore,
   }) : _remote = remoteDataSource,
        _local = localDataSource,
        _now = now ?? DateTime.now;
@@ -29,6 +36,15 @@ final class TransitRepositoryImpl implements TransitRepository {
   final TransitRemoteDataSource _remote;
   final TransitLocalDataSource _local;
   final DateTime Function() _now;
+
+  /// Dónde se guarda la red para planificar sin conexión. Null = sin ese
+  /// modo (los tests que no lo miran, o una plataforma sin dónde guardar).
+  final PlannerNetworkStore? _plannerStore;
+
+  /// Cada cuánto se vuelve a bajar la red del planificador. Más corto que
+  /// [staleAfter]: un recorrido corregido (como la 102A en octubre) tiene
+  /// que llegarle también al que planifica sin señal.
+  static const plannerNetworkMaxAge = Duration(days: 3);
 
   /// A partir de cuándo una cache de datos estáticos se considera vieja.
   ///
@@ -113,22 +129,110 @@ final class TransitRepositoryImpl implements TransitRepository {
     required int maxWalkMeters,
     required int maxResults,
   }) async {
-    // SIEMPRE a la red, por lo mismo que `getNearbyStops`: la respuesta
-    // depende de dos puntos arbitrarios del mapa. Cachear por par de
-    // coordenadas sería una cache que nunca acierta dos veces.
+    // A la red primero, por lo mismo que `getNearbyStops`: la respuesta
+    // depende de dos puntos arbitrarios del mapa, y el servidor tiene los
+    // datos del día. Cachear por par de coordenadas sería una cache que
+    // nunca acierta dos veces.
     try {
-      return Right(
-        await _remote.planTrip(
-          originLat: originLat,
-          originLng: originLng,
-          destLat: destLat,
-          destLng: destLng,
-          maxWalkMeters: maxWalkMeters,
-          maxResults: maxResults,
-        ),
+      final plans = await _remote.planTrip(
+        originLat: originLat,
+        originLng: originLng,
+        destLat: destLat,
+        destLng: destLng,
+        maxWalkMeters: maxWalkMeters,
+        maxResults: maxResults,
       );
+      // Hay señal: es el momento de dejar guardada la red para cuando no.
+      unawaited(_refreshPlannerNetworkIfStale());
+      return Right(plans);
     } on AppException catch (e) {
+      // Sin servidor: el mismo cálculo, en el teléfono, con lo guardado.
+      // Si tampoco alcanza (nunca se bajó la red, o no hay viaje con esos
+      // datos), el error de siempre: "no hay viaje" sin señal sería una
+      // respuesta que no podemos dar.
+      final offline = await _planOffline(
+        originLat: originLat,
+        originLng: originLng,
+        destLat: destLat,
+        destLng: destLng,
+        maxWalkMeters: maxWalkMeters,
+        maxResults: maxResults,
+      );
+      if (offline != null && offline.isNotEmpty) return Right(offline);
       return Left(_toFailure(e));
+    }
+  }
+
+  Future<void> _refreshPlannerNetworkIfStale() async {
+    final store = _plannerStore;
+    if (store == null) return;
+    try {
+      final saved = await store.savedAt();
+      if (saved != null && _now().difference(saved) < plannerNetworkMaxAge) {
+        return;
+      }
+      final network = await _remote.getPlannerNetwork();
+      if (network != null) await store.write(network, _now());
+    } on Object {
+      // Es un extra: si falla, se intenta en el próximo viaje con señal.
+    }
+  }
+
+  Future<List<TripPlan>?> _planOffline({
+    required double originLat,
+    required double originLng,
+    required double destLat,
+    required double destLng,
+    required int maxWalkMeters,
+    required int maxResults,
+  }) async {
+    final store = _plannerStore;
+    if (store == null) return null;
+    try {
+      final saved = await store.read();
+      if (saved == null) return null;
+      final lines = await _local.getCachedLines();
+      final stops = await _local.getCachedAllStops();
+      if (lines.isEmpty || stops.isEmpty) return null;
+      final plannerStops = [
+        for (final s in stops)
+          PlannerStop(
+            id: s.id,
+            name: s.name,
+            description: s.description,
+            osmNodeId: s.osmNodeId,
+            lat: s.lat,
+            lng: s.lng,
+          ),
+      ];
+      final plannerLines = [
+        for (final l in lines)
+          PlannerLine(
+            id: l.id,
+            code: l.code,
+            name: l.name,
+            colorHex: l.colorHex,
+            networkCode: l.network.code,
+            networkName: l.network.name,
+          ),
+      ];
+      final trips = await _planInIsolate(
+        network: saved.network,
+        stops: plannerStops,
+        lines: plannerLines,
+        originLat: originLat,
+        originLng: originLng,
+        destLat: destLat,
+        destLng: destLng,
+        maxWalkM: maxWalkMeters.toDouble(),
+        maxResults: maxResults,
+      );
+      return [
+        for (final json in trips)
+          TripPlanModel.fromJson(json, calculatedOffline: true),
+      ];
+    } on Object {
+      return null;
     }
   }
 
@@ -280,3 +384,34 @@ final class TransitRepositoryImpl implements TransitRepository {
     return a.compareTo(b);
   }
 }
+
+/// El cálculo sin conexión, en otro isolate.
+///
+/// Armar la red con siete mil paradas y calcular puede llevar unos cientos
+/// de milisegundos en un teléfono barato; en el hilo de la pantalla, eso es
+/// un tirón justo cuando la persona espera el viaje. Es una función de nivel
+/// superior a propósito: lo que viaja al otro isolate son solo estos datos,
+/// nunca el repositorio ni el acceso al almacenamiento, que no se pueden
+/// copiar entre isolates.
+Future<List<Map<String, dynamic>>> _planInIsolate({
+  required Map<String, dynamic> network,
+  required List<PlannerStop> stops,
+  required List<PlannerLine> lines,
+  required double originLat,
+  required double originLng,
+  required double destLat,
+  required double destLng,
+  required double maxWalkM,
+  required int maxResults,
+}) => Isolate.run(
+  () => planTripOffline(
+    PlannerNetwork.fromJson(network, stops: stops, lines: lines),
+    originLat: originLat,
+    originLng: originLng,
+    destLat: destLat,
+    destLng: destLng,
+    maxWalkM: maxWalkM,
+    maxResults: maxResults,
+    maxTransferM: SupabaseTransitRemoteDataSource.maxTransferMeters.toDouble(),
+  ),
+);

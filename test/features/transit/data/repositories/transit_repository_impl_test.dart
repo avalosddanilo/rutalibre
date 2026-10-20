@@ -3,6 +3,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rutalibre/core/errors/exceptions.dart';
 import 'package:rutalibre/core/errors/failures.dart';
+import 'package:rutalibre/features/transit/data/datasources/planner_network_store.dart';
 import 'package:rutalibre/features/transit/data/datasources/transit_local_datasource.dart';
 import 'package:rutalibre/features/transit/data/datasources/transit_remote_datasource.dart';
 import 'package:rutalibre/features/transit/data/models/bus_line_model.dart';
@@ -19,6 +20,43 @@ import 'package:rutalibre/features/transit/domain/entities/transit_network.dart'
 class _MockRemote extends Mock implements TransitRemoteDataSource {}
 
 class _MockLocal extends Mock implements TransitLocalDataSource {}
+
+/// La red guardada, en memoria: en los tests no hay `SharedPreferencesAsync`.
+class _MemoryStore implements PlannerNetworkStore {
+  Map<String, dynamic>? network;
+  DateTime? saved;
+  var writes = 0;
+
+  @override
+  Future<({Map<String, dynamic> network, DateTime savedAt})?> read() async =>
+      network == null ? null : (network: network!, savedAt: saved!);
+
+  @override
+  Future<void> write(Map<String, dynamic> n, DateTime savedAt) async {
+    network = n;
+    saved = savedAt;
+    writes++;
+  }
+
+  @override
+  Future<DateTime?> savedAt() async => saved;
+}
+
+/// La línea 3 de s1 a s2, como la devuelve `get_planner_network()`.
+const _plannerNetwork = {
+  'v': 1,
+  'variants': [
+    {
+      'id': 'rv1',
+      'line_id': 'l3',
+      'name': 'Ida: A → B',
+      'branch': null,
+      'direction': 0,
+      'stops': ['s1', 's2'],
+      'dist': [0, 3000],
+    },
+  ],
+};
 
 // Fixtures. Los codes están DESORDENADOS a propósito: getLines debe ordenar
 // numéricamente ("3" < "9B" < "110"), no alfabéticamente.
@@ -432,6 +470,122 @@ void main() {
 
       expect(result.getLeft().toNullable(), isA<ServerFailure>());
       verifyZeroInteractions(local);
+    });
+  });
+
+  group('planTrip sin conexión', () {
+    late _MemoryStore store;
+    late TransitRepositoryImpl offlineRepo;
+
+    setUp(() {
+      store = _MemoryStore();
+      offlineRepo = TransitRepositoryImpl(
+        remoteDataSource: remote,
+        localDataSource: local,
+        now: () => _now,
+        plannerStore: store,
+      );
+      when(() => local.getCachedLines()).thenAnswer((_) async => [_line3]);
+      when(() => local.getCachedAllStops()).thenAnswer((_) async => _stops);
+    });
+
+    void stubRemote(Object answer) =>
+        when(
+          () => remote.planTrip(
+            originLat: any(named: 'originLat'),
+            originLng: any(named: 'originLng'),
+            destLat: any(named: 'destLat'),
+            destLng: any(named: 'destLng'),
+            maxWalkMeters: any(named: 'maxWalkMeters'),
+            maxResults: any(named: 'maxResults'),
+          ),
+        ).thenAnswer((_) async {
+          if (answer is AppException) throw answer;
+          return answer as List<TripPlanModel>;
+        });
+
+    Future<Either<Failure, List<dynamic>>> plan() => offlineRepo.planTrip(
+      originLat: -27.1,
+      originLng: -58.1,
+      destLat: -27.2,
+      destLng: -58.2,
+      maxWalkMeters: 500,
+      maxResults: 6,
+    );
+
+    // El refresco de la red corre sin esperar al viaje: hay que dejarlo
+    // terminar antes de mirar.
+    Future<void> settle() async {
+      for (var i = 0; i < 10; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+    }
+
+    test('sin servidor, el teléfono calcula el viaje y lo marca', () async {
+      stubRemote(const NetworkException('sin señal'));
+      store
+        ..network = _plannerNetwork
+        ..saved = _now;
+
+      final result = await plan();
+
+      final plans = result.getRight().toNullable()!;
+      expect(plans, hasLength(1));
+      final trip = plans.single as TripPlanModel;
+      expect(trip.calculatedOffline, isTrue);
+      expect(trip.legs.single.lineCode, '3');
+      expect(trip.legs.single.stopCount, 1);
+    });
+
+    test('sin servidor y sin red guardada, el error de siempre', () async {
+      stubRemote(const NetworkException('sin señal'));
+
+      final result = await plan();
+
+      expect(result.getLeft().toNullable(), isA<NetworkFailure>());
+    });
+
+    test('con señal, deja la red guardada para cuando no haya', () async {
+      stubRemote(_tripPlans);
+      when(
+        () => remote.getPlannerNetwork(),
+      ).thenAnswer((_) async => _plannerNetwork);
+
+      final result = await plan();
+      await settle();
+
+      expect(result.getRight().toNullable(), _tripPlans);
+      expect(store.network, _plannerNetwork);
+      expect(store.saved, _now);
+    });
+
+    test('si la red guardada es de hace menos de tres días, no la vuelve a '
+        'bajar', () async {
+      stubRemote(_tripPlans);
+      store
+        ..network = _plannerNetwork
+        ..saved = _now.subtract(const Duration(days: 2));
+
+      await plan();
+      await settle();
+
+      verifyNever(() => remote.getPlannerNetwork());
+    });
+
+    test('si es más vieja, sí', () async {
+      stubRemote(_tripPlans);
+      store
+        ..network = _plannerNetwork
+        ..saved = _now.subtract(const Duration(days: 4));
+      when(
+        () => remote.getPlannerNetwork(),
+      ).thenAnswer((_) async => _plannerNetwork);
+
+      await plan();
+      await settle();
+
+      verify(() => remote.getPlannerNetwork()).called(1);
+      expect(store.saved, _now);
     });
   });
 
