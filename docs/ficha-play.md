@@ -111,24 +111,26 @@ OpenStreetMap para corregirla: el mapa es de todos.
 TU PRIVACIDAD
 No hay cuentas ni registro. No hay publicidad ni rastreadores. No medimos qué
 pantallas mirás. Tu ubicación se usa solo cuando hacés algo que la necesita, y
-no se guarda en ningún servidor. Los favoritos y los últimos destinos viven en
-tu teléfono y no salen de ahí.
+no se guarda en ningún servidor. Favoritos, últimos destinos y Casa y
+Trabajo o facu viven en tu teléfono y no salen de ahí.
 
 Hecha en Resistencia, Chaco.
 ```
 
 ## Novedades de esta versión (máx. 500)
 
+La 1.3. Las de la 1.2 están en el CHANGELOG.
+
 ```
-Transbordo caminando: si para cambiar de colectivo hay que caminar hasta otra
-parada, ahora la app te lo arma y te dice cuánto. Así se conecta el 904 con
-las líneas de Corrientes, y aparecen viajes que antes daban "no hay".
+Casa y Trabajo o facu: guardalos una vez y armá el viaje de todos los días con un toque.
 
-Avisos de paros y desvíos arriba del mapa.
+Cada recorrido dice hacia dónde va: «Hacia Hipermercado Libertad» en vez de «Ramal A · Ida».
 
-La alarma para bajar suena también con la pantalla apagada.
+El buscador entiende «UTN», «UNNE», «facultad» y «terminal».
 
-Las paradas de Corrientes ahora tienen el nombre de su esquina.
+Ya figura el boleto de Corrientes capital.
+
+Nuevo «Enviar diagnóstico»: si la alarma no sonó o algo falló, nos mandás el registro de la app. Nunca incluye tu ubicación.
 ```
 
 ---
