@@ -104,7 +104,30 @@ _MatchQuality? _quality(String name, String normalizedQuery) {
   for (final word in haystack.split(' ')) {
     if (word.startsWith(normalizedQuery)) return _MatchQuality.wordPrefix;
   }
-  return haystack.contains(normalizedQuery) ? _MatchQuality.contains : null;
+  if (haystack.contains(normalizedQuery)) return _MatchQuality.contains;
+  return _joinedQuality(haystack, normalizedQuery);
+}
+
+/// Lo mismo, sin los espacios: "chango mas" encuentra "Hiper Changomás", y
+/// "changomas" encontraría un "Chango Más".
+///
+/// **Por qué.** Una usuaria buscó "chango más" y le dijo que no estaba: en
+/// OSM figura todo junto. Las marcas se escriben de las dos formas, y quien
+/// busca no tiene por qué saber cuál eligió el que lo cargó.
+///
+/// Va después de todo lo demás, así que no cambia ningún resultado que ya
+/// salía. Desde 4 letras: con menos, juntar palabras matchea cualquier cosa.
+_MatchQuality? _joinedQuality(String haystack, String normalizedQuery) {
+  final query = normalizedQuery.replaceAll(' ', '');
+  if (query.length < 4) return null;
+  if (query != normalizedQuery) {
+    for (final word in haystack.split(' ')) {
+      if (word.startsWith(query)) return _MatchQuality.wordPrefix;
+    }
+  }
+  return haystack.replaceAll(' ', '').contains(query)
+      ? _MatchQuality.contains
+      : null;
 }
 
 /// Busca en lugares y paradas a la vez, ordenado por qué tan bien matchea.

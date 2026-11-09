@@ -34,6 +34,47 @@ void main() {
       expect(results, hasLength(1));
     });
 
+    test('"chango mas" encuentra "Hiper Changomás": las marcas se escriben '
+        'separadas o juntas', () {
+      // Lo reportó una usuaria: en OSM está todo junto.
+      final results = searchDestinations(
+        query: 'chango más',
+        places: [
+          _place('Hiper Changomás Resistencia', PlaceKind.compras),
+          _place('Chango Paniagua (Laguna Brava)', PlaceKind.calle),
+        ],
+        stops: const [],
+      );
+      expect(_names(results), ['Hiper Changomás Resistencia']);
+    });
+
+    test('y al revés: "changomas" encuentra un "Chango Más"', () {
+      final results = searchDestinations(
+        query: 'changomas',
+        places: [_place('Chango Más Barranqueras', PlaceKind.compras)],
+        stops: const [],
+      );
+      expect(_names(results), ['Chango Más Barranqueras']);
+    });
+
+    test('juntar palabras no le gana a lo que ya matcheaba tal cual', () {
+      final results = searchDestinations(
+        query: 'san ta',
+        places: [_place('Santa Fe'), _place('San Tadeo')],
+        stops: const [],
+      );
+      expect(_names(results), ['San Tadeo', 'Santa Fe']);
+    });
+
+    test('con menos de 4 letras no junta nada', () {
+      final results = searchDestinations(
+        query: 'a b',
+        places: [_place('Club Abc')],
+        stops: const [],
+      );
+      expect(results, isEmpty);
+    });
+
     test('sin query no devuelve nada: la lista vacía la llenan los '
         'favoritos y recientes', () {
       expect(
