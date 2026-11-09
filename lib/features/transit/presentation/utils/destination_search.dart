@@ -105,8 +105,32 @@ _MatchQuality? _quality(String name, String normalizedQuery) {
     if (word.startsWith(normalizedQuery)) return _MatchQuality.wordPrefix;
   }
   if (haystack.contains(normalizedQuery)) return _MatchQuality.contains;
-  return _joinedQuality(haystack, normalizedQuery);
+  return _joinedQuality(haystack, normalizedQuery) ??
+      _allWordsQuality(haystack, normalizedQuery);
 }
+
+/// Cada palabra escrita empieza alguna palabra del nombre, en cualquier
+/// orden: "gala y convenciones" encuentra "Gala Convenciones".
+///
+/// Las letras sueltas ("y", "o", "e") no cuentan: son el "y" de "Gala y
+/// Convenciones", que el que cargó el lugar no escribió. **Los artículos sí
+/// cuentan:** "el hiper" no encuentra "Hiper Libertad", a propósito, para
+/// no acostumbrar a buscar de cualquier forma. Los números sueltos también
+/// cuentan: "9 julio" no puede dar cualquier "Julio".
+_MatchQuality? _allWordsQuality(String haystack, String normalizedQuery) {
+  final words = [
+    for (final word in normalizedQuery.split(' '))
+      if (word.isNotEmpty && !_looseLetter.hasMatch(word)) word,
+  ];
+  if (words.length < 2) return null;
+  final nameWords = haystack.split(' ');
+  final all = words.every(
+    (word) => nameWords.any((name) => name.startsWith(word)),
+  );
+  return all ? _MatchQuality.contains : null;
+}
+
+final _looseLetter = RegExp(r'^[a-z]$');
 
 /// Lo mismo, sin los espacios: "chango mas" encuentra "Hiper Changomás", y
 /// "changomas" encontraría un "Chango Más".

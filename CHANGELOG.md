@@ -57,6 +57,13 @@ Versionado según [SemVer](https://semver.org/lang/es/).
   la calle Facundo) y "terminal" las dos terminales de ómnibus primero. Los
   apodos están en `place_aliases.dart`, y un test verifica que cada uno
   apunte a un lugar que existe en los datos.
+- **"chango más" encuentra el Changomás, y "gala y convenciones" el Gala.**
+  Lo reportó una usuaria. Si lo escrito no aparece tal cual, se prueba con
+  las palabras juntas y, por último, palabra por palabra en cualquier orden,
+  sin contar las letras sueltas como la "y". Los artículos siguen contando:
+  "el hiper" no busca "hiper".
+- **Hoteles, salones de eventos, centros de convenciones y casinos** ahora
+  están entre los lugares (60 nuevos, con datos de OSM de noviembre).
 
 ### Diagnóstico
 

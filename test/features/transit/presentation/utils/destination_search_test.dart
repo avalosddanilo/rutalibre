@@ -66,6 +66,50 @@ void main() {
       expect(_names(results), ['San Tadeo', 'Santa Fe']);
     });
 
+    test('"gala y convenciones" encuentra "Gala Convenciones": las letras '
+        'sueltas no cuentan', () {
+      final results = searchDestinations(
+        query: 'gala y convenciones',
+        places: [
+          _place('Gala Convenciones', PlaceKind.cultura),
+          _place('Plaza Ramona Galarza', PlaceKind.plaza),
+        ],
+        stops: const [],
+      );
+      expect(_names(results), ['Gala Convenciones']);
+    });
+
+    test('las palabras pueden venir en otro orden', () {
+      final results = searchDestinations(
+        query: 'convenciones gala',
+        places: [_place('Gala Convenciones', PlaceKind.cultura)],
+        stops: const [],
+      );
+      expect(results, hasLength(1));
+    });
+
+    test(
+      'pero los artículos SÍ cuentan: "el hiper" no es "Hiper Libertad"',
+      () {
+        // Decisión de producto: no acostumbrar a buscar de cualquier forma.
+        final results = searchDestinations(
+          query: 'el hiper',
+          places: [_place('Hiper Libertad', PlaceKind.compras)],
+          stops: const [],
+        );
+        expect(results, isEmpty);
+      },
+    );
+
+    test('y los números también: "9 julio" no da cualquier "Julio"', () {
+      final results = searchDestinations(
+        query: '9 julio',
+        places: [_place('Escuela Julio Cortázar')],
+        stops: const [],
+      );
+      expect(results, isEmpty);
+    });
+
     test('con menos de 4 letras no junta nada', () {
       final results = searchDestinations(
         query: 'a b',
