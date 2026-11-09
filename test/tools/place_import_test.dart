@@ -22,6 +22,15 @@ void main() {
       expect(kindFor({'amenity': 'place_of_worship'}), PlaceKind.iglesia);
     });
 
+    test('los lugares de eventos y los hoteles también son destinos', () {
+      // Alguien buscó "gala y convenciones" y no estaba: en OSM el Gala es
+      // `leisure=adult_gaming_centre`, y los hoteles no se traían.
+      expect(kindFor({'leisure': 'adult_gaming_centre'}), PlaceKind.otro);
+      expect(kindFor({'amenity': 'conference_centre'}), PlaceKind.cultura);
+      expect(kindFor({'amenity': 'events_venue'}), PlaceKind.cultura);
+      expect(kindFor({'tourism': 'hotel'}), PlaceKind.otro);
+    });
+
     test('lo que no está en la lista blanca NO entra', () {
       // OSM tiene miles de valores y casi ninguno es un destino: un buzón,
       // una boca de incendio, un banco de plaza.

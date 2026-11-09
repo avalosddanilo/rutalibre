@@ -47,10 +47,10 @@ const _placesQuery =
     '''
 [out:json][timeout:270];
 (
-  nwr["amenity"~"^(hospital|clinic|doctors|pharmacy|school|university|college|kindergarten|townhall|police|courthouse|post_office|bank|library|theatre|cinema|marketplace|bus_station|place_of_worship|community_centre)\$"]["name"]($_bbox);
+  nwr["amenity"~"^(hospital|clinic|doctors|pharmacy|school|university|college|kindergarten|townhall|police|courthouse|post_office|bank|library|theatre|cinema|marketplace|bus_station|place_of_worship|community_centre|conference_centre|events_venue|casino)\$"]["name"]($_bbox);
   nwr["shop"~"^(mall|supermarket|department_store)\$"]["name"]($_bbox);
-  nwr["leisure"~"^(park|stadium|sports_centre)\$"]["name"]($_bbox);
-  nwr["tourism"~"^(museum|attraction)\$"]["name"]($_bbox);
+  nwr["leisure"~"^(park|stadium|sports_centre|adult_gaming_centre)\$"]["name"]($_bbox);
+  nwr["tourism"~"^(museum|attraction|hotel)\$"]["name"]($_bbox);
   nwr["public_transport"="station"]["name"]($_bbox);
   nwr["landuse"="cemetery"]["name"]($_bbox);
   nwr["office"="government"]["name"]($_bbox);

@@ -61,6 +61,14 @@ const _kindByTag = <String, PlaceKind>{
   'amenity=cinema': PlaceKind.cultura,
   'amenity=library': PlaceKind.cultura,
   'amenity=place_of_worship': PlaceKind.iglesia,
+  // Donde se hacen congresos, recibidas, fiestas y shows. Entraron porque
+  // alguien buscó "gala y convenciones" y no estaba: en OSM el Gala figura
+  // como sala de juegos, y los hoteles no se traían.
+  'amenity=conference_centre': PlaceKind.cultura,
+  'amenity=events_venue': PlaceKind.cultura,
+  'amenity=casino': PlaceKind.otro,
+  'leisure=adult_gaming_centre': PlaceKind.otro,
+  'tourism=hotel': PlaceKind.otro,
   'amenity=bank': PlaceKind.otro,
   'amenity=community_centre': PlaceKind.otro,
   'landuse=cemetery': PlaceKind.otro,
